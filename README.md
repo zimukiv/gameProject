@@ -9,6 +9,7 @@ Unity 版本固定为 **6000.6.4f1**。Unity Hub 中使用 Add / Add project fro
 - [动手验收和 Inspector 说明](Docs/02-T01-T02验收与学习.md)
 - [确认规则、正文和批注的区别](Docs/01-规则与范围.md)
 - [A/B 文件维护边界与当前交接](Docs/03-A与B交接.md)
+- [B 当前阶段任务单](Docs/06-B阶段任务单-T03资源模块.md)
 - [接入已有 GitHub 仓库](Docs/05-GitHub协作起点.md)
 
 T03 token 与八方向冲刺尚未实现。B_SystemTest 及 Prototype 当前仅是独立空场景，分别留给系统测试和后续主地图整合。
