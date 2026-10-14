@@ -1,0 +1,33 @@
+# Unity generated data (project is in UnityProject/)
+**/[Ll]ibrary/
+**/[Tt]emp/
+**/[Oo]bj/
+**/[Ll]ogs/
+**/[Uu]ser[Ss]ettings/
+**/[Bb]uild/
+**/[Bb]uilds/
+**/[Mm]emoryCaptures/
+**/[Rr]ecordings/
+**/.vs/
+**/.idea/
+**/.vscode/
+*.csproj
+*.sln
+*.slnx
+*.user
+*.pidb
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.tmp
+*.log
+*.unitypackage
+sysinfo.txt
+.DS_Store
+Thumbs.db
+# Office lock files; keep the design document itself.
+~$*
+Verification/
+# Generated source handoff archives, not source files.
+/Handoff/

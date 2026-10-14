@@ -1,0 +1,6 @@
+{
+  "name": "Minigame.PlayModeTests",
+  "references": ["Minigame.Runtime", "Unity.InputSystem"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "defineConstraints": ["UNITY_INCLUDE_TESTS"]
+}
