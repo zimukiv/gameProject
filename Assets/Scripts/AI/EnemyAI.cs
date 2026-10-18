@@ -44,6 +44,8 @@ public class EnemyAI : MonoBehaviour
     private Rigidbody2D rb;
     private Transform playerTransform;
     private Collider2D bodyCollider;
+    private float knockbackRemaining;
+    private Vector2 knockbackVelocity;
 
     private void Awake()
     {
@@ -84,6 +86,7 @@ public class EnemyAI : MonoBehaviour
     private void HandlePlayerRespawned()
     {
         StopAllCoroutines();
+        knockbackRemaining = 0f;
         // 玩家复活后重置技能冷却与追击速度
         skillCooldownTimer = skillCooldown;
         isExecutingSkill = false;
@@ -99,7 +102,7 @@ public class EnemyAI : MonoBehaviour
         else ResetChase();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (GameManager.Instance != null && GameManager.Instance.CurrentState == GameManager.GameState.LevelClear)
         {
@@ -113,9 +116,17 @@ public class EnemyAI : MonoBehaviour
             return;
         }
 
+        // External forces take priority over both chase movement and skills.
+        if (knockbackRemaining > 0f)
+        {
+            knockbackRemaining = Mathf.Max(0f, knockbackRemaining - Time.fixedDeltaTime);
+            rb.velocity = knockbackVelocity;
+            return;
+        }
+
         if (skillCooldownTimer > 0)
         {
-            skillCooldownTimer -= Time.deltaTime;
+            skillCooldownTimer -= Time.fixedDeltaTime;
         }
 
         // 仅在被激活（快节奏期）时全速追击
@@ -127,7 +138,7 @@ public class EnemyAI : MonoBehaviour
 
         if (chaseStartDelay > 0f)
         {
-            chaseStartDelay -= Time.deltaTime;
+            chaseStartDelay -= Time.fixedDeltaTime;
             rb.velocity = Vector2.zero;
             return;
         }
@@ -267,6 +278,8 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    private void OnCollisionStay2D(Collision2D collision) => OnCollisionEnter2D(collision);
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (isHunting && other.CompareTag("Player"))
@@ -276,11 +289,26 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay2D(Collider2D other) => OnTriggerEnter2D(other);
+
+    public void ApplyKnockback(Vector2 velocity, float duration)
+    {
+        if (duration <= 0f) return;
+        if (GameManager.Instance != null && GameManager.Instance.CurrentState == GameManager.GameState.LevelClear) return;
+        StopAllCoroutines();
+        isExecutingSkill = false;
+        knockbackVelocity = velocity;
+        knockbackRemaining = duration;
+        rb.velocity = velocity;
+        skillCooldownTimer = Mathf.Max(skillCooldownTimer, duration);
+    }
+
     public void ResetChase()
     {
         StopAllCoroutines();
         isExecutingSkill = false;
         isHunting = false;
+        knockbackRemaining = 0f;
         chaseStartDelay = 0f;
         rb.velocity = Vector2.zero;
         rb.gravityScale = 0f;

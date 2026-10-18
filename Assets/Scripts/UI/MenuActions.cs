@@ -23,6 +23,8 @@ public class MenuActions : MonoBehaviour
     public void Resume() { GameManager.Instance.ResumeGame(); }
     public void MainMenu()
     {
+        SaveManager.Instance?.FlushPendingSave();
+        SettingsManager.Instance?.FlushPendingSettings();
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
     }
@@ -31,6 +33,6 @@ public class MenuActions : MonoBehaviour
         int next = LevelManager.Instance.currentLevelIndex + 1;
         Time.timeScale = 1f;
         if (next <= LevelManager.TOTAL_LEVELS) LevelManager.Instance.LoadLevel(next);
-        else SceneManager.LoadScene("MainMenu");
+        else MainMenu();
     }
 }

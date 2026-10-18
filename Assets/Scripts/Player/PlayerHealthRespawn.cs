@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerHealthRespawn : MonoBehaviour
 {
     private PlayerController playerController;
-    private float lastDeathTime = -10f;
+    private readonly InvulnerabilityWindow respawnProtection = new InvulnerabilityWindow();
     public float respawnInvulnerability = 1.5f;
 
     private void Awake()
@@ -18,8 +18,7 @@ public class PlayerHealthRespawn : MonoBehaviour
     public void Die()
     {
         if (GameManager.Instance != null && GameManager.Instance.CurrentState == GameManager.GameState.LevelClear) return;
-        if (Time.time - lastDeathTime < respawnInvulnerability) return;
-        lastDeathTime = Time.time;
+        if (!respawnProtection.TryStart(Time.time, respawnInvulnerability)) return;
         Debug.Log("[PlayerHealthRespawn] 玩家触发死亡！");
         EventBus.TriggerPlayerDied();
 
@@ -79,6 +78,8 @@ public class PlayerHealthRespawn : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay2D(Collider2D collision) => OnTriggerEnter2D(collision);
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Hazard"))
@@ -86,4 +87,6 @@ public class PlayerHealthRespawn : MonoBehaviour
             Die();
         }
     }
+
+    private void OnCollisionStay2D(Collision2D collision) => OnCollisionEnter2D(collision);
 }

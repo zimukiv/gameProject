@@ -103,15 +103,17 @@ public class LevelManager : MonoBehaviour
     public void LoadLevel(int levelIndex)
     {
         if (levelIndex < 1 || levelIndex > TOTAL_LEVELS) return;
+        string sceneName = "Level" + levelIndex;
+        if (!Application.CanStreamedLevelBeLoaded(sceneName))
+        {
+            Debug.LogError("[LevelManager] Scene is not available: " + sceneName);
+            return;
+        }
         if (SaveManager.Instance != null && ScoreManager.Instance != null)
             ScoreManager.Instance.SetScore(SaveManager.Instance.GlobalData.committedScore);
         currentLevelIndex = levelIndex;
         // 实际项目可根据命名载入如 "Level1", "Level2", "Level3"
-        string sceneName = "Level" + levelIndex;
         Debug.Log($"[LevelManager] 加载关卡场景: {sceneName}");
-        if (Application.CanStreamedLevelBeLoaded(sceneName))
-        {
-            SceneManager.LoadScene(sceneName);
-        }
+        SceneManager.LoadScene(sceneName);
     }
 }

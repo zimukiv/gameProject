@@ -10,6 +10,7 @@ public class RotatingHazardBlock : BaseBlock
     [Header("Rotation Settings")]
     public float rotationSpeed = 180f; // 度/秒
     public float knockbackForce = 22f;
+    public float knockbackDuration = .4f;
 
     private Rigidbody2D rb;
 
@@ -20,32 +21,31 @@ public class RotatingHazardBlock : BaseBlock
         rb.bodyType = RigidbodyType2D.Kinematic;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
+        rb.MoveRotation(rb.rotation + rotationSpeed * Time.fixedDeltaTime);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Vector2 contactPoint = collision.contacts[0].point;
-        Vector2 center = transform.position;
-        Vector2 hitDir = (contactPoint - center).normalized;
+        Hit(collision.collider);
+    }
 
-        if (collision.gameObject.CompareTag("Player"))
+    private void OnTriggerEnter2D(Collider2D other) => Hit(other);
+
+    private void Hit(Collider2D other)
+    {
+        Vector2 hitDir = ((Vector2)other.bounds.center - (Vector2)transform.position).normalized;
+        if (hitDir.sqrMagnitude < .001f) hitDir = Vector2.up;
+        var player = other.GetComponentInParent<PlayerController>();
+        if (player != null)
         {
-            PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
-            if (pc != null)
-            {
-                pc.ForceLaunch(hitDir * knockbackForce);
-            }
+            player.ForceLaunch(hitDir * knockbackForce);
         }
-        else if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.GetComponent<EnemyAI>() != null)
+        else
         {
-            Rigidbody2D enemyRb = collision.gameObject.GetComponent<Rigidbody2D>();
-            if (enemyRb != null)
-            {
-                enemyRb.velocity = hitDir * knockbackForce;
-            }
+            var enemy = other.GetComponentInParent<EnemyAI>();
+            if (enemy != null) enemy.ApplyKnockback(hitDir * knockbackForce, knockbackDuration);
         }
     }
 }

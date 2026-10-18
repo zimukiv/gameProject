@@ -57,12 +57,12 @@ public class PlayerController : MonoBehaviour
     private BoxCollider2D boxCollider;
     private SpriteRenderer spriteRenderer;
 
-    private float dashTimer;
     private float defaultGravityScale;
     private Vector2 currentDashDirection;
-    private float currentDashSpeed;
     private float externalMotionTimer;
     private readonly TimedSpeedModifiers speedModifiers = new TimedSpeedModifiers();
+    private readonly PlayerInputBuffer inputBuffer = new PlayerInputBuffer();
+    private readonly DashMotion dashMotion = new DashMotion();
     private object scriptedMotionOwner;
 
     private void Awake()
@@ -90,44 +90,64 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance != null &&
-            GameManager.Instance.CurrentState != GameManager.GameState.SlowPacedPhase &&
-            GameManager.Instance.CurrentState != GameManager.GameState.FastPacedPhase)
+        if (!CanControl() || scriptedMotionOwner != null || externalMotionTimer > 0f)
+        {
+            inputBuffer.Clear();
             return;
+        }
+        inputBuffer.Sample(GameInput.IsHeld(KeyCode.A), GameInput.IsHeld(KeyCode.D),
+            GameInput.IsHeld(KeyCode.W), GameInput.IsHeld(KeyCode.S),
+            GameInput.WasPressed(KeyCode.Space) || GameInput.WasPressed(KeyCode.W),
+            GameInput.WasPressed(KeyCode.LeftShift));
+    }
 
-        if (scriptedMotionOwner != null) return;
+    private bool CanControl() => GameManager.Instance == null ||
+        GameManager.Instance.CurrentState == GameManager.GameState.SlowPacedPhase ||
+        GameManager.Instance.CurrentState == GameManager.GameState.FastPacedPhase;
 
+    private void FixedUpdate()
+    {
+        if (!CanControl() || scriptedMotionOwner != null)
+        {
+            inputBuffer.Clear();
+            return;
+        }
+        var command = inputBuffer.Consume();
         CheckGrounded();
-        HandleDirectionFacing();
-        HandleCrouch();
+        HandleDirectionFacing(command.moveX);
+        HandleCrouch(command.crouch);
 
         if (externalMotionTimer > 0f)
         {
-            externalMotionTimer -= Time.deltaTime;
+            externalMotionTimer = Mathf.Max(0f, externalMotionTimer - Time.fixedDeltaTime);
+            ClampFallSpeed();
             return;
         }
 
         if (isDashing)
         {
+            if (!dashMotion.IsComplete) { UpdateDash(); return; }
+            EndDash();
+        }
+
+        HandleMovement(command.moveX);
+        if (command.jump && isGrounded && !isCrouching)
+            rb.velocity = new Vector2(rb.velocity.x, jumpVelocity);
+        if (command.dash && (isFirstDashFree || currentDashCharges > 0) && dashDuration > 0f && dashInitialSpeed > 0f)
+        {
+            StartDash(command.dashX, command.dashY);
             UpdateDash();
             return;
         }
-
-        HandleMovement();
-        HandleJump();
-        HandleDashInput();
+        ClampFallSpeed();
     }
 
-    private void FixedUpdate()
+    private void ClampFallSpeed()
     {
-        if (scriptedMotionOwner == null && !isDashing && rb.velocity.y < -maxFallSpeed)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, -maxFallSpeed);
-        }
+        if (rb.velocity.y < -maxFallSpeed) rb.velocity = new Vector2(rb.velocity.x, -maxFallSpeed);
     }
 
-    private bool IsKeyHeld(KeyCode code) => GameInput.IsHeld(code);
-    private bool IsKeyDown(KeyCode code) => GameInput.WasPressed(code);
+    private void OnDisable() => inputBuffer.Clear();
 
     private void CheckGrounded()
     {
@@ -144,26 +164,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void HandleDirectionFacing()
+    private void HandleDirectionFacing(int moveX)
     {
-        bool right = IsKeyHeld(KeyCode.D);
-        bool left = IsKeyHeld(KeyCode.A);
-
-        if (right && !left)
+        if (moveX > 0)
         {
             facingDirection = 1;
             if (spriteRenderer != null) spriteRenderer.flipX = false;
         }
-        else if (left && !right)
+        else if (moveX < 0)
         {
             facingDirection = -1;
             if (spriteRenderer != null) spriteRenderer.flipX = true;
         }
     }
 
-    private void HandleCrouch()
+    private void HandleCrouch(bool crouchHeld)
     {
-        if (IsKeyHeld(KeyCode.S) && isGrounded)
+        if (crouchHeld && isGrounded)
         {
             if (!isCrouching)
             {
@@ -189,38 +206,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void HandleMovement()
+    private void HandleMovement(int moveInput)
     {
-        float moveInput = 0f;
-        if (IsKeyHeld(KeyCode.D)) moveInput += 1f;
-        if (IsKeyHeld(KeyCode.A)) moveInput -= 1f;
-
         float targetSpeed = (isCrouching ? crouchSpeed : moveSpeed) * speedModifiers.GetMultiplier(Time.time);
         float acceleration = isOnIce ? iceAcceleration : isGrounded ? groundAcceleration : airAcceleration;
-        float x = Mathf.MoveTowards(rb.velocity.x, moveInput * targetSpeed, acceleration * Time.deltaTime);
+        float x = Mathf.MoveTowards(rb.velocity.x, moveInput * targetSpeed, acceleration * Time.fixedDeltaTime);
         rb.velocity = new Vector2(x, rb.velocity.y);
     }
 
-    private void HandleJump()
-    {
-        if ((IsKeyDown(KeyCode.Space) || IsKeyDown(KeyCode.W)) && isGrounded && !isCrouching)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, jumpVelocity);
-        }
-    }
-
-    private void HandleDashInput()
-    {
-        if (IsKeyDown(KeyCode.LeftShift))
-        {
-            if (isFirstDashFree || currentDashCharges > 0)
-            {
-                StartDash();
-            }
-        }
-    }
-
-    private void StartDash()
+    private void StartDash(int horizontal, int vertical)
     {
         if (isFirstDashFree)
         {
@@ -233,58 +227,24 @@ public class PlayerController : MonoBehaviour
         }
 
         isDashing = true;
-        dashTimer = dashDuration;
-        currentDashSpeed = dashInitialSpeed;
+        dashMotion.Begin(dashInitialSpeed, Mathf.Max(0f, dashDeceleration), dashDuration);
 
         rb.velocity = Vector2.zero;
         rb.gravityScale = 0f;
 
-        currentDashDirection = CalculateDashDirection();
-        rb.velocity = currentDashDirection * currentDashSpeed;
-    }
-
-    private Vector2 CalculateDashDirection()
-    {
-        bool w = IsKeyHeld(KeyCode.W);
-        bool s = IsKeyHeld(KeyCode.S);
-        bool a = IsKeyHeld(KeyCode.A);
-        bool d = IsKeyHeld(KeyCode.D);
-
-        int h = 0;
-        if (a && !d) h = -1;
-        else if (d && !a) h = 1;
-
-        int v = 0;
-        if (w && s)
-        {
-            v = 1;
-        }
-        else if (w) v = 1;
-        else if (s) v = -1;
-
-        if (h == 0 && v == 0)
-        {
-            return new Vector2(facingDirection, 0f).normalized;
-        }
-
-        return new Vector2(h, v).normalized;
+        currentDashDirection = horizontal == 0 && vertical == 0
+            ? new Vector2(facingDirection, 0f) : new Vector2(horizontal, vertical).normalized;
     }
 
     private void UpdateDash()
     {
-        dashTimer -= Time.deltaTime;
-        currentDashSpeed = Mathf.Max(0f, currentDashSpeed - dashDeceleration * Time.deltaTime);
-        rb.velocity = currentDashDirection * currentDashSpeed;
-
-        if (dashTimer <= 0f)
-        {
-            EndDash();
-        }
+        rb.velocity = currentDashDirection * (dashMotion.Step(Time.fixedDeltaTime) / Time.fixedDeltaTime);
     }
 
     private void EndDash()
     {
         isDashing = false;
+        dashMotion.Reset();
         rb.gravityScale = defaultGravityScale;
         rb.velocity = Vector2.zero;
     }
@@ -293,6 +253,8 @@ public class PlayerController : MonoBehaviour
     {
         transform.SetParent(null, true);
         speedModifiers.Clear();
+        inputBuffer.Clear();
+        dashMotion.Reset();
         scriptedMotionOwner = null;
         isDashing = false;
         isCrouching = false;
@@ -303,7 +265,6 @@ public class PlayerController : MonoBehaviour
             boxCollider.size = normalColliderSize;
             boxCollider.offset = normalColliderOffset;
         }
-        dashTimer = 0f;
         externalMotionTimer = 0f;
         rb.gravityScale = defaultGravityScale;
         rb.velocity = Vector2.zero;
@@ -317,6 +278,7 @@ public class PlayerController : MonoBehaviour
     public bool TryBeginScriptedMotion(object owner)
     {
         if (owner == null || scriptedMotionOwner != null) return false;
+        inputBuffer.Clear();
         if (isDashing) EndDash();
         scriptedMotionOwner = owner;
         rb.velocity = Vector2.zero;
@@ -363,6 +325,7 @@ public class PlayerController : MonoBehaviour
 
     public void ForceLaunch(Vector2 force)
     {
+        inputBuffer.Clear();
         if (isDashing) EndDash();
         rb.velocity = force;
         externalMotionTimer = .38f;

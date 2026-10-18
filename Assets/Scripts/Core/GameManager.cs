@@ -68,6 +68,8 @@ public class GameManager : MonoBehaviour
 
     public void PauseGame()
     {
+        SaveManager.Instance?.FlushPendingSave();
+        SettingsManager.Instance?.FlushPendingSettings();
         stateBeforePause = CurrentState;
         CurrentState = GameState.Paused;
         Time.timeScale = 0f;

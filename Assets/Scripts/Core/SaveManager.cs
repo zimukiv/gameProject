@@ -11,17 +11,6 @@ public class SaveManager : MonoBehaviour
     public static SaveManager Instance { get; private set; }
 
     [System.Serializable]
-    public class GlobalSaveData
-    {
-        public int highestUnlockedLevel = 1; // 1 ~ 3
-        public bool isGameFullyCompleted = false;
-        public int currentScore = 0;
-        public int committedScore = 0;
-        public int highScore = 0;
-        public bool hasSavedGame = false;
-    }
-
-    [System.Serializable]
     public class TempSaveData
     {
         public bool isValid = false;
@@ -41,6 +30,20 @@ public class SaveManager : MonoBehaviour
     private readonly Dictionary<MonoBehaviour, object> mechanismSnapshot = new Dictionary<MonoBehaviour, object>();
 
     private string globalSavePath;
+    private readonly DeferredWrite pendingWrite = new DeferredWrite(1f);
+
+    private void Update()
+    {
+        if (pendingWrite.IsDue(Time.unscaledTime)) FlushPendingSave();
+    }
+
+    private void OnApplicationPause(bool paused) { if (paused) FlushPendingSave(); }
+    private void OnApplicationQuit() => FlushPendingSave();
+
+    public void FlushPendingSave()
+    {
+        if (pendingWrite.IsPending) PersistGlobal();
+    }
 
     private void Awake()
     {
@@ -66,13 +69,7 @@ public class SaveManager : MonoBehaviour
                 string json = File.ReadAllText(globalSavePath);
                 GlobalData = JsonUtility.FromJson<GlobalSaveData>(json);
                 if (GlobalData == null) throw new InvalidDataException("Empty save data");
-                GlobalData.highestUnlockedLevel = Mathf.Clamp(GlobalData.highestUnlockedLevel, 1, LevelManager.TOTAL_LEVELS);
-                GlobalData.currentScore = Mathf.Max(0, GlobalData.currentScore);
-                if (GlobalData.committedScore == 0 &&
-                    (GlobalData.highestUnlockedLevel > 1 || GlobalData.isGameFullyCompleted))
-                    GlobalData.committedScore = GlobalData.currentScore;
-                GlobalData.committedScore = Mathf.Clamp(GlobalData.committedScore, 0, GlobalData.currentScore);
-                GlobalData.highScore = Mathf.Max(GlobalData.currentScore, GlobalData.highScore);
+                GlobalData.Normalize(LevelManager.TOTAL_LEVELS);
             }
             catch (Exception ex)
             {
@@ -94,31 +91,36 @@ public class SaveManager : MonoBehaviour
             GlobalData.highScore = GlobalData.currentScore;
         }
 
+        PersistGlobal();
+    }
+
+    private void PersistGlobal()
+    {
         try
         {
             WriteGlobalAtomically();
+            pendingWrite.MarkWritten();
             Debug.Log("[SaveManager] 全局存档已写入。");
         }
         catch (Exception ex)
         {
+            pendingWrite.RetryLater(Time.unscaledTime);
             Debug.LogError($"[SaveManager] 写入全局存档失败: {ex.Message}");
         }
     }
 
     public void SaveLiveScore()
     {
-        if (GlobalData.hasSavedGame) SaveGlobal();
+        if (!GlobalData.hasSavedGame) return;
+        GlobalData.highScore = Mathf.Max(GlobalData.highScore, GlobalData.currentScore);
+        pendingWrite.Request(Time.unscaledTime);
     }
 
     public void ClearGlobalSave()
     {
         int best = GlobalData != null ? GlobalData.highScore : 0;
         GlobalData = new GlobalSaveData { highScore = best, hasSavedGame = false };
-        try
-        {
-            WriteGlobalAtomically();
-        }
-        catch (Exception ex) { Debug.LogError("[SaveManager] Failed to reset run: " + ex.Message); }
+        PersistGlobal();
     }
 
     private void WriteGlobalAtomically()

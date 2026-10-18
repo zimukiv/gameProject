@@ -14,6 +14,22 @@ public class SettingsManager : MonoBehaviour
 
     private const string PREF_VOLUME = "GameVolume";
     private const string PREF_FULLSCREEN = "GameFullscreen";
+    private readonly DeferredWrite pendingWrite = new DeferredWrite(.5f);
+
+    private void Update()
+    {
+        if (pendingWrite.IsDue(Time.unscaledTime)) FlushPendingSettings();
+    }
+
+    private void OnApplicationPause(bool paused) { if (paused) FlushPendingSettings(); }
+    private void OnApplicationQuit() => FlushPendingSettings();
+
+    public void FlushPendingSettings()
+    {
+        if (!pendingWrite.IsPending) return;
+        PlayerPrefs.Save();
+        pendingWrite.MarkWritten();
+    }
 
     private void Awake()
     {
@@ -32,13 +48,13 @@ public class SettingsManager : MonoBehaviour
     {
         if (volumeSlider != null)
         {
-            volumeSlider.value = AudioListener.volume;
+            volumeSlider.SetValueWithoutNotify(AudioListener.volume);
             volumeSlider.onValueChanged.AddListener(SetVolume);
         }
 
         if (fullscreenToggle != null)
         {
-            fullscreenToggle.isOn = Screen.fullScreen;
+            fullscreenToggle.SetIsOnWithoutNotify(Screen.fullScreen);
             fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
         }
     }
@@ -47,23 +63,25 @@ public class SettingsManager : MonoBehaviour
     {
         AudioListener.volume = Mathf.Clamp01(volume);
         PlayerPrefs.SetFloat(PREF_VOLUME, AudioListener.volume);
-        PlayerPrefs.Save();
+        pendingWrite.Request(Time.unscaledTime);
     }
 
     public void SetFullscreen(bool isFullscreen)
     {
         Screen.fullScreen = isFullscreen;
         PlayerPrefs.SetInt(PREF_FULLSCREEN, isFullscreen ? 1 : 0);
-        PlayerPrefs.Save();
+        pendingWrite.Request(Time.unscaledTime);
+        FlushPendingSettings();
         Debug.Log($"[SettingsManager] 屏幕模式切换: {(isFullscreen ? "全屏" : "窗口化")}");
     }
 
     public void ToggleFullscreen()
     {
-        SetFullscreen(!Screen.fullScreen);
+        bool next = !Screen.fullScreen;
+        SetFullscreen(next);
         if (fullscreenToggle != null)
         {
-            fullscreenToggle.isOn = Screen.fullScreen;
+            fullscreenToggle.SetIsOnWithoutNotify(next);
         }
     }
 
