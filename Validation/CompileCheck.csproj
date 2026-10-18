@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <Nullable>disable</Nullable>
+    <NoWarn>0618;0619</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../Assets/Scripts/**/*.cs" />
+    <Compile Include="../Assets/Editor/**/*.cs" />
+    <Reference Include="C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/Managed/UnityEngine/*.dll" />
+    <Reference Include="C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/Managed/UnityEditor/*.dll" />
+    <Reference Include="C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/Resources/PackageManager/ProjectTemplates/libcache/com.unity.template.2d-cross-platform-2d-7.0.0/ScriptAssemblies/UnityEngine.UI.dll" />
+  </ItemGroup>
+</Project>

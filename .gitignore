@@ -1,0 +1,8 @@
+/Library/
+/Logs/
+/Temp/
+/UserSettings/
+/Validation/bin/
+/Validation/obj/
+/Builds/
+*.log
