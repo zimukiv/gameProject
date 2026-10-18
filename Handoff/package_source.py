@@ -13,10 +13,13 @@ output.mkdir(parents=True, exist_ok=True)
 note = root / "Handoff" / "队友交接说明.md"
 copy2(note, output / note.name)
 
-source_files = [root / "README.md"]
+source_files = [root / "README.md", root / ".gitignore"]
 for directory in ("Assets", "Packages", "ProjectSettings", "Handoff"):
     source_files.extend(path for path in (root / directory).rglob("*") if path.is_file())
-source_files.extend(path for path in (root / "Validation").iterdir() if path.is_file())
+source_files.extend(
+    path for path in (root / "Validation").rglob("*")
+    if path.is_file() and not {"bin", "obj"}.intersection(path.relative_to(root / "Validation").parts)
+)
 
 archive = output / "MiniGame_Unity工程_源码包.zip"
 with ZipFile(archive, "w", ZIP_DEFLATED, compresslevel=6) as package:

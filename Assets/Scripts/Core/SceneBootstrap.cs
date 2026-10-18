@@ -1,6 +1,7 @@
 using UnityEngine;
 
 /// <summary>Allows a generated level to be played directly from the editor.</summary>
+[DefaultExecutionOrder(100)]
 public class SceneBootstrap : MonoBehaviour
 {
     public int levelIndex = 1;
@@ -26,8 +27,8 @@ public class SceneBootstrap : MonoBehaviour
     {
         if (levelIndex > 0)
         {
-            SaveManager.Instance.InitTempSave(spawnPosition, levelIndex);
             if (levelIndex == 3) AttendanceBlock.ResetAttendance();
+            SaveManager.Instance.InitTempSave(spawnPosition, levelIndex);
         }
     }
 

@@ -7,7 +7,7 @@ using UnityEngine;
 /// - 积分状态 (Integral)：将周围游离方块聚拢吸附为规整平台
 /// - 求导状态 (Derivative)：将聚拢的方块拆散、推离回原始离散轨道
 /// </summary>
-public class IntegralDerivativeBlock : InteractiveBlock
+public class IntegralDerivativeBlock : InteractiveBlock, ICheckpointState
 {
     public enum MathMode { Integral, Derivative }
 
@@ -27,10 +27,7 @@ public class IntegralDerivativeBlock : InteractiveBlock
         base.Awake();
         foreach (var block in targetBlocks)
         {
-            if (block != null)
-            {
-                originalPositions.Add(block.position);
-            }
+            originalPositions.Add(block != null ? block.position : Vector3.zero);
         }
     }
 
@@ -44,8 +41,28 @@ public class IntegralDerivativeBlock : InteractiveBlock
 
     public void ToggleMode()
     {
+        if (isTransitioning || transitionSpeed <= 0f) return;
         currentMode = (currentMode == MathMode.Integral) ? MathMode.Derivative : MathMode.Integral;
         StartCoroutine(TransitionBlocks());
+    }
+
+    public object CaptureCheckpointState()
+    {
+        var positions = new Vector3[targetBlocks.Count];
+        for (int i = 0; i < targetBlocks.Count; i++)
+            if (targetBlocks[i] != null) positions[i] = targetBlocks[i].position;
+        return (currentMode, positions, isTransitioning);
+    }
+
+    public void RestoreCheckpointState(object state)
+    {
+        var saved = ((MathMode mode, Vector3[] positions, bool transitioning))state;
+        StopAllCoroutines();
+        isTransitioning = false;
+        currentMode = saved.mode;
+        for (int i = 0; i < targetBlocks.Count && i < saved.positions.Length; i++)
+            if (targetBlocks[i] != null) targetBlocks[i].position = saved.positions[i];
+        if (saved.transitioning && isActiveAndEnabled) StartCoroutine(TransitionBlocks());
     }
 
     private IEnumerator TransitionBlocks()

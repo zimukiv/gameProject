@@ -1,7 +1,4 @@
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM
-using UnityEngine.InputSystem;
-#endif
 
 /// <summary>
 /// 玩家核心控制器：
@@ -65,6 +62,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 currentDashDirection;
     private float currentDashSpeed;
     private float externalMotionTimer;
+    private readonly TimedSpeedModifiers speedModifiers = new TimedSpeedModifiers();
+    private object scriptedMotionOwner;
 
     private void Awake()
     {
@@ -96,6 +95,8 @@ public class PlayerController : MonoBehaviour
             GameManager.Instance.CurrentState != GameManager.GameState.FastPacedPhase)
             return;
 
+        if (scriptedMotionOwner != null) return;
+
         CheckGrounded();
         HandleDirectionFacing();
         HandleCrouch();
@@ -119,67 +120,14 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!isDashing && rb.velocity.y < -maxFallSpeed)
+        if (scriptedMotionOwner == null && !isDashing && rb.velocity.y < -maxFallSpeed)
         {
             rb.velocity = new Vector2(rb.velocity.x, -maxFallSpeed);
         }
     }
 
-    #region Input Abstraction (Hybrid Input Support)
-    private bool IsKeyHeld(KeyCode code)
-    {
-#if ENABLE_INPUT_SYSTEM
-        var kb = Keyboard.current;
-        if (kb != null)
-        {
-            switch (code)
-            {
-                case KeyCode.A: return kb.aKey.isPressed || kb.leftArrowKey.isPressed;
-                case KeyCode.D: return kb.dKey.isPressed || kb.rightArrowKey.isPressed;
-                case KeyCode.W: return kb.wKey.isPressed || kb.upArrowKey.isPressed;
-                case KeyCode.S: return kb.sKey.isPressed || kb.downArrowKey.isPressed;
-                case KeyCode.Space: return kb.spaceKey.isPressed;
-                case KeyCode.LeftShift: return kb.leftShiftKey.isPressed || kb.rightShiftKey.isPressed;
-            }
-        }
-#endif
-        try
-        {
-            return Input.GetKey(code);
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    private bool IsKeyDown(KeyCode code)
-    {
-#if ENABLE_INPUT_SYSTEM
-        var kb = Keyboard.current;
-        if (kb != null)
-        {
-            switch (code)
-            {
-                case KeyCode.A: return kb.aKey.wasPressedThisFrame || kb.leftArrowKey.wasPressedThisFrame;
-                case KeyCode.D: return kb.dKey.wasPressedThisFrame || kb.rightArrowKey.wasPressedThisFrame;
-                case KeyCode.W: return kb.wKey.wasPressedThisFrame || kb.upArrowKey.wasPressedThisFrame;
-                case KeyCode.S: return kb.sKey.wasPressedThisFrame || kb.downArrowKey.wasPressedThisFrame;
-                case KeyCode.Space: return kb.spaceKey.wasPressedThisFrame;
-                case KeyCode.LeftShift: return kb.leftShiftKey.wasPressedThisFrame || kb.rightShiftKey.wasPressedThisFrame;
-            }
-        }
-#endif
-        try
-        {
-            return Input.GetKeyDown(code);
-        }
-        catch
-        {
-            return false;
-        }
-    }
-    #endregion
+    private bool IsKeyHeld(KeyCode code) => GameInput.IsHeld(code);
+    private bool IsKeyDown(KeyCode code) => GameInput.WasPressed(code);
 
     private void CheckGrounded()
     {
@@ -247,7 +195,7 @@ public class PlayerController : MonoBehaviour
         if (IsKeyHeld(KeyCode.D)) moveInput += 1f;
         if (IsKeyHeld(KeyCode.A)) moveInput -= 1f;
 
-        float targetSpeed = isCrouching ? crouchSpeed : moveSpeed;
+        float targetSpeed = (isCrouching ? crouchSpeed : moveSpeed) * speedModifiers.GetMultiplier(Time.time);
         float acceleration = isOnIce ? iceAcceleration : isGrounded ? groundAcceleration : airAcceleration;
         float x = Mathf.MoveTowards(rb.velocity.x, moveInput * targetSpeed, acceleration * Time.deltaTime);
         rb.velocity = new Vector2(x, rb.velocity.y);
@@ -343,11 +291,54 @@ public class PlayerController : MonoBehaviour
 
     public void ResetMotion()
     {
+        transform.SetParent(null, true);
+        speedModifiers.Clear();
+        scriptedMotionOwner = null;
         isDashing = false;
+        isCrouching = false;
+        isGrounded = false;
+        isOnIce = false;
+        if (boxCollider != null)
+        {
+            boxCollider.size = normalColliderSize;
+            boxCollider.offset = normalColliderOffset;
+        }
         dashTimer = 0f;
         externalMotionTimer = 0f;
         rb.gravityScale = defaultGravityScale;
         rb.velocity = Vector2.zero;
+    }
+
+    public void ApplySpeedModifier(object source, float multiplier, float duration)
+        => speedModifiers.Apply(source, multiplier, duration, Time.time);
+
+    public void RemoveSpeedModifier(object source) => speedModifiers.Remove(source);
+
+    public bool TryBeginScriptedMotion(object owner)
+    {
+        if (owner == null || scriptedMotionOwner != null) return false;
+        if (isDashing) EndDash();
+        scriptedMotionOwner = owner;
+        rb.velocity = Vector2.zero;
+        rb.gravityScale = 0f;
+        return true;
+    }
+
+    public bool IsScriptedMotionControlledBy(object owner) => owner != null && ReferenceEquals(scriptedMotionOwner, owner);
+
+    public void CancelScriptedMotion(object owner)
+    {
+        if (!IsScriptedMotionControlledBy(owner)) return;
+        scriptedMotionOwner = null;
+        rb.gravityScale = defaultGravityScale;
+        rb.velocity = Vector2.zero;
+    }
+
+    public void CompleteScriptedMotion(object owner, Vector2 launchVelocity)
+    {
+        if (!IsScriptedMotionControlledBy(owner)) return;
+        CancelScriptedMotion(owner);
+        ForceLaunch(launchVelocity);
     }
 
     public void RechargeDash(int count = 1)

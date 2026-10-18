@@ -24,7 +24,7 @@ public class CollectibleItem : MonoBehaviour
             if (requiresAINearby)
             {
                 // 检查场景中的 AI 距离
-                var enemyAI = FindObjectOfType<EnemyAI>();
+                var enemyAI = EnemyAI.Instance;
                 if (enemyAI == null || Vector2.Distance(transform.position, enemyAI.transform.position) > requiredAIDistance)
                 {
                     Debug.Log("[CollectibleItem] 尚未引领 AI 靠近，收藏品处于锁定保护状态！");

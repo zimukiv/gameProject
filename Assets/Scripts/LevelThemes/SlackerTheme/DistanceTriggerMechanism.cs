@@ -5,7 +5,7 @@ using UnityEngine.Events;
 /// 关卡3（水课）：AI 近身距离触发机制
 /// 核心玩法规则：玩家独自一人无法触发机关，必须引领/吸引 AI 到达足够近的距离（如 < 5m）才能成功触发机关！
 /// </summary>
-public class DistanceTriggerMechanism : MonoBehaviour
+public class DistanceTriggerMechanism : MonoBehaviour, ICheckpointState
 {
     [Header("Distance Requirement")]
     public float requiredAIDistance = 5.0f; // 暂定 5m
@@ -49,7 +49,7 @@ public class DistanceTriggerMechanism : MonoBehaviour
             {
                 TryActivate();
             }
-            else if (Input.GetKeyDown(interactKey))
+            else if (GameInput.WasPressed(interactKey))
             {
                 TryActivate();
             }
@@ -61,7 +61,7 @@ public class DistanceTriggerMechanism : MonoBehaviour
         if (isTriggered) return;
 
         // 寻找附近的 AI
-        EnemyAI ai = FindObjectOfType<EnemyAI>();
+        EnemyAI ai = EnemyAI.Instance;
         if (ai != null)
         {
             float dist = Vector2.Distance(transform.position, ai.transform.position);
@@ -75,6 +75,14 @@ public class DistanceTriggerMechanism : MonoBehaviour
         }
 
         onConditionFailed?.Invoke();
+    }
+
+    public object CaptureCheckpointState() => isTriggered;
+
+    public void RestoreCheckpointState(object state)
+    {
+        isTriggered = (bool)state;
+        playerInRange = false;
     }
 
     private void OnDrawGizmosSelected()

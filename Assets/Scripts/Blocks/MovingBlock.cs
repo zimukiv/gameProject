@@ -4,7 +4,7 @@ using UnityEngine;
 /// 按轨迹移动的互动方块：
 /// 支持在多点之间平滑往返移动，站在上方时可带动玩家平移
 /// </summary>
-public class MovingBlock : InteractiveBlock
+public class MovingBlock : InteractiveBlock, ICheckpointState
 {
     [Header("Waypoints")]
     public Transform[] waypoints;
@@ -14,6 +14,17 @@ public class MovingBlock : InteractiveBlock
     private int currentTargetIndex = 0;
     private float waitTimer = 0f;
     private bool movingForward = true;
+
+    public object CaptureCheckpointState() => (transform.position, currentTargetIndex, waitTimer, movingForward);
+
+    public void RestoreCheckpointState(object state)
+    {
+        var saved = ((Vector3 position, int index, float wait, bool forward))state;
+        transform.position = saved.position;
+        currentTargetIndex = saved.index;
+        waitTimer = saved.wait;
+        movingForward = saved.forward;
+    }
 
     private void Update()
     {
@@ -60,7 +71,7 @@ public class MovingBlock : InteractiveBlock
     protected override void OnCollisionEnter2D(Collision2D collision)
     {
         base.OnCollisionEnter2D(collision);
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && isPlayerSteppingOn)
         {
             collision.transform.SetParent(transform);
         }
@@ -69,7 +80,7 @@ public class MovingBlock : InteractiveBlock
     protected override void OnCollisionExit2D(Collision2D collision)
     {
         base.OnCollisionExit2D(collision);
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && collision.transform.parent == transform)
         {
             collision.transform.SetParent(null);
         }

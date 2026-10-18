@@ -6,7 +6,7 @@ using UnityEngine;
 /// 玩家触碰/交互后，消耗当前持有的所有 Token 为 AI 充能并激活对应难度，进入快节奏追击/逃生。
 /// </summary>
 [RequireComponent(typeof(Collider2D))]
-public class AIActivatorDevice : MonoBehaviour
+public class AIActivatorDevice : MonoBehaviour, ICheckpointState
 {
     [Header("Activation Config")]
     public bool isActivated = false;
@@ -53,7 +53,7 @@ public class AIActivatorDevice : MonoBehaviour
     {
         if (playerInRange && !isActivated && !autoActivateOnContact)
         {
-            if (Input.GetKeyDown(interactKey))
+            if (GameInput.WasPressed(interactKey))
             {
                 TriggerActivation();
             }
@@ -83,5 +83,19 @@ public class AIActivatorDevice : MonoBehaviour
         cachedPlayer = null;
         if (activeVFX != null) activeVFX.SetActive(false);
         if (deviceRenderer != null) deviceRenderer.color = Color.cyan;
+    }
+
+    public object CaptureCheckpointState() => (isActivated, deviceRenderer != null ? deviceRenderer.color : Color.cyan,
+        activeVFX != null && activeVFX.activeSelf);
+
+    public void RestoreCheckpointState(object state)
+    {
+        var saved = ((bool activated, Color color, bool vfx))state;
+        isActivated = saved.activated;
+        playerInRange = false;
+        cachedPlayer = null;
+        if (activationAudio != null) activationAudio.Stop();
+        if (deviceRenderer != null) deviceRenderer.color = saved.color;
+        if (activeVFX != null) activeVFX.SetActive(saved.vfx);
     }
 }

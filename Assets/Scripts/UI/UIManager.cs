@@ -54,9 +54,11 @@ public class UIManager : MonoBehaviour
         EventBus.OnDashChargeChanged += UpdateDashUI;
         EventBus.OnAIActivated += UpdatePhaseUI;
         EventBus.OnLevelCompleted += ShowLevelComplete;
+        EventBus.OnPlayerRespawned += RefreshPhaseUI;
 
         // 初始化主菜单显示
         RefreshMainMenuButtons();
+        RefreshPhaseUI();
         if (ScoreManager.Instance != null) UpdateScoreUI(0, ScoreManager.Instance.TotalScore);
         if (PlayerController.Instance != null)
         {
@@ -72,6 +74,7 @@ public class UIManager : MonoBehaviour
         EventBus.OnDashChargeChanged -= UpdateDashUI;
         EventBus.OnAIActivated -= UpdatePhaseUI;
         EventBus.OnLevelCompleted -= ShowLevelComplete;
+        EventBus.OnPlayerRespawned -= RefreshPhaseUI;
     }
 
     private void Update()
@@ -120,6 +123,12 @@ public class UIManager : MonoBehaviour
     private void UpdatePhaseUI(int tokens, float difficulty)
     {
         if (phaseText != null) phaseText.text = "AI 已启动 · 尽快抵达出口";
+    }
+
+    private void RefreshPhaseUI()
+    {
+        bool fast = GameManager.Instance != null && GameManager.Instance.CurrentState == GameManager.GameState.FastPacedPhase;
+        if (phaseText != null) phaseText.text = fast ? "AI 已启动 · 尽快抵达出口" : "探索 · 收集 Token";
     }
 
     private void ShowLevelComplete(int level)

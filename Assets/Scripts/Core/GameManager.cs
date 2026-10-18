@@ -1,7 +1,4 @@
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM
-using UnityEngine.InputSystem;
-#endif
 using UnityEngine.SceneManagement;
 
 /// <summary>
@@ -53,22 +50,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        bool escPressed = false;
-#if ENABLE_INPUT_SYSTEM
-        var kb = Keyboard.current;
-        if (kb != null)
-        {
-            escPressed = kb.escapeKey.wasPressedThisFrame;
-        }
-#endif
-        if (!escPressed)
-        {
-            try
-            {
-                escPressed = Input.GetKeyDown(KeyCode.Escape);
-            }
-            catch { }
-        }
+        bool escPressed = GameInput.WasPressed(KeyCode.Escape);
 
         // ESC 暂停菜单逻辑
         if (escPressed)

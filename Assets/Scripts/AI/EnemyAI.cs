@@ -11,6 +11,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class EnemyAI : MonoBehaviour
 {
+    public static EnemyAI Instance { get; private set; }
     public enum AISkillType
     {
         BurstDash,        // 物理关：超强爆发突刺
@@ -42,15 +43,18 @@ public class EnemyAI : MonoBehaviour
 
     private Rigidbody2D rb;
     private Transform playerTransform;
+    private Collider2D bodyCollider;
 
     private void Awake()
     {
+        Instance = this;
         rb = GetComponent<Rigidbody2D>();
+        bodyCollider = GetComponent<Collider2D>();
     }
 
     private void Start()
     {
-        var player = FindObjectOfType<PlayerController>();
+        var player = PlayerController.Instance;
         if (player != null) playerTransform = player.transform;
 
         EventBus.OnAIActivated += HandleAIActivated;
@@ -61,13 +65,15 @@ public class EnemyAI : MonoBehaviour
     {
         EventBus.OnAIActivated -= HandleAIActivated;
         EventBus.OnPlayerRespawned -= HandlePlayerRespawned;
+        if (PlayerController.Instance != null) PlayerController.Instance.RemoveSpeedModifier(this);
+        if (Instance == this) Instance = null;
     }
 
     private void HandleAIActivated(int consumedTokens, float difficulty)
     {
         isHunting = true;
         rb.gravityScale = 0f;
-        GetComponent<Collider2D>().isTrigger = true;
+        bodyCollider.isTrigger = true;
         difficultyMultiplier = difficulty;
         currentSpeed = baseChaseSpeed * difficultyMultiplier;
         skillCooldownTimer = Mathf.Max(skillCooldownTimer, 2.5f);
@@ -77,14 +83,20 @@ public class EnemyAI : MonoBehaviour
 
     private void HandlePlayerRespawned()
     {
+        StopAllCoroutines();
         // 玩家复活后重置技能冷却与追击速度
         skillCooldownTimer = skillCooldown;
         isExecutingSkill = false;
+        var player = PlayerController.Instance;
+        if (player != null) playerTransform = player.transform;
         if (playerTransform != null)
         {
             transform.position = playerTransform.position + Vector3.left * 8f;
             rb.velocity = Vector2.zero;
         }
+        if (GameManager.Instance != null && GameManager.Instance.CurrentState == GameManager.GameState.FastPacedPhase)
+            HandleAIActivated(0, GameManager.Instance.currentAIDifficulty);
+        else ResetChase();
     }
 
     private void Update()
@@ -96,7 +108,7 @@ public class EnemyAI : MonoBehaviour
         }
         if (playerTransform == null)
         {
-            var p = FindObjectOfType<PlayerController>();
+            var p = PlayerController.Instance;
             if (p != null) playerTransform = p.transform;
             return;
         }
@@ -145,16 +157,20 @@ public class EnemyAI : MonoBehaviour
         Vector3 targetPos = playerTransform.position;
 
         // 检查附近是否有被激活的分叉点标记
-        NavigationMarker[] markers = FindObjectsOfType<NavigationMarker>();
         NavigationMarker nearestTriggeredMarker = null;
-        float minMarkerDist = float.MaxValue;
+        float minMarkerDist = 12f * 12f;
 
-        foreach (var marker in markers)
+        foreach (var marker in NavigationMarker.ActiveMarkers)
         {
             if (marker.isTriggeredByPlayer)
             {
-                float d = Vector2.Distance(transform.position, marker.transform.position);
-                if (d < 12f && d < minMarkerDist)
+                float d = (transform.position - marker.transform.position).sqrMagnitude;
+                if (d < .5f * .5f)
+                {
+                    marker.isTriggeredByPlayer = false;
+                    continue;
+                }
+                if (d < minMarkerDist)
                 {
                     minMarkerDist = d;
                     nearestTriggeredMarker = marker;
@@ -186,7 +202,9 @@ public class EnemyAI : MonoBehaviour
                 StartCoroutine(CalculusDriftCoroutine());
                 break;
             case AISkillType.DeadlinePressure:
-                StartCoroutine(DeadlinePressureCoroutine());
+                var player = PlayerController.Instance;
+                if (player != null) player.ApplySpeedModifier(this, .65f, 1.5f);
+                isExecutingSkill = false;
                 break;
         }
     }
@@ -203,28 +221,14 @@ public class EnemyAI : MonoBehaviour
 
     private IEnumerator CalculusDriftCoroutine()
     {
-        var body = playerTransform.GetComponent<Rigidbody2D>();
-        if (body != null)
+        var player = PlayerController.Instance;
+        if (player != null)
         {
             Vector2 pull = ((Vector2)transform.position - (Vector2)playerTransform.position).normalized;
-            body.velocity = pull * 9f * difficultyMultiplier;
+            player.ForceLaunch(pull * 9f * difficultyMultiplier);
         }
         yield return new WaitForSeconds(.4f);
         isExecutingSkill = false;
-    }
-
-    private IEnumerator DeadlinePressureCoroutine()
-    {
-        var player = playerTransform.GetComponent<PlayerController>();
-        if (player != null)
-        {
-            float previousSpeed = player.moveSpeed;
-            player.moveSpeed *= .65f;
-            isExecutingSkill = false;
-            yield return new WaitForSeconds(1.5f);
-            if (player != null) player.moveSpeed = previousSpeed;
-        }
-        else isExecutingSkill = false;
     }
 
     public void TeleportCloserToPlayer()
@@ -274,11 +278,13 @@ public class EnemyAI : MonoBehaviour
 
     public void ResetChase()
     {
+        StopAllCoroutines();
+        isExecutingSkill = false;
         isHunting = false;
         chaseStartDelay = 0f;
         rb.velocity = Vector2.zero;
         rb.gravityScale = 0f;
-        GetComponent<Collider2D>().isTrigger = true;
+        bodyCollider.isTrigger = true;
     }
 
     private void OnDrawGizmosSelected()

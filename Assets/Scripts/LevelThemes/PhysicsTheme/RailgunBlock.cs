@@ -14,30 +14,41 @@ public class RailgunBlock : InteractiveBlock
     public Vector2 launchDirection = Vector2.right;
 
     private bool isLaunching = false;
+    private PlayerController launchPlayer;
+
+    private void OnEnable() => EventBus.OnPlayerDied += CancelLaunch;
+
+    private void OnDisable()
+    {
+        EventBus.OnPlayerDied -= CancelLaunch;
+        CancelLaunch();
+    }
+
+    private void CancelLaunch()
+    {
+        StopAllCoroutines();
+        if (launchPlayer != null) launchPlayer.CancelScriptedMotion(this);
+        launchPlayer = null;
+        isLaunching = false;
+    }
 
     protected override void OnPlayerStepped(PlayerController player)
     {
-        if (!isLaunching && player != null)
+        if (!isLaunching && player != null && acceleration > 0f && player.TryBeginScriptedMotion(this))
         {
+            isLaunching = true;
+            launchPlayer = player;
             StartCoroutine(RailgunSequence(player));
         }
     }
 
     private IEnumerator RailgunSequence(PlayerController player)
     {
-        isLaunching = true;
-        Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
-        Collider2D col = player.GetComponent<Collider2D>();
-
-        // 暂时冻结重力与输入控制
-        rb.velocity = Vector2.zero;
-        rb.gravityScale = 0f;
-
-        Vector3 startPos = transform.position;
         Vector3 endPos = launchEndPoint != null ? launchEndPoint.position : transform.position + (Vector3)launchDirection * 5f;
 
         float currentSpeed = 0f;
-        while (Vector3.Distance(player.transform.position, endPos) > 0.3f)
+        while (player != null && player.IsScriptedMotionControlledBy(this) &&
+            Vector3.Distance(player.transform.position, endPos) > 0.3f)
         {
             currentSpeed += acceleration * Time.deltaTime;
             Vector3 nextPos = Vector3.MoveTowards(player.transform.position, endPos, currentSpeed * Time.deltaTime);
@@ -46,9 +57,9 @@ public class RailgunBlock : InteractiveBlock
         }
 
         // 到达末端，猛烈弹射抛出
-        rb.gravityScale = 3f; // 恢复重力
         Vector2 finalForce = launchDirection.normalized * launchExitSpeed;
-        player.ForceLaunch(finalForce);
+        if (player != null) player.CompleteScriptedMotion(this, finalForce);
+        launchPlayer = null;
 
         yield return new WaitForSeconds(0.5f);
         isLaunching = false;

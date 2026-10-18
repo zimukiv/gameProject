@@ -6,7 +6,7 @@ using UnityEngine;
 /// 默认阻挡玩家，响应 TriggerButton 或代码调用 OpenDoor 后平滑升起开启，支持关门
 /// </summary>
 [RequireComponent(typeof(BoxCollider2D))]
-public class DoorMechanism : BaseBlock
+public class DoorMechanism : BaseBlock, ICheckpointState
 {
     [Header("Door Movement")]
     public Vector3 openOffset = new Vector3(0, 3.5f, 0); // 向上升起3.5米
@@ -50,6 +50,20 @@ public class DoorMechanism : BaseBlock
     {
         if (isOpen) CloseDoor();
         else OpenDoor();
+    }
+
+    public object CaptureCheckpointState() => (isOpen, transform.position, targetPos);
+
+    public void RestoreCheckpointState(object state)
+    {
+        var saved = ((bool open, Vector3 position, Vector3 target))state;
+        if (moveCoroutine != null) StopCoroutine(moveCoroutine);
+        isOpen = saved.open;
+        transform.position = saved.position;
+        targetPos = saved.target;
+        moveCoroutine = null;
+        if (isActiveAndEnabled && Vector3.Distance(transform.position, targetPos) > .02f)
+            moveCoroutine = StartCoroutine(MoveToTarget());
     }
 
     private IEnumerator MoveToTarget()

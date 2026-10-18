@@ -298,7 +298,11 @@ public static class MiniGameAutoSetup
         {
             var events = new GameObject("Event System");
             events.AddComponent<UnityEngine.EventSystems.EventSystem>();
+#if ENABLE_INPUT_SYSTEM
+            events.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+#else
             events.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+#endif
         }
         return canvas;
     }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -5,14 +6,30 @@ using UnityEngine;
 /// 玩家穿过/触发后激活该标记，敌人 AI 在分叉路口感知到被激活的标记后，将自动调整寻路方向朝向该标记移动
 /// </summary>
 [RequireComponent(typeof(Collider2D))]
-public class NavigationMarker : MonoBehaviour
+public class NavigationMarker : MonoBehaviour, ICheckpointState
 {
+    internal static readonly HashSet<NavigationMarker> ActiveMarkers = new HashSet<NavigationMarker>();
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetRegistry() => ActiveMarkers.Clear();
+
+    private void OnEnable() => ActiveMarkers.Add(this);
+    private void OnDisable() => ActiveMarkers.Remove(this);
     [Header("Marker Config")]
     public int markerId;
     public bool isTriggeredByPlayer = false;
     public float activeTimeWindow = 10f; // 标记有效记忆窗口
 
     private float timer = 0f;
+
+    public object CaptureCheckpointState() => (isTriggeredByPlayer, timer);
+
+    public void RestoreCheckpointState(object state)
+    {
+        var saved = ((bool triggered, float remaining))state;
+        isTriggeredByPlayer = saved.triggered;
+        timer = saved.remaining;
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {

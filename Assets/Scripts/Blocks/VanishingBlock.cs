@@ -1,10 +1,9 @@
-using System.Collections;
 using UnityEngine;
 
 /// <summary>
 /// 消失方块：支持随时间周期性出现/消失，或踩踏后延时消失并自动重置
 /// </summary>
-public class VanishingBlock : InteractiveBlock
+public class VanishingBlock : InteractiveBlock, ICheckpointState
 {
     public enum VanishMode
     {
@@ -28,43 +27,33 @@ public class VanishingBlock : InteractiveBlock
     public Color vanishColor = new Color(1f, 1f, 1f, 0.1f);
 
     private bool isCurrentlyVisible = true;
+    private float remaining;
+    private bool timerRunning;
 
-    protected override void Awake()
+    private void Start()
     {
-        base.Awake();
-        if (mode == VanishMode.PeriodicBlink)
-        {
-            StartCoroutine(PeriodicCycle());
-        }
+        SetVisibility(true);
+        timerRunning = mode == VanishMode.PeriodicBlink;
+        remaining = Mathf.Max(.01f, visibleDuration);
     }
 
-    private IEnumerator PeriodicCycle()
+    private void Update()
     {
-        while (true)
-        {
-            SetVisibility(true);
-            yield return new WaitForSeconds(visibleDuration);
-
-            SetVisibility(false);
-            yield return new WaitForSeconds(invisibleDuration);
-        }
+        if (!timerRunning) return;
+        remaining -= Time.deltaTime;
+        if (remaining > 0f) return;
+        SetVisibility(!isCurrentlyVisible);
+        if (mode == VanishMode.PeriodicBlink)
+            remaining = Mathf.Max(.01f, isCurrentlyVisible ? visibleDuration : invisibleDuration);
+        else if (!isCurrentlyVisible) remaining = Mathf.Max(.01f, respawnDelay);
+        else timerRunning = false;
     }
 
     protected override void OnPlayerStepped(PlayerController player)
     {
-        if (mode == VanishMode.TriggerOnStep && isCurrentlyVisible)
-        {
-            StartCoroutine(StepVanishSequence());
-        }
-    }
-
-    private IEnumerator StepVanishSequence()
-    {
-        yield return new WaitForSeconds(stepVanishDelay);
-        SetVisibility(false);
-
-        yield return new WaitForSeconds(respawnDelay);
-        SetVisibility(true);
+        if (mode != VanishMode.TriggerOnStep || !isCurrentlyVisible || timerRunning) return;
+        remaining = Mathf.Max(.01f, stepVanishDelay);
+        timerRunning = true;
     }
 
     private void SetVisibility(bool visible)
@@ -72,5 +61,15 @@ public class VanishingBlock : InteractiveBlock
         isCurrentlyVisible = visible;
         if (boxCollider != null) boxCollider.enabled = visible;
         if (spriteRenderer != null) spriteRenderer.color = visible ? visibleColor : vanishColor;
+    }
+
+    public object CaptureCheckpointState() => (isCurrentlyVisible, remaining, timerRunning);
+
+    public void RestoreCheckpointState(object state)
+    {
+        var saved = ((bool visible, float time, bool running))state;
+        SetVisibility(saved.visible);
+        remaining = saved.time;
+        timerRunning = saved.running;
     }
 }

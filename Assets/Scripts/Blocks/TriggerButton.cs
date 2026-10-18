@@ -6,7 +6,7 @@ using UnityEngine.Events;
 /// 玩家踩上去时触发 onButtonPressed 事件（可驱动门、升降梯、光源等），离开时可选择是否重置
 /// </summary>
 [RequireComponent(typeof(BoxCollider2D))]
-public class TriggerButton : MonoBehaviour
+public class TriggerButton : MonoBehaviour, ICheckpointState
 {
     [Header("Button Settings")]
     public bool isOneShot = true; // 是否为一次性触发
@@ -64,5 +64,15 @@ public class TriggerButton : MonoBehaviour
         transform.position = originalPos;
 
         onButtonReleased?.Invoke();
+    }
+
+    public object CaptureCheckpointState() => (isPressed, transform.position, buttonRenderer != null ? buttonRenderer.color : unpressedColor);
+
+    public void RestoreCheckpointState(object state)
+    {
+        var saved = ((bool pressed, Vector3 position, Color color))state;
+        isPressed = saved.pressed;
+        transform.position = saved.position;
+        if (buttonRenderer != null) buttonRenderer.color = saved.color;
     }
 }

@@ -38,6 +38,7 @@ public class SaveManager : MonoBehaviour
     public GlobalSaveData GlobalData = new GlobalSaveData();
     public TempSaveData TempData = new TempSaveData();
     private readonly Dictionary<GameObject, bool> pickupSnapshot = new Dictionary<GameObject, bool>();
+    private readonly Dictionary<MonoBehaviour, object> mechanismSnapshot = new Dictionary<MonoBehaviour, object>();
 
     private string globalSavePath;
 
@@ -137,12 +138,12 @@ public class SaveManager : MonoBehaviour
         TempData.respawnPosition = startPos;
         TempData.scoreAtCheckpoint = ScoreManager.Instance != null ? ScoreManager.Instance.TotalScore : 0;
         TempData.tokensHeld = 0;
-        TempData.dashChargesRemaining = 3;
+        TempData.dashChargesRemaining = PlayerController.Instance != null ? PlayerController.Instance.maxDashCharges : 3;
         TempData.currentLevelIndex = startLevelIndex;
         TempData.firstDashFree = true;
         TempData.wasFastPhase = false;
         TempData.aiDifficulty = 1f;
-        CapturePickups();
+        CaptureSceneState();
     }
 
     public void UpdateTempCheckpoint(Vector3 checkpointPos, int currentTokens, int currentDashCharges)
@@ -155,7 +156,7 @@ public class SaveManager : MonoBehaviour
         TempData.firstDashFree = PlayerController.Instance != null && PlayerController.Instance.isFirstDashFree;
         TempData.wasFastPhase = GameManager.Instance != null && GameManager.Instance.CurrentState == GameManager.GameState.FastPacedPhase;
         TempData.aiDifficulty = GameManager.Instance != null ? GameManager.Instance.currentAIDifficulty : 1f;
-        CapturePickups();
+        CaptureSceneState();
         Debug.Log($"[SaveManager] 临时存档更新点: {checkpointPos}, Tokens: {currentTokens}, Dash: {currentDashCharges}");
     }
 
@@ -163,17 +164,29 @@ public class SaveManager : MonoBehaviour
     {
         TempData = new TempSaveData();
         pickupSnapshot.Clear();
+        mechanismSnapshot.Clear();
     }
 
-    private void CapturePickups()
+    private void CaptureSceneState()
     {
         pickupSnapshot.Clear();
-        foreach (var go in Resources.FindObjectsOfTypeAll<GameObject>())
+        mechanismSnapshot.Clear();
+        var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+        foreach (var component in FindObjectsOfType<MonoBehaviour>(true))
         {
-            if (!go.scene.IsValid()) continue;
-            if (go.GetComponent<TokenItem>() != null || go.GetComponent<BigTokenItem>() != null || go.GetComponent<CollectibleItem>() != null)
-                pickupSnapshot[go] = go.activeSelf;
+            if (component.gameObject.scene != scene) continue;
+            if (component is TokenItem || component is BigTokenItem || component is CollectibleItem)
+                pickupSnapshot[component.gameObject] = component.gameObject.activeSelf;
+            if (component is ICheckpointState participant)
+                mechanismSnapshot[component] = participant.CaptureCheckpointState();
         }
+    }
+
+    public void RestoreMechanisms()
+    {
+        foreach (var pair in mechanismSnapshot)
+            if (pair.Key != null && pair.Key is ICheckpointState participant)
+                participant.RestoreCheckpointState(pair.Value);
     }
 
     public void RestorePickups()

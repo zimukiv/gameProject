@@ -4,5 +4,7 @@
 /UserSettings/
 /Validation/bin/
 /Validation/obj/
+/Validation/**/bin/
+/Validation/**/obj/
 /Builds/
 *.log

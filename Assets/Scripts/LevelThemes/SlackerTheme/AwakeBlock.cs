@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -6,7 +5,7 @@ using UnityEngine;
 /// 初始为不可穿透方块，巡查老师穿过/触碰后被激活唤醒（变为Trigger可穿透）；
 /// 玩家穿过后获得移速提升加速 Buff。
 /// </summary>
-public class AwakeBlock : BaseBlock
+public class AwakeBlock : BaseBlock, ICheckpointState
 {
     [Header("Awake State")]
     public bool isAwakened = false;
@@ -53,19 +52,16 @@ public class AwakeBlock : BaseBlock
             PlayerController pc = other.GetComponent<PlayerController>();
             if (pc != null)
             {
-                StartCoroutine(ApplySpeedBoost(pc));
+                pc.ApplySpeedModifier(this, speedBoostMultiplier, boostDuration);
             }
         }
     }
 
-    private IEnumerator ApplySpeedBoost(PlayerController pc)
+    public object CaptureCheckpointState() => isAwakened;
+
+    public void RestoreCheckpointState(object state)
     {
-        float originalSpeed = pc.moveSpeed;
-        pc.moveSpeed *= speedBoostMultiplier;
-        Debug.Log($"[AwakeBlock] 穿过清醒方块！获得加速 Buff (x{speedBoostMultiplier})！");
-
-        yield return new WaitForSeconds(boostDuration);
-
-        pc.moveSpeed = originalSpeed;
+        isAwakened = (bool)state;
+        UpdateBlockState();
     }
 }

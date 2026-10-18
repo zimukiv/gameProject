@@ -5,7 +5,7 @@ using UnityEngine;
 /// 玩家进入新房间时触发，向 SaveManager 写入临时存档点数据
 /// </summary>
 [RequireComponent(typeof(Collider2D))]
-public class Checkpoint : MonoBehaviour
+public class Checkpoint : MonoBehaviour, ICheckpointState
 {
     [Header("Checkpoint Config")]
     public Transform respawnPoint;
@@ -53,5 +53,13 @@ public class Checkpoint : MonoBehaviour
         }
 
         EventBus.TriggerCheckpointReached(spawnPos);
+    }
+
+    public object CaptureCheckpointState() => isActivated;
+
+    public void RestoreCheckpointState(object state)
+    {
+        isActivated = (bool)state;
+        if (flagRenderer != null) flagRenderer.color = isActivated ? activeColor : inactiveColor;
     }
 }

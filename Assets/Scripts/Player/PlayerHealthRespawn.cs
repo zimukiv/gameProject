@@ -31,8 +31,8 @@ public class PlayerHealthRespawn : MonoBehaviour
         if (SaveManager.Instance != null && SaveManager.Instance.TempData.isValid)
         {
             var temp = SaveManager.Instance.TempData;
-            transform.position = temp.respawnPosition;
             if (playerController != null) playerController.ResetMotion();
+            transform.position = temp.respawnPosition;
 
             // 恢复属性
             if (playerController != null)
@@ -50,6 +50,7 @@ public class PlayerHealthRespawn : MonoBehaviour
                 ScoreManager.Instance.SetScore(temp.scoreAtCheckpoint);
             }
             SaveManager.Instance.RestorePickups();
+            SaveManager.Instance.RestoreMechanisms();
 
             Debug.Log($"[PlayerHealthRespawn] 已在检查点复活: {temp.respawnPosition}");
         }
@@ -59,24 +60,15 @@ public class PlayerHealthRespawn : MonoBehaviour
             Debug.LogWarning("[PlayerHealthRespawn] 未找到有效检查点，无法回滚状态。");
         }
 
-        EventBus.TriggerPlayerRespawned();
         if (GameManager.Instance != null)
         {
             var temp = SaveManager.Instance != null ? SaveManager.Instance.TempData : null;
             bool fast = temp != null && temp.wasFastPhase;
             GameManager.Instance.CurrentState = fast ? GameManager.GameState.FastPacedPhase : GameManager.GameState.SlowPacedPhase;
-            var ai = FindObjectOfType<EnemyAI>();
-            if (ai != null)
-            {
-                if (fast) EventBus.TriggerAIActivated(0, temp.aiDifficulty);
-                else
-                {
-                    ai.ResetChase();
-                    var device = FindObjectOfType<AIActivatorDevice>();
-                    if (device != null) device.ResetActivation();
-                }
-            }
+            GameManager.Instance.currentAIDifficulty = fast ? temp.aiDifficulty : 1f;
         }
+        Physics2D.SyncTransforms();
+        EventBus.TriggerPlayerRespawned();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
