@@ -10,11 +10,13 @@ public class PatrolTeacherAI : MonoBehaviour
     public Transform[] patrolWaypoints;
     public float patrolSpeed = 4.0f;
     public int scorePenaltyOnCatch = 500;
+    public float catchCooldown = 1.0f;
 
     [Header("Trajectory Line Visualizer")]
     public LineRenderer trajectoryLine;
 
     private int currentTargetIndex = 0;
+    private float catchCooldownTimer = 0f;
 
     private void Start()
     {
@@ -33,6 +35,11 @@ public class PatrolTeacherAI : MonoBehaviour
 
     private void Update()
     {
+        if (catchCooldownTimer > 0f)
+        {
+            catchCooldownTimer -= Time.deltaTime;
+        }
+
         if (patrolWaypoints == null || patrolWaypoints.Length < 2) return;
 
         Transform target = patrolWaypoints[currentTargetIndex];
@@ -52,7 +59,23 @@ public class PatrolTeacherAI : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            CatchPlayer(other.GetComponent<PlayerController>());
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            CatchPlayer(collision.gameObject.GetComponent<PlayerController>());
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -62,9 +85,12 @@ public class PatrolTeacherAI : MonoBehaviour
 
     private void CatchPlayer(PlayerController player)
     {
+        if (catchCooldownTimer > 0f) return;
+
         if (ScoreManager.Instance != null)
         {
             ScoreManager.Instance.DeductScore(scorePenaltyOnCatch);
+            catchCooldownTimer = catchCooldown;
             Debug.Log($"[PatrolTeacherAI] 惨遭巡查老师抓住！扣除 {scorePenaltyOnCatch} 积分！");
         }
     }

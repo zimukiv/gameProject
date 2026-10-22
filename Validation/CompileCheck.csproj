@@ -5,15 +5,24 @@
     <Nullable>disable</Nullable>
     <NoWarn>0618;0619</NoWarn>
     <DefineConstants Condition="'$(UseNewInputSystem)' == 'true'">$(DefineConstants);ENABLE_INPUT_SYSTEM</DefineConstants>
+    <UnityDataDir Condition="'$(UNITY_PATH)' != ''">$(UNITY_PATH)</UnityDataDir>
+    <UnityDataDir Condition="'$(UnityDataDir)' == '' and Exists('C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data')">C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data</UnityDataDir>
+    <UnityDataDir Condition="'$(UnityDataDir)' == '' and Exists('C:/Program Files/Unity/Editor/Data')">C:/Program Files/Unity/Editor/Data</UnityDataDir>
   </PropertyGroup>
-  <ItemGroup>
+
+  <ItemGroup Condition="'$(UnityDataDir)' != ''">
     <Compile Include="../Assets/Scripts/**/*.cs" />
     <Compile Include="../Assets/Editor/**/*.cs" />
-    <Reference Include="C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/Managed/UnityEngine/*.dll" />
-    <Reference Include="C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/Managed/UnityEditor/*.dll" />
-    <Reference Include="C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/Resources/PackageManager/ProjectTemplates/libcache/com.unity.template.2d-cross-platform-2d-7.0.0/ScriptAssemblies/UnityEngine.UI.dll" />
+    <Reference Include="$(UnityDataDir)/Managed/UnityEngine/*.dll" />
+    <Reference Include="$(UnityDataDir)/Managed/UnityEditor/*.dll" />
+    <Reference Include="$(UnityDataDir)/Resources/PackageManager/ProjectTemplates/libcache/**/ScriptAssemblies/UnityEngine.UI.dll" />
   </ItemGroup>
-  <ItemGroup Condition="'$(UseNewInputSystem)' == 'true'">
-    <Reference Include="C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/Resources/PackageManager/ProjectTemplates/libcache/com.unity.template.2d-cross-platform-2d-7.0.0/ScriptAssemblies/Unity.InputSystem.dll" />
+
+  <ItemGroup Condition="'$(UseNewInputSystem)' == 'true' and '$(UnityDataDir)' != ''">
+    <Reference Include="$(UnityDataDir)/Resources/PackageManager/ProjectTemplates/libcache/**/ScriptAssemblies/Unity.InputSystem.dll" />
   </ItemGroup>
+
+  <Target Name="WarnNoUnity" BeforeTargets="BeforeBuild" Condition="'$(UnityDataDir)' == ''">
+    <Warning Text="Unity installation directory was not found. Please set -p:UNITY_PATH=&quot;&lt;PathToUnity&gt;/Editor/Data&quot; to build CompileCheck." />
+  </Target>
 </Project>

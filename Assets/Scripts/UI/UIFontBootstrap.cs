@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>Uses an installed Windows CJK font for generated prototype UI.</summary>
+/// <summary>Uses an installed CJK font for generated prototype UI across Windows, macOS and Linux.</summary>
 public class UIFontBootstrap : MonoBehaviour
 {
     private static Font runtimeFont;
@@ -10,7 +10,11 @@ public class UIFontBootstrap : MonoBehaviour
     {
         if (runtimeFont == null)
         {
-            string[] candidates = { "Microsoft YaHei UI", "Microsoft YaHei", "SimHei" };
+            string[] candidates = {
+                "Microsoft YaHei UI", "Microsoft YaHei", "SimHei",
+                "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC",
+                "Arial"
+            };
             foreach (string candidate in candidates)
             {
                 try

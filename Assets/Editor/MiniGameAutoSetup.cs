@@ -263,16 +263,23 @@ public static class MiniGameAutoSetup
         var attendance = new List<AttendanceBlock>();
         for (int i = 0; i < 5; i++)
             attendance.Add(Square("Attendance " + (i + 1), new Vector2(-2 + i * 3.2f, -2.8f), new Vector2(1, .35f), platform, true).AddComponent<AttendanceBlock>());
+        var attendanceDoor = Square("Attendance door", new Vector2(13.5f, -2), new Vector2(.7f, 3), Color.yellow, true).AddComponent<DoorMechanism>();
+        foreach (var block in attendance) UnityEventTools.AddPersistentListener(block.onAllAttendanceCompleted, attendanceDoor.OpenDoor);
+
         var teacher = Trigger("Patrol teacher", new Vector2(20, -2), new Vector2(.9f, 1.3f), Color.red);
         teacher.tag = "Teacher";
+        var teacherBody = teacher.AddComponent<Rigidbody2D>();
+        teacherBody.bodyType = RigidbodyType2D.Kinematic;
+        teacherBody.gravityScale = 0f;
+        teacherBody.freezeRotation = true;
         var patrol = teacher.AddComponent<PatrolTeacherAI>();
         patrol.patrolWaypoints = new[] { Point("Patrol start", new Vector2(18, -2)), Point("Patrol end", new Vector2(25, -2)) };
+
         var awake = Square("Awake block", new Vector2(23, -2.8f), new Vector2(1.5f, .4f), Color.gray, true);
         awake.AddComponent<AwakeBlock>();
         var mechanism = Trigger("AI proximity switch", new Vector2(27, -1.5f), new Vector2(1, 2), Color.magenta).AddComponent<DistanceTriggerMechanism>();
         var door = Square("AI door", new Vector2(30, -2), new Vector2(.7f, 3), Color.red, true).AddComponent<DoorMechanism>();
         UnityEventTools.AddPersistentListener(mechanism.onMechanismActivated, door.OpenDoor);
-        foreach (var block in attendance) UnityEventTools.AddPersistentListener(block.onAllAttendanceCompleted, door.OpenDoor);
     }
 
     private static void IntroBoard()

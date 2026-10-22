@@ -35,7 +35,12 @@ public static class MiniGameWindowsBuild
         BuildReport report = BuildPipeline.BuildPlayer(options);
         if (report.summary.result != BuildResult.Succeeded)
             throw new Exception("Windows build failed: " + report.summary.result);
-        const string handoffPath = "Handoff/队友交接说明.md";
+        string handoffPath = "Handoff/队友交接说明.md";
+        if (!File.Exists(handoffPath) && Directory.Exists("Handoff"))
+        {
+            var mdFiles = Directory.GetFiles("Handoff", "*.md");
+            if (mdFiles.Length > 0) handoffPath = mdFiles[0];
+        }
         if (File.Exists(handoffPath))
             File.Copy(handoffPath, "Builds/Windows/队友交接说明.md", true);
         Debug.Log("Windows build ready: " + Path.GetFullPath(options.locationPathName));

@@ -40,6 +40,20 @@ public class AIActivatorDevice : MonoBehaviour, ICheckpointState
         }
     }
 
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.CompareTag("Player") && !isActivated)
+        {
+            playerInRange = true;
+            if (cachedPlayer == null) cachedPlayer = other.GetComponent<PlayerController>();
+
+            if (autoActivateOnContact)
+            {
+                TriggerActivation();
+            }
+        }
+    }
+
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -62,7 +76,9 @@ public class AIActivatorDevice : MonoBehaviour, ICheckpointState
 
     public void TriggerActivation()
     {
-        if (isActivated || cachedPlayer == null) return;
+        if (isActivated) return;
+        if (cachedPlayer == null) cachedPlayer = PlayerController.Instance;
+        if (cachedPlayer == null) return;
 
         isActivated = true;
         int tokens = cachedPlayer.ConsumeAllTokens();

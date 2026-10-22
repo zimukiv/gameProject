@@ -35,17 +35,26 @@ public class AwakeBlock : BaseBlock, ICheckpointState
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        CheckInteraction(collision.collider);
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
+        CheckInteraction(other);
+    }
+
+    private void CheckInteraction(Collider2D other)
+    {
+        if (other == null) return;
+
         // 巡查老师穿过唤醒该方块
-        if (other.GetComponent<PatrolTeacherAI>() != null || other.CompareTag("Teacher"))
+        if (!isAwakened && (other.GetComponent<PatrolTeacherAI>() != null || other.CompareTag("Teacher")))
         {
-            if (!isAwakened)
-            {
-                isAwakened = true;
-                UpdateBlockState();
-                Debug.Log("[AwakeBlock] 巡查老师已穿过，清醒方块被唤醒为可穿透状态！");
-            }
+            isAwakened = true;
+            UpdateBlockState();
+            Debug.Log("[AwakeBlock] 巡查老师已穿过，清醒方块被唤醒为可穿透状态！");
         }
         else if (isAwakened && other.CompareTag("Player"))
         {

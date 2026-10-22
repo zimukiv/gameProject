@@ -51,4 +51,9 @@ public class CollectibleItem : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        OnTriggerEnter2D(other);
+    }
 }
