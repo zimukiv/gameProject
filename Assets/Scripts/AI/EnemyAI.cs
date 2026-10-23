@@ -95,7 +95,7 @@ public class EnemyAI : MonoBehaviour
         if (playerTransform != null)
         {
             transform.position = playerTransform.position + Vector3.left * 8f;
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
         }
         if (GameManager.Instance != null && GameManager.Instance.CurrentState == GameManager.GameState.FastPacedPhase)
             HandleAIActivated(0, GameManager.Instance.currentAIDifficulty);
@@ -106,7 +106,7 @@ public class EnemyAI : MonoBehaviour
     {
         if (GameManager.Instance != null && GameManager.Instance.CurrentState == GameManager.GameState.LevelClear)
         {
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             return;
         }
         if (playerTransform == null)
@@ -120,7 +120,7 @@ public class EnemyAI : MonoBehaviour
         if (knockbackRemaining > 0f)
         {
             knockbackRemaining = Mathf.Max(0f, knockbackRemaining - Time.fixedDeltaTime);
-            rb.velocity = knockbackVelocity;
+            rb.linearVelocity = knockbackVelocity;
             return;
         }
 
@@ -132,14 +132,14 @@ public class EnemyAI : MonoBehaviour
         // 仅在被激活（快节奏期）时全速追击
         if (!isHunting)
         {
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             return;
         }
 
         if (chaseStartDelay > 0f)
         {
             chaseStartDelay -= Time.fixedDeltaTime;
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             return;
         }
 
@@ -195,7 +195,7 @@ public class EnemyAI : MonoBehaviour
         }
 
         Vector2 dir = (targetPos - transform.position).normalized;
-        rb.velocity = dir * currentSpeed;
+        rb.linearVelocity = dir * currentSpeed;
     }
 
     private void ExecuteSpecialSkill()
@@ -223,7 +223,7 @@ public class EnemyAI : MonoBehaviour
     private IEnumerator BurstDashCoroutine()
     {
         Vector2 dir = (playerTransform.position - transform.position).normalized;
-        rb.velocity = dir * burstSpeed * difficultyMultiplier;
+        rb.linearVelocity = dir * burstSpeed * difficultyMultiplier;
 
         yield return new WaitForSeconds(burstDuration);
 
@@ -261,7 +261,7 @@ public class EnemyAI : MonoBehaviour
         if (bestNode != null)
         {
             transform.position = bestNode.position;
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             Debug.Log($"[EnemyAI] AI 已通过传送路径瞬移至: {bestNode.position}");
         }
     }
@@ -299,7 +299,7 @@ public class EnemyAI : MonoBehaviour
         isExecutingSkill = false;
         knockbackVelocity = velocity;
         knockbackRemaining = duration;
-        rb.velocity = velocity;
+        rb.linearVelocity = velocity;
         skillCooldownTimer = Mathf.Max(skillCooldownTimer, duration);
     }
 
@@ -310,7 +310,7 @@ public class EnemyAI : MonoBehaviour
         isHunting = false;
         knockbackRemaining = 0f;
         chaseStartDelay = 0f;
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         rb.gravityScale = 0f;
         bodyCollider.isTrigger = true;
     }

@@ -1172,7 +1172,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -315}
-  m_SizeDelta: {x: 950, y: 70}
+  m_SizeDelta: {x: 1100, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &804354823
 MonoBehaviour:
@@ -1196,7 +1196,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 19
+    m_FontSize: 18
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -1207,7 +1207,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "A/D \u79FB\u52A8    W/\u7A7A\u683C \u8DF3\u8DC3    Shift \u51B2\u523A    S \u4E0B\u8E72    Esc \u6682\u505C"
+  m_Text: "A/D \u79fb\u52a8 \u00b7 \u7a7a\u683c/W \u8df3\u8dc3 \u00b7 S \u4e0b\u8e72 \u00b7 Shift \u6c34\u5e73\u51b2\u523a\uff083 Token / \u6b21\uff0c\u6700\u591a 1 \u6b21\uff09\u00b7 Esc \u6682\u505c"
 --- !u!222 &804354824
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -19,7 +19,7 @@ public class SaveManager : MonoBehaviour
         public int tokensHeld;
         public int dashChargesRemaining;
         public int currentLevelIndex = 1;
-        public bool firstDashFree;
+        public int dashChargeProgress;
         public bool wasFastPhase;
         public float aiDifficulty = 1f;
     }
@@ -140,9 +140,10 @@ public class SaveManager : MonoBehaviour
         TempData.respawnPosition = startPos;
         TempData.scoreAtCheckpoint = ScoreManager.Instance != null ? ScoreManager.Instance.TotalScore : 0;
         TempData.tokensHeld = 0;
-        TempData.dashChargesRemaining = PlayerController.Instance != null ? PlayerController.Instance.maxDashCharges : 3;
+        TempData.dashChargesRemaining = 0;
+        TempData.dashChargeProgress = 0;
         TempData.currentLevelIndex = startLevelIndex;
-        TempData.firstDashFree = true;
+        if (PlayerController.Instance != null) PlayerController.Instance.RestoreRunResources(0, 0, 0);
         TempData.wasFastPhase = false;
         TempData.aiDifficulty = 1f;
         CaptureSceneState();
@@ -154,8 +155,9 @@ public class SaveManager : MonoBehaviour
         TempData.respawnPosition = checkpointPos;
         TempData.scoreAtCheckpoint = ScoreManager.Instance != null ? ScoreManager.Instance.TotalScore : 0;
         TempData.tokensHeld = currentTokens;
-        TempData.dashChargesRemaining = currentDashCharges;
-        TempData.firstDashFree = PlayerController.Instance != null && PlayerController.Instance.isFirstDashFree;
+        TempData.dashChargesRemaining = PlayerController.Instance != null ? PlayerController.Instance.currentDashCharges
+            : Mathf.Clamp(currentDashCharges, 0, DashChargeMeter.Capacity);
+        TempData.dashChargeProgress = PlayerController.Instance != null ? PlayerController.Instance.dashChargeProgress : 0;
         TempData.wasFastPhase = GameManager.Instance != null && GameManager.Instance.CurrentState == GameManager.GameState.FastPacedPhase;
         TempData.aiDifficulty = GameManager.Instance != null ? GameManager.Instance.currentAIDifficulty : 1f;
         CaptureSceneState();

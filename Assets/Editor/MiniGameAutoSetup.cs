@@ -138,7 +138,7 @@ public static class MiniGameAutoSetup
         UnityEventTools.AddPersistentListener(Button(canvas.transform, "切换全屏", new Vector2(0, -175), Color.gray).onClick, actions.ToggleFullscreen);
         VolumeSlider(canvas.transform, new Vector2(0, -240), actions);
         TextLabel(canvas.transform, "音量", new Vector2(-165, -240), 18, Color.white, 90, TextAnchor.MiddleCenter);
-        TextLabel(canvas.transform, "A/D 移动    W/空格 跳跃    Shift 冲刺    S 下蹲    Esc 暂停", new Vector2(0, -315), 19, Color.white, 950, TextAnchor.MiddleCenter);
+        TextLabel(canvas.transform, "A/D 移动 · 空格/W 跳跃 · S 下蹲 · Shift 水平冲刺（3 Token / 次，最多 1 次）· Esc 暂停", new Vector2(0, -315), 18, Color.white, 1100, TextAnchor.MiddleCenter);
         EditorSceneManager.SaveScene(scene, "Assets/Scenes/MainMenu.unity");
     }
 
@@ -233,14 +233,94 @@ public static class MiniGameAutoSetup
 
     private static void PhysicsFeatures(Color platform)
     {
-        var ice = Square("Ice", new Vector2(8, -2.8f), new Vector2(2.5f, .4f), Color.cyan, true);
-        ice.AddComponent<IceBlock>();
-        Square("Thermal controller", new Vector2(4, -2.8f), new Vector2(1.2f, .4f), Color.blue, true).AddComponent<ThermalControllerBlock>();
-        var vent = Trigger("Air vent", new Vector2(16, -2.9f), new Vector2(1.3f, .4f), Color.yellow);
-        vent.AddComponent<AirVentBlock>().isContinuous = true;
-        var rail = Square("Railgun", new Vector2(21, -2.8f), new Vector2(2, .4f), platform, true);
+        Camera.main.clearFlags = CameraClearFlags.SolidColor;
+        // Keep the shared level skeleton, and replace only the physics introduction.
+        Place("Middle ground", new Vector2(3, -3.5f), new Vector2(2, 1));
+        Place("Jump platform A", new Vector2(0, -.2f), new Vector2(1.6f, .4f));
+        Place("Jump platform B", new Vector2(2, 1.4f), new Vector2(1.6f, .4f));
+        GameObject.Find("Jump platform A").name = "Ice step 2";
+        GameObject.Find("Jump platform B").name = "Ice step 3";
+        var ice1 = Square("Ice step 1", new Vector2(-2, -1.8f), new Vector2(1.6f, .4f), Color.cyan, true).AddComponent<IceBlock>();
+        var ice2 = GameObject.Find("Ice step 2").AddComponent<IceBlock>();
+        var ice3 = GameObject.Find("Ice step 3").AddComponent<IceBlock>();
+        var wall = Square("Ice wall", new Vector2(10.8f, 4), new Vector2(.9f, 4), Color.cyan, true).AddComponent<IceBlock>();
+        var routeIce = new[] { ice1, ice2, ice3, wall };
+        foreach (var ice in routeIce)
+        {
+            ice.isMelted = true;
+            ice.GetComponent<BoxCollider2D>().enabled = false;
+            ice.GetComponent<SpriteRenderer>().color = new Color(.45f, .85f, 1f, .12f);
+        }
+        Square("Physics upper ledge", new Vector2(9, -1), new Vector2(10, 6), platform, true);
+        Square("Physics ceiling", new Vector2(9, 6.3f), new Vector2(10, .6f), platform, true);
+        Square("Physics return floor", new Vector2(20, -3.5f), new Vector2(12, 1), platform, true);
+        var a = Trigger("Thermal controller A", new Vector2(-5, -2.35f), new Vector2(.8f, 1.3f), Color.yellow).AddComponent<ThermalControllerBlock>();
+        var b = Trigger("Thermal controller B", new Vector2(7, 2.65f), new Vector2(.8f, 1.3f), Color.yellow).AddComponent<ThermalControllerBlock>();
+        a.controlledIce = routeIce;
+        a.terminalName = "A";
+        b.terminalName = "B";
+        b.linkedController = a;
+        var backdrop = Square("Temperature backdrop", new Vector2(1, 1.5f), new Vector2(26, 12), a.hotFilterColor).GetComponent<SpriteRenderer>();
+        backdrop.sortingOrder = -5;
+        a.roomFilterOverlay = b.roomFilterOverlay = backdrop;
+        Place("Room 2 checkpoint", new Vector2(6, 3), new Vector2(.7f, 2));
+        string[] downstream = { "Finish ground", "Moving platform", "Moving start", "Moving end", "Timed platform",
+            "Big token", "Room 3 checkpoint", "AI activation device", "AI pursuer", "AI teleport 1", "AI teleport 2",
+            "Exit", "AI locked collectible", "Chase platform", "Secret shelf" };
+        foreach (string name in downstream) GameObject.Find(name).transform.position += Vector3.right * 10;
+        // The first vent teaches steering on a clear flight path, before the chase starts.
+        foreach (string name in new[] { "Moving platform", "Moving start", "Moving end" })
+            Object.DestroyImmediate(GameObject.Find(name));
+        Place("Finish ground", new Vector2(41, -3.5f), new Vector2(30, 1));
+        Place("Chase platform", new Vector2(32, 1.55f), new Vector2(5, .5f));
+        Place("Room 3 checkpoint", new Vector2(23, -2), new Vector2(.7f, 2));
+        foreach (string name in new[] { "Room 2 checkpoint", "Room 3 checkpoint" })
+            GameObject.Find(name).GetComponent<Checkpoint>().useFlagVisual = true;
+        Place("Big token", new Vector2(31.5f, 2.5f), Vector2.one * .8f);
+        Place("AI activation device", new Vector2(33, 2.65f), new Vector2(1, 1.5f));
+        var device = GameObject.Find("AI activation device").GetComponent<AIActivatorDevice>();
+        device.autoActivateOnContact = false;
+        device.showInteractionGuide = true;
+        Place("AI pursuer", new Vector2(30, 2.45f), new Vector2(.9f, 1.3f));
+        GameObject.Find("AI teleport 1").transform.position = new Vector2(38, -2);
+        GameObject.Find("AI teleport 2").transform.position = new Vector2(48, -2);
+        Place("Timed platform", new Vector2(46, 0), new Vector2(2, .4f));
+        Place("Secret shelf", new Vector2(49, 1.6f), new Vector2(3, .5f));
+        Place("AI locked collectible", new Vector2(49, 2.3f), Vector2.one * .7f);
+        var timedGuide = GameObject.Find("Timed platform").GetComponent<VanishingBlock>();
+        timedGuide.showGuide = true;
+        timedGuide.optionalCollectible = GameObject.Find("AI locked collectible").GetComponent<CollectibleItem>();
+        Place("Exit", new Vector2(52, -2), new Vector2(1.2f, 2.5f));
+        Vector2[] tokenPositions = { new Vector2(-6, -2.3f), new Vector2(-2, -.9f), new Vector2(0, .7f),
+            new Vector2(2, 2.3f), new Vector2(5, 2.8f), new Vector2(8, 2.8f), new Vector2(13, 2.8f) };
+        for (int i = 0; i < tokenPositions.Length; i++) GameObject.Find("Token " + i).transform.position = tokenPositions[i];
+        Place("Fall death", new Vector2(15, -10), new Vector2(90, 1));
+        Camera.main.GetComponent<CameraFollow>().maxBounds = new Vector2(55, 15);
+
+        var vent = Trigger("Air vent", new Vector2(26, -2.9f), new Vector2(1.3f, .4f), Color.yellow);
+        var air = vent.AddComponent<AirVentBlock>();
+        air.isContinuous = true;
+        air.upwardForce = 19;
+        air.guideText = "喷气口 ↑\n向右落上高台 →";
+        var rail = Square("Railgun", new Vector2(41, -2.9f), new Vector2(2, .2f), platform, true);
+        rail.layer = 0;
+        var entry = rail.GetComponent<BoxCollider2D>();
+        entry.isTrigger = true;
+        entry.size = new Vector2(1, 7);
+        entry.offset = new Vector2(0, 2.5f);
         var gun = rail.AddComponent<RailgunBlock>();
-        gun.launchEndPoint = Point("Railgun end", new Vector2(24, -2.5f));
+        gun.launchEndPoint = Point("Railgun end", new Vector2(44, -2.35f));
+        string[] permanentNames = { "Start ground", "Middle ground", "Finish ground", "Physics upper ledge",
+            "Physics ceiling", "Physics return floor", "Chase platform", "Secret shelf", "Railgun" };
+        foreach (string name in permanentNames)
+            GameObject.Find(name).GetComponent<SpriteRenderer>().color = new Color(.22f, .29f, .36f);
+    }
+
+    private static void Place(string name, Vector2 position, Vector2 size)
+    {
+        var target = GameObject.Find(name).transform;
+        target.position = position;
+        target.localScale = new Vector3(size.x, size.y, 1);
     }
 
     private static void MathFeatures(Color platform)
@@ -286,7 +366,7 @@ public static class MiniGameAutoSetup
     {
         var board = Trigger("Controls board", new Vector2(-8, -1.3f), new Vector2(1, 2), new Color(1, .7f, .2f)).AddComponent<BulletinBoard>();
         var canvas = Canvas("Guide Canvas");
-        var popup = TextLabel(canvas.transform, "A/D 移动  ·  W/空格 跳跃  ·  Shift 冲刺  ·  S 下蹲\n收集 Token，触碰蓝色装置启动 AI。引它靠近紫色收藏品。", new Vector2(0, -220), 20, Color.white, 1000, TextAnchor.MiddleCenter);
+        var popup = TextLabel(canvas.transform, "A/D 移动 · 空格跳跃 · Shift 水平冲刺（3 Token 充能，最多 1 次）\n先在 A 降温生成冰阶，上高台后靠近 B 按 E 升温融冰。", new Vector2(0, -220), 20, Color.white, 1000, TextAnchor.MiddleCenter);
         board.popupPanel = popup.gameObject;
     }
 
@@ -384,8 +464,8 @@ public static class MiniGameAutoSetup
         Color hudInk = level == 2 ? new Color(.10f, .15f, .22f) : Color.white;
         ui.totalScoreText = TextLabel(canvas.transform, "SCORE: 0", new Vector2(-450, 310), 24, hudInk, 300, TextAnchor.MiddleLeft);
         ui.tokenCountText = TextLabel(canvas.transform, "TOKENS: 0", new Vector2(-450, 270), 22, level == 2 ? new Color(.65f, .28f, .03f) : Color.yellow, 300, TextAnchor.MiddleLeft);
-        ui.dashChargeSlots = new Image[3];
-        for (int i = 0; i < 3; i++)
+        ui.dashChargeSlots = new Image[1];
+        for (int i = 0; i < ui.dashChargeSlots.Length; i++)
         {
             var slot = new GameObject("Dash " + i);
             slot.transform.SetParent(canvas.transform, false);
@@ -394,6 +474,7 @@ public static class MiniGameAutoSetup
             rect.anchoredPosition = new Vector2(-580 + i * 44, 235);
             ui.dashChargeSlots[i] = slot.AddComponent<Image>();
         }
+        ui.dashStatusText = TextLabel(canvas.transform, "冲刺 0/1 · 充能 0/3", new Vector2(-425, 235), 18, hudInk, 250, TextAnchor.MiddleLeft);
         TextLabel(canvas.transform, level == 1 ? "物理" : level == 2 ? "高数" : "水课", new Vector2(0, 310), 28, hudInk, 250, TextAnchor.MiddleCenter);
         ui.phaseText = TextLabel(canvas.transform, "探索 · 收集 Token", new Vector2(380, 310), 20, level == 2 ? new Color(.1f, .4f, .55f) : Color.cyan, 330, TextAnchor.MiddleRight);
         var actions = new GameObject("Level Actions").AddComponent<MenuActions>();

@@ -12,6 +12,7 @@ public class AIActivatorDevice : MonoBehaviour, ICheckpointState
     public bool isActivated = false;
     public KeyCode interactKey = KeyCode.E;
     public bool autoActivateOnContact = false;
+    public bool showInteractionGuide;
 
     [Header("Difficulty Formula")]
     public float baseDifficulty = 1.0f;
@@ -25,6 +26,34 @@ public class AIActivatorDevice : MonoBehaviour, ICheckpointState
 
     private bool playerInRange = false;
     private PlayerController cachedPlayer;
+    private TextMesh guide;
+    private LineRenderer coreOutline;
+    private Material coreMaterial;
+    private string lastGuideText;
+
+    private void Start()
+    {
+        if (!showInteractionGuide) return;
+        if (deviceRenderer != null) deviceRenderer.enabled = false;
+        var frame = new GameObject("AI core frame");
+        frame.transform.SetParent(transform, false);
+        coreOutline = frame.AddComponent<LineRenderer>();
+        coreMaterial = new Material(Shader.Find("Sprites/Default"));
+        coreOutline.sharedMaterial = coreMaterial;
+        coreOutline.useWorldSpace = true;
+        coreOutline.loop = true;
+        coreOutline.positionCount = 6;
+        coreOutline.startWidth = coreOutline.endWidth = .07f;
+        coreOutline.sortingOrder = 5;
+        for (int i = 0; i < 6; i++)
+        {
+            float angle = i * Mathf.PI / 3;
+            coreOutline.SetPosition(i, transform.position + new Vector3(Mathf.Cos(angle) * .55f, Mathf.Sin(angle) * .65f));
+        }
+        MechanismGuideVisuals.CreateLabel(transform, "AI", transform.position, Color.white, .1f);
+        guide = MechanismGuideVisuals.CreateLabel(transform, "", transform.position + Vector3.up * 1.35f,
+            Color.white, .075f);
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -69,14 +98,35 @@ public class AIActivatorDevice : MonoBehaviour, ICheckpointState
         {
             if (GameInput.WasPressed(interactKey))
             {
-                TriggerActivation();
+                TryActivateFromInteraction();
             }
         }
+        if (guide != null)
+        {
+            string text = isActivated ? "追逐已启动 →" : playerInRange
+                ? "[" + interactKey + "] 启动 AI\n消耗全部 Token，开始追逐"
+                : autoActivateOnContact ? "AI 启动器\n接触后开始追逐" : "AI 启动器\n靠近按 " + interactKey + "，准备后再出发";
+            if (text != lastGuideText) { guide.text = text; lastGuideText = text; }
+            Color color = isActivated ? new Color(1f, .6f, .25f) : new Color(.8f, .6f, 1f);
+            guide.color = color;
+            coreOutline.startColor = coreOutline.endColor = color;
+        }
+    }
+
+    private bool CanActivateNow() => Time.timeScale > 0f && (GameManager.Instance == null ||
+        GameManager.Instance.CurrentState == GameManager.GameState.SlowPacedPhase ||
+        GameManager.Instance.CurrentState == GameManager.GameState.FastPacedPhase);
+
+    public bool TryActivateFromInteraction()
+    {
+        if (!playerInRange || isActivated || autoActivateOnContact || !CanActivateNow()) return false;
+        TriggerActivation();
+        return isActivated;
     }
 
     public void TriggerActivation()
     {
-        if (isActivated) return;
+        if (isActivated || !CanActivateNow()) return;
         if (cachedPlayer == null) cachedPlayer = PlayerController.Instance;
         if (cachedPlayer == null) return;
 
@@ -113,5 +163,10 @@ public class AIActivatorDevice : MonoBehaviour, ICheckpointState
         if (activationAudio != null) activationAudio.Stop();
         if (deviceRenderer != null) deviceRenderer.color = saved.color;
         if (activeVFX != null) activeVFX.SetActive(saved.vfx);
+    }
+
+    private void OnDestroy()
+    {
+        if (coreMaterial != null) Destroy(coreMaterial);
     }
 }

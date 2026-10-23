@@ -7,6 +7,7 @@
     <Compile Include="../../Assets/Scripts/Player/TimedSpeedModifiers.cs" Link="TimedSpeedModifiers.cs" />
     <Compile Include="../../Assets/Scripts/Player/PlayerInputBuffer.cs" Link="PlayerInputBuffer.cs" />
     <Compile Include="../../Assets/Scripts/Player/DashMotion.cs" Link="DashMotion.cs" />
+    <Compile Include="../../Assets/Scripts/Player/DashChargeMeter.cs" Link="DashChargeMeter.cs" />
     <Compile Include="../../Assets/Scripts/Player/InvulnerabilityWindow.cs" Link="InvulnerabilityWindow.cs" />
     <Compile Include="../../Assets/Scripts/Core/GlobalSaveData.cs" Link="GlobalSaveData.cs" />
     <Compile Include="../../Assets/Scripts/Core/DeferredWrite.cs" Link="DeferredWrite.cs" />

@@ -64,7 +64,7 @@ internal static class Program
         input.Sample(true, false, true, true, false, true);
         command = input.Consume();
         Equal(-1, command.moveX, "Left movement survives sampling");
-        Equal(1, command.dashY, "Up wins when both vertical dash keys are held");
+        Equal(-1, command.dashX, "Vertical keys do not change horizontal dash input");
         Check(command.crouch, "Crouch remains a held action");
         command = input.Consume();
         Equal(-1, command.moveX, "Held direction survives multiple physics ticks");
@@ -72,6 +72,42 @@ internal static class Program
         input.Clear();
         command = input.Consume();
         Check(!command.jump && !command.dash && command.moveX == 0, "Pause or death discards pending input");
+    }
+
+    private static void CheckDashChargeMeter()
+    {
+        var charge = new DashChargeMeter();
+        Check(!charge.TrySpend(), "New run has no free dash");
+        charge.Collect(1);
+        Equal(0, charge.Charges, "One Token cannot charge a dash");
+        Equal(1, charge.Progress, "First Token contributes one third");
+        charge.Collect(1);
+        Equal(2, charge.Progress, "Second Token contributes two thirds");
+        charge.Collect(1);
+        Equal(1, charge.Charges, "Third Token fills the single charge");
+        Equal(0, charge.Progress, "A full charge has no banked partial energy");
+        charge.Collect(100);
+        Check(charge.TrySpend(), "A full charge can be spent");
+        Check(!charge.TrySpend(), "Full-capacity pickups cannot bank another dash");
+        Equal(0, charge.Progress, "Spending starts the next charge at zero");
+        charge.Collect(5);
+        Equal(1, charge.Charges, "Big Token still respects one-charge capacity");
+        charge.TrySpend();
+        Equal(0, charge.Progress, "Big Token overflow is discarded");
+        charge.Restore(0, 2);
+        charge.Collect(1);
+        Equal(1, charge.Charges, "Restored two-thirds progress needs one more Token");
+        charge.Restore(3, 2);
+        Equal(1, charge.Charges, "Legacy multi-charge data is clamped to one");
+        Equal(0, charge.Progress, "Full restored charge cannot also bank partial energy");
+        charge.Restore(-1, -2);
+        charge.Collect(0);
+        charge.Collect(-1);
+        Equal(0, charge.Progress, "Invalid and empty pickups do not add progress");
+        charge.Collect(int.MaxValue);
+        Equal(1, charge.Charges, "Large pickup cannot overflow the charge calculation");
+        charge.Reset();
+        Check(charge.Charges == 0 && charge.Progress == 0, "New run resets both charge and progress");
     }
 
     private static float DashDistance(float step, float speed = 25f, float slowdown = 50f, float duration = .22f)
@@ -177,6 +213,7 @@ internal static class Program
         CheckSavedProgress();
         CheckInputBuffer();
         CheckDashMotion();
+        CheckDashChargeMeter();
         CheckDeferredWrites();
         CheckContactProtection();
         Console.WriteLine($"Runtime rules regressions passed: {checks} assertions.");

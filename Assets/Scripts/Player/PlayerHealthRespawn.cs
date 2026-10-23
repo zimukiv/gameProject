@@ -36,11 +36,7 @@ public class PlayerHealthRespawn : MonoBehaviour
             // 恢复属性
             if (playerController != null)
             {
-                playerController.currentTokens = temp.tokensHeld;
-                playerController.currentDashCharges = temp.dashChargesRemaining;
-                playerController.isFirstDashFree = temp.firstDashFree;
-                EventBus.TriggerTokenCountChanged(0, playerController.currentTokens);
-                EventBus.TriggerDashChargeChanged(playerController.currentDashCharges, playerController.maxDashCharges);
+                playerController.RestoreRunResources(temp.tokensHeld, temp.dashChargesRemaining, temp.dashChargeProgress);
             }
 
             // 恢复至保存点时的分数

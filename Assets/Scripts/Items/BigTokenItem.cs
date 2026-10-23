@@ -1,13 +1,12 @@
 using UnityEngine;
 
 /// <summary>
-/// 大 Token：+1000 分，充能 2 次冲刺，增加玩家 5 个 Token
+/// 大 Token：+1000 分，增加 5 Token；充能遵循同一套单槽上限规则。
 /// </summary>
 [RequireComponent(typeof(Collider2D))]
 public class BigTokenItem : MonoBehaviour
 {
     public int scoreAmount = 1000;
-    public int dashRechargeAmount = 2;
     public int tokenAmount = 5;
 
     public GameObject collectVFX;
@@ -20,7 +19,6 @@ public class BigTokenItem : MonoBehaviour
             PlayerController pc = other.GetComponent<PlayerController>();
             if (pc != null)
             {
-                pc.RechargeDash(dashRechargeAmount);
                 pc.AddTokens(tokenAmount);
             }
 

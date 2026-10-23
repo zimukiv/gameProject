@@ -6,7 +6,7 @@ using UnityEngine;
 /// - 左右朝向切换与移动
 /// - S 键下蹲
 /// - 空格/W 单段跳跃（调优初速度与下落阻尼）
-/// - Shift 8向匀减速冲刺（支持空中跳跃中二次冲刺衔接）
+/// - Shift 水平冲刺；每收集 3 Token 充能一次，最多储存一次
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class PlayerController : MonoBehaviour
@@ -28,9 +28,9 @@ public class PlayerController : MonoBehaviour
     public float dashInitialSpeed = 25f;
     public float dashDeceleration = 50f;
     public float dashDuration = 0.22f;
-    public int maxDashCharges = 3;
-    public int currentDashCharges = 3;
-    public bool isFirstDashFree = true;
+    public int maxDashCharges => DashChargeMeter.Capacity;
+    public int currentDashCharges => dashCharges.Charges;
+    public int dashChargeProgress => dashCharges.Progress;
 
     [Header("Ground Detection")]
     public Transform groundCheck;
@@ -63,6 +63,7 @@ public class PlayerController : MonoBehaviour
     private readonly TimedSpeedModifiers speedModifiers = new TimedSpeedModifiers();
     private readonly PlayerInputBuffer inputBuffer = new PlayerInputBuffer();
     private readonly DashMotion dashMotion = new DashMotion();
+    private readonly DashChargeMeter dashCharges = new DashChargeMeter();
     private object scriptedMotionOwner;
 
     private void Awake()
@@ -79,7 +80,8 @@ public class PlayerController : MonoBehaviour
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
         defaultGravityScale = rb.gravityScale;
-        currentDashCharges = maxDashCharges;
+        currentTokens = 0;
+        dashCharges.Reset();
     }
 
     private void Start()
@@ -132,10 +134,10 @@ public class PlayerController : MonoBehaviour
 
         HandleMovement(command.moveX);
         if (command.jump && isGrounded && !isCrouching)
-            rb.velocity = new Vector2(rb.velocity.x, jumpVelocity);
-        if (command.dash && (isFirstDashFree || currentDashCharges > 0) && dashDuration > 0f && dashInitialSpeed > 0f)
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpVelocity);
+        if (command.dash && currentDashCharges > 0 && dashDuration > 0f && dashInitialSpeed > 0f)
         {
-            StartDash(command.dashX, command.dashY);
+            StartDash(command.dashX);
             UpdateDash();
             return;
         }
@@ -144,7 +146,7 @@ public class PlayerController : MonoBehaviour
 
     private void ClampFallSpeed()
     {
-        if (rb.velocity.y < -maxFallSpeed) rb.velocity = new Vector2(rb.velocity.x, -maxFallSpeed);
+        if (rb.linearVelocity.y < -maxFallSpeed) rb.linearVelocity = new Vector2(rb.linearVelocity.x, -maxFallSpeed);
     }
 
     private void OnDisable() => inputBuffer.Clear();
@@ -155,7 +157,8 @@ public class PlayerController : MonoBehaviour
         {
             var ground = Physics2D.Raycast(groundCheck.position + Vector3.up * .15f, Vector2.down, .27f, groundLayer);
             isGrounded = ground.collider != null;
-            isOnIce = ground.collider != null && ground.collider.GetComponent<IceBlock>() != null;
+            // Thermal ice is ordinary footing; temperature alone determines its presence.
+            isOnIce = false;
         }
         else
         {
@@ -210,35 +213,27 @@ public class PlayerController : MonoBehaviour
     {
         float targetSpeed = (isCrouching ? crouchSpeed : moveSpeed) * speedModifiers.GetMultiplier(Time.time);
         float acceleration = isOnIce ? iceAcceleration : isGrounded ? groundAcceleration : airAcceleration;
-        float x = Mathf.MoveTowards(rb.velocity.x, moveInput * targetSpeed, acceleration * Time.fixedDeltaTime);
-        rb.velocity = new Vector2(x, rb.velocity.y);
+        float x = Mathf.MoveTowards(rb.linearVelocity.x, moveInput * targetSpeed, acceleration * Time.fixedDeltaTime);
+        rb.linearVelocity = new Vector2(x, rb.linearVelocity.y);
     }
 
-    private void StartDash(int horizontal, int vertical)
+    private void StartDash(int horizontal)
     {
-        if (isFirstDashFree)
-        {
-            isFirstDashFree = false;
-        }
-        else
-        {
-            currentDashCharges--;
-            EventBus.TriggerDashChargeChanged(currentDashCharges, maxDashCharges);
-        }
+        if (!dashCharges.TrySpend()) return;
+        EventBus.TriggerDashChargeChanged(currentDashCharges, maxDashCharges);
 
         isDashing = true;
         dashMotion.Begin(dashInitialSpeed, Mathf.Max(0f, dashDeceleration), dashDuration);
 
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         rb.gravityScale = 0f;
 
-        currentDashDirection = horizontal == 0 && vertical == 0
-            ? new Vector2(facingDirection, 0f) : new Vector2(horizontal, vertical).normalized;
+        currentDashDirection = new Vector2(horizontal == 0 ? facingDirection : horizontal > 0 ? 1 : -1, 0f);
     }
 
     private void UpdateDash()
     {
-        rb.velocity = currentDashDirection * (dashMotion.Step(Time.fixedDeltaTime) / Time.fixedDeltaTime);
+        rb.linearVelocity = currentDashDirection * (dashMotion.Step(Time.fixedDeltaTime) / Time.fixedDeltaTime);
     }
 
     private void EndDash()
@@ -246,7 +241,7 @@ public class PlayerController : MonoBehaviour
         isDashing = false;
         dashMotion.Reset();
         rb.gravityScale = defaultGravityScale;
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
     }
 
     public void ResetMotion()
@@ -267,7 +262,7 @@ public class PlayerController : MonoBehaviour
         }
         externalMotionTimer = 0f;
         rb.gravityScale = defaultGravityScale;
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
     }
 
     public void ApplySpeedModifier(object source, float multiplier, float duration)
@@ -281,7 +276,7 @@ public class PlayerController : MonoBehaviour
         inputBuffer.Clear();
         if (isDashing) EndDash();
         scriptedMotionOwner = owner;
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         rb.gravityScale = 0f;
         return true;
     }
@@ -293,26 +288,52 @@ public class PlayerController : MonoBehaviour
         if (!IsScriptedMotionControlledBy(owner)) return;
         scriptedMotionOwner = null;
         rb.gravityScale = defaultGravityScale;
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
     }
 
     public void CompleteScriptedMotion(object owner, Vector2 launchVelocity)
     {
         if (!IsScriptedMotionControlledBy(owner)) return;
         CancelScriptedMotion(owner);
-        ForceLaunch(launchVelocity);
+        LaunchWithControl(launchVelocity);
     }
 
-    public void RechargeDash(int count = 1)
+    // Friendly launchers restore steering immediately; hostile knockback still uses ForceLaunch.
+    public bool LaunchWithControl(Vector2 launchVelocity)
     {
-        currentDashCharges = Mathf.Min(maxDashCharges, currentDashCharges + count);
+        if (!CanControl() || scriptedMotionOwner != null) return false;
+        if (isDashing) EndDash();
+        transform.SetParent(null, true);
+        inputBuffer.Clear();
+        externalMotionTimer = 0f;
+        isGrounded = false;
+        rb.linearVelocity = launchVelocity;
+        return true;
+    }
+
+    public bool LaunchFromAirVent(Vector2 launchVelocity)
+    {
+        if (launchVelocity.sqrMagnitude < .001f) return false;
+        Vector2 direction = launchVelocity.normalized;
+        Vector2 sidewaysVelocity = rb.linearVelocity - Vector2.Dot(rb.linearVelocity, direction) * direction;
+        return LaunchWithControl(sidewaysVelocity + launchVelocity);
+    }
+
+    public void RestoreRunResources(int tokens, int charges, int progress)
+    {
+        currentTokens = Mathf.Max(0, tokens);
+        dashCharges.Restore(charges, progress);
+        EventBus.TriggerTokenCountChanged(0, currentTokens);
         EventBus.TriggerDashChargeChanged(currentDashCharges, maxDashCharges);
     }
 
     public void AddTokens(int amount)
     {
+        if (amount <= 0) return;
         currentTokens += amount;
+        dashCharges.Collect(amount);
         EventBus.TriggerTokenCountChanged(amount, currentTokens);
+        EventBus.TriggerDashChargeChanged(currentDashCharges, maxDashCharges);
     }
 
     public int ConsumeAllTokens()
@@ -327,7 +348,7 @@ public class PlayerController : MonoBehaviour
     {
         inputBuffer.Clear();
         if (isDashing) EndDash();
-        rb.velocity = force;
+        rb.linearVelocity = force;
         externalMotionTimer = .38f;
     }
 }

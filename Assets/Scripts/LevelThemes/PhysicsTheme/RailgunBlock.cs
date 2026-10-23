@@ -16,6 +16,8 @@ public class RailgunBlock : InteractiveBlock
     private bool isLaunching = false;
     private PlayerController launchPlayer;
 
+    private void Start() => MechanismGuideVisuals.AddRailgun(this);
+
     private void OnEnable() => EventBus.OnPlayerDied += CancelLaunch;
 
     private void OnDisable()
@@ -40,6 +42,11 @@ public class RailgunBlock : InteractiveBlock
             launchPlayer = player;
             StartCoroutine(RailgunSequence(player));
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player")) OnPlayerStepped(other.GetComponent<PlayerController>());
     }
 
     private IEnumerator RailgunSequence(PlayerController player)

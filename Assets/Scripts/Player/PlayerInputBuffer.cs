@@ -8,7 +8,6 @@ public sealed class PlayerInputBuffer
         public bool jump;
         public bool dash;
         public int dashX;
-        public int dashY;
     }
 
     private Command pending;
@@ -22,7 +21,7 @@ public sealed class PlayerInputBuffer
         {
             pending.dash = true;
             pending.dashX = pending.moveX;
-            pending.dashY = up ? 1 : down ? -1 : 0;
+            // Vertical keys still control jumping/crouching, never the dash direction.
         }
     }
 

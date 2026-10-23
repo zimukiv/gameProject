@@ -1,103 +1,87 @@
 using UnityEngine;
 
-/// <summary>
-/// 冰块：
-/// 踩上去很滑，站上去 1s 融化（碰撞体禁用），过 3s 重新结冰。
-/// 支持被热反应方块外部直接强制融化/结冰。
-/// </summary>
+/// <summary>Thermal ice is solid when cold and absent when hot. It never melts on a timer.</summary>
 public class IceBlock : InteractiveBlock, ICheckpointState
 {
-    [Header("Ice Timers")]
-    public float meltDelay = 1.0f;
-    public float refreezeDelay = 3.0f;
-
-    [Header("State")]
-    public bool isMelted = false;
-
-    [Header("Visuals")]
-    public Color solidColor = new Color(0.6f, 0.9f, 1f, 1f);
-    public Color meltedColor = new Color(0.6f, 0.9f, 1f, 0.15f);
-
-    private float meltRemaining = -1f;
-    private float refreezeRemaining = -1f;
-    private bool heldMelted;
+    public bool isMelted;
+    public Color solidColor = new Color(.45f, .85f, 1f, 1f);
+    public Color meltedColor = new Color(.45f, .85f, 1f, 0f);
+    private LineRenderer outline;
+    private TextMesh symbol;
+    private Material outlineMaterial;
 
     protected override void Awake()
     {
         base.Awake();
+        ApplyState();
+    }
+
+    private void Start()
+    {
+        symbol = MechanismGuideVisuals.CreateLabel(transform, "❄", transform.position, Color.white, .08f);
+        var guide = new GameObject("Ice boundary");
+        guide.transform.SetParent(transform, false);
+        outline = guide.AddComponent<LineRenderer>();
+        outlineMaterial = new Material(Shader.Find("Sprites/Default"));
+        outline.sharedMaterial = outlineMaterial;
+        outline.useWorldSpace = true;
+        outline.loop = true;
+        outline.positionCount = 4;
+        outline.startWidth = outline.endWidth = .035f;
+        outline.sortingOrder = 3;
+        Bounds bounds = GetIceBounds();
+        outline.SetPositions(new[] {
+            new Vector3(bounds.min.x, bounds.min.y), new Vector3(bounds.max.x, bounds.min.y),
+            new Vector3(bounds.max.x, bounds.max.y), new Vector3(bounds.min.x, bounds.max.y)
+        });
+        ApplyState();
+    }
+
+    private void ApplyState()
+    {
         if (boxCollider != null) boxCollider.enabled = !isMelted;
-        if (spriteRenderer != null)
+        if (spriteRenderer != null) spriteRenderer.color = isMelted ? meltedColor : solidColor;
+        if (symbol != null) symbol.gameObject.SetActive(!isMelted);
+        if (outline != null)
         {
-            spriteRenderer.color = isMelted ? meltedColor : solidColor;
-        }
-
-        // 默认附加低摩擦力材质
-        if (boxCollider != null && boxCollider.sharedMaterial == null)
-        {
-            PhysicsMaterial2D slipperyMat = new PhysicsMaterial2D("SlipperyMat")
-            {
-                friction = 0.02f,
-                bounciness = 0f
-            };
-            boxCollider.sharedMaterial = slipperyMat;
+            Color color = isMelted ? new Color(1f, .7f, .3f, .12f) : new Color(.8f, .97f, 1f);
+            outline.startColor = outline.endColor = color;
         }
     }
 
-    protected override void OnPlayerStepped(PlayerController player)
+    public Bounds GetIceBounds()
     {
-        if (!isMelted && meltRemaining < 0f) meltRemaining = meltDelay;
+        Vector3 size = Vector3.Scale((Vector3)boxCollider.size, transform.lossyScale);
+        size = new Vector3(Mathf.Abs(size.x), Mathf.Abs(size.y), .1f);
+        return new Bounds(transform.TransformPoint(boxCollider.offset), size);
     }
 
-    private void Update()
+    public bool OverlapsPlayer(PlayerController player)
     {
-        if (heldMelted) return;
-        if (meltRemaining >= 0f)
-        {
-            meltRemaining -= Time.deltaTime;
-            if (meltRemaining <= 0f)
-            {
-                Melt();
-                refreezeRemaining = refreezeDelay;
-            }
-        }
-        else if (refreezeRemaining >= 0f)
-        {
-            refreezeRemaining -= Time.deltaTime;
-            if (refreezeRemaining <= 0f) Refreeze();
-        }
+        if (player == null) return false;
+        var playerCollider = player.GetComponent<Collider2D>();
+        if (playerCollider == null) return false;
+        Bounds ice = GetIceBounds();
+        Bounds actor = playerCollider.bounds;
+        const float skin = .03f;
+        return actor.max.x > ice.min.x + skin && actor.min.x < ice.max.x - skin &&
+            actor.max.y > ice.min.y + skin && actor.min.y < ice.max.y - skin;
     }
 
-    public void Melt()
-    {
-        meltRemaining = -1f;
-        isMelted = true;
-        if (boxCollider != null) boxCollider.enabled = false;
-        if (spriteRenderer != null) spriteRenderer.color = meltedColor;
-    }
-
-    public void Refreeze()
-    {
-        meltRemaining = refreezeRemaining = -1f;
-        isMelted = false;
-        if (boxCollider != null) boxCollider.enabled = true;
-        if (spriteRenderer != null) spriteRenderer.color = solidColor;
-    }
+    public void Melt() => SetTemperature(true);
+    public void Refreeze() => SetTemperature(false);
 
     public void SetTemperature(bool hot)
     {
-        heldMelted = hot;
-        if (hot) { Melt(); refreezeRemaining = -1f; }
-        else Refreeze();
+        isMelted = hot;
+        ApplyState();
     }
 
-    public object CaptureCheckpointState() => (isMelted, heldMelted, meltRemaining, refreezeRemaining);
+    public object CaptureCheckpointState() => isMelted;
+    public void RestoreCheckpointState(object state) => SetTemperature((bool)state);
 
-    public void RestoreCheckpointState(object state)
+    private void OnDestroy()
     {
-        var saved = ((bool melted, bool hot, float meltTime, float refreezeTime))state;
-        if (saved.melted) Melt(); else Refreeze();
-        heldMelted = saved.hot;
-        meltRemaining = saved.meltTime;
-        refreezeRemaining = saved.refreezeTime;
+        if (outlineMaterial != null) Destroy(outlineMaterial);
     }
 }

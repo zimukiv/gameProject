@@ -1,13 +1,12 @@
 using UnityEngine;
 
 /// <summary>
-/// 普通 Token：+100 分，充能 1 次冲刺，增加玩家持有 Token 数量
+/// 普通 Token：+100 分，增加 1 Token 并贡献 1/3 冲刺充能。
 /// </summary>
 [RequireComponent(typeof(Collider2D))]
 public class TokenItem : MonoBehaviour
 {
     public int scoreAmount = 100;
-    public int dashRechargeAmount = 1;
     public int tokenAmount = 1;
 
     public GameObject collectVFX;
@@ -20,7 +19,6 @@ public class TokenItem : MonoBehaviour
             PlayerController pc = other.GetComponent<PlayerController>();
             if (pc != null)
             {
-                pc.RechargeDash(dashRechargeAmount);
                 pc.AddTokens(tokenAmount);
             }
 

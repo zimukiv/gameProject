@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// 统一 UI 管理器：
-/// - HUD (累计总分、Token 持有量、3 段冲刺槽显示)
+/// - HUD (累计总分、Token 持有量、单槽冲刺与三 Token 充能进度)
 /// - ESC 暂停菜单与设置面板
 /// - 主菜单及 3 关解锁状态渲染（新游戏高亮第1关/灰度其余，继续游戏已通彩色/高亮最新/未解锁灰色）
 /// </summary>
@@ -15,7 +15,8 @@ public class UIManager : MonoBehaviour
     public GameObject hudRoot;
     public Text totalScoreText;
     public Text tokenCountText;
-    public Image[] dashChargeSlots; // 最多 3 个槽
+    public Image[] dashChargeSlots;
+    public Text dashStatusText;
     public Text phaseText;
     public GameObject levelCompletePanel;
     public Text completionScoreText;
@@ -109,15 +110,25 @@ public class UIManager : MonoBehaviour
 
     private void UpdateDashUI(int current, int max)
     {
-        if (dashChargeSlots == null) return;
-
+        if (dashChargeSlots != null)
         for (int i = 0; i < dashChargeSlots.Length; i++)
         {
             if (dashChargeSlots[i] != null)
             {
+                dashChargeSlots[i].gameObject.SetActive(i < max);
                 dashChargeSlots[i].color = (i < current) ? dashSlotActiveColor : dashSlotEmptyColor;
             }
         }
+        UpdateDashStatus();
+    }
+
+    private void UpdateDashStatus()
+    {
+        if (dashStatusText == null) return;
+        var player = PlayerController.Instance;
+        int progress = player != null ? player.dashChargeProgress : 0;
+        bool ready = player != null && player.currentDashCharges > 0;
+        dashStatusText.text = ready ? "冲刺 1/1 · Shift 水平冲刺" : $"冲刺 0/1 · 充能 {progress}/{DashChargeMeter.TokensPerCharge}";
     }
 
     private void UpdatePhaseUI(int tokens, float difficulty)
