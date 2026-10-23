@@ -1,0 +1,9 @@
+{
+  "name": "physics-level-data-phase1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-strip-types --test tests/roundtrip.test.ts"
+  },
+  "engines": { "node": ">=22" }
+}

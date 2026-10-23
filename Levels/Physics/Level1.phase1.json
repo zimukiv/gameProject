@@ -1,0 +1,196 @@
+{
+  "formatVersion": 1,
+  "levelId": "unity:8012e3d1cdce7da499fa92e045ffd865",
+  "coverage": "partial",
+  "sourceSceneGuid": "8012e3d1cdce7da499fa92e045ffd865",
+  "objects": [
+    {
+      "id": "2711a5f2-7b03-508b-b02a-81879fced97a",
+      "name": "Token 3",
+      "kind": "token",
+      "parentId": null,
+      "active": true,
+      "layer": 0,
+      "localPosition": {
+        "x": 2,
+        "y": 2.3,
+        "z": 0
+      },
+      "localRotationZ": 0,
+      "localScale": {
+        "x": 0.45,
+        "y": 0.45,
+        "z": 1
+      },
+      "components": [
+        {
+          "typeId": "visual.sprite",
+          "version": 1,
+          "enabled": true,
+          "sprite": {
+            "assetGuid": "e14644a0d884a524aba3793fdd30e7aa",
+            "localFileId": "2868101353237766674",
+            "color": {
+              "r": 1,
+              "g": 0.92156863,
+              "b": 0.015686275,
+              "a": 1
+            },
+            "sortingOrder": 0
+          }
+        },
+        {
+          "typeId": "physics.boxCollider2d",
+          "version": 1,
+          "enabled": true,
+          "collider": {
+            "size": {
+              "x": 1,
+              "y": 1
+            },
+            "offset": {
+              "x": 0,
+              "y": 0
+            },
+            "isTrigger": true
+          }
+        },
+        {
+          "typeId": "item.token",
+          "version": 1,
+          "enabled": true,
+          "token": {
+            "scoreAmount": 100,
+            "tokenAmount": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "46c11342-6027-593d-87d5-ff1d6cb512b2",
+      "name": "Start ground",
+      "kind": "platform",
+      "parentId": null,
+      "active": true,
+      "layer": 8,
+      "localPosition": {
+        "x": -5,
+        "y": -3.5,
+        "z": 0
+      },
+      "localRotationZ": 0,
+      "localScale": {
+        "x": 14,
+        "y": 1,
+        "z": 1
+      },
+      "components": [
+        {
+          "typeId": "visual.sprite",
+          "version": 1,
+          "enabled": true,
+          "sprite": {
+            "assetGuid": "e14644a0d884a524aba3793fdd30e7aa",
+            "localFileId": "2868101353237766674",
+            "color": {
+              "r": 0.22,
+              "g": 0.29,
+              "b": 0.36,
+              "a": 1
+            },
+            "sortingOrder": 0
+          }
+        },
+        {
+          "typeId": "physics.boxCollider2d",
+          "version": 1,
+          "enabled": true,
+          "collider": {
+            "size": {
+              "x": 1,
+              "y": 1
+            },
+            "offset": {
+              "x": 0,
+              "y": 0
+            },
+            "isTrigger": false
+          }
+        },
+        {
+          "typeId": "physics.platform",
+          "version": 1,
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "id": "fa949e9b-1ebb-54c1-b252-8ae8a737e2b3",
+      "name": "Air vent",
+      "kind": "airVent",
+      "parentId": null,
+      "active": true,
+      "layer": 0,
+      "localPosition": {
+        "x": 26.0,
+        "y": -2.9,
+        "z": 0
+      },
+      "localRotationZ": 0,
+      "localScale": {
+        "x": 1.3,
+        "y": 0.4,
+        "z": 1
+      },
+      "components": [
+        {
+          "typeId": "visual.sprite",
+          "version": 1,
+          "enabled": true,
+          "sprite": {
+            "assetGuid": "e14644a0d884a524aba3793fdd30e7aa",
+            "localFileId": "2868101353237766674",
+            "color": {
+              "r": 1,
+              "g": 0.92156863,
+              "b": 0.015686275,
+              "a": 1
+            },
+            "sortingOrder": 0
+          }
+        },
+        {
+          "typeId": "physics.boxCollider2d",
+          "version": 1,
+          "enabled": true,
+          "collider": {
+            "size": {
+              "x": 1,
+              "y": 1
+            },
+            "offset": {
+              "x": 0,
+              "y": 0
+            },
+            "isTrigger": true
+          }
+        },
+        {
+          "typeId": "physics.airVent",
+          "version": 1,
+          "enabled": true,
+          "airVent": {
+            "ventDirection": {
+              "x": 0,
+              "y": 1
+            },
+            "upwardForce": 19.0,
+            "isInteractable": true,
+            "guideText": "喷气口 ↑\n向右落上高台 →",
+            "isContinuous": true
+          }
+        }
+      ]
+    }
+  ]
+}

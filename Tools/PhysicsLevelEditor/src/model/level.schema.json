@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://physics-level-editor.local/schema/phase1-level-v1",
+  "title": "Physics Level Editor Phase 1 partial level",
+  "type": "object",
+  "required": ["formatVersion", "levelId", "coverage", "sourceSceneGuid", "objects"],
+  "additionalProperties": false,
+  "properties": {
+    "formatVersion": {"const": 1},
+    "levelId": {"type": "string", "minLength": 1},
+    "coverage": {"const": "partial"},
+    "sourceSceneGuid": {"type": "string", "pattern": "^[0-9a-fA-F]{32}$"},
+    "objects": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/object"}}
+  },
+  "$defs": {
+    "vec2": {
+      "type": "object", "required": ["x", "y"], "additionalProperties": false,
+      "properties": {"x": {"type": "number"}, "y": {"type": "number"}}
+    },
+    "vec3": {
+      "type": "object", "required": ["x", "y", "z"], "additionalProperties": false,
+      "properties": {"x": {"type": "number"}, "y": {"type": "number"}, "z": {"type": "number"}}
+    },
+    "color": {
+      "type": "object", "required": ["r", "g", "b", "a"], "additionalProperties": false,
+      "properties": {"r": {"type": "number"}, "g": {"type": "number"}, "b": {"type": "number"}, "a": {"type": "number"}}
+    },
+    "sprite": {
+      "type": "object", "required": ["assetGuid", "localFileId", "color", "sortingOrder"], "additionalProperties": false,
+      "properties": {
+        "assetGuid": {"type": "string", "pattern": "^[0-9a-fA-F]{32}$"},
+        "localFileId": {"type": "string", "pattern": "^[1-9][0-9]*$"},
+        "color": {"$ref": "#/$defs/color"}, "sortingOrder": {"type": "integer"}
+      }
+    },
+    "collider": {
+      "type": "object", "required": ["size", "offset", "isTrigger"], "additionalProperties": false,
+      "properties": {"size": {"$ref": "#/$defs/vec2"}, "offset": {"$ref": "#/$defs/vec2"}, "isTrigger": {"type": "boolean"}}
+    },
+    "airVent": {
+      "type": "object", "required": ["ventDirection", "upwardForce", "isInteractable", "guideText", "isContinuous"],
+      "additionalProperties": false,
+      "properties": {
+        "ventDirection": {"$ref": "#/$defs/vec2"}, "upwardForce": {"type": "number", "exclusiveMinimum": 0},
+        "isInteractable": {"type": "boolean"}, "guideText": {"type": "string"},
+        "isContinuous": {"type": "boolean"}
+      }
+    },
+    "token": {
+      "type": "object", "required": ["scoreAmount", "tokenAmount"], "additionalProperties": false,
+      "properties": {
+        "scoreAmount": {"type": "integer", "minimum": 0},
+        "tokenAmount": {"type": "integer", "minimum": 0}
+      }
+    },
+    "component": {
+      "type": "object", "required": ["typeId", "version", "enabled"], "additionalProperties": false,
+      "properties": {
+        "typeId": {"enum": ["visual.sprite", "physics.boxCollider2d", "physics.platform", "physics.airVent", "item.token"]},
+        "version": {"const": 1}, "enabled": {"type": "boolean"},
+        "sprite": {"oneOf": [{"$ref": "#/$defs/sprite"}, {"type": "null"}]},
+        "collider": {"oneOf": [{"$ref": "#/$defs/collider"}, {"type": "null"}]},
+        "airVent": {"oneOf": [{"$ref": "#/$defs/airVent"}, {"type": "null"}]},
+        "token": {"oneOf": [{"$ref": "#/$defs/token"}, {"type": "null"}]}
+      },
+      "allOf": [
+        {"if": {"properties": {"typeId": {"const": "visual.sprite"}}}, "then": {"required": ["sprite"], "properties": {"sprite": {"$ref": "#/$defs/sprite"}}}},
+        {"if": {"properties": {"typeId": {"const": "physics.boxCollider2d"}}}, "then": {"required": ["collider"], "properties": {"collider": {"$ref": "#/$defs/collider"}}}},
+        {"if": {"properties": {"typeId": {"const": "physics.airVent"}}}, "then": {"required": ["airVent"], "properties": {"airVent": {"$ref": "#/$defs/airVent"}}}},
+        {"if": {"properties": {"typeId": {"const": "item.token"}}}, "then": {"required": ["token"], "properties": {"token": {"$ref": "#/$defs/token"}}}}
+      ]
+    },
+    "object": {
+      "type": "object",
+      "required": ["id", "name", "kind", "active", "layer", "localPosition", "localRotationZ", "localScale", "components"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "format": "uuid"}, "name": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["platform", "airVent", "token"]},
+        "parentId": {"oneOf": [{"type": "string", "format": "uuid"}, {"type": "null"}]},
+        "active": {"type": "boolean"}, "layer": {"type": "integer", "minimum": 0, "maximum": 31},
+        "localPosition": {"$ref": "#/$defs/vec3"}, "localRotationZ": {"type": "number"},
+        "localScale": {"$ref": "#/$defs/vec3"},
+        "components": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"$ref": "#/$defs/component"}}
+      }
+    }
+  }
+}
