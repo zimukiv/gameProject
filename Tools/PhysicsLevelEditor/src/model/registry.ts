@@ -11,3 +11,25 @@ export const kindComponent = {
   airVent: 'physics.airVent',
   token: 'item.token',
 } as const;
+
+// UI metadata for fields already supported by the Phase 1 Unity adapter.
+export const editorFields = {
+  'visual.sprite': [
+    ['sprite.assetGuid', 'Sprite GUID', 'text'], ['sprite.localFileId', 'Local file ID', 'text'],
+    ['sprite.color.r', 'Red', 'number'], ['sprite.color.g', 'Green', 'number'],
+    ['sprite.color.b', 'Blue', 'number'], ['sprite.color.a', 'Alpha', 'number'],
+    ['sprite.sortingOrder', 'Sorting order', 'integer']
+  ],
+  'physics.boxCollider2d': [
+    ['collider.size.x', 'Size X', 'number'], ['collider.size.y', 'Size Y', 'number'],
+    ['collider.offset.x', 'Offset X', 'number'], ['collider.offset.y', 'Offset Y', 'number'],
+    ['collider.isTrigger', 'Trigger', 'boolean']
+  ],
+  'physics.platform': [],
+  'physics.airVent': [
+    ['airVent.ventDirection.x', 'Direction X', 'number'], ['airVent.ventDirection.y', 'Direction Y', 'number'],
+    ['airVent.upwardForce', 'Force', 'number'], ['airVent.isInteractable', 'Interactable', 'boolean'],
+    ['airVent.guideText', 'Guide text', 'text'], ['airVent.isContinuous', 'Continuous', 'boolean']
+  ],
+  'item.token': [['token.scoreAmount', 'Score', 'integer'], ['token.tokenAmount', 'Tokens', 'integer']]
+} as const;
