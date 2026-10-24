@@ -90,24 +90,109 @@ export function groupObjects(level: LevelDataV1, ids: string[]): LevelDataV1 {
   return next;
 }
 
-export function worldPose(level: LevelDataV1, object: LevelObject): { position: Vec3; rotationZ: number; scale: Vec3 } {
-  if (!object.parentId) return { position: object.localPosition, rotationZ: object.localRotationZ, scale: object.localScale };
-  const parent = level.objects.find(o => o.id === object.parentId);
-  if (!parent) throw new Error(`找不到父对象 ${object.parentId}`);
-  const pose = worldPose(level,parent);
-  const angle = pose.rotationZ * Math.PI / 180;
-  const x = object.localPosition.x * pose.scale.x, y = object.localPosition.y * pose.scale.y;
-  return { position: { x: pose.position.x + x*Math.cos(angle)-y*Math.sin(angle),
-    y: pose.position.y + x*Math.sin(angle)+y*Math.cos(angle),
-    z: pose.position.z + object.localPosition.z*pose.scale.z },
-    rotationZ: pose.rotationZ + object.localRotationZ,
-    scale: { x: pose.scale.x*object.localScale.x, y: pose.scale.y*object.localScale.y,
-      z: pose.scale.z*object.localScale.z } };
+export type Matrix2D = { a: number; b: number; c: number; d: number; x: number; y: number };
+const identity: Matrix2D = {a:1,b:0,c:0,d:1,x:0,y:0};
+export function multiply(left: Matrix2D, right: Matrix2D): Matrix2D {
+  return { a:left.a*right.a+left.c*right.b, b:left.b*right.a+left.d*right.b,
+    c:left.a*right.c+left.c*right.d, d:left.b*right.c+left.d*right.d,
+    x:left.a*right.x+left.c*right.y+left.x, y:left.b*right.x+left.d*right.y+left.y };
 }
-
+export function transformPoint(matrix: Matrix2D, point: Vec2): Vec2 {
+  return {x:matrix.a*point.x+matrix.c*point.y+matrix.x,
+    y:matrix.b*point.x+matrix.d*point.y+matrix.y};
+}
+export function inversePoint(matrix: Matrix2D, point: Vec2): Vec2 {
+  const det=matrix.a*matrix.d-matrix.b*matrix.c;
+  if (Math.abs(det)<1e-9) throw new Error('父子变换矩阵不可逆；缩放接近零');
+  const x=point.x-matrix.x, y=point.y-matrix.y;
+  return {x:(matrix.d*x-matrix.c*y)/det, y:(-matrix.b*x+matrix.a*y)/det};
+}
+export function inverseMatrix(matrix: Matrix2D): Matrix2D {
+  const det=matrix.a*matrix.d-matrix.b*matrix.c;
+  if (Math.abs(det)<1e-9) throw new Error('父子变换矩阵不可逆；缩放接近零');
+  return {a:matrix.d/det,b:-matrix.b/det,c:-matrix.c/det,d:matrix.a/det,
+    x:(matrix.c*matrix.y-matrix.d*matrix.x)/det,
+    y:(matrix.b*matrix.x-matrix.a*matrix.y)/det};
+}
+export function worldMatrix(level: LevelDataV1, object: LevelObject): Matrix2D {
+  const angle=object.localRotationZ*Math.PI/180, co=Math.cos(angle), si=Math.sin(angle);
+  const local: Matrix2D={a:co*object.localScale.x,b:si*object.localScale.x,
+    c:-si*object.localScale.y,d:co*object.localScale.y,
+    x:object.localPosition.x,y:object.localPosition.y};
+  if (!object.parentId) return local;
+  const parent=level.objects.find(o=>o.id===object.parentId);
+  if (!parent) throw new Error(`找不到父对象 ${object.parentId}`);
+  return multiply(worldMatrix(level,parent),local);
+}
+export function worldPose(level: LevelDataV1, object: LevelObject): { position: Vec3; rotationZ: number; scale: Vec3 } {
+  const m=worldMatrix(level,object);
+  let ancestor=object.parentId ? level.objects.find(o=>o.id===object.parentId) : undefined;
+  let z=object.localPosition.z, zScale=object.localScale.z;
+  while (ancestor) { z=ancestor.localPosition.z+z*ancestor.localScale.z; zScale*=ancestor.localScale.z;
+    ancestor=ancestor.parentId ? level.objects.find(o=>o.id===ancestor!.parentId) : undefined; }
+  return {position:{x:m.x,y:m.y,z},rotationZ:Math.atan2(m.b,m.a)*180/Math.PI,
+    scale:{x:Math.hypot(m.a,m.b),y:Math.hypot(m.c,m.d),z:zScale}};
+}
 export function colliderWorldCorners(level: LevelDataV1, object: LevelObject): Vec2[] {
-  const pose = worldPose(level,object);
-  return colliderCorners({ ...object, localPosition: pose.position, localRotationZ: pose.rotationZ, localScale: pose.scale });
+  const c=object.components.find(c=>c.typeId==='physics.boxCollider2d')?.collider;
+  if (!c) return [];
+  const m=worldMatrix(level,object);
+  return [[-1,-1],[1,-1],[1,1],[-1,1]].map(([sx,sy]) => transformPoint(m,
+    {x:c.offset.x+sx*c.size.x/2,y:c.offset.y+sy*c.size.y/2}));
+}
+export function resizeColliderFromWorld(level: LevelDataV1, id: string, corner: number, target: Vec2): LevelDataV1 {
+  if (!Number.isInteger(corner) || corner<0 || corner>3) throw new Error('Collider 控制点无效');
+  const source=level.objects.find(o=>o.id===id);
+  if (!source) throw new Error(`找不到对象 ${id}`);
+  const c=source.components.find(c=>c.typeId==='physics.boxCollider2d')?.collider;
+  if (!c) throw new Error('对象没有 BoxCollider2D');
+  const opposite=[2,3,0,1][corner];
+  const corners=[[-1,-1],[1,-1],[1,1],[-1,1]];
+  const [sx,sy]=corners[opposite];
+  const fixed={x:c.offset.x+sx*c.size.x/2,y:c.offset.y+sy*c.size.y/2};
+  const moving=inversePoint(worldMatrix(level,source),target);
+  const next=clone(level);
+  const collider=next.objects.find(o=>o.id===id)!.components.find(c=>c.typeId==='physics.boxCollider2d')!.collider!;
+  collider.size={x:Math.abs(moving.x-fixed.x),y:Math.abs(moving.y-fixed.y)};
+  collider.offset={x:(moving.x+fixed.x)/2,y:(moving.y+fixed.y)/2};
+  if(collider.size.x<0.05 || collider.size.y<0.05) throw new Error('Collider 每个轴至少需要 0.05 单位');
+  assertSchema(next); validateLevel(next);
+  return next;
+}
+export function reparentObject(level: LevelDataV1, id: string, parentId: string | null): LevelDataV1 {
+  const object=level.objects.find(o=>o.id===id);
+  if (!object) throw new Error(`找不到对象 ${id}`);
+  if (parentId===object.parentId) return level;
+  if (parentId===id) throw new Error('对象不能成为自己的父级');
+  const parent=parentId ? level.objects.find(o=>o.id===parentId) : null;
+  if (parentId && !parent) throw new Error(`找不到父对象 ${parentId}`);
+  let cursor=parent;
+  while(cursor) {
+    if(cursor.id===id) throw new Error('父子关系会形成循环引用');
+    cursor=cursor.parentId ? level.objects.find(o=>o.id===cursor!.parentId) : null;
+  }
+  const world=worldMatrix(level,object);
+  const base=parent ? worldMatrix(level,parent) : identity;
+  const local=multiply(inverseMatrix(base),world);
+  const sx=Math.hypot(local.a,local.b);
+  const determinant=local.a*local.d-local.b*local.c;
+  if(sx<1e-9 || Math.abs(determinant)<1e-9) throw new Error('目标层级存在不可逆缩放');
+  const sy=determinant/sx, angle=Math.atan2(local.b,local.a);
+  const expected={a:Math.cos(angle)*sx,b:Math.sin(angle)*sx,c:-Math.sin(angle)*sy,d:Math.cos(angle)*sy};
+  if (Math.max(Math.abs(local.a-expected.a),Math.abs(local.b-expected.b),
+    Math.abs(local.c-expected.c),Math.abs(local.d-expected.d))>1e-7)
+    throw new Error('改父级将产生剪切变换；当前 LevelDataV1 无法无损表示，已拒绝');
+  const before=worldPose(level,object);
+  const parentPose=parent ? worldPose(level,parent) : null;
+  if(parentPose && Math.abs(parentPose.scale.z)<1e-9) throw new Error('父对象 Z 缩放不可逆');
+  const next=clone(level); const updated=next.objects.find(o=>o.id===id)!;
+  updated.parentId=parentId;
+  updated.localPosition={x:local.x,y:local.y,
+    z:parentPose ? (before.position.z-parentPose.position.z)/parentPose.scale.z : before.position.z};
+  updated.localRotationZ=angle*180/Math.PI;
+  updated.localScale={x:sx,y:sy,z:parentPose ? before.scale.z/parentPose.scale.z : before.scale.z};
+  assertSchema(next); validateLevel(next);
+  return next;
 }
 
 export function validateDocument(level: LevelDataV1): Issue[] {
