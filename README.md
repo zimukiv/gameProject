@@ -34,3 +34,9 @@
 - [实际游戏截图](Validation/Previews/)
 
 本机 Unity 6000.6.4f1 脚本编译及记录中的自动检查已通过；完整三关人工跑关、整体难度平衡和本轮 Windows 独立构建仍需完成，详见交接说明。测试脚本须在独立工程运行，避免影响正常试玩存档。
+
+## 物理关卡编辑器（Windows）
+
+队友请阅读 [工作台中文操作说明](Tools/PhysicsLevelEditor/TEAM_GUIDE.zh-CN.md)。
+
+当前已验收版本为 Phase 3，使用 Electron 桌面程序，需要 Node.js 22+。
