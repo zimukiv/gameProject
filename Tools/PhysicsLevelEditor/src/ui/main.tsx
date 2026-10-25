@@ -10,6 +10,8 @@ import { clone, commit, createObject, current, deleteObjects, dirty, duplicate, 
   redo, replaceCurrent, resizeColliderFromWorld, screenToWorld, serialized, setComponent, setObject, snap, undo, validateDocument,
   worldToScreen, colliderWorldCorners, worldPose, type History, type View, type Kind } from '../editor/document.ts';
 import './style.css';
+import { V2Inspector } from './v2-inspector.tsx';
+import { ReleaseWorkbench } from './release-workbench.tsx';
 
 type FileState = { path: string; fingerprint: string } | null;
 type Drag = { mode: 'move' | 'pan' | 'box' | 'resize'; start: Vec2; ids?: string[];
@@ -46,7 +48,7 @@ function Field({ label, value, type, onCommit, mixed = false, onInvalid }: { lab
     onChange={e => setDraft(e.target.value)} onBlur={save} onKeyDown={e => { if (e.key === 'Enter') e.currentTarget.blur(); if (e.key === 'Escape') { setDraft(String(value)); e.currentTarget.blur(); } }} /></label>;
 }
 
-function App() {
+function App({onV2,onHome}:{onV2:()=>void;onHome:()=>void}) {
   const [doc, setDoc] = useState<History | null>(null);
   const [file, setFile] = useState<FileState>(null);
   const [selection, setSelection] = useState<string[]>([]);
@@ -245,7 +247,7 @@ function App() {
       </div>{!collapsed.includes(o.id) && tree(o.id, depth+1)}</React.Fragment>);
   const ordered = level ? [...level.objects].filter(o=>!isHidden(o.id)).sort((a,b) => Number(Boolean(a.parentId))-Number(Boolean(b.parentId))) : [];
   return <div className="app">
-    <header><strong>Physics Level Editor</strong><button onClick={newLevel}>新建</button><button onClick={() => void load(window.levelFiles.open)}>打开</button>
+    <header><strong>Physics Level Editor</strong><button onClick={()=>{if(confirmDiscard())onHome();}}>三关工作台</button><button onClick={()=>{if(confirmDiscard())onV2();}}>V2 Inspector</button><button onClick={newLevel}>新建</button><button onClick={() => void load(window.levelFiles.open)}>打开</button>
       <button onClick={() => void load(window.levelFiles.openSample)}>打开 Phase 1 样本</button>
       <button disabled={!doc} onClick={() => void save()}>保存</button><button disabled={!doc} onClick={() => void save(true)}>另存为</button>
       <button disabled={!doc || doc.index === 0} onClick={() => setDoc(h => h && undo(h))}>撤销</button>
@@ -349,4 +351,7 @@ function App() {
       <div className="status"><b>文件与状态</b>{error && <span className="error">{error}</span>}<span>{message}</span><span>{file?.path ?? '未命名文件'}</span></div></footer>
   </div>;
 }
-createRoot(document.getElementById('root')!).render(<App />);
+function Root(){const[mode,setMode]=useState<'release'|'v1'|'v2'>('release');return mode==='release'?
+  <ReleaseWorkbench onLegacy={()=>setMode('v1')}/>:mode==='v2'?
+  <V2Inspector onBack={()=>setMode('v1')}/>:<App onV2={()=>setMode('v2')} onHome={()=>setMode('release')}/>;}
+createRoot(document.getElementById('root')!).render(<Root />);

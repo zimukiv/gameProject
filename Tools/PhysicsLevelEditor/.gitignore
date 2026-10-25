@@ -1,3 +1,8 @@
 node_modules/
 dist/
 dist-electron/
+runner-staging/
+native/bin/
+release/
+__pycache__/
+*.pyc

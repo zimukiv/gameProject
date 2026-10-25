@@ -1,0 +1,669 @@
+{
+  "resourceManifestVersion": 1,
+  "migrationState": "sourceOnly",
+  "resources": [
+    {
+      "assetId": "unity:0000000000000000e000000000000000:10001",
+      "sourceKind": "unityBuiltin",
+      "assetType": "UnityBuiltin",
+      "unityGuid": "0000000000000000e000000000000000",
+      "localFileId": "10001",
+      "sourcePath": null,
+      "sourceSha256": null,
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:0000000000000000e000000000000000:10102",
+      "sourceKind": "unityBuiltin",
+      "assetType": "UnityBuiltin",
+      "unityGuid": "0000000000000000e000000000000000",
+      "localFileId": "10102",
+      "sourcePath": null,
+      "sourceSha256": null,
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:0000000000000000f000000000000000:10304",
+      "sourceKind": "unityBuiltin",
+      "assetType": "UnityBuiltin",
+      "unityGuid": "0000000000000000f000000000000000",
+      "localFileId": "10304",
+      "sourcePath": null,
+      "sourceSha256": null,
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:0000000000000000f000000000000000:10754",
+      "sourceKind": "unityBuiltin",
+      "assetType": "UnityBuiltin",
+      "unityGuid": "0000000000000000f000000000000000",
+      "localFileId": "10754",
+      "sourcePath": null,
+      "sourceSha256": null,
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:0000000000000000f000000000000000:20201",
+      "sourceKind": "unityBuiltin",
+      "assetType": "UnityBuiltin",
+      "unityGuid": "0000000000000000f000000000000000",
+      "localFileId": "20201",
+      "sourcePath": null,
+      "sourceSha256": null,
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:011d8678f7fb40540a61e07cb77e4970:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "011d8678f7fb40540a61e07cb77e4970",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/UI/UIManager.cs",
+      "sourceSha256": "9dad69dbb828642e760aab4b92d133db44a45b3a64e719417a6908eb3e7359a8",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:0476a0df478af314c97be7367a780091:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "0476a0df478af314c97be7367a780091",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/Items/TokenItem.cs",
+      "sourceSha256": "a12340299a2849fb2ab4603f8b18e61eb9b1305fb9c40a42f8b8256629cad635",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:0cd44c1031e13a943bb63640046fad76:11500000",
+      "sourceKind": "unityPackage",
+      "assetType": "MonoScript",
+      "unityGuid": "0cd44c1031e13a943bb63640046fad76",
+      "localFileId": "11500000",
+      "sourcePath": null,
+      "sourceSha256": null,
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:217ea9197c396d347be1be6370aa64de:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "217ea9197c396d347be1be6370aa64de",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/LevelThemes/PhysicsTheme/RailgunBlock.cs",
+      "sourceSha256": "ac4e338e82ea68eb076f0a1248bd4c78f63946dfe892a6fc5a2219b95c680920",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1"
+      ]
+    },
+    {
+      "assetId": "unity:221f9378f97df7e4ba77cf9dbfec070a:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "221f9378f97df7e4ba77cf9dbfec070a",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/Player/PlayerController.cs",
+      "sourceSha256": "9b182965e922b51a15cfe936efae523aaa87cdac58a4fd1dc6534a11fc0270e9",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:3810bd670137f7c489dd6b354fffd8b8:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "3810bd670137f7c489dd6b354fffd8b8",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/LevelThemes/SlackerTheme/AwakeBlock.cs",
+      "sourceSha256": "0056fb68de99e21cf44cc5072ab6ca48c8d002a3d519c2b14f52d94c53e0cda9",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:47e3a102c248ed2438460b18bb4947f5:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "47e3a102c248ed2438460b18bb4947f5",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/Player/PlayerHealthRespawn.cs",
+      "sourceSha256": "dd39790d46bb6219fe069832c0c2cbda9f69d31633f437ad861cb101b3070b04",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:4e29b1a8efbd4b44bb3f3716e73f07ff:11500000",
+      "sourceKind": "unityPackage",
+      "assetType": "MonoScript",
+      "unityGuid": "4e29b1a8efbd4b44bb3f3716e73f07ff",
+      "localFileId": "11500000",
+      "sourcePath": null,
+      "sourceSha256": null,
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:4f231c4fb786f3946a6b90b886c48677:11500000",
+      "sourceKind": "unityPackage",
+      "assetType": "MonoScript",
+      "unityGuid": "4f231c4fb786f3946a6b90b886c48677",
+      "localFileId": "11500000",
+      "sourcePath": null,
+      "sourceSha256": null,
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:53559b1fbd6474348a65cf1578c9df7b:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "53559b1fbd6474348a65cf1578c9df7b",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/Environment/AIActivatorDevice.cs",
+      "sourceSha256": "dfad6b5a52c17de5407c18be3a648cbd86974709563bb0132b3206a7ad5a9889",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:5b2b49e355fd0cd498df19377af34d98:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "5b2b49e355fd0cd498df19377af34d98",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/LevelThemes/SlackerTheme/PatrolTeacherAI.cs",
+      "sourceSha256": "a62702928049c3bbcfd0e04c30696679f8230c8cb880413e1355939d49e2db97",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:5f7201a12d95ffc409449d95f23cf332:11500000",
+      "sourceKind": "unityPackage",
+      "assetType": "MonoScript",
+      "unityGuid": "5f7201a12d95ffc409449d95f23cf332",
+      "localFileId": "11500000",
+      "sourcePath": null,
+      "sourceSha256": null,
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:60ae22c64d0fec8449131be4cb7c0f9f:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "60ae22c64d0fec8449131be4cb7c0f9f",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/LevelThemes/SlackerTheme/AttendanceBlock.cs",
+      "sourceSha256": "293a4ae451b4173bee90079702dd8fb72d93d237eee1e420c3499e2d95404c0c",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:662078dd5b708c245b9c302efb2c2b31:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "662078dd5b708c245b9c302efb2c2b31",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/LevelThemes/PhysicsTheme/AirVentBlock.cs",
+      "sourceSha256": "d6be75d7cce4d0b8d0242233103025e53aa0d9e85b9a62001bf40683f0314111",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1"
+      ]
+    },
+    {
+      "assetId": "unity:67db9e8f0e2ae9c40bc1e2b64352a6b4:11500000",
+      "sourceKind": "unityPackage",
+      "assetType": "MonoScript",
+      "unityGuid": "67db9e8f0e2ae9c40bc1e2b64352a6b4",
+      "localFileId": "11500000",
+      "sourcePath": null,
+      "sourceSha256": null,
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:76c392e42b5098c458856cdf6ecaaaa1:11500000",
+      "sourceKind": "unityPackage",
+      "assetType": "MonoScript",
+      "unityGuid": "76c392e42b5098c458856cdf6ecaaaa1",
+      "localFileId": "11500000",
+      "sourcePath": null,
+      "sourceSha256": null,
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:780e8c8e6ed29d84da3762967add8ab9:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "780e8c8e6ed29d84da3762967add8ab9",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/UI/UIFontBootstrap.cs",
+      "sourceSha256": "84e0dce6631d2f161da4602c2b42d18c064a7660fe9fba046f569ba0966ffbd9",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:795317aedd8ae9f47864df8f0220491d:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "795317aedd8ae9f47864df8f0220491d",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/Items/CollectibleItem.cs",
+      "sourceSha256": "ed3ac203d87ec2360bedd64e72327d804468796201a5f0f78f614c19088eb481",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:833f17a9d270bce4e90bc6b55cb740c5:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "833f17a9d270bce4e90bc6b55cb740c5",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/Blocks/BaseBlock.cs",
+      "sourceSha256": "1162cafeaa3c17c0b5605751a71cdd5b6c1f457493719bec667db070762790bc",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:87e30cbc65273e640b58633aeff3fa34:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "87e30cbc65273e640b58633aeff3fa34",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/LevelThemes/MathTheme/IntegralDerivativeBlock.cs",
+      "sourceSha256": "aa8608648f684094093a1988707a7d1641069794fe99f7e460818975d7b9e14a",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room2"
+      ]
+    },
+    {
+      "assetId": "unity:8f779598811c2134485076d11f9333ae:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "8f779598811c2134485076d11f9333ae",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/Blocks/IceBlock.cs",
+      "sourceSha256": "3ce49756e3ce9e7d025b91e4c1dad0cf4b7169b16110ed59119587e328655768",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1"
+      ]
+    },
+    {
+      "assetId": "unity:94b44fb1e8d67e345a395a3930b537c2:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "94b44fb1e8d67e345a395a3930b537c2",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/Blocks/DoorMechanism.cs",
+      "sourceSha256": "de27938e471ab9ad6e79e9f308b049c0ad6a3a76facfd3a9cc37e9e2c21eb014",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:967957151c9a8754c820889226ab9c70:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "967957151c9a8754c820889226ab9c70",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/UI/MenuActions.cs",
+      "sourceSha256": "d895eaa457026a2817ee4640b47363f0ccf4c5793aba8e6aede528e32393e8bf",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:98343d7bf8f3ab54497476a330599f93:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "98343d7bf8f3ab54497476a330599f93",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/Blocks/MovingBlock.cs",
+      "sourceSha256": "5bb7b5868cd27394e3473af7394369b4bfc3cdd2262f629a6223ec437ee31795",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:9e3b3d6d60538154a8c4b726b8e2a02a:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "9e3b3d6d60538154a8c4b726b8e2a02a",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/LevelThemes/PhysicsTheme/ThermalControllerBlock.cs",
+      "sourceSha256": "fc23b6e256ec21e09836f8f7c8d11dbbd032e59ece3b50d3e3cf592c8a5f4625",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1"
+      ]
+    },
+    {
+      "assetId": "unity:a2319cb756a841245b6ef1bb123fd5f1:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "a2319cb756a841245b6ef1bb123fd5f1",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/Environment/BulletinBoard.cs",
+      "sourceSha256": "450ddf649f6fd41a53901f7851fdde3e821c2007295d912d5f7f0c8f1791b3dc",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1"
+      ]
+    },
+    {
+      "assetId": "unity:a44752a362d86654aae9528ecf7c80d1:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "a44752a362d86654aae9528ecf7c80d1",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/LevelThemes/MathTheme/RotatingHazardBlock.cs",
+      "sourceSha256": "18fd61aa80b27d4ae52d84e1e1c52144f79f0bbb96ea431c4d5ad3d84dd2d915",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room2"
+      ]
+    },
+    {
+      "assetId": "unity:ca243d0e72d95b2489487a844b82f483:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "ca243d0e72d95b2489487a844b82f483",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/Blocks/VanishingBlock.cs",
+      "sourceSha256": "84fa4464ecf23a5ee9188927dcbf30615ab7de178ae8a04c60c9d751741b9ce1",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:d000909a41735174bbe7fad79cc740b9:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "d000909a41735174bbe7fad79cc740b9",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/Items/BigTokenItem.cs",
+      "sourceSha256": "d7ba2190586c404ad5cf3b95dde80831825efc5d769a64248c5bfdaff5fab90e",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:d10c2fc47be3dc446b4c44376500a080:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "d10c2fc47be3dc446b4c44376500a080",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/Environment/Checkpoint.cs",
+      "sourceSha256": "cdd8a198b32a6bfb7519ee411807fe8b852b0083e08262c3edce8638714061ed",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:dc42784cf147c0c48a680349fa168899:11500000",
+      "sourceKind": "unityPackage",
+      "assetType": "MonoScript",
+      "unityGuid": "dc42784cf147c0c48a680349fa168899",
+      "localFileId": "11500000",
+      "sourcePath": null,
+      "sourceSha256": null,
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:de2ca89d727864547a76a0b060a9e004:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "de2ca89d727864547a76a0b060a9e004",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/Environment/CameraFollow.cs",
+      "sourceSha256": "f126da2e4bebcb74e88e5d759c5f3d696bd71dbf19b8d2b51645a0b2ff1ea5d0",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:df73ed77da6808a469271c6d83d860f4:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "df73ed77da6808a469271c6d83d860f4",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/Core/SceneBootstrap.cs",
+      "sourceSha256": "e3cc391b1b020a2733c57782d1bcb9dc18f376734a5600f8725a413864e17d29",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:e14644a0d884a524aba3793fdd30e7aa:2868101353237766674",
+      "sourceKind": "projectAsset",
+      "assetType": "Sprite",
+      "unityGuid": "e14644a0d884a524aba3793fdd30e7aa",
+      "localFileId": "2868101353237766674",
+      "sourcePath": "Assets/WhiteSquare.png",
+      "sourceSha256": "db993f2d24618c82972fb8a7bc2c85a44cc6c2f8c34609ca0af3a0e4c34c15a7",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:f30913185dfd197488024519102f8c80:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "f30913185dfd197488024519102f8c80",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/AI/EnemyAI.cs",
+      "sourceSha256": "21853fd7e06454357c9294716e0c973b404ba35035c3ae6798e410c56e6aeb32",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:f37e05a69adb3884eba48971e558c83b:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "f37e05a69adb3884eba48971e558c83b",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/Environment/LevelGoal.cs",
+      "sourceSha256": "2ecd4d6b91355f8fb76e653065bb9d0a46cf23939316cb8b2049b1f7b81e412f",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:fa62c606d9126824fb6f894228d0ac81:11500000",
+      "sourceKind": "codeDependency",
+      "assetType": "MonoScript",
+      "unityGuid": "fa62c606d9126824fb6f894228d0ac81",
+      "localFileId": "11500000",
+      "sourcePath": "Assets/Scripts/LevelThemes/SlackerTheme/DistanceTriggerMechanism.cs",
+      "sourceSha256": "d742297a587887da599552d1429cd11f8bddc2d905b58e0a5d00cb8ef375d160",
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room3"
+      ]
+    },
+    {
+      "assetId": "unity:fe87c0e1cc204ed48ad3b37840f39efc:11500000",
+      "sourceKind": "unityPackage",
+      "assetType": "MonoScript",
+      "unityGuid": "fe87c0e1cc204ed48ad3b37840f39efc",
+      "localFileId": "11500000",
+      "sourcePath": null,
+      "sourceSha256": null,
+      "packagePath": null,
+      "readiness": "sourceOnly",
+      "usedByRooms": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    }
+  ]
+}

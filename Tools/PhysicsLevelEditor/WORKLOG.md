@@ -57,3 +57,95 @@ The Phase 3 V1/V2 tool remains reachable. The three-room Beta does **not** yet s
 4. Add real asset rendering, typed component/event editing, portable resources, game runner and final Windows release only with matching runtime acceptance.
 
 Static tests do not imply Unity reconstruction PASS. A packaged EXE and source browsing do not imply the complete editor or one-click Playtest is complete.
+
+## Canvas regression repair (2026-10-25)
+
+The first three-room Beta routed V3 data to a new `release-workbench.tsx` SVG that drew each world object as a labelled circle. This bypassed the stable Phase 3 canvas geometry and interactions in `main.tsx` / `editor/document.ts`. It made real ground, platform and ice Collider sizes invisible even though the M1.2 V3 drafts retain `BoxCollider2D` dimensions and offsets.
+
+The repair adds `editor/v3-canvas.ts`, an adapter from V3 source fields to the Phase 3 world transform and collider geometry functions. `ui/v3-canvas-view.tsx` restores polygon Collider outlines, grid, pointer-centered zoom, pan, click/box/multi-selection, focus, snapping and one-step multi-object drag. Box and Circle colliders use their size/radius, offset, Transform scale, rotation and parent transform. The Inspector and hierarchy share selection. UI and Camera objects stay in the hierarchy with dedicated labels rather than being drawn as world geometry; source-only SpriteRenderers without trustworthy sprite bounds use a visibly distinct square placeholder. Hover or selection reveals object names, reducing label overlap.
+
+Only supported V3 `localPosition` edits write to the original separate overlay. Collider handles and unsupported component fields remain read-only; source YAML, V3 drafts and formal Scenes are untouched. The Phase 3 V1/V2 editor is still reachable through the legacy button, and the underlying Phase 3 geometry code is reused. This is a canvas restoration, not a claim that native Sprite assets or Unity Playtest are available.
+
+New regression tests check actual Level1/2/3 ground and platform geometry, Level1 Ice wall dimensions, CircleCollider radius/offset, work-copy movement, atomic multi-drag, the Phase 3 selected-parent rule and read-only rejection. The test suite reports 72 PASS, 1 existing Unity-only SKIP, 0 FAIL; build and ZIP packaging PASS. The packaged executable independently loads 71/64/72 objects and 254/221/254 components in Node-runtime mode. A GUI smoke launch in the controlled agent environment aborts at Electron's AppContainer ACL preflight before app code; GUI is **NOT VERIFIED** here. Prior user verification establishes that the older EXE launches on the user's desktop, but does not validate this revised canvas. The current portable artifact is `release/PhysicsLevelEditor-win32-x64-beta-r4.zip`; earlier Beta archives are retained for comparison.
+
+## P0 real Unity playtest bridge (in progress, 2026-10-25)
+
+The r4 canvas was accepted by the user, but its saved overlay did not affect the game. This is now the sole P0 objective. Two routes were compared: (A) a prebuilt Unity Player reads each saved overlay at launch; (B) rebuild a copied Scene/Player for each edit. Route A is used for repeat playtest speed. A one-time **isolated** Scene copy and build supplies the Player; subsequent tests read new immutable session copies of the saved overlay without rebuilding the 254 original Level1 components.
+
+The copied Scene is named `Level1` so existing scene-name-based game logic remains valid. The isolated Editor build checks source Scene SHA-256, SourceMap SHA-256, source Scene GUID, all 71 GameObject fileIDs and 33 A-object stable IDs. It attaches `LevelObjectId` only to the copied Scene and adds a dedicated bootstrap. The runtime reads a SHA-256-bound overlay, checks room/source/ID inventory and every edit before applying any position, then writes an applied/rejected receipt with actual Transform readback. The editor refuses unsaved changes, external work-copy conflicts, missing/incompatible Players and incomplete receipts. Session files and Player logs are kept under its separate user-data directory. The Player uses the previously isolated Company/Product, so its persistent save path differs from the formal game. This route does not use object names or runtime YAML fileIDs to match a target.
+
+New files: `Assets/Scripts/LevelRuntime/LevelEditorPlaytestBootstrap.cs`, `Assets/Editor/LevelImportExport/PhysicsLevelPlaytestBuild.cs`, `src/editor/playtest.ts`, `tests/playtest.test.ts`, `tools/compile-playtest-static.py` and the new Unity `.meta` files. The Electron main/preload/UI and portable packager have only the launch/receipt and runner inclusion changes. The packager refuses to create a Playtest-labelled ZIP without a matching isolated Unity Player.
+
+**Verified now:** `npm.cmd run check` 73 PASS / 1 existing Unity SKIP; `npm.cmd run build` PASS; new C# sources compile against installed Unity 6000.6.4f1 assemblies (warnings only). An integration test saved Start ground at X+0.5 and X+1.0 in sequence and confirmed two distinct, hashed session overlays for the same stable object ID. The three formal Scene hashes still match ProjectManifest. These tests do **not** prove a Player build or actual Unity application.
+
+**Current blocker:** isolated batchmode began script reload but Licensing Client IPC refused and retried; no `PLE_PLAYER_BUILD_PASS` or Player artifact was produced. The batch Editor process started by this task was stopped after repeated license timeouts. `Temp/Phase4AIsolatedProject/Temp/UnityLockfile` remained; it was **not removed**. The four new Unity script/meta files had been synced before launching, with identical source/isolated SHA-256. Do not overwrite that isolated project while its lock exists. `npm.cmd run package:portable` correctly fails closed because no verified Player build exists. There is **no new r5 ZIP yet**, and real Player data/behavior/GUI are NOT_RUN.
+
+Next single action in a normally licensed Unity Hub session: open `Temp/Phase4AIsolatedProject` in Unity 6000.6.4f1; after scripts compile with zero red errors, run `Physics Level Editor > Release First > Build isolated Room 1 playtest Player`. Capture `PLE_PLAYER_BUILD_PASS` and the output path, or report the first error. The Editor must be closed before any further file sync. Only after the Player build can `npm.cmd run package:portable` create the r5 ZIP and the real Start ground X+0.5 / X+1.0 Player tests begin. Unity Player build PASS, receipt/applied PASS and human movement/jump/gameplay PASS must be reported separately.
+
+## Embedded Playtest acceptance (2026-10-25)
+
+Goal: Room 1 saved work copy -> click 试玩 -> the real Unity Player runs **inside the workbench stage** -> keyboard works -> stop -> back to editing -> replay shows the new value. The isolated Player build and the SHA-bound overlay were already present; this session resolved the embedding failures and completed runtime acceptance on the packaged r5.
+
+### Embedding diagnosis (observed, not inferred)
+
+1. Standalone `PhysicsLevelPlaytest.exe` renders and accepts keyboard input. Baseline PASS.
+2. Engine-owned attach via `-parentHWND <hwnd> delayed` (mode `unity`): the Player renders inside the host area. If the host then restyles/reparents the window **after** Unity has attached (`SetWindowLongPtr`, `SetParent`, style changes), the client area turns black. Not used.
+3. Host-owned `SetParent` + `WS_CHILD` (mode `child`): renders, but synthetic A/D/Space do not move the player; keyboard focus stays outside the child window. Rejected for acceptance.
+4. Owned borderless overlay: top-level `WS_POPUP` window, `GWL_HWNDPARENT` set to the workbench HWND, `WS_EX_TOOLWINDOW`, no caption, positioned over the stage. It renders real gameplay **and** receives keyboard input, has no taskbar entry, follows the stage, and cannot be moved independently. **Adopted.**
+5. The earlier "owned mode renders black" reading was a harness artifact: the self-host WinForms form used `TopMost=true` and covered the owned window. `--topmost` now defaults off; with it off the owned window renders.
+
+### DPI and geometry
+
+- `native/PlaytestHost.cs` calls `SetProcessDpiAwarenessContext(PER_MONITOR_AWARE_V2)` with a `SetProcessDPIAware()` fallback before creating anything.
+- The Electron main process measures the stage rect in DIP (renderer `getBoundingClientRect()` plus `getContentBounds()`) and converts it with `screen.dipToScreenRect()`, then fits 16:9 inside the measured stage so `CanvasScaler` never crops the HUD.
+- Measured on the packaged EXE (physical 2560x1600, 150% scaling): workbench 2221x1351 at (170,89); embedded Unity window 1285x722 at (602,438), i.e. 16:9, inside the center stage, with the right Inspector still visible. Evidence: `ple-geom-front.png` (DPI-aware full-screen capture).
+- Test-tooling note: a DPI-unaware screen capture produced a 1707x1067 image that is a **1:1 crop of the top-left physical region**, not a downscaled full screen. That crop cut the workbench at x=1707 and produced a false "the game spills past the stage" reading. Geometry checks must use a DPI-aware capture.
+
+### Edit -> save -> playtest -> stop (packaged r5)
+
+- `PLAYTEST_SMOKE={"before":"-4.5","after":"-4","applied":true,...}`.
+- Receipt `%APPDATA%\Physics Level Editor Beta\playtest-sessions\ef254f55-6595-46ac-992e-b71a627c365e\receipt.json`: `status=applied`, `appliedCount=1`, Start ground `46c11342-6027-593d-87d5-ff1d6cb512b2` at `x=-4.0, y=-3.5, z=0`.
+- UI footer: "Unity 已确认应用 1 项位置修改 · PID 40268 · 原始 Unity Scene 不会被覆盖".
+- Keyboard inside the embedded window: clicked the stage (triggers `focusPlaytest`), then sent D/Space. HUD changed from `SCORE 0 / TOKENS 0` to `SCORE 200 / TOKENS 2`, `充能 2/3`. Evidence: `ple-input-packed.png`.
+- Auto-stop after 120 s: both `PhysicsLevelPlaytest.exe` and `PlaytestHost.exe` exited; the editor canvas returned and the header went back to `试玩 Room 1`. Evidence: `ple-state-now.png`.
+- Externally closing the Unity window (`WM_CLOSE`) also stops the session and restores the canvas.
+- A hard Unity crash (process killed without WM_CLOSE) is **NOT TESTED**. The helper attaches a Job Object with `JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE`, but crash survival/cleanup is unverified.
+- Formal Scenes unchanged: `git status` shows no modification under `Assets/Scenes`. PlayerPrefs `GameFullscreen_h3745021268` is `0` after the run.
+
+### Tests, build, artifact
+
+- `npm.cmd run check`: 75 tests, 74 PASS, 1 existing Unity-only SKIP, 0 FAIL.
+- `npm.cmd run build`: PASS.
+- `npm.cmd run package:portable`: PASS. `release/PhysicsLevelEditor-win32-x64-beta-r5-playtest/` and `.zip` (490,823,680 bytes). SHA-256 `4EA1DD839DE2FC1D04BE8B3FCF903464F717B23DC68591C9D574EF2B15B379B2`. `r4` is retained untouched.
+- The packager now compiles `native/PlaytestHost.exe` from checked-in source before packaging and refuses to ship without it; the ZIP listing is verified. `tar.exe` is invoked with a bare archive name from the release directory because bsdtar treats an absolute `C:\...` `-f` path as a remote host.
+- `runner-staging/` (a junction to the isolated Player build, dev only) and `native/bin/` are gitignored; neither is part of the release.
+
+### Capabilities and limits
+
+- Runtime-verified: Room 1 only; A-class non-UI `localPosition` edits; work-copy save with backup and SHA-bound overlay; embedded real Player with working keyboard input; stop/exit cleanup.
+- Not implemented: playtest for Rooms 2/3; collider/component-field editing; native Sprite asset rendering; Unity-Editor-free **rebuild** of the Player (the bundled Player is prebuilt).
+- The embedded window is an **owned top-level overlay**, not a true child. It is visually inside the stage and follows it, but it remains a separate owned HWND. Child mode stays unsuitable because of keyboard focus.
+- Minimize hides the game; restore re-shows, resizes and refocuses. Window move/resize and the renderer `ResizeObserver` reapply the rect (verified in dev; not separately re-verified on r5).
+- The renderer's timed auto-stop depends on a renderer timer; Chromium throttling (occluded window) can delay it. The Stop button and window-close paths are independent of that timer.
+
+### Minimal manual acceptance
+
+1. Extract `PhysicsLevelEditor-win32-x64-beta-r5-playtest.zip` fully; do not run the EXE inside the ZIP.
+2. Double-click `PhysicsLevelEditor.exe`, open Room 1, select `Start ground`, change X by +0.5, click `保存工作副本`.
+3. Click `试玩 Room 1`, click the game area once, then A/D + Space; confirm movement/jump in the embedded game.
+4. Click `停止试玩`; confirm the canvas returns; play again and confirm the saved X is still applied (receipt/footer).
+5. Confirm the formal `Assets/Scenes/Level1.unity` and the other Scenes are unchanged.
+
+### Residual test-process note
+
+Four `PhysicsLevelEditor.exe` PIDs (30960/37568/46328/47164, started 20:38-22:00, no command line, no window) survived `WM_CLOSE` and `Stop-Process`. They predate this acceptance run and are outside it; every process started by the r5 run exited normally.
+
+## Documentation and repository state (2026-10-26)
+
+Added `PLAYTEST_GUIDE.md` (Chinese end-user manual for Beta r5): extraction and launch, the Room 1 edit/save/playtest/stop acceptance flow, keyboard controls, work-copy and session paths, receipt fields, window behavior (owned overlay, not a true child), troubleshooting, limits, and developer packaging prerequisites. `README.md` now links to it and marks the older Phase 2/3 sections as development documentation.
+
+Corrected the packaged `README.txt` template: the user-data path was written as `%APPDATA%\physics-level-editor-beta\room-work-copies`, but the actual Electron `userData` directory is `%APPDATA%\Physics Level Editor Beta`. The fix is in `package-portable.mjs`; the already-built r5 ZIP still contains the old text and was **not** rebuilt, so the guide is authoritative for that artifact. The next packaging run will emit the corrected path.
+
+`Tools/PhysicsLevelEditor/.gitignore` now also excludes `release/` (3.0 GB of local Beta folders and ZIPs) and Python caches. Release artifacts stay local; source, native helper source, tests, Phase 4 Unity scripts/data and documentation are committed. The formal Unity Scenes remain unmodified.
+
+Pre-commit evidence from this acceptance session: `npm.cmd run check` 75 tests / 74 PASS / 1 existing Unity-only SKIP / 0 FAIL; `npm.cmd run build` PASS; packaged r5 smoke `PLAYTEST_SMOKE={"before":"-4.5","after":"-4","applied":true}`; receipt status `applied`, `appliedCount=1`, Start ground `x=-4.0`; embedded keyboard input changed the HUD from `SCORE 0 / TOKENS 0` to `SCORE 200 / TOKENS 2`. Hard-crash cleanup remains NOT TESTED.

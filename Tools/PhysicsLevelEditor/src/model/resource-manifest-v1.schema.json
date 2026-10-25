@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://physics-level-editor.local/schema/resource-manifest-v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "resourceManifestVersion",
+    "migrationState",
+    "resources"
+  ],
+  "properties": {
+    "resourceManifestVersion": {
+      "const": 1
+    },
+    "migrationState": {
+      "const": "sourceOnly"
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "assetId",
+          "sourceKind",
+          "assetType",
+          "unityGuid",
+          "localFileId",
+          "sourcePath",
+          "sourceSha256",
+          "packagePath",
+          "readiness",
+          "usedByRooms"
+        ],
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sourceKind": {
+            "enum": [
+              "projectAsset",
+              "codeDependency",
+              "unityBuiltin",
+              "unityPackage"
+            ]
+          },
+          "assetType": {
+            "type": "string",
+            "minLength": 1
+          },
+          "unityGuid": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{32}$"
+          },
+          "localFileId": {
+            "type": "string",
+            "pattern": "^[0-9]+$"
+          },
+          "sourcePath": {
+            "oneOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sourceSha256": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "packagePath": {
+            "oneOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "readiness": {
+            "const": "sourceOnly"
+          },
+          "usedByRooms": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "room1",
+                "room2",
+                "room3"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "manifestVersion": 1,
+  "projectId": "zimukiv.gameProject.physicsLevelEditor",
+  "levelFormatVersion": 3,
+  "resourceManifestVersion": 1,
+  "resourceManifestPath": "Resources/ResourceSources.json",
+  "rooms": [
+    {
+      "roomId": "room1",
+      "displayName": "\u7269\u7406",
+      "levelId": "unity:8012e3d1cdce7da499fa92e045ffd865",
+      "sourceScene": {
+        "path": "Assets/Scenes/Level1.unity",
+        "guid": "8012e3d1cdce7da499fa92e045ffd865",
+        "sha256": "208caa5ee0c2edb7fe3140ece317ccd0156957ad0ae89e2a738a3ccb2d396d34"
+      },
+      "sourceMapPath": "SourceMaps/Level1.source.json",
+      "levelDataPath": null,
+      "migrationState": "sourceOnly",
+      "sourceObjectCount": 71,
+      "sourceComponentCount": 254,
+      "sourceEventCount": 5
+    },
+    {
+      "roomId": "room2",
+      "displayName": "\u9ad8\u6570",
+      "levelId": "unity:aace1a4c60c02be42aea6f7a1173de6b",
+      "sourceScene": {
+        "path": "Assets/Scenes/Level2.unity",
+        "guid": "aace1a4c60c02be42aea6f7a1173de6b",
+        "sha256": "bbe8f5622425b71c7cb6debb53c592932746b051438c36e35fd667619b8a0e51"
+      },
+      "sourceMapPath": "SourceMaps/Level2.source.json",
+      "levelDataPath": null,
+      "migrationState": "sourceOnly",
+      "sourceObjectCount": 64,
+      "sourceComponentCount": 221,
+      "sourceEventCount": 5
+    },
+    {
+      "roomId": "room3",
+      "displayName": "\u6c34\u8bfe",
+      "levelId": "unity:5ad5b2f153ad80546b7a33b6d8911e36",
+      "sourceScene": {
+        "path": "Assets/Scenes/Level3.unity",
+        "guid": "5ad5b2f153ad80546b7a33b6d8911e36",
+        "sha256": "b087f4199fb7589ca5b5811b214ccf8988b737ba340fca65d11b864f91cb023c"
+      },
+      "sourceMapPath": "SourceMaps/Level3.source.json",
+      "levelDataPath": null,
+      "migrationState": "sourceOnly",
+      "sourceObjectCount": 72,
+      "sourceComponentCount": 254,
+      "sourceEventCount": 11
+    }
+  ]
+}

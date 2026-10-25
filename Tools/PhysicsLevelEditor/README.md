@@ -2,6 +2,8 @@
 
 Windows desktop editor for the Phase 1 `LevelDataV1` partial JSON format. It edits real files through Electron. The renderer has no Node.js access; file operations go through a limited preload API.
 
+> **Current Windows Beta r5:** the shipping artifact runs a real Unity Player inside the workbench playtest area. See [PLAYTEST_GUIDE.md](PLAYTEST_GUIDE.md) for the end-user workflow, data paths, troubleshooting and current limits. The sections below describe the earlier Phase 2/3 editor surface and remain useful for development.
+
 ## Start
 
 From `Tools/PhysicsLevelEditor`:

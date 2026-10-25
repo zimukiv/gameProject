@@ -3,22 +3,27 @@ import { createHash, randomUUID } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { validateLevel } from '../model/validate.ts';
 import { assertSchema } from './schema.ts';
+import { validateV2 } from '../model/validate-v2.ts';
 
 export type Opened = { path: string; text: string; fingerprint: string };
 const hash = (text: string) => createHash('sha256').update(text).digest('hex');
+function validateStored(data: unknown) {
+  if (data && typeof data==='object' && (data as {formatVersion?:unknown}).formatVersion===2) validateV2(data);
+  else { assertSchema(data); validateLevel(data); }
+}
 
 export class LevelFiles {
   private known = new Map<string, string>();
   knownFingerprint(path: string) { return this.known.get(path) ?? null; }
   async open(path: string): Promise<Opened> {
     const text = await readFile(path, 'utf8');
-    const data = JSON.parse(text); assertSchema(data); validateLevel(data);
+    const data = JSON.parse(text); validateStored(data);
     const fingerprint = hash(text);
     this.known.set(path, fingerprint);
     return { path, text, fingerprint };
   }
   async save(path: string, text: string, expected: string | null): Promise<Opened> {
-    const data = JSON.parse(text); assertSchema(data); validateLevel(data);
+    const data = JSON.parse(text); validateStored(data);
     let exists = false, old = '';
     try { old = await readFile(path, 'utf8'); exists = true; }
     catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }

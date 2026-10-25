@@ -1,0 +1,456 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://physics-level-editor.local/schema/source-inventory-v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "inventoryVersion",
+    "roomId",
+    "sourceScene",
+    "migrationState",
+    "objects",
+    "persistentCalls"
+  ],
+  "properties": {
+    "inventoryVersion": {
+      "const": 1
+    },
+    "roomId": {
+      "enum": [
+        "room1",
+        "room2",
+        "room3"
+      ]
+    },
+    "sourceScene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "guid",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "guid": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{32}$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "migrationState": {
+      "const": "sourceOnly"
+    },
+    "objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "objectId",
+          "sourceFileId",
+          "sourceOrder",
+          "nameAtSource",
+          "hierarchyAtSource",
+          "parentObjectId",
+          "ownership",
+          "responsibility",
+          "sourceGameObjectSha256",
+          "components"
+        ],
+        "properties": {
+          "objectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sourceFileId": {
+            "type": "string",
+            "pattern": "^[0-9]+$"
+          },
+          "sourceOrder": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "nameAtSource": {
+            "type": "string"
+          },
+          "hierarchyAtSource": {
+            "type": "string"
+          },
+          "parentObjectId": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "ownership": {
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D"
+            ]
+          },
+          "responsibility": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "configPath",
+              "readiness"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "levelObject",
+                  "referenceMarker",
+                  "runnerBinding",
+                  "sceneConfigVisual"
+                ]
+              },
+              "configPath": {
+                "type": "string",
+                "minLength": 1
+              },
+              "readiness": {
+                "enum": [
+                  "pendingAdapter",
+                  "pendingTemplate"
+                ]
+              },
+              "templateSlot": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "sourceGameObjectSha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "components": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "componentId",
+                "sourceFileId",
+                "classId",
+                "unityType",
+                "sourceScriptGuid",
+                "sourceOrder",
+                "sourceDocumentSha256",
+                "restoration",
+                "readiness",
+                "references"
+              ],
+              "properties": {
+                "componentId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "sourceFileId": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                },
+                "classId": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "unityType": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "sourceScriptGuid": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{32}$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "sourceOrder": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "sourceDocumentSha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "restoration": {
+                  "enum": [
+                    "levelObject",
+                    "referenceMarker",
+                    "runnerBinding",
+                    "sceneConfigVisual"
+                  ]
+                },
+                "readiness": {
+                  "enum": [
+                    "pendingAdapter",
+                    "pendingTemplate"
+                  ]
+                },
+                "references": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "fieldPath",
+                          "kind"
+                        ],
+                        "properties": {
+                          "fieldPath": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "kind": {
+                            "const": "null"
+                          }
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "fieldPath",
+                          "kind",
+                          "objectId",
+                          "sourceFileId"
+                        ],
+                        "properties": {
+                          "fieldPath": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "kind": {
+                            "const": "object"
+                          },
+                          "objectId": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "sourceFileId": {
+                            "type": "string",
+                            "pattern": "^[0-9]+$"
+                          }
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "fieldPath",
+                          "kind",
+                          "objectId",
+                          "componentId",
+                          "sourceFileId"
+                        ],
+                        "properties": {
+                          "fieldPath": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "kind": {
+                            "const": "component"
+                          },
+                          "objectId": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "componentId": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "sourceFileId": {
+                            "type": "string",
+                            "pattern": "^[0-9]+$"
+                          }
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "fieldPath",
+                          "kind",
+                          "sourceFileId"
+                        ],
+                        "properties": {
+                          "fieldPath": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "kind": {
+                            "const": "sceneSetting"
+                          },
+                          "sourceFileId": {
+                            "type": "string",
+                            "pattern": "^[0-9]+$"
+                          }
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "fieldPath",
+                          "kind",
+                          "assetId",
+                          "unityGuid",
+                          "localFileId"
+                        ],
+                        "properties": {
+                          "fieldPath": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "kind": {
+                            "const": "asset"
+                          },
+                          "assetId": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "unityGuid": {
+                            "type": "string",
+                            "pattern": "^[0-9a-f]{32}$"
+                          },
+                          "localFileId": {
+                            "type": "string",
+                            "pattern": "^[0-9]+$"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "persistentCalls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "eventId",
+          "classification",
+          "sourceObjectId",
+          "sourceComponentId",
+          "sourceComponentFileId",
+          "fieldPath",
+          "callIndex",
+          "targetObjectId",
+          "targetComponentId",
+          "targetComponentFileId",
+          "targetUnityType",
+          "methodName",
+          "mode",
+          "callState",
+          "arguments",
+          "persistentCall",
+          "reviewFlag"
+        ],
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "classification": {
+            "enum": [
+              "runnerUi",
+              "levelDesign"
+            ]
+          },
+          "sourceObjectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sourceComponentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sourceComponentFileId": {
+            "type": "string",
+            "pattern": "^[0-9]+$"
+          },
+          "fieldPath": {
+            "type": "string",
+            "minLength": 1
+          },
+          "callIndex": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "targetObjectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "targetComponentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "targetComponentFileId": {
+            "type": "string",
+            "pattern": "^[0-9]+$"
+          },
+          "targetUnityType": {
+            "type": "string",
+            "minLength": 1
+          },
+          "methodName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mode": {
+            "type": "string",
+            "pattern": "^[0-9]+$"
+          },
+          "callState": {
+            "type": "string",
+            "pattern": "^[0-9]+$"
+          },
+          "arguments": {
+            "type": "object"
+          },
+          "persistentCall": {
+            "type": "object"
+          },
+          "reviewFlag": {
+            "oneOf": [
+              {
+                "const": "nameMethodMismatch"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

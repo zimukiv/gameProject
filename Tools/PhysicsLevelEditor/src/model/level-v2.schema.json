@@ -1,0 +1,1128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://physics-level-editor.local/schema/level-v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "formatVersion",
+    "levelId",
+    "coverage",
+    "sourceSceneGuid",
+    "objects"
+  ],
+  "properties": {
+    "formatVersion": {
+      "const": 2
+    },
+    "levelId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "coverage": {
+      "enum": [
+        "partial",
+        "full"
+      ]
+    },
+    "sourceSceneGuid": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{32}$"
+    },
+    "objects": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/object"
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "vec2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "x",
+        "y"
+      ],
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      }
+    },
+    "vec3": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "z": {
+          "type": "number"
+        }
+      }
+    },
+    "color": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "r",
+        "g",
+        "b",
+        "a"
+      ],
+      "properties": {
+        "r": {
+          "type": "number"
+        },
+        "g": {
+          "type": "number"
+        },
+        "b": {
+          "type": "number"
+        },
+        "a": {
+          "type": "number"
+        }
+      }
+    },
+    "sprite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assetGuid",
+        "localFileId",
+        "color",
+        "sortingOrder"
+      ],
+      "properties": {
+        "assetGuid": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{32}$"
+        },
+        "localFileId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$"
+        },
+        "color": {
+          "$ref": "#/$defs/color"
+        },
+        "sortingOrder": {
+          "type": "integer"
+        }
+      }
+    },
+    "collider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "size",
+        "offset",
+        "isTrigger"
+      ],
+      "properties": {
+        "size": {
+          "$ref": "#/$defs/vec2"
+        },
+        "offset": {
+          "$ref": "#/$defs/vec2"
+        },
+        "isTrigger": {
+          "type": "boolean"
+        }
+      }
+    },
+    "airVent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ventDirection",
+        "upwardForce",
+        "isInteractable",
+        "guideText",
+        "isContinuous"
+      ],
+      "properties": {
+        "ventDirection": {
+          "$ref": "#/$defs/vec2"
+        },
+        "upwardForce": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "isInteractable": {
+          "type": "boolean"
+        },
+        "guideText": {
+          "type": "string"
+        },
+        "isContinuous": {
+          "type": "boolean"
+        }
+      }
+    },
+    "token": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scoreAmount",
+        "tokenAmount"
+      ],
+      "properties": {
+        "scoreAmount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tokenAmount": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "vanishing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "visibleDuration",
+        "invisibleDuration",
+        "stepVanishDelay",
+        "respawnDelay",
+        "visibleColor",
+        "vanishColor",
+        "showGuide",
+        "warningDuration",
+        "optionalCollectible"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "PeriodicBlink",
+            "TriggerOnStep"
+          ]
+        },
+        "visibleDuration": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "invisibleDuration": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "stepVanishDelay": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "respawnDelay": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "visibleColor": {
+          "$ref": "#/$defs/color"
+        },
+        "vanishColor": {
+          "$ref": "#/$defs/color"
+        },
+        "showGuide": {
+          "type": "boolean"
+        },
+        "warningDuration": {
+          "type": "number",
+          "minimum": 0
+        },
+        "optionalCollectible": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sceneComponentRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "ice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "isMelted",
+        "solidColor",
+        "meltedColor"
+      ],
+      "properties": {
+        "isMelted": {
+          "type": "boolean"
+        },
+        "solidColor": {
+          "$ref": "#/$defs/color"
+        },
+        "meltedColor": {
+          "$ref": "#/$defs/color"
+        }
+      }
+    },
+    "thermal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "currentState",
+        "linkedController",
+        "controlledIce",
+        "terminalName",
+        "interactionRadius",
+        "controlRadius",
+        "roomFilterOverlay",
+        "coldFilterColor",
+        "hotFilterColor"
+      ],
+      "properties": {
+        "currentState": {
+          "enum": [
+            "Cold",
+            "Hot"
+          ]
+        },
+        "terminalName": {
+          "type": "string"
+        },
+        "interactionRadius": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "controlRadius": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "coldFilterColor": {
+          "$ref": "#/$defs/color"
+        },
+        "hotFilterColor": {
+          "$ref": "#/$defs/color"
+        },
+        "linkedController": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sceneComponentRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "controlledIce": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sceneComponentRef"
+          }
+        },
+        "roomFilterOverlay": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sceneComponentRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "railgun": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "launchEndPoint",
+        "acceleration",
+        "launchExitSpeed",
+        "launchDirection"
+      ],
+      "properties": {
+        "acceleration": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "launchExitSpeed": {
+          "type": "number",
+          "minimum": 0
+        },
+        "launchDirection": {
+          "$ref": "#/$defs/vec2"
+        },
+        "launchEndPoint": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/transformRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "bigToken": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scoreAmount",
+        "tokenAmount",
+        "collectVfxAsset",
+        "collectSfxAsset"
+      ],
+      "properties": {
+        "scoreAmount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tokenAmount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "collectVfxAsset": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/assetRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "collectSfxAsset": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/assetRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "collectible": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scoreAmount",
+        "collectibleName",
+        "requiresAINearby",
+        "requiredAIDistance",
+        "collectVfxAsset",
+        "collectSfxAsset"
+      ],
+      "properties": {
+        "scoreAmount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "collectibleName": {
+          "type": "string"
+        },
+        "requiresAINearby": {
+          "type": "boolean"
+        },
+        "requiredAIDistance": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "collectVfxAsset": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/assetRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "collectSfxAsset": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/assetRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "respawnPoint",
+        "isActivated",
+        "useFlagVisual",
+        "flagRenderer",
+        "activeColor",
+        "inactiveColor"
+      ],
+      "properties": {
+        "isActivated": {
+          "type": "boolean"
+        },
+        "useFlagVisual": {
+          "type": "boolean"
+        },
+        "activeColor": {
+          "$ref": "#/$defs/color"
+        },
+        "inactiveColor": {
+          "$ref": "#/$defs/color"
+        },
+        "respawnPoint": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/transformRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "flagRenderer": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sceneComponentRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "goal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nextLevelIndex",
+        "autoLoadNextLevel",
+        "requiresAIActivation",
+        "delayBeforeNextLevel",
+        "goalRenderer",
+        "completedColor"
+      ],
+      "properties": {
+        "nextLevelIndex": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "autoLoadNextLevel": {
+          "type": "boolean"
+        },
+        "requiresAIActivation": {
+          "type": "boolean"
+        },
+        "delayBeforeNextLevel": {
+          "type": "number",
+          "minimum": 0
+        },
+        "completedColor": {
+          "$ref": "#/$defs/color"
+        },
+        "goalRenderer": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sceneComponentRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "activator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "isActivated",
+        "interactKey",
+        "autoActivateOnContact",
+        "showInteractionGuide",
+        "baseDifficulty",
+        "difficultyPerToken",
+        "activeVfx",
+        "activationAudio",
+        "deviceRenderer",
+        "activeColor"
+      ],
+      "properties": {
+        "isActivated": {
+          "type": "boolean"
+        },
+        "interactKey": {
+          "enum": [
+            "E"
+          ]
+        },
+        "autoActivateOnContact": {
+          "type": "boolean"
+        },
+        "showInteractionGuide": {
+          "type": "boolean"
+        },
+        "baseDifficulty": {
+          "type": "number",
+          "minimum": 0
+        },
+        "difficultyPerToken": {
+          "type": "number",
+          "minimum": 0
+        },
+        "activeColor": {
+          "$ref": "#/$defs/color"
+        },
+        "activeVfx": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sceneObjectRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "activationAudio": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sceneComponentRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "deviceRenderer": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sceneComponentRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "enemy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "isHunting",
+        "baseChaseSpeed",
+        "currentSpeed",
+        "difficultyMultiplier",
+        "skillType",
+        "skillTriggerDistance",
+        "skillCooldown",
+        "burstSpeed",
+        "burstDuration",
+        "teleportNodes",
+        "maxAllowedPlayerLagDistance"
+      ],
+      "properties": {
+        "isHunting": {
+          "type": "boolean"
+        },
+        "baseChaseSpeed": {
+          "type": "number",
+          "minimum": 0
+        },
+        "currentSpeed": {
+          "type": "number",
+          "minimum": 0
+        },
+        "difficultyMultiplier": {
+          "type": "number",
+          "minimum": 0
+        },
+        "skillType": {
+          "enum": [
+            "BurstDash",
+            "CalculusDrift",
+            "DeadlinePressure"
+          ]
+        },
+        "skillTriggerDistance": {
+          "type": "number",
+          "minimum": 0
+        },
+        "skillCooldown": {
+          "type": "number",
+          "minimum": 0
+        },
+        "burstSpeed": {
+          "type": "number",
+          "minimum": 0
+        },
+        "burstDuration": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maxAllowedPlayerLagDistance": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "teleportNodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/transformRef"
+          }
+        }
+      }
+    },
+    "triggerButton": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "isOneShot",
+        "isPressed",
+        "buttonRenderer",
+        "unpressedColor",
+        "pressedColor",
+        "pressOffset"
+      ],
+      "properties": {
+        "isOneShot": {
+          "type": "boolean"
+        },
+        "isPressed": {
+          "type": "boolean"
+        },
+        "unpressedColor": {
+          "$ref": "#/$defs/color"
+        },
+        "pressedColor": {
+          "$ref": "#/$defs/color"
+        },
+        "pressOffset": {
+          "$ref": "#/$defs/vec3"
+        },
+        "buttonRenderer": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sceneComponentRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "typeId",
+        "version",
+        "enabled"
+      ],
+      "properties": {
+        "typeId": {
+          "type": "string"
+        },
+        "version": {
+          "const": 1
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "sprite": {
+          "$ref": "#/$defs/sprite"
+        },
+        "collider": {
+          "$ref": "#/$defs/collider"
+        },
+        "airVent": {
+          "$ref": "#/$defs/airVent"
+        },
+        "token": {
+          "$ref": "#/$defs/token"
+        },
+        "vanishing": {
+          "$ref": "#/$defs/vanishing"
+        },
+        "ice": {
+          "$ref": "#/$defs/ice"
+        },
+        "thermal": {
+          "$ref": "#/$defs/thermal"
+        },
+        "railgun": {
+          "$ref": "#/$defs/railgun"
+        },
+        "bigToken": {
+          "$ref": "#/$defs/bigToken"
+        },
+        "collectible": {
+          "$ref": "#/$defs/collectible"
+        },
+        "checkpoint": {
+          "$ref": "#/$defs/checkpoint"
+        },
+        "goal": {
+          "$ref": "#/$defs/goal"
+        },
+        "activator": {
+          "$ref": "#/$defs/activator"
+        },
+        "enemy": {
+          "$ref": "#/$defs/enemy"
+        },
+        "triggerButton": {
+          "$ref": "#/$defs/triggerButton"
+        },
+        "rigidbody": {
+          "$ref": "#/$defs/rigidbody"
+        }
+      }
+    },
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "target",
+        "expectedBool",
+        "expectedState"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "always",
+            "once",
+            "objectActive",
+            "mechanismState"
+          ]
+        },
+        "expectedBool": {
+          "type": "boolean"
+        },
+        "expectedState": {
+          "type": "string"
+        },
+        "target": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sceneTargetRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "target",
+        "componentTypeId",
+        "parameterPath",
+        "boolValue",
+        "numberValue",
+        "stateValue",
+        "delaySeconds"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "enum": [
+            "setObjectActive",
+            "setComponentEnabled",
+            "setMechanismState",
+            "setParameter",
+            "delay"
+          ]
+        },
+        "componentTypeId": {
+          "type": "string"
+        },
+        "parameterPath": {
+          "type": "string"
+        },
+        "boolValue": {
+          "type": "boolean"
+        },
+        "numberValue": {
+          "type": "number"
+        },
+        "stateValue": {
+          "type": "string"
+        },
+        "delaySeconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "target": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sceneTargetRef"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "enabled",
+        "trigger",
+        "condition",
+        "repeat",
+        "actions"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "trigger": {
+          "enum": [
+            "playerEnter",
+            "playerExit",
+            "interact",
+            "buttonPressed"
+          ]
+        },
+        "condition": {
+          "$ref": "#/$defs/condition"
+        },
+        "repeat": {
+          "enum": [
+            "ignoreWhileRunning",
+            "restart"
+          ]
+        },
+        "actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/action"
+          }
+        }
+      }
+    },
+    "object": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "parentId",
+        "active",
+        "layer",
+        "localPosition",
+        "localRotationZ",
+        "localScale",
+        "components",
+        "rules"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parentId": {
+          "$ref": "#/$defs/ref"
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "layer": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 31
+        },
+        "localPosition": {
+          "$ref": "#/$defs/vec3"
+        },
+        "localRotationZ": {
+          "type": "number"
+        },
+        "localScale": {
+          "$ref": "#/$defs/vec3"
+        },
+        "components": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/component"
+          }
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rule"
+          }
+        }
+      }
+    },
+    "sceneObjectRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "objectId"
+      ],
+      "properties": {
+        "kind": {
+          "const": "sceneObject"
+        },
+        "objectId": {
+          "$ref": "#/$defs/id"
+        }
+      }
+    },
+    "sceneComponentRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "objectId",
+        "componentTypeId",
+        "instanceId"
+      ],
+      "properties": {
+        "kind": {
+          "const": "sceneComponent"
+        },
+        "objectId": {
+          "$ref": "#/$defs/id"
+        },
+        "componentTypeId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instanceId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "transformRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "objectId"
+      ],
+      "properties": {
+        "kind": {
+          "const": "transform"
+        },
+        "objectId": {
+          "$ref": "#/$defs/id"
+        }
+      }
+    },
+    "assetRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "assetGuid",
+        "localFileId"
+      ],
+      "properties": {
+        "kind": {
+          "const": "asset"
+        },
+        "assetGuid": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{32}$"
+        },
+        "localFileId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$"
+        }
+      }
+    },
+    "sceneTargetRef": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/sceneObjectRef"
+        },
+        {
+          "$ref": "#/$defs/sceneComponentRef"
+        }
+      ]
+    },
+    "rigidbody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bodyType",
+        "gravityScale",
+        "freezeRotation"
+      ],
+      "properties": {
+        "bodyType": {
+          "enum": [
+            "Dynamic",
+            "Kinematic",
+            "Static"
+          ]
+        },
+        "gravityScale": {
+          "type": "number"
+        },
+        "freezeRotation": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

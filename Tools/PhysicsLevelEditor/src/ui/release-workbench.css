@@ -1,0 +1,38 @@
+.release-app{height:100vh;display:flex;flex-direction:column;background:#15202b;color:#e5edf5;overflow:hidden}
+.release-bar{height:48px;flex:none;display:flex;align-items:center;gap:7px;padding:6px 11px;background:#1f3040;border-bottom:1px solid #416077}
+.release-bar strong{font-size:16px;margin-right:12px}.release-grow{flex:1}
+.release-overview{padding:28px;overflow:auto}.release-overview h1{font-size:23px;margin:0 0 8px}.release-overview p{color:#aac1d4}
+.release-rooms{display:grid;grid-template-columns:repeat(3,minmax(190px,1fr));gap:16px;margin-top:30px}
+.release-room{min-height:170px;text-align:left;display:flex;flex-direction:column;gap:12px;padding:20px;background:#243a4b;border:1px solid #55809a}
+.release-room strong{font-size:18px}.release-room span{color:#d0e3ef}.release-room small{color:#9ab8ca}
+.release-main{flex:1;min-height:0;display:flex}.release-left,.release-right{padding:10px;overflow:auto;background:#1d2e3d}
+.release-left{width:280px;min-width:210px;resize:horizontal;border-right:1px solid #415b6d}
+.release-right{width:330px;min-width:240px;resize:horizontal;border-left:1px solid #415b6d}
+.release-left input{width:100%}.release-left h3,.release-right h3{margin:4px 0 10px}.release-warning{background:#604b27;color:#fff0c8;padding:7px;font-size:11px}
+.release-tree{margin-top:10px;max-height:calc(100vh - 195px);overflow:auto}
+.release-tree-row{width:100%;display:flex;text-align:left;justify-content:space-between;gap:4px;border:0;background:transparent;border-radius:0;white-space:nowrap}
+.release-tree-row span{overflow:hidden;text-overflow:ellipsis}.release-tree-row small{color:#8ca7ba}.release-tree-row.active{background:#285c77}
+.release-center{flex:1;min-width:180px;display:flex;flex-direction:column}.release-caption{padding:7px 10px;background:#233548;color:#a4bfd0;font-size:11px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.release-caption input{width:52px}.release-stage{flex:1;min-height:0;position:relative;display:flex}.release-stage>.release-canvas{flex:1;width:100%}
+.release-playtest-cover{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;text-align:center;background:#0d1620;color:#dbe9f4;border:1px solid #416077}
+.release-playtest-cover strong{font-size:17px}.release-playtest-cover span{color:#a9c6d8}.release-playtest-cover small{color:#89a6b9}
+.release-canvas{flex:1;width:100%;min-height:0;touch-action:none;background:#17232e}
+.release-grid line{stroke:#2b3c4b;stroke-width:.6;pointer-events:none}
+.release-object{cursor:pointer}.release-object.read-only{cursor:default}
+.release-hit{fill:transparent;stroke:transparent;stroke-width:12}
+.release-outline{fill-opacity:.45;stroke:#bcd8e8;stroke-width:2;vector-effect:non-scaling-stroke}
+.release-outline.trigger{stroke-dasharray:6 4}.release-object.picked .release-outline{stroke:#ffd565;stroke-width:3;fill-opacity:.55}
+.release-placeholder{stroke:#bcd8e8;stroke-width:1.5;fill-opacity:.45;stroke-dasharray:3 2}
+.release-object.picked .release-placeholder{stroke:#ffd565;stroke-width:2}
+.release-object text{display:none;fill:#e4f1f8;font-size:11px;paint-order:stroke;stroke:#17232e;stroke-width:3;pointer-events:none}
+.release-object:hover text,.release-object.picked text{display:block}
+.release-readonly-handle{fill:#293b4c;stroke:#ffd565;pointer-events:none}
+.release-selection-box{fill:#77afd133;stroke:#a6d7f5;stroke-dasharray:5 3;pointer-events:none}
+.release-tree-action{font-size:11px;color:#a9c8d7;padding:0 2px}.release-tree-action:hover{color:#fff}
+.release-buttons{display:flex;flex-wrap:wrap;gap:4px}
+.release-id{font-size:10px;color:#9db5c8;overflow-wrap:anywhere;margin:7px 0}
+.release-field{display:flex;align-items:center;justify-content:space-between;margin:5px 0}.release-field input{width:140px}
+.release-note{font-size:11px;color:#b7c8d5;background:#294052;padding:7px}.release-right details{border-top:1px solid #3f5a6c;padding:7px 0}
+.release-right summary{cursor:pointer}.release-right pre{max-height:190px;overflow:auto;white-space:pre-wrap;word-break:break-word;font-size:10px}
+.release-right details p{font-size:10px;overflow-wrap:anywhere}.release-footer{height:70px;flex:none;display:flex;gap:12px;align-items:center;overflow:auto;padding:7px 11px;background:#1c2d3b;border-top:1px solid #3f5a6c;font-size:11px}
+.release-footer span{max-width:34%;overflow-wrap:anywhere}.release-footer strong{color:#ff9f9f}

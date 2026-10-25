@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://physics-level-editor.local/schema/project-manifest-v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifestVersion",
+    "projectId",
+    "levelFormatVersion",
+    "resourceManifestVersion",
+    "resourceManifestPath",
+    "rooms"
+  ],
+  "properties": {
+    "manifestVersion": {
+      "const": 1
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "levelFormatVersion": {
+      "const": 3
+    },
+    "resourceManifestVersion": {
+      "const": 1
+    },
+    "resourceManifestPath": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rooms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "roomId",
+          "displayName",
+          "levelId",
+          "sourceScene",
+          "sourceMapPath",
+          "levelDataPath",
+          "migrationState",
+          "sourceObjectCount",
+          "sourceComponentCount",
+          "sourceEventCount"
+        ],
+        "properties": {
+          "roomId": {
+            "enum": [
+              "room1",
+              "room2",
+              "room3"
+            ]
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "levelId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sourceScene": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "guid",
+              "sha256"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "guid": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{32}$"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          },
+          "sourceMapPath": {
+            "type": "string",
+            "minLength": 1
+          },
+          "levelDataPath": {
+            "oneOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "migrationState": {
+            "enum": [
+              "sourceOnly",
+              "partial",
+              "full"
+            ]
+          },
+          "sourceObjectCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sourceComponentCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sourceEventCount": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1224 @@
+{
+  "stage": "M1.3A",
+  "status": "dataPreparedPlayNotRun",
+  "sourceDraftSha256": "360e9cd725ee6f9c8c9ac48862301fd0190a39ea431cfed4ed507fa71d563a93",
+  "sourceSceneSha256": "208caa5ee0c2edb7fe3140ece317ccd0156957ad0ae89e2a738a3ccb2d396d34",
+  "selectedObjectIds": {
+    "controllerA": "0c53c967-c623-50f2-9d5d-98de4129232d",
+    "controllerB": "0c00697d-0470-5e5d-940b-b0645f0c858e",
+    "ice1": "670b32aa-3139-55f7-b655-ef0bebf7776c",
+    "ice2": "1263c26b-67be-5071-8ada-a79b35fdc71c",
+    "ice3": "e520f104-d5ae-5663-b6c5-3eea07634b76",
+    "wall": "9336ae16-b68e-5747-a5cd-113149e3870a",
+    "backdrop": "4a942db3-88db-5728-b2db-f49f66c969ee"
+  },
+  "componentCount": 32,
+  "sourceFieldCoverage": [
+    {
+      "componentId": "19136510-ea57-58c2-b1aa-7b856858feee",
+      "typeId": "unity.Transform",
+      "appliedTopLevelFields": [
+        "m_Father",
+        "m_LocalPosition",
+        "m_LocalRotation",
+        "m_LocalScale"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_Children",
+        "m_ConstrainProportionsScale",
+        "m_CorrespondingSourceObject",
+        "m_GameObject",
+        "m_LocalEulerAnglesHint",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "80d94b70-4b1e-571b-96f8-15897fb10cc9",
+      "typeId": "unity.SpriteRenderer",
+      "appliedTopLevelFields": [
+        "m_Color",
+        "m_DrawMode",
+        "m_Enabled",
+        "m_FlipX",
+        "m_FlipY",
+        "m_Materials",
+        "m_Size",
+        "m_SortingLayerID",
+        "m_SortingOrder",
+        "m_Sprite"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_AdaptiveModeThreshold",
+        "m_AutoUVMaxAngle",
+        "m_AutoUVMaxDistance",
+        "m_BlendShapeWeights",
+        "m_CastShadows",
+        "m_CorrespondingSourceObject",
+        "m_DynamicOccludee",
+        "m_ForceMeshLod",
+        "m_GameObject",
+        "m_GlobalIlluminationMeshLod",
+        "m_IgnoreNormalsForChartDetection",
+        "m_ImportantGI",
+        "m_LightProbeUsage",
+        "m_LightProbeVolumeOverride",
+        "m_LightmapParameters",
+        "m_MaskInteraction",
+        "m_MeshLodSelectionBias",
+        "m_MinimumChartSize",
+        "m_MotionVectors",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_PreserveUVs",
+        "m_ProbeAnchor",
+        "m_RayTraceProcedural",
+        "m_RayTracingAccelStructBuildFlags",
+        "m_RayTracingAccelStructBuildFlagsOverride",
+        "m_RayTracingMode",
+        "m_ReceiveGI",
+        "m_ReceiveShadows",
+        "m_ReflectionProbeUsage",
+        "m_RendererPriority",
+        "m_RenderingLayerMask",
+        "m_ScaleInLightmap",
+        "m_SelectedEditorRenderState",
+        "m_SmallMeshCulling",
+        "m_SortingLayer",
+        "m_SpriteSortPoint",
+        "m_SpriteTileMode",
+        "m_StaticBatchInfo",
+        "m_StaticBatchRoot",
+        "m_StaticShadowCaster",
+        "m_StitchLightmapSeams",
+        "m_WasSpriteAssigned",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "08e6d7d2-eafb-5c44-af14-af9761fefec7",
+      "typeId": "unity.BoxCollider2D",
+      "appliedTopLevelFields": [
+        "m_Density",
+        "m_EdgeRadius",
+        "m_Enabled",
+        "m_IsTrigger",
+        "m_Material",
+        "m_Offset",
+        "m_Size"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_AutoTiling",
+        "m_CallbackLayers",
+        "m_CompositeOperation",
+        "m_CompositeOrder",
+        "m_ContactCaptureLayers",
+        "m_CorrespondingSourceObject",
+        "m_ExcludeLayers",
+        "m_ForceReceiveLayers",
+        "m_ForceSendLayers",
+        "m_GameObject",
+        "m_IncludeLayers",
+        "m_LayerOverridePriority",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_SpriteTilingProperty",
+        "m_UsedByEffector",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "0d185d37-55dd-5fe7-9e13-069d561c8730",
+      "typeId": "unity.BaseBlock",
+      "appliedTopLevelFields": [
+        "m_Enabled",
+        "m_Script"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_EditorClassIdentifier",
+        "m_EditorHideFlags",
+        "m_GameObject",
+        "m_Name",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance"
+      ]
+    },
+    {
+      "componentId": "70d939db-9269-5f5c-a3d0-ebdc159278ed",
+      "typeId": "unity.ThermalControllerBlock",
+      "appliedTopLevelFields": [
+        "coldFilterColor",
+        "controlRadius",
+        "controlledIce",
+        "currentState",
+        "hotFilterColor",
+        "interactionRadius",
+        "isInteractable",
+        "linkedController",
+        "m_Enabled",
+        "m_Script",
+        "roomFilterOverlay",
+        "terminalName"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_EditorClassIdentifier",
+        "m_EditorHideFlags",
+        "m_GameObject",
+        "m_Name",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance"
+      ]
+    },
+    {
+      "objectId": "0c53c967-c623-50f2-9d5d-98de4129232d",
+      "typeId": "unity.GameObject",
+      "appliedTopLevelFields": [
+        "m_Name",
+        "m_IsActive",
+        "m_Layer",
+        "m_TagString",
+        "m_Component"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_Icon",
+        "m_NavMeshLayer",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_StaticEditorFlags",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "f4de41e5-1b58-5d89-85d3-cd507fa66a82",
+      "typeId": "unity.Transform",
+      "appliedTopLevelFields": [
+        "m_Father",
+        "m_LocalPosition",
+        "m_LocalRotation",
+        "m_LocalScale"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_Children",
+        "m_ConstrainProportionsScale",
+        "m_CorrespondingSourceObject",
+        "m_GameObject",
+        "m_LocalEulerAnglesHint",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "d655fc3a-a120-5d59-9e44-3aeee0aae5bd",
+      "typeId": "unity.SpriteRenderer",
+      "appliedTopLevelFields": [
+        "m_Color",
+        "m_DrawMode",
+        "m_Enabled",
+        "m_FlipX",
+        "m_FlipY",
+        "m_Materials",
+        "m_Size",
+        "m_SortingLayerID",
+        "m_SortingOrder",
+        "m_Sprite"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_AdaptiveModeThreshold",
+        "m_AutoUVMaxAngle",
+        "m_AutoUVMaxDistance",
+        "m_BlendShapeWeights",
+        "m_CastShadows",
+        "m_CorrespondingSourceObject",
+        "m_DynamicOccludee",
+        "m_ForceMeshLod",
+        "m_GameObject",
+        "m_GlobalIlluminationMeshLod",
+        "m_IgnoreNormalsForChartDetection",
+        "m_ImportantGI",
+        "m_LightProbeUsage",
+        "m_LightProbeVolumeOverride",
+        "m_LightmapParameters",
+        "m_MaskInteraction",
+        "m_MeshLodSelectionBias",
+        "m_MinimumChartSize",
+        "m_MotionVectors",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_PreserveUVs",
+        "m_ProbeAnchor",
+        "m_RayTraceProcedural",
+        "m_RayTracingAccelStructBuildFlags",
+        "m_RayTracingAccelStructBuildFlagsOverride",
+        "m_RayTracingMode",
+        "m_ReceiveGI",
+        "m_ReceiveShadows",
+        "m_ReflectionProbeUsage",
+        "m_RendererPriority",
+        "m_RenderingLayerMask",
+        "m_ScaleInLightmap",
+        "m_SelectedEditorRenderState",
+        "m_SmallMeshCulling",
+        "m_SortingLayer",
+        "m_SpriteSortPoint",
+        "m_SpriteTileMode",
+        "m_StaticBatchInfo",
+        "m_StaticBatchRoot",
+        "m_StaticShadowCaster",
+        "m_StitchLightmapSeams",
+        "m_WasSpriteAssigned",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "239af48c-de5c-5f9b-957e-12864baea0a6",
+      "typeId": "unity.BoxCollider2D",
+      "appliedTopLevelFields": [
+        "m_Density",
+        "m_EdgeRadius",
+        "m_Enabled",
+        "m_IsTrigger",
+        "m_Material",
+        "m_Offset",
+        "m_Size"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_AutoTiling",
+        "m_CallbackLayers",
+        "m_CompositeOperation",
+        "m_CompositeOrder",
+        "m_ContactCaptureLayers",
+        "m_CorrespondingSourceObject",
+        "m_ExcludeLayers",
+        "m_ForceReceiveLayers",
+        "m_ForceSendLayers",
+        "m_GameObject",
+        "m_IncludeLayers",
+        "m_LayerOverridePriority",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_SpriteTilingProperty",
+        "m_UsedByEffector",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "8d53c05b-14a9-5dba-a459-8c7c1cb5f8b1",
+      "typeId": "unity.BaseBlock",
+      "appliedTopLevelFields": [
+        "m_Enabled",
+        "m_Script"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_EditorClassIdentifier",
+        "m_EditorHideFlags",
+        "m_GameObject",
+        "m_Name",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance"
+      ]
+    },
+    {
+      "componentId": "3bab67d8-52ff-529c-b0ce-c5a9e1741b22",
+      "typeId": "unity.IceBlock",
+      "appliedTopLevelFields": [
+        "isInteractable",
+        "isMelted",
+        "m_Enabled",
+        "m_Script",
+        "meltedColor",
+        "solidColor"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_EditorClassIdentifier",
+        "m_EditorHideFlags",
+        "m_GameObject",
+        "m_Name",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance"
+      ]
+    },
+    {
+      "objectId": "670b32aa-3139-55f7-b655-ef0bebf7776c",
+      "typeId": "unity.GameObject",
+      "appliedTopLevelFields": [
+        "m_Name",
+        "m_IsActive",
+        "m_Layer",
+        "m_TagString",
+        "m_Component"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_Icon",
+        "m_NavMeshLayer",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_StaticEditorFlags",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "a43f582e-8b77-59b9-8c99-6271da0d2ebf",
+      "typeId": "unity.Transform",
+      "appliedTopLevelFields": [
+        "m_Father",
+        "m_LocalPosition",
+        "m_LocalRotation",
+        "m_LocalScale"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_Children",
+        "m_ConstrainProportionsScale",
+        "m_CorrespondingSourceObject",
+        "m_GameObject",
+        "m_LocalEulerAnglesHint",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "547c1f9a-6882-5ae2-94d3-3b2bfdb75ab2",
+      "typeId": "unity.SpriteRenderer",
+      "appliedTopLevelFields": [
+        "m_Color",
+        "m_DrawMode",
+        "m_Enabled",
+        "m_FlipX",
+        "m_FlipY",
+        "m_Materials",
+        "m_Size",
+        "m_SortingLayerID",
+        "m_SortingOrder",
+        "m_Sprite"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_AdaptiveModeThreshold",
+        "m_AutoUVMaxAngle",
+        "m_AutoUVMaxDistance",
+        "m_BlendShapeWeights",
+        "m_CastShadows",
+        "m_CorrespondingSourceObject",
+        "m_DynamicOccludee",
+        "m_ForceMeshLod",
+        "m_GameObject",
+        "m_GlobalIlluminationMeshLod",
+        "m_IgnoreNormalsForChartDetection",
+        "m_ImportantGI",
+        "m_LightProbeUsage",
+        "m_LightProbeVolumeOverride",
+        "m_LightmapParameters",
+        "m_MaskInteraction",
+        "m_MeshLodSelectionBias",
+        "m_MinimumChartSize",
+        "m_MotionVectors",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_PreserveUVs",
+        "m_ProbeAnchor",
+        "m_RayTraceProcedural",
+        "m_RayTracingAccelStructBuildFlags",
+        "m_RayTracingAccelStructBuildFlagsOverride",
+        "m_RayTracingMode",
+        "m_ReceiveGI",
+        "m_ReceiveShadows",
+        "m_ReflectionProbeUsage",
+        "m_RendererPriority",
+        "m_RenderingLayerMask",
+        "m_ScaleInLightmap",
+        "m_SelectedEditorRenderState",
+        "m_SmallMeshCulling",
+        "m_SortingLayer",
+        "m_SpriteSortPoint",
+        "m_SpriteTileMode",
+        "m_StaticBatchInfo",
+        "m_StaticBatchRoot",
+        "m_StaticShadowCaster",
+        "m_StitchLightmapSeams",
+        "m_WasSpriteAssigned",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "f818eed3-9db2-549e-8f76-aade6d7a2f8a",
+      "typeId": "unity.BoxCollider2D",
+      "appliedTopLevelFields": [
+        "m_Density",
+        "m_EdgeRadius",
+        "m_Enabled",
+        "m_IsTrigger",
+        "m_Material",
+        "m_Offset",
+        "m_Size"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_AutoTiling",
+        "m_CallbackLayers",
+        "m_CompositeOperation",
+        "m_CompositeOrder",
+        "m_ContactCaptureLayers",
+        "m_CorrespondingSourceObject",
+        "m_ExcludeLayers",
+        "m_ForceReceiveLayers",
+        "m_ForceSendLayers",
+        "m_GameObject",
+        "m_IncludeLayers",
+        "m_LayerOverridePriority",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_SpriteTilingProperty",
+        "m_UsedByEffector",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "6e629473-1b34-5466-b1a6-0f11e10add16",
+      "typeId": "unity.BaseBlock",
+      "appliedTopLevelFields": [
+        "m_Enabled",
+        "m_Script"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_EditorClassIdentifier",
+        "m_EditorHideFlags",
+        "m_GameObject",
+        "m_Name",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance"
+      ]
+    },
+    {
+      "componentId": "83e053d6-1512-588c-ba5e-6465b458ee61",
+      "typeId": "unity.IceBlock",
+      "appliedTopLevelFields": [
+        "isInteractable",
+        "isMelted",
+        "m_Enabled",
+        "m_Script",
+        "meltedColor",
+        "solidColor"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_EditorClassIdentifier",
+        "m_EditorHideFlags",
+        "m_GameObject",
+        "m_Name",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance"
+      ]
+    },
+    {
+      "objectId": "1263c26b-67be-5071-8ada-a79b35fdc71c",
+      "typeId": "unity.GameObject",
+      "appliedTopLevelFields": [
+        "m_Name",
+        "m_IsActive",
+        "m_Layer",
+        "m_TagString",
+        "m_Component"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_Icon",
+        "m_NavMeshLayer",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_StaticEditorFlags",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "172b3ad1-b199-5faf-91a3-5cab6ca3ee4e",
+      "typeId": "unity.Transform",
+      "appliedTopLevelFields": [
+        "m_Father",
+        "m_LocalPosition",
+        "m_LocalRotation",
+        "m_LocalScale"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_Children",
+        "m_ConstrainProportionsScale",
+        "m_CorrespondingSourceObject",
+        "m_GameObject",
+        "m_LocalEulerAnglesHint",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "5312efbb-f55c-5cf8-81b4-6b5cd2007e61",
+      "typeId": "unity.SpriteRenderer",
+      "appliedTopLevelFields": [
+        "m_Color",
+        "m_DrawMode",
+        "m_Enabled",
+        "m_FlipX",
+        "m_FlipY",
+        "m_Materials",
+        "m_Size",
+        "m_SortingLayerID",
+        "m_SortingOrder",
+        "m_Sprite"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_AdaptiveModeThreshold",
+        "m_AutoUVMaxAngle",
+        "m_AutoUVMaxDistance",
+        "m_BlendShapeWeights",
+        "m_CastShadows",
+        "m_CorrespondingSourceObject",
+        "m_DynamicOccludee",
+        "m_ForceMeshLod",
+        "m_GameObject",
+        "m_GlobalIlluminationMeshLod",
+        "m_IgnoreNormalsForChartDetection",
+        "m_ImportantGI",
+        "m_LightProbeUsage",
+        "m_LightProbeVolumeOverride",
+        "m_LightmapParameters",
+        "m_MaskInteraction",
+        "m_MeshLodSelectionBias",
+        "m_MinimumChartSize",
+        "m_MotionVectors",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_PreserveUVs",
+        "m_ProbeAnchor",
+        "m_RayTraceProcedural",
+        "m_RayTracingAccelStructBuildFlags",
+        "m_RayTracingAccelStructBuildFlagsOverride",
+        "m_RayTracingMode",
+        "m_ReceiveGI",
+        "m_ReceiveShadows",
+        "m_ReflectionProbeUsage",
+        "m_RendererPriority",
+        "m_RenderingLayerMask",
+        "m_ScaleInLightmap",
+        "m_SelectedEditorRenderState",
+        "m_SmallMeshCulling",
+        "m_SortingLayer",
+        "m_SpriteSortPoint",
+        "m_SpriteTileMode",
+        "m_StaticBatchInfo",
+        "m_StaticBatchRoot",
+        "m_StaticShadowCaster",
+        "m_StitchLightmapSeams",
+        "m_WasSpriteAssigned",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "186c4bfd-bda8-5e04-b768-1a9215d9ebc6",
+      "typeId": "unity.BoxCollider2D",
+      "appliedTopLevelFields": [
+        "m_Density",
+        "m_EdgeRadius",
+        "m_Enabled",
+        "m_IsTrigger",
+        "m_Material",
+        "m_Offset",
+        "m_Size"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_AutoTiling",
+        "m_CallbackLayers",
+        "m_CompositeOperation",
+        "m_CompositeOrder",
+        "m_ContactCaptureLayers",
+        "m_CorrespondingSourceObject",
+        "m_ExcludeLayers",
+        "m_ForceReceiveLayers",
+        "m_ForceSendLayers",
+        "m_GameObject",
+        "m_IncludeLayers",
+        "m_LayerOverridePriority",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_SpriteTilingProperty",
+        "m_UsedByEffector",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "a670b544-79d6-5297-85d2-93708101a5df",
+      "typeId": "unity.BaseBlock",
+      "appliedTopLevelFields": [
+        "m_Enabled",
+        "m_Script"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_EditorClassIdentifier",
+        "m_EditorHideFlags",
+        "m_GameObject",
+        "m_Name",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance"
+      ]
+    },
+    {
+      "componentId": "370996dc-27e9-5608-b3bd-369f7a18db29",
+      "typeId": "unity.IceBlock",
+      "appliedTopLevelFields": [
+        "isInteractable",
+        "isMelted",
+        "m_Enabled",
+        "m_Script",
+        "meltedColor",
+        "solidColor"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_EditorClassIdentifier",
+        "m_EditorHideFlags",
+        "m_GameObject",
+        "m_Name",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance"
+      ]
+    },
+    {
+      "objectId": "e520f104-d5ae-5663-b6c5-3eea07634b76",
+      "typeId": "unity.GameObject",
+      "appliedTopLevelFields": [
+        "m_Name",
+        "m_IsActive",
+        "m_Layer",
+        "m_TagString",
+        "m_Component"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_Icon",
+        "m_NavMeshLayer",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_StaticEditorFlags",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "474e0352-1e5f-5df4-9540-d5e0f45d75af",
+      "typeId": "unity.Transform",
+      "appliedTopLevelFields": [
+        "m_Father",
+        "m_LocalPosition",
+        "m_LocalRotation",
+        "m_LocalScale"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_Children",
+        "m_ConstrainProportionsScale",
+        "m_CorrespondingSourceObject",
+        "m_GameObject",
+        "m_LocalEulerAnglesHint",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "2010f6b7-52e3-50e6-9d14-8260c73592e7",
+      "typeId": "unity.SpriteRenderer",
+      "appliedTopLevelFields": [
+        "m_Color",
+        "m_DrawMode",
+        "m_Enabled",
+        "m_FlipX",
+        "m_FlipY",
+        "m_Materials",
+        "m_Size",
+        "m_SortingLayerID",
+        "m_SortingOrder",
+        "m_Sprite"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_AdaptiveModeThreshold",
+        "m_AutoUVMaxAngle",
+        "m_AutoUVMaxDistance",
+        "m_BlendShapeWeights",
+        "m_CastShadows",
+        "m_CorrespondingSourceObject",
+        "m_DynamicOccludee",
+        "m_ForceMeshLod",
+        "m_GameObject",
+        "m_GlobalIlluminationMeshLod",
+        "m_IgnoreNormalsForChartDetection",
+        "m_ImportantGI",
+        "m_LightProbeUsage",
+        "m_LightProbeVolumeOverride",
+        "m_LightmapParameters",
+        "m_MaskInteraction",
+        "m_MeshLodSelectionBias",
+        "m_MinimumChartSize",
+        "m_MotionVectors",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_PreserveUVs",
+        "m_ProbeAnchor",
+        "m_RayTraceProcedural",
+        "m_RayTracingAccelStructBuildFlags",
+        "m_RayTracingAccelStructBuildFlagsOverride",
+        "m_RayTracingMode",
+        "m_ReceiveGI",
+        "m_ReceiveShadows",
+        "m_ReflectionProbeUsage",
+        "m_RendererPriority",
+        "m_RenderingLayerMask",
+        "m_ScaleInLightmap",
+        "m_SelectedEditorRenderState",
+        "m_SmallMeshCulling",
+        "m_SortingLayer",
+        "m_SpriteSortPoint",
+        "m_SpriteTileMode",
+        "m_StaticBatchInfo",
+        "m_StaticBatchRoot",
+        "m_StaticShadowCaster",
+        "m_StitchLightmapSeams",
+        "m_WasSpriteAssigned",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "becb0343-0b61-505c-b483-c38377c87d06",
+      "typeId": "unity.BoxCollider2D",
+      "appliedTopLevelFields": [
+        "m_Density",
+        "m_EdgeRadius",
+        "m_Enabled",
+        "m_IsTrigger",
+        "m_Material",
+        "m_Offset",
+        "m_Size"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_AutoTiling",
+        "m_CallbackLayers",
+        "m_CompositeOperation",
+        "m_CompositeOrder",
+        "m_ContactCaptureLayers",
+        "m_CorrespondingSourceObject",
+        "m_ExcludeLayers",
+        "m_ForceReceiveLayers",
+        "m_ForceSendLayers",
+        "m_GameObject",
+        "m_IncludeLayers",
+        "m_LayerOverridePriority",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_SpriteTilingProperty",
+        "m_UsedByEffector",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "f2990b9d-5e82-5a0a-88be-0a7318f7df8c",
+      "typeId": "unity.BaseBlock",
+      "appliedTopLevelFields": [
+        "m_Enabled",
+        "m_Script"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_EditorClassIdentifier",
+        "m_EditorHideFlags",
+        "m_GameObject",
+        "m_Name",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance"
+      ]
+    },
+    {
+      "componentId": "0469509b-6a0d-556c-9f3d-e06b775998f2",
+      "typeId": "unity.IceBlock",
+      "appliedTopLevelFields": [
+        "isInteractable",
+        "isMelted",
+        "m_Enabled",
+        "m_Script",
+        "meltedColor",
+        "solidColor"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_EditorClassIdentifier",
+        "m_EditorHideFlags",
+        "m_GameObject",
+        "m_Name",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance"
+      ]
+    },
+    {
+      "objectId": "9336ae16-b68e-5747-a5cd-113149e3870a",
+      "typeId": "unity.GameObject",
+      "appliedTopLevelFields": [
+        "m_Name",
+        "m_IsActive",
+        "m_Layer",
+        "m_TagString",
+        "m_Component"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_Icon",
+        "m_NavMeshLayer",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_StaticEditorFlags",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "8dfea917-4ac2-5cb8-be25-a69f3d5be9e7",
+      "typeId": "unity.Transform",
+      "appliedTopLevelFields": [
+        "m_Father",
+        "m_LocalPosition",
+        "m_LocalRotation",
+        "m_LocalScale"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_Children",
+        "m_ConstrainProportionsScale",
+        "m_CorrespondingSourceObject",
+        "m_GameObject",
+        "m_LocalEulerAnglesHint",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "89994845-4a70-5881-8bb0-0eae631632cc",
+      "typeId": "unity.SpriteRenderer",
+      "appliedTopLevelFields": [
+        "m_Color",
+        "m_DrawMode",
+        "m_Enabled",
+        "m_FlipX",
+        "m_FlipY",
+        "m_Materials",
+        "m_Size",
+        "m_SortingLayerID",
+        "m_SortingOrder",
+        "m_Sprite"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_AdaptiveModeThreshold",
+        "m_AutoUVMaxAngle",
+        "m_AutoUVMaxDistance",
+        "m_BlendShapeWeights",
+        "m_CastShadows",
+        "m_CorrespondingSourceObject",
+        "m_DynamicOccludee",
+        "m_ForceMeshLod",
+        "m_GameObject",
+        "m_GlobalIlluminationMeshLod",
+        "m_IgnoreNormalsForChartDetection",
+        "m_ImportantGI",
+        "m_LightProbeUsage",
+        "m_LightProbeVolumeOverride",
+        "m_LightmapParameters",
+        "m_MaskInteraction",
+        "m_MeshLodSelectionBias",
+        "m_MinimumChartSize",
+        "m_MotionVectors",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_PreserveUVs",
+        "m_ProbeAnchor",
+        "m_RayTraceProcedural",
+        "m_RayTracingAccelStructBuildFlags",
+        "m_RayTracingAccelStructBuildFlagsOverride",
+        "m_RayTracingMode",
+        "m_ReceiveGI",
+        "m_ReceiveShadows",
+        "m_ReflectionProbeUsage",
+        "m_RendererPriority",
+        "m_RenderingLayerMask",
+        "m_ScaleInLightmap",
+        "m_SelectedEditorRenderState",
+        "m_SmallMeshCulling",
+        "m_SortingLayer",
+        "m_SpriteSortPoint",
+        "m_SpriteTileMode",
+        "m_StaticBatchInfo",
+        "m_StaticBatchRoot",
+        "m_StaticShadowCaster",
+        "m_StitchLightmapSeams",
+        "m_WasSpriteAssigned",
+        "serializedVersion"
+      ]
+    },
+    {
+      "objectId": "4a942db3-88db-5728-b2db-f49f66c969ee",
+      "typeId": "unity.GameObject",
+      "appliedTopLevelFields": [
+        "m_Name",
+        "m_IsActive",
+        "m_Layer",
+        "m_TagString",
+        "m_Component"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_Icon",
+        "m_NavMeshLayer",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_StaticEditorFlags",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "cb83e1a5-693e-5e01-8874-cf393a5ed9f0",
+      "typeId": "unity.Transform",
+      "appliedTopLevelFields": [
+        "m_Father",
+        "m_LocalPosition",
+        "m_LocalRotation",
+        "m_LocalScale"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_Children",
+        "m_ConstrainProportionsScale",
+        "m_CorrespondingSourceObject",
+        "m_GameObject",
+        "m_LocalEulerAnglesHint",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "6b061fa2-7e68-5a71-a420-9b19f6c5428d",
+      "typeId": "unity.SpriteRenderer",
+      "appliedTopLevelFields": [
+        "m_Color",
+        "m_DrawMode",
+        "m_Enabled",
+        "m_FlipX",
+        "m_FlipY",
+        "m_Materials",
+        "m_Size",
+        "m_SortingLayerID",
+        "m_SortingOrder",
+        "m_Sprite"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_AdaptiveModeThreshold",
+        "m_AutoUVMaxAngle",
+        "m_AutoUVMaxDistance",
+        "m_BlendShapeWeights",
+        "m_CastShadows",
+        "m_CorrespondingSourceObject",
+        "m_DynamicOccludee",
+        "m_ForceMeshLod",
+        "m_GameObject",
+        "m_GlobalIlluminationMeshLod",
+        "m_IgnoreNormalsForChartDetection",
+        "m_ImportantGI",
+        "m_LightProbeUsage",
+        "m_LightProbeVolumeOverride",
+        "m_LightmapParameters",
+        "m_MaskInteraction",
+        "m_MeshLodSelectionBias",
+        "m_MinimumChartSize",
+        "m_MotionVectors",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_PreserveUVs",
+        "m_ProbeAnchor",
+        "m_RayTraceProcedural",
+        "m_RayTracingAccelStructBuildFlags",
+        "m_RayTracingAccelStructBuildFlagsOverride",
+        "m_RayTracingMode",
+        "m_ReceiveGI",
+        "m_ReceiveShadows",
+        "m_ReflectionProbeUsage",
+        "m_RendererPriority",
+        "m_RenderingLayerMask",
+        "m_ScaleInLightmap",
+        "m_SelectedEditorRenderState",
+        "m_SmallMeshCulling",
+        "m_SortingLayer",
+        "m_SpriteSortPoint",
+        "m_SpriteTileMode",
+        "m_StaticBatchInfo",
+        "m_StaticBatchRoot",
+        "m_StaticShadowCaster",
+        "m_StitchLightmapSeams",
+        "m_WasSpriteAssigned",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "4ac542f8-a6bf-509e-80c9-c4ebeb738704",
+      "typeId": "unity.BoxCollider2D",
+      "appliedTopLevelFields": [
+        "m_Density",
+        "m_EdgeRadius",
+        "m_Enabled",
+        "m_IsTrigger",
+        "m_Material",
+        "m_Offset",
+        "m_Size"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_AutoTiling",
+        "m_CallbackLayers",
+        "m_CompositeOperation",
+        "m_CompositeOrder",
+        "m_ContactCaptureLayers",
+        "m_CorrespondingSourceObject",
+        "m_ExcludeLayers",
+        "m_ForceReceiveLayers",
+        "m_ForceSendLayers",
+        "m_GameObject",
+        "m_IncludeLayers",
+        "m_LayerOverridePriority",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_SpriteTilingProperty",
+        "m_UsedByEffector",
+        "serializedVersion"
+      ]
+    },
+    {
+      "componentId": "cd4bdbae-f3b0-5667-8ee7-c2505824ea0c",
+      "typeId": "unity.BaseBlock",
+      "appliedTopLevelFields": [
+        "m_Enabled",
+        "m_Script"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_EditorClassIdentifier",
+        "m_EditorHideFlags",
+        "m_GameObject",
+        "m_Name",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance"
+      ]
+    },
+    {
+      "componentId": "c98a6cdc-6e54-54f9-9d20-6b53d2e88b6a",
+      "typeId": "unity.ThermalControllerBlock",
+      "appliedTopLevelFields": [
+        "coldFilterColor",
+        "controlRadius",
+        "controlledIce",
+        "currentState",
+        "hotFilterColor",
+        "interactionRadius",
+        "isInteractable",
+        "linkedController",
+        "m_Enabled",
+        "m_Script",
+        "roomFilterOverlay",
+        "terminalName"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_EditorClassIdentifier",
+        "m_EditorHideFlags",
+        "m_GameObject",
+        "m_Name",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance"
+      ]
+    },
+    {
+      "objectId": "0c00697d-0470-5e5d-940b-b0645f0c858e",
+      "typeId": "unity.GameObject",
+      "appliedTopLevelFields": [
+        "m_Name",
+        "m_IsActive",
+        "m_Layer",
+        "m_TagString",
+        "m_Component"
+      ],
+      "preservedOnlyTopLevelFields": [
+        "m_CorrespondingSourceObject",
+        "m_Icon",
+        "m_NavMeshLayer",
+        "m_ObjectHideFlags",
+        "m_PrefabAsset",
+        "m_PrefabInstance",
+        "m_StaticEditorFlags",
+        "serializedVersion"
+      ]
+    }
+  ],
+  "editedObjectId": "1263c26b-67be-5071-8ada-a79b35fdc71c",
+  "positionBefore": {
+    "x": 0,
+    "y": -0.2,
+    "z": 0
+  },
+  "positionAfter": {
+    "x": 0.75,
+    "y": -0.2,
+    "z": 0
+  },
+  "colliderSizeBefore": {
+    "x": 1,
+    "y": 1
+  },
+  "colliderSizeAfter": {
+    "x": 1,
+    "y": 1.25
+  },
+  "authority": "typed V3 position/collider/refs drive rebuild; sourceSerialized is immutable audit backup",
+  "playMode": "NOT_RUN"
+}
