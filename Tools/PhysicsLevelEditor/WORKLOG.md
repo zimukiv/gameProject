@@ -144,8 +144,61 @@ Four `PhysicsLevelEditor.exe` PIDs (30960/37568/46328/47164, started 20:38-22:00
 
 Added `PLAYTEST_GUIDE.md` (Chinese end-user manual for Beta r5): extraction and launch, the Room 1 edit/save/playtest/stop acceptance flow, keyboard controls, work-copy and session paths, receipt fields, window behavior (owned overlay, not a true child), troubleshooting, limits, and developer packaging prerequisites. `README.md` now links to it and marks the older Phase 2/3 sections as development documentation.
 
-Corrected the packaged `README.txt` template: the user-data path was written as `%APPDATA%\physics-level-editor-beta\room-work-copies`, but the actual Electron `userData` directory is `%APPDATA%\Physics Level Editor Beta`. The fix is in `package-portable.mjs`; the already-built r5 ZIP still contains the old text and was **not** rebuilt, so the guide is authoritative for that artifact. The next packaging run will emit the corrected path.
+Corrected the packaged `README.txt` template: the user-data path was written as `%APPDATA%\physics-level-editor-beta\room-work-copies`, but the actual Electron `userData` directory is `%APPDATA%\Physics Level Editor Beta`. The old playtest ZIP still contains the wrong text; the clean `PhysicsLevelEditor-r5-win-x64.zip` described below was repackaged after the fix and contains the corrected Chinese README plus `PLAYTEST_GUIDE.md`.
 
 `Tools/PhysicsLevelEditor/.gitignore` now also excludes `release/` (3.0 GB of local Beta folders and ZIPs) and Python caches. Release artifacts stay local; source, native helper source, tests, Phase 4 Unity scripts/data and documentation are committed. The formal Unity Scenes remain unmodified.
 
 Pre-commit evidence from this acceptance session: `npm.cmd run check` 75 tests / 74 PASS / 1 existing Unity-only SKIP / 0 FAIL; `npm.cmd run build` PASS; packaged r5 smoke `PLAYTEST_SMOKE={"before":"-4.5","after":"-4","applied":true}`; receipt status `applied`, `appliedCount=1`, Start ground `x=-4.0`; embedded keyboard input changed the HUD from `SCORE 0 / TOKENS 0` to `SCORE 200 / TOKENS 2`. Hard-crash cleanup remains NOT TESTED.
+
+## r5 release cleanup and independent acceptance (2026-10-26)
+
+Scope: produce a clean development branch and a teammate ZIP without deleting local history, without touching the formal Scenes, and without uploading debug artifacts.
+
+### Audit categories
+
+- **A. Version-controlled source/resources:** `Assets/Editor/LevelImportExport/*`, `Assets/Scripts/LevelRuntime/*`, `Tools/PhysicsLevelEditor/{src,tests,native,tools}`, `package.json` + lockfile, `Levels/` + `SourceMaps/` + V3 drafts, `README.md`, `PLAYTEST_GUIDE.md`, `WORKLOG.md`, `.gitignore`.
+- **B. Required in the Windows package:** Electron runtime (including `locales/`, Paks, `dxcompiler.dll` etc.), `PhysicsLevelEditor.exe`, `resources/app/dist*`, bundled `Levels` data, the five runtime npm packages (`ajv`, `ajv-formats`, `fast-deep-equal`, `fast-uri`, `json-schema-traverse`), `game-runner/` with `PhysicsLevelPlaytest.exe`, `PhysicsLevelPlaytest_Data/`, `UnityPlayer.dll`, `MonoBleedingEdge/`, `D3D12/`, `PlaytestHost.exe`, `runner-manifest.json`, `README.txt`, `PLAYTEST_GUIDE.md`.
+- **C. Local-only history:** `release/` (old beta/r2/r3/r4/r5 folders and ZIPs), `%TEMP%` verification scripts/screenshots, `runner-staging/` junction, `native/bin/`, `.pyc`, user-data work copies/sessions.
+- **D. Generated caches:** `node_modules/`, `dist/`, `dist-electron/`, Unity `Library/`, `Temp/`, `Logs/`, `Obj/`, `Builds/`.
+
+### Repository changes
+
+- Removed the remaining hardcoded user paths from the three Unity editor scripts (`PhysicsLevelPlaytestBuild.cs`, `PhysicsLevelV2Tests.cs`, `PhysicsLevelV3ThermalRebuild.cs`). Isolation is still proven by the marker file plus the separate `MiniGame Team Phase4A Test` / `Physics Level Editor Phase4A Isolated` Company/Product. Optional exact-path checks moved to `PLE_ISOLATED_PROJECT`, `PLE_DEV_PROJECT`, `PLE_FORMAL_PROJECT`.
+- `package-portable.mjs`: release name is configurable via `PLE_RELEASE_NAME`; the packaged `README.txt` is now the concise Chinese teammate guide; `PLAYTEST_GUIDE.md` is copied and verified in the ZIP; ZIP size and SHA-256 are printed on success.
+- `compile-playtest-static.py`: skip compiling a second `LevelEditorPlaytestBootstrap` when the isolated `Assembly-CSharp.dll` already contains it (fixes CS0433); prints `PLE_CSHARP_STATIC_COMPILE_PASS; Unity build/Player behavior NOT_RUN`.
+- `main.ts`: added dev-only `--release-acceptance` (three rooms + two edit/save/playtest/stop cycles). Fixed it to switch through 三关总览 between rooms, wait for 71/64/72 rows, retry an edit that a late playtest readback re-render overwrote, and exit with `app.exit(ok?0:1)` instead of relying on `process.exitCode` + `app.quit()`.
+- `.gitignore` already excludes `release/`, `node_modules/`, `dist/`, `dist-electron/`, `runner-staging/`, `native/bin/`, Python caches. `release/` remains local; no ZIP is committed.
+
+### Clean artifact
+
+- `release/PhysicsLevelEditor-r5-win-x64.zip`
+- Size: **490,475,520 bytes (467.8 MiB)**; SHA-256 `24827ecfde91381a9047ffe47fa2d5daed2793e911b13d6971b730bbc5c77ccf`.
+- Folder: 469 MB / 826 files; ZIP: 921 entries. Largest items: `PhysicsLevelEditor.exe` 235 MB, `game-runner/` 93 MB, `locales/` 49 MB, `dxcompiler.dll` 25 MB, `LICENSES.chromium.html` 20 MB.
+- Contains no `.log`, `.zip`, `.pdb`, `.ps1`, Unity `Library/Temp/Obj/Logs`, editor `src/`/`tests/`, or user-path config. The only `node_modules` content is the five runtime packages (their published `src/`/`test/` files are package internals).
+- Size comparison: old playtest r5 ZIP 490,823,680 bytes -> clean r5 ZIP 490,475,520 bytes (**-348,160 bytes**, about -340 KiB). The small reduction comes from the trimmed README/logs and excludes; the real Unity Player and its resources are kept.
+
+### Independent acceptance (outside the source tree)
+
+- Extracted to `%TEMP%\r5-final-verify2-20261026\PhysicsLevelEditor-r5-win-x64`; the source directory, Node.js and Unity Editor were not used.
+- `PhysicsLevelEditor.exe --release-acceptance` (with `ELECTRON_RUN_AS_NODE` unset) exited **0** and printed:
+  - rooms: room1 71 rows / 38 canvas objects; room2 64 / 33; room3 72 / 41; captions report 34, 29 and 35 real Collider outlines respectively.
+  - first cycle: `before=-5`, `after=-4.5`, `applied=true`, `stopped=true`, `persisted=-4.5`, PID 23736.
+  - second cycle: `before=-4.5`, `after=-4`, `applied=true`, `stopped=true`, `persisted=-4`, PID 29292.
+  - `error=""`.
+- Receipts: session `cb836d74...` has `status=applied`, `appliedCount=1`, `Start ground x=-4.5`; session `fffe0ec6...` has `status=applied`, `appliedCount=1`, `x=-4.0`, both bound to source Scene SHA-256 `208caa5e...`.
+- Keyboard: the owned Unity window (857x481 at 401,292) received synthetic input (`attached=true`). `kbd-before.png` shows `SCORE 51700 / TOKENS 0`; after holding D, `kbd-after-d.png` shows `SCORE 51800 / TOKENS 1 / 充能 1/3` and the player moved right; after Space, `kbd-after-space.png` shows the player airborne.
+- Canvas screenshots: `room-room1.png`, `room-room2.png`, `room-room3.png` show three distinct Collider layouts, not a repeated Room 1.
+- Formal Scene SHA-256 after all runs: Level1 `208caa5ee0c2edb7fe3140ece317ccd0156957ad0ae89e2a738a3ccb2d396d34`, Level2 `bbe8f5622425b71c7cb6debb53c592932746b051438c36e35fd667619b8a0e51`, Level3 `b087f4199fb7589ca5b5811b214ccf8988b737ba340fca65d11b864f91cb023c`; `git status` shows no change under `Assets/Scenes`.
+- Evidence retained under `release/verification-20261026/run-c-final/` (`acceptance.log`, `rooms.json`, `kbd.json`, PNGs, `userdata/`). The superseded candidate builds are under `superseded-package-abed6d/` and `superseded-package-370509/`. The user's original work copies/sessions were moved out before the runs and restored afterwards from `original-userdata/`.
+
+### Tests
+
+- `npm.cmd run check`: 75 tests, 74 PASS, 1 existing Unity-only SKIP, 0 FAIL.
+- `npm.cmd run build`: PASS.
+- C# static compile against Unity 6000.6.4f1 assemblies: PASS (syntax/API only; Unity build and Player behavior NOT_RUN).
+
+### Not tested / manual
+
+- Unity Player build, Unity Editor batchmode, and hard-kill crash cleanup are **NOT RUN** in this session.
+- Embedded-window behavior on monitors other than the 150% DPI Windows 11 / RTX 5060 setup is **NOT TESTED**.
+- Four pre-existing `PhysicsLevelEditor.exe` PIDs (30960/37568/46328/47164, no window/command line) remain from earlier sessions and were not touched.

@@ -364,10 +364,17 @@ public static class PhysicsLevelV2Tests
             Application.productName=="AI 大人，拜托了" ||
             !Application.companyName.Contains("Phase4A") || !Application.productName.Contains("Phase4A"))
             throw new InvalidOperationException("Isolation guard failed: use a separate copied project, exact marker, and Phase4A Company/Product settings.");
-        string source=Path.GetFullPath(@"C:\Users\Kayla\Desktop\gameProject-physics-phase4");
-        string original=Path.GetFullPath(@"C:\Users\Kayla\Desktop\gameProject-physics");
-        if (string.Equals(project.TrimEnd(Path.DirectorySeparatorChar),source,StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(project.TrimEnd(Path.DirectorySeparatorChar),original,StringComparison.OrdinalIgnoreCase))
+        // Optional extra guards for a developer machine; the marker and separate
+        // Company/Product above are the location-independent isolation proof.
+        string source=Environment.GetEnvironmentVariable("PLE_DEV_PROJECT");
+        string original=Environment.GetEnvironmentVariable("PLE_FORMAL_PROJECT");
+        bool inDev=!string.IsNullOrWhiteSpace(source) && string.Equals(
+            project.TrimEnd(Path.DirectorySeparatorChar),
+            Path.GetFullPath(source).TrimEnd(Path.DirectorySeparatorChar),StringComparison.OrdinalIgnoreCase);
+        bool inFormal=!string.IsNullOrWhiteSpace(original) && string.Equals(
+            project.TrimEnd(Path.DirectorySeparatorChar),
+            Path.GetFullPath(original).TrimEnd(Path.DirectorySeparatorChar),StringComparison.OrdinalIgnoreCase);
+        if (inDev || inFormal)
             throw new InvalidOperationException("Isolation guard failed: active project is a development or formal worktree.");
         Debug.Log("PHASE4A_ISOLATION_PASS project="+project+"; Company="+Application.companyName+"; Product="+Application.productName);
     }

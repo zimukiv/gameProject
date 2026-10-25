@@ -51,10 +51,18 @@ public static class PhysicsLevelPlaytestBuild
     }
     static void CheckIsolation()
     {
-        string expected = Path.GetFullPath(@"C:\Users\Kayla\Desktop\gameProject-physics-phase4\Temp\Phase4AIsolatedProject");
-        Require(string.Equals(Root.TrimEnd(Path.DirectorySeparatorChar),
-            expected.TrimEnd(Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase),
-            "Build requires the exact Phase4A isolated project");
+        // Location is configurable for a clean checkout; the marker and separate
+        // Company/Product below still prove this is the isolated project.
+        string expected = Environment.GetEnvironmentVariable("PLE_ISOLATED_PROJECT");
+        if (!string.IsNullOrWhiteSpace(expected))
+            Require(string.Equals(Root.TrimEnd(Path.DirectorySeparatorChar),
+                Path.GetFullPath(expected).TrimEnd(Path.DirectorySeparatorChar),
+                StringComparison.OrdinalIgnoreCase),
+                "PLE_ISOLATED_PROJECT does not match the open project");
+        else
+            Require(string.Equals(Path.GetFileName(Root.TrimEnd(Path.DirectorySeparatorChar)),
+                "Phase4AIsolatedProject", StringComparison.OrdinalIgnoreCase),
+                "Build requires an isolated Phase4AIsolatedProject directory or PLE_ISOLATED_PROJECT");
         string marker = Absolute("Phase4A.IsolatedProject.marker");
         Require(File.Exists(marker) && File.ReadAllText(marker).Trim() == Marker,
             "Isolated project marker is missing or wrong");

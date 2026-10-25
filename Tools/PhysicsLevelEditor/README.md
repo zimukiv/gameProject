@@ -1,48 +1,100 @@
-# Physics Level Editor · Phase 2/3
+# Physics Level Editor（Windows x64）
 
-Windows desktop editor for the Phase 1 `LevelDataV1` partial JSON format. It edits real files through Electron. The renderer has no Node.js access; file operations go through a limited preload API.
+当前交付版本：**r5 Playtest**。
+队友操作手册：[PLAYTEST_GUIDE.md](PLAYTEST_GUIDE.md)　·　开发历史与技术债：[WORKLOG.md](WORKLOG.md)
 
-> **Current Windows Beta r5:** the shipping artifact runs a real Unity Player inside the workbench playtest area. See [PLAYTEST_GUIDE.md](PLAYTEST_GUIDE.md) for the end-user workflow, data paths, troubleshooting and current limits. The sections below describe the earlier Phase 2/3 editor surface and remain useful for development.
+## 队友：运行
 
-## Start
+1. 完整解压 `PhysicsLevelEditor-r5-win-x64.zip`，不要直接在 ZIP 内双击。
+2. 双击 `PhysicsLevelEditor.exe`。
+3. 不需要安装 Node.js、Unity Editor 或 Unity Hub。
 
-From `Tools/PhysicsLevelEditor`:
+启动后在 **三关总览** 中选择房间。
+
+## 三个 Room
+
+| Room | 内容 | 当前能力 |
+| --- | --- | --- |
+| Room 1 · Physics | `Level1.unity` 的 71 个来源对象 / 254 个组件 | 可编辑位置、可真实试玩 |
+| Room 2 · Calculus | `Level2.unity` 的 64 / 221 | 只读浏览对象与 Collider 几何 |
+| Room 3 · Slacker | `Level3.unity` 的 72 / 254 | 只读浏览对象与 Collider 几何 |
+
+画布显示真实的 Box/Circle Collider 轮廓和网格；Sprite 资源未打包，视觉对象使用带标签的占位图。
+
+## 编辑与保存
+
+- 左侧层级选择对象，右侧 Inspector 可修改 **Transform · localPosition** 的 X/Y/Z。
+- 仅支持非 UI、归属 A、未锁定的对象。旋转、缩放、Collider 尺寸和组件字段只读。
+- 点击 **保存工作副本**。工作副本与自动备份写入：
+
+```
+%APPDATA%\Physics Level Editor Beta\room-work-copies\room1.overlay.json
+```
+
+- 原始 `Assets/Scenes/Level1.unity`、`Level2.unity`、`Level3.unity` 不会被修改。
+- 多选对象可整体位移；含只读或锁定对象时整批拒绝。
+- 撤销 / 重做只作用于当前会话的编辑。
+
+## 试玩与停止
+
+1. 保存工作副本后，点击 **试玩 Room 1**。
+2. 等待页脚出现 `Unity 已确认应用 N 项位置修改`；`N` 和坐标来自 Unity 回执 `receipt.json`。
+3. 点击游戏画面一次获得键盘焦点：`A` / `D` 移动，`空格` 跳跃，`Shift` 冲刺，`E` 互动。
+4. 点击 **停止试玩**（或关闭游戏窗口）返回编辑画布。
+5. 再次试玩会读取最新保存的工作副本。
+
+试玩窗口在视觉上嵌入工作台中央，比例固定 16:9；它技术上是一个无边框 owned 顶层窗口，不是真正的子窗口，不能单独拖走，最小化主窗口时会隐藏。
+
+日志与回执：
+
+```
+%APPDATA%\Physics Level Editor Beta\playtest-sessions\<sessionId>\Player.log
+%APPDATA%\Physics Level Editor Beta\playtest-sessions\<sessionId>\receipt.json
+```
+
+## 尚未实现
+
+- Room 2 / Room 3 的真实 Unity 试玩运行器。
+- Collider、组件字段、旋转/缩放的编辑。
+- 原生 Sprite / 音频资源的渲染和导入。
+- 从编辑内容重新构建 Unity Player（发行包内是预构建 Player，只读取 overlay）。
+- Unity 进程被强制杀死时的崩溃恢复路径尚未实测。
+
+## 开发
+
+在 `Tools/PhysicsLevelEditor`：
 
 ```powershell
 npm.cmd install
-npm.cmd run desktop
+npm.cmd run check       # TypeScript + 数据/运行器测试
+npm.cmd run build       # 渲染层 + Electron 主进程
+npm.cmd run desktop     # 开发模式启动
+npm.cmd run package:portable
 ```
 
-Use **打开 Phase 1 样本** to load `Levels/Physics/Level1.phase1.json`, change the vent `Force` or platform position in Inspector, then **另存为** a new JSON. Close and reopen that file to verify persistence. The sample is marked **PARTIAL COVERAGE** and saving over it requires confirmation.
+打包前置条件：
 
-`npm.cmd run check` runs TypeScript and data tests. `npm.cmd run smoke` starts a hidden real Electron window and checks that the sample renders three objects. On systems where Windows prevents Electron sandbox processes from reading the worktree, this smoke test may fail before application code starts; launch the app from a normal user session for manual verification.
+- `Temp/Phase4AIsolatedProject/Builds/LevelEditorPlaytest/<timestamp>/` 中存在通过校验的
+  `runner-manifest.json`、`PhysicsLevelPlaytest.exe` 和 `PhysicsLevelPlaytest_Data/`。
+- `native/PlaytestHost.cs` 由打包脚本用系统 `csc.exe` 现场编译，不依赖预置二进制。
+- 没有合格运行器时脚本拒绝打包，不会生成假的试玩按钮。
 
-## Editing rules
+发行包默认输出到 `release/`。可以用 `PLE_RELEASE_NAME` 指定新包名，例如：
 
-- Wheel: zoom. Middle/right mouse or Alt drag: pan. Click: select. Shift/Ctrl click: multi-select. Drag background: box select. Drag selected objects: move. A drag is one undo step.
-- Ctrl+S: save; Ctrl+Z: undo; Ctrl+Y or Ctrl+Shift+Z: redo; Ctrl+D: duplicate; Delete: delete.
-- Grid snap is 0.5 world units. Unity world Y points upward. Transform scale, Sprite identity and Collider size are separate values.
-- **分组** sets the first selected root as parent. It supports unrotated root objects and preserves world positions and collider dimensions. Other hierarchy edits use local Transform coordinates.
-- Locking is session only. The Phase 1 JSON has no lock field.
-- Templates store one or more Phase 1 objects. Instantiation generates new IDs and remaps parent references among copied objects; external references remain external.
-- The Phase 1 Unity adapter only supports the registered fixed three-component combinations. The component list cannot be freely expanded yet. Existing Unity Sprite GUIDs can be edited, but picking arbitrary local images or audio cannot create valid Unity references in this format.
-- No camera data is present in this partial JSON, so the canvas omits a camera frame. Collider outlines are shown; Sprite display bounds are unavailable without resolving Unity assets.
+```powershell
+$env:PLE_RELEASE_NAME='PhysicsLevelEditor-r5-win-x64'
+npm.cmd run package:portable
+```
 
-## Scope
+`release/`、`node_modules/`、`dist/`、`runner-staging/`、`native/bin/` 均不进入 Git。
 
-This phase does not load Unity scenes, run Unity physics, package LevelPacks, perform runtime edits, or import PNG/JPG/WAV/OGG into Unity. Validation means Phase 1 data compatibility, not gameplay reachability.
+## 目录
 
-## Phase 3 interaction acceptance
-
-Run `npm.cmd run check` and `npm.cmd run build`. In a normal Windows desktop session, `npm.cmd run desktop` opens the Electron editor. `node_modules/.bin/electron.cmd . --phase3-smoke` exercises a real hidden Electron window: it opens the Phase 1 JSON, selects two objects, checks the Mixed Inspector state, changes their common Active field, and undoes that change. The smoke command prints `PHASE3_ELECTRON_GUI=...`; exit code 0 requires three objects, PARTIAL COVERAGE, Mixed, two changed objects and zero changed objects after Undo.
-
-Manual acceptance with **打开 Phase 1 样本**:
-
-1. Ctrl-click the platform and vent in Hierarchy. Inspector should say **选中 2 个对象**; Layer should show **Mixed**. Set their common Active field, then Undo and Redo. Both objects must change together.
-2. Enter a world-coordinate offset ΔX=2, ΔY=1 and apply it. Relative spacing must remain the same. Undo once should restore both positions. Select parent and child together after grouping and drag; the child must move only once.
-3. Select one object and drag a Collider corner. `collider.size` and `collider.offset` should change while `localScale` stays fixed. Change snap step in the toolbar and repeat.
-4. Collapse and expand Hierarchy children. Toggle the eye and lock controls; hidden objects leave the canvas, and locked objects cannot be dragged or batch edited. These controls are session state and are not written to LevelDataV1.
-5. Change the parent in Inspector. A safe change should preserve the world Collider outline; a cycle or transformation requiring shear must display an error and leave the JSON unchanged.
-6. Use **另存为** to write a new JSON. Close and reopen that file. Confirm object IDs, transforms, collider fields and `PARTIAL COVERAGE` remain. Do not overwrite `Level1.phase1.json` for this acceptance run.
-
-The Phase 1 format still accepts only three Unity-backed object kinds and fixed component combinations. Unknown components are rejected with a compatibility error without altering the source file. The editor does not derive Sprite bounds from Collider size, and no camera frame is shown because the partial JSON has no camera data.
+```
+Assets/Editor/LevelImportExport/   Unity 导入导出、Player 构建与验证
+Assets/Scripts/LevelRuntime/       Playtest Bootstrap 与 V3 运行期数据
+Levels/                            ProjectManifest、SourceMaps、V3 草稿
+Tools/PhysicsLevelEditor/src/      Electron 主进程、编辑器与 React UI
+Tools/PhysicsLevelEditor/native/   PlaytestHost.cs（Win32 嵌入宿主）
+Tools/PhysicsLevelEditor/tests/    Node 测试
+```

@@ -35,10 +35,14 @@ def main() -> None:
     with tempfile.TemporaryDirectory(prefix='ple-static-') as temp:
         out = pathlib.Path(temp)
         runtime = out / 'PlaytestRuntime.dll'
-        compile_one(runtime, ROOT / 'Assets/Scripts/LevelRuntime/LevelEditorPlaytestBootstrap.cs', refs)
+        # The isolated cache may already contain the bootstrap; compiling it again
+        # would produce two definitions of LevelEditorPlaytestBootstrap (CS0433).
+        if b'LevelEditorPlaytestBootstrap' not in GAME.read_bytes():
+            compile_one(runtime, ROOT / 'Assets/Scripts/LevelRuntime/LevelEditorPlaytestBootstrap.cs', refs)
+            refs = refs + [runtime]
         compile_one(out / 'PlaytestEditor.dll',
                     ROOT / 'Assets/Editor/LevelImportExport/PhysicsLevelPlaytestBuild.cs',
-                    refs + [runtime])
+                    refs)
     print('PLE_CSHARP_STATIC_COMPILE_PASS; Unity build/Player behavior NOT_RUN')
 
 

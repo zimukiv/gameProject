@@ -173,6 +173,103 @@ app.whenReady().then(() => {
       }catch(error){console.error('PLAYTEST_SMOKE_FAIL',error);}
     });
   }
+  if(process.argv.includes('--release-acceptance')){
+    win.show();
+    win.webContents.once('did-finish-load',async()=>{
+      try{
+        const result=await win.webContents.executeJavaScript(`(async()=>{
+          const wait=ms=>new Promise(r=>setTimeout(r,ms));
+          const until=async(fn,n=400)=>{for(let i=0;i<n;i++){if(await fn())return true;await wait(80);}return false;};
+          const footer=()=>document.querySelector('.release-footer')?.textContent??'';
+          const button=needle=>[...document.querySelectorAll('button')]
+            .find(b=>(b.textContent??'').includes(needle));
+          const startRow=()=>[...document.querySelectorAll('[data-source-object]')]
+            .find(b=>(b.textContent??'').includes('Start ground'));
+          const xInput=()=>{
+            const field=[...document.querySelectorAll('.release-field')]
+              .find(l=>l.querySelector('input')&&(l.textContent??'').trim().startsWith('X'));
+            return field?.querySelector('input');
+          };
+          const readX=async()=>{startRow()?.click();await wait(150);return xInput()?.value;};
+          const setX=async value=>{
+            startRow()?.click();await wait(150);
+            const input=xInput();if(!input)throw new Error('X input missing');
+            const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;
+            setter.call(input,String(value));
+            input.dispatchEvent(new Event('input',{bubbles:true}));
+            input.focus();input.blur();await wait(300);
+          };
+          await until(()=>document.querySelectorAll('[data-room-id]').length===3);
+          const expected={room1:71,room2:64,room3:72};
+          const rooms={};
+          for(const room of ['room1','room2','room3']){
+            if(!document.querySelector('[data-room-id]')){
+              button('三关总览')?.click();
+              await until(()=>document.querySelectorAll('[data-room-id]').length===3,200);
+            }
+            document.querySelector('[data-room-id="'+room+'"]')?.click();
+            await until(()=>document.querySelectorAll('[data-source-object]').length===expected[room],300);
+            await wait(200);
+            rooms[room]={
+              rows:document.querySelectorAll('[data-source-object]').length,
+              shapes:document.querySelectorAll('[data-canvas-id]').length,
+              caption:[...document.querySelectorAll('.release-caption')]
+                .map(x=>x.textContent??'').join(' | ').slice(0,240)
+            };
+          }
+          button('三关总览')?.click();
+          await until(()=>document.querySelectorAll('[data-room-id]').length===3,200);
+          document.querySelector('[data-room-id="room1"]')?.click();
+          await until(()=>document.querySelectorAll('[data-source-object]').length===71,200);
+          const cycle=async label=>{
+            const before=await readX();
+            const after=String(Number(before)+0.5);
+            await setX(after);
+            // A late re-render from the previous playtest readback can restore
+            // the numeric draft right after blur. Re-apply once, then wait for
+            // the dirty state instead of sampling the button immediately.
+            if(button('保存工作副本')?.disabled){
+              await wait(350);
+              await setX(after);
+            }
+            const saveReady=await until(()=>button('保存工作副本')?.disabled===false,40);
+            const save=button('保存工作副本');
+            if(!saveReady||!save||save.disabled)
+              throw new Error(label+': save disabled (input='+xInput()?.value+
+                ' dirty='+document.querySelector('.release-bar b')?.textContent+')');
+            save.click();
+            await until(()=>button('保存工作副本')?.disabled===true,200);
+            await until(()=>button('试玩 Room 1')?.disabled===false,200);
+            const play=button('试玩 Room 1');
+            if(!play||play.disabled)throw new Error(label+': play disabled');
+            play.click();
+            await until(()=>document.querySelector('[data-playtest-stop]'),400);
+            const applied=await until(()=>footer().includes('已确认应用'),500);
+            const receipt=footer().slice(0,340);
+            await wait(${Number(process.env.PLE_ACCEPT_HOLD_MS??15000)});
+            document.querySelector('[data-playtest-stop]')?.click();
+            const stopped=await until(()=>!document.querySelector('[data-playtest-stop]')&&
+              button('试玩 Room 1')?.disabled===false,400);
+            await wait(350);
+            const persisted=await readX();
+            return {label,before,after,applied,receipt,stopped,persisted};
+          };
+          const first=await cycle('first');
+          const second=await cycle('second');
+          return {rooms,first,second,
+            error:document.querySelector('[data-release-error]')?.textContent??''};
+        })()`);
+        console.log('RELEASE_ACCEPTANCE='+JSON.stringify(result));
+        const ok=result.rooms?.room1?.rows===71&&result.rooms?.room2?.rows===64&&
+          result.rooms?.room3?.rows===72&&result.first?.applied&&result.first?.stopped&&
+          result.second?.applied&&result.second?.stopped&&
+          Number(result.first?.persisted)===Number(result.first?.after)&&
+          Number(result.second?.before)===Number(result.first?.after)&&
+          Number(result.second?.persisted)===Number(result.second?.after)&&!result.error;
+        app.exit(ok?0:1);
+      }catch(error){console.error('RELEASE_ACCEPTANCE_FAIL',error);app.exit(1);}
+    });
+  }
   if(process.argv.includes('--release-smoke')){
     win.webContents.once('did-finish-load',async()=>{
       try{

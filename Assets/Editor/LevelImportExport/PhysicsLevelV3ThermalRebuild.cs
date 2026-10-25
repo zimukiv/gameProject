@@ -41,11 +41,17 @@ public static class PhysicsLevelV3ThermalRebuild
             Application.companyName == "MiniGame Team Phase4A Test" &&
             Application.productName == "Physics Level Editor Phase4A Isolated",
             "M1.3A requires the marked Phase4A isolated project with separate Company/Product.");
-        string dev = Path.GetFullPath(@"C:\Users\Kayla\Desktop\gameProject-physics-phase4");
-        string formal = Path.GetFullPath(@"C:\Users\Kayla\Desktop\gameProject-physics");
-        Require(!string.Equals(root.TrimEnd(Path.DirectorySeparatorChar),dev,StringComparison.OrdinalIgnoreCase) &&
-            !string.Equals(root.TrimEnd(Path.DirectorySeparatorChar),formal,StringComparison.OrdinalIgnoreCase),
-            "M1.3A cannot run in a development or formal worktree.");
+        // Optional extra guards for a developer machine; the marker and separate
+        // Company/Product above are the location-independent isolation proof.
+        string dev = Environment.GetEnvironmentVariable("PLE_DEV_PROJECT");
+        string formal = Environment.GetEnvironmentVariable("PLE_FORMAL_PROJECT");
+        bool inDev = !string.IsNullOrWhiteSpace(dev) && string.Equals(
+            root.TrimEnd(Path.DirectorySeparatorChar),
+            Path.GetFullPath(dev).TrimEnd(Path.DirectorySeparatorChar),StringComparison.OrdinalIgnoreCase);
+        bool inFormal = !string.IsNullOrWhiteSpace(formal) && string.Equals(
+            root.TrimEnd(Path.DirectorySeparatorChar),
+            Path.GetFullPath(formal).TrimEnd(Path.DirectorySeparatorChar),StringComparison.OrdinalIgnoreCase);
+        Require(!inDev && !inFormal, "M1.3A cannot run in a development or formal worktree.");
         Debug.Log("M13A_ISOLATION_PASS project="+root+"; Company="+Application.companyName+
             "; Product="+Application.productName);
     }

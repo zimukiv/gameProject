@@ -1,4 +1,6 @@
 import {cp,copyFile,mkdir,readFile,readdir,rename,stat,writeFile} from 'node:fs/promises';
+import {createReadStream} from 'node:fs';
+import {createHash} from 'node:crypto';
 import {dirname,join,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
@@ -6,7 +8,7 @@ import {spawnSync} from 'node:child_process';
 const project=dirname(fileURLToPath(import.meta.url));
 const repo=resolve(project,'../..');
 const release=join(project,'release');
-const name='PhysicsLevelEditor-win32-x64-beta-r5-playtest';
+const name=process.env.PLE_RELEASE_NAME??'PhysicsLevelEditor-win32-x64-beta-r5-playtest';
 const folder=join(release,name);
 const archive=join(release,`${name}.zip`);
 for(const output of [folder,archive]){
@@ -78,9 +80,41 @@ const runtime=['ajv','ajv-formats','fast-deep-equal','fast-uri','json-schema-tra
 await mkdir(join(app,'node_modules'),{recursive:true});
 for(const module of runtime)await cp(join(project,'node_modules',module),
   join(app,'node_modules',module),{recursive:true});
-const instructions=`Physics Level Editor Beta (Windows x64)\r\n\r\nDouble-click PhysicsLevelEditor.exe. No Node.js or Unity Editor installation is needed.\r\nThe three rooms contain complete source inventories from the original Unity Scenes.\r\nSelect a room, browse objects and registered source components, and edit supported\r\nlocalPosition fields. Click Save work copy; files and backups are stored under\r\n%APPDATA%\\Physics Level Editor Beta\\room-work-copies. Playtest logs are stored\r\nunder %APPDATA%\\Physics Level Editor Beta\\playtest-sessions.\r\n\r\nThe canvas outlines Box/Circle Collider geometry. Sprite assets are not bundled, so\r\nvisuals use labelled placeholders. Component fields remain read-only. In Room 1,\r\nSave then click Playtest to run the included Unity game inside the workbench playtest\r\narea using that saved work copy. Click the game area once to give it keyboard focus;\r\nA/D moves, Space jumps. Press Stop playtest to close the game and return to editing.\r\nThe original Unity Scenes and V3 drafts remain unchanged.\r\n\r\nKeep the full extracted folder together. Do not run the EXE from inside the ZIP.\r\n`;
+const instructions=[
+  'Physics Level Editor r5 (Windows x64)',
+  '',
+  '启动：完整解压后双击 PhysicsLevelEditor.exe。不要直接在 ZIP 内运行。',
+  '无需安装 Node.js 或 Unity Editor；请保持整个文件夹结构不变。',
+  '',
+  'Room 1（Physics）',
+  '  1. 在左侧选择对象（例如 Start ground），在右侧 Inspector 修改 X/Y/Z。',
+  '  2. 只有非 UI、归属 A 且未锁定对象的 localPosition 可写；其他字段只读。',
+  '  3. 点击“保存工作副本”，再点击“试玩 Room 1”。',
+  '  4. 等待页脚出现“已确认应用 ... 项位置修改”。',
+  '  5. 点击游戏画面一次获得键盘焦点：A/D 移动，空格跳跃，Shift 冲刺，E 互动。',
+  '  6. 点击“停止试玩”返回编辑；再次试玩会读取最新工作副本。',
+  '',
+  'Room 2（Calculus）/ Room 3（Slacker）',
+  '  当前可浏览来源对象和 Collider 几何，但没有真实试玩运行器。',
+  '',
+  '数据位置：',
+  '  %APPDATA%\\Physics Level Editor Beta\\room-work-copies\\room1.overlay.json',
+  '  %APPDATA%\\Physics Level Editor Beta\\playtest-sessions\\<session>\\Player.log',
+  '  %APPDATA%\\Physics Level Editor Beta\\playtest-sessions\\<session>\\receipt.json',
+  '',
+  '限制：',
+  '  - 仅 Room 1 支持真实 Unity 试玩。',
+  '  - 仅支持位置（localPosition）修改；Collider/组件字段只读。',
+  '  - 试玩窗口是无边框 owned 窗口，视觉上嵌入工作台，但不是真正子窗口。',
+  '  - 详细说明见 PLAYTEST_GUIDE.md。',
+  '',
+  '原始 Unity Scene 不会被修改。',
+  ''
+].join('\r\n');
 await writeFile(join(folder,'README.txt'),instructions,'utf8');
-for(const required of ['PhysicsLevelEditor.exe','resources/app/dist/index.html',
+await copyFile(join(project,'PLAYTEST_GUIDE.md'),join(folder,'PLAYTEST_GUIDE.md'));
+for(const required of ['PhysicsLevelEditor.exe','README.txt','PLAYTEST_GUIDE.md',
+  'resources/app/dist/index.html',
   'resources/app/dist-electron/electron/main.cjs',
   'resources/app/bundled-levels/Drafts/M1.2/Level3.v3.draft.json',
   'game-runner/runner-manifest.json','game-runner/PhysicsLevelPlaytest.exe',
@@ -93,8 +127,14 @@ const result=spawnSync('tar.exe',['-a','-c','-f',archiveName,name],{cwd:release,
 if(result.status!==0)throw Error(`ZIP creation failed: ${result.stderr||result.stdout}`);
 const entries=spawnSync('tar.exe',['-tf',archiveName],{cwd:release,encoding:'utf8'});
 if(entries.status!==0||!entries.stdout.includes('PhysicsLevelEditor.exe')||
+  !entries.stdout.includes('README.txt')||!entries.stdout.includes('PLAYTEST_GUIDE.md')||
   !entries.stdout.includes('Level3.v3.draft.json')||
   !entries.stdout.includes('PhysicsLevelPlaytest.exe')||
   !entries.stdout.includes('PlaytestHost.exe'))throw Error('ZIP content verification failed');
 const count=(await readdir(join(app,'node_modules'))).length;
-console.log(`PORTABLE_RELEASE_PASS folder=${folder} archive=${archive} runtimePackages=${count}`);
+const hash=createHash('sha256');
+await new Promise((accept,reject)=>createReadStream(archive)
+  .on('data',chunk=>hash.update(chunk)).on('end',accept).on('error',reject));
+const archiveStat=await stat(archive);
+console.log(`PORTABLE_RELEASE_PASS folder=${folder} archive=${archive} `+
+  `bytes=${archiveStat.size} sha256=${hash.digest('hex')} runtimePackages=${count}`);
