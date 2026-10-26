@@ -174,6 +174,26 @@ internal static class Program
         Check(protection.TryStart(3f, 1.5f), "Later contact is not permanently suppressed");
     }
 
+    private static void CheckTokenChaseSpeed()
+    {
+        Equal(14f, 14f * TokenChaseSpeed.Calculate(0, 1f, .03f), "Zero Tokens preserve baseline chase speed");
+        Equal(12.844037f, 14f * TokenChaseSpeed.Calculate(3, 1f, .03f), "Three Tokens weaken chase");
+        Equal(11.570248f, 14f * TokenChaseSpeed.Calculate(7, 1f, .03f), "Seven Tokens weaken chase further");
+        Equal(10.294118f, 14f * TokenChaseSpeed.Calculate(12, 1f, .03f), "Full physics collection rewards preparation");
+        float previous = 1f;
+        for (int tokens = 1; tokens <= 12; tokens++)
+        {
+            float current = TokenChaseSpeed.Calculate(tokens, 1f, .03f);
+            Check(current < previous && current > 0f, "Each available Token unit further slows AI: " + tokens);
+            previous = current;
+        }
+        Equal(.7f, TokenChaseSpeed.Calculate(int.MaxValue, 1f, .03f), "Excess Tokens preserve pursuit speed floor");
+        Equal(1f, TokenChaseSpeed.Calculate(-5, 1f, .1f), "Negative Token count cannot increase speed");
+        Equal(1f, TokenChaseSpeed.Calculate(12, 1f, -.1f), "Negative weakening cannot strengthen AI");
+        Equal(1f, TokenChaseSpeed.Calculate(12, 1f, 0f), "Zero weakening preserves baseline");
+        Equal(1.4f, TokenChaseSpeed.Calculate(int.MaxValue, 2f, .03f), "Speed floor is relative to configured baseline");
+    }
+
     private static void Main()
     {
         var effects = new TimedSpeedModifiers();
@@ -216,6 +236,7 @@ internal static class Program
         CheckDashChargeMeter();
         CheckDeferredWrites();
         CheckContactProtection();
+        CheckTokenChaseSpeed();
         Console.WriteLine($"Runtime rules regressions passed: {checks} assertions.");
     }
 }

@@ -4,6 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../../Assets/Scripts/AI/TokenChaseSpeed.cs" Link="TokenChaseSpeed.cs" />
     <Compile Include="../../Assets/Scripts/Player/TimedSpeedModifiers.cs" Link="TimedSpeedModifiers.cs" />
     <Compile Include="../../Assets/Scripts/Player/PlayerInputBuffer.cs" Link="PlayerInputBuffer.cs" />
     <Compile Include="../../Assets/Scripts/Player/DashMotion.cs" Link="DashMotion.cs" />

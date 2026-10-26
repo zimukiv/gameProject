@@ -132,6 +132,7 @@ public class HorizontalDashTestRunner : MonoBehaviour
         enemy.enabled=false;
         enemy.GetComponent<Collider2D>().enabled=false;
         var device=GameObject.Find("AI activation device").GetComponent<AIActivatorDevice>();
+        CheckTokenWeakening();
         player.RestoreRunResources(5,0,2);
         device.TriggerActivation();
         Check(device.isActivated && player.currentTokens==0,"Actual AI activation still consumes held Tokens");
@@ -180,7 +181,67 @@ public class HorizontalDashTestRunner : MonoBehaviour
             var next=PlayerController.Instance;
             Check(next.currentTokens==0 && next.currentDashCharges==0 && next.dashChargeProgress==0,level+" resets run resources");
             Check(UIManager.Instance.dashChargeSlots.Length==1 && UIManager.Instance.dashStatusText.text.Contains("0/3"),level+" uses single-slot progress HUD");
+            CheckTokenWeakening();
         }
+    }
+
+    private void CheckTokenWeakening()
+    {
+        var currentPlayer=PlayerController.Instance;
+        var currentEnemy=EnemyAI.Instance;
+        var currentDevice=GameObject.Find("AI activation device").GetComponent<AIActivatorDevice>();
+        var initialPosition=currentEnemy.transform.position;
+        float previous=float.PositiveInfinity;
+        foreach(int tokens in new[] { 0,3,7,12 })
+        {
+            currentDevice.ResetActivation();
+            GameManager.Instance.CurrentState=GameManager.GameState.SlowPacedPhase;
+            currentPlayer.RestoreRunResources(tokens,0,2);
+            currentDevice.TriggerActivation();
+            float expected=currentEnemy.baseChaseSpeed*TokenChaseSpeed.Calculate(tokens,currentDevice.baseDifficulty,currentDevice.difficultyPerToken);
+            Check(Mathf.Abs(currentEnemy.currentSpeed-expected)<.0001f && currentEnemy.currentSpeed<previous
+                && currentEnemy.currentSpeed>=currentPlayer.moveSpeed*1.2f,
+                SceneManager.GetActiveScene().name+" AI slows with "+tokens+" Tokens but remains at least 20% faster than player");
+            Check(currentPlayer.currentTokens==0 && currentPlayer.currentDashCharges==0 && currentPlayer.dashChargeProgress==2,
+                "Weakening consumes held Tokens without altering dash energy");
+            previous=currentEnemy.currentSpeed;
+        }
+        var save=SaveManager.Instance;
+        save.UpdateTempCheckpoint(currentPlayer.transform.position,currentPlayer.currentTokens,currentPlayer.currentDashCharges);
+        currentEnemy.currentSpeed=99f;
+        GameManager.Instance.currentAIDifficulty=99f;
+        currentPlayer.GetComponent<PlayerHealthRespawn>().RespawnAtLastCheckpoint();
+        Check(Mathf.Abs(currentEnemy.currentSpeed-previous)<.0001f,"Chase checkpoint restores weakened AI speed");
+        Check(currentEnemy.isHunting && Vector3.Distance(currentEnemy.transform.position,
+            currentPlayer.transform.position+Vector3.left*8f)<.001f,
+            "Chase checkpoint keeps AI behind the player");
+        currentDevice.ResetActivation();
+        currentEnemy.ResetChase();
+        GameManager.Instance.CurrentState=GameManager.GameState.SlowPacedPhase;
+        currentPlayer.RestoreRunResources(7,1,0);
+        var checkpoint=GameObject.Find("Room 3 checkpoint").transform.position;
+        save.UpdateTempCheckpoint(checkpoint,currentPlayer.currentTokens,currentPlayer.currentDashCharges);
+        currentDevice.TriggerActivation();
+        currentEnemy.transform.position=new Vector3(50,8);
+        currentEnemy.GetComponent<Rigidbody2D>().linearVelocity=new Vector2(14,2);
+        currentPlayer.GetComponent<PlayerHealthRespawn>().RespawnAtLastCheckpoint();
+        Check(Vector3.Distance(currentEnemy.transform.position,initialPosition)<.001f,
+            "Exploration checkpoint restores original scene AI position");
+        Check(!currentEnemy.isHunting && !currentDevice.isActivated &&
+            GameManager.Instance.CurrentState==GameManager.GameState.SlowPacedPhase,
+            "Exploration respawn restores dormant AI and unstarted core");
+        Check(currentEnemy.GetComponent<Rigidbody2D>().linearVelocity==Vector2.zero &&
+            currentEnemy.currentSpeed==currentEnemy.baseChaseSpeed && currentEnemy.difficultyMultiplier==1f,
+            "Exploration respawn clears chase velocity and previous speed multiplier");
+        Check(currentPlayer.currentTokens==7 && currentPlayer.currentDashCharges==1,
+            "Exploration respawn preserves checkpoint Tokens and dash");
+        currentDevice.TriggerActivation();
+        Check(currentEnemy.isHunting && currentDevice.isActivated &&
+            Mathf.Abs(currentEnemy.currentSpeed-currentEnemy.baseChaseSpeed*TokenChaseSpeed.Calculate(7,currentDevice.baseDifficulty,currentDevice.difficultyPerToken))<.0001f,
+            "AI can restart from its original position with restored Token weakening");
+        currentPlayer.GetComponent<PlayerHealthRespawn>().RespawnAtLastCheckpoint();
+        Check(Vector3.Distance(currentEnemy.transform.position,initialPosition)<.001f && !currentEnemy.isHunting,
+            "Repeated exploration rollback returns AI to the same initial position");
     }
 
     private void Command(int horizontal,bool up,bool down,bool dash)

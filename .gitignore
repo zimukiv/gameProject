@@ -8,3 +8,5 @@
 /Validation/**/obj/
 /Builds/
 *.log
+/.roomlab-runtime/
+/.roomlab-downloads/

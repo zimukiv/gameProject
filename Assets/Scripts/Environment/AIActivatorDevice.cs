@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// AI 启动装置：
 /// 关卡快慢两段的分水岭。
-/// 玩家触碰/交互后，消耗当前持有的所有 Token 为 AI 充能并激活对应难度，进入快节奏追击/逃生。
+/// 玩家触碰/交互后，投入当前持有的所有 Token 削弱 AI 追逐速度，进入快节奏追击/逃生。
 /// </summary>
 [RequireComponent(typeof(Collider2D))]
 public class AIActivatorDevice : MonoBehaviour, ICheckpointState
@@ -14,9 +14,10 @@ public class AIActivatorDevice : MonoBehaviour, ICheckpointState
     public bool autoActivateOnContact = false;
     public bool showInteractionGuide;
 
-    [Header("Difficulty Formula")]
+    [Header("Token Chase Weakening")]
     public float baseDifficulty = 1.0f;
-    public float difficultyPerToken = 0.1f; // 投入 Token 越多，AI 能力/难度系数越高
+    [Tooltip("保留原序列化字段名；正值表示每单位 Token 的减速强度。速度倍率 = 基础倍率 / (1 + Token × 强度)，最低为基础倍率的 70%。")]
+    public float difficultyPerToken = 0.03f;
 
     [Header("Feedback")]
     public GameObject activeVFX;
@@ -104,8 +105,8 @@ public class AIActivatorDevice : MonoBehaviour, ICheckpointState
         if (guide != null)
         {
             string text = isActivated ? "追逐已启动 →" : playerInRange
-                ? "[" + interactKey + "] 启动 AI\n消耗全部 Token，开始追逐"
-                : autoActivateOnContact ? "AI 启动器\n接触后开始追逐" : "AI 启动器\n靠近按 " + interactKey + "，准备后再出发";
+                ? "[" + interactKey + "] 启动 AI\n投入全部 Token 减慢 AI，开始追逐"
+                : autoActivateOnContact ? "AI 启动器\n接触后开始追逐，Token 越多 AI 越慢" : "AI 启动器\n靠近按 " + interactKey + "，Token 越多 AI 越慢";
             if (text != lastGuideText) { guide.text = text; lastGuideText = text; }
             Color color = isActivated ? new Color(1f, .6f, .25f) : new Color(.8f, .6f, 1f);
             guide.color = color;
@@ -132,14 +133,14 @@ public class AIActivatorDevice : MonoBehaviour, ICheckpointState
 
         isActivated = true;
         int tokens = cachedPlayer.ConsumeAllTokens();
-        float calculatedDifficulty = baseDifficulty + (tokens * difficultyPerToken);
+        float calculatedDifficulty = TokenChaseSpeed.Calculate(tokens, baseDifficulty, difficultyPerToken);
 
         if (activeVFX != null) activeVFX.SetActive(true);
         if (activationAudio != null) activationAudio.Play();
         if (deviceRenderer != null) deviceRenderer.color = activeColor;
 
         EventBus.TriggerAIActivated(tokens, calculatedDifficulty);
-        Debug.Log($"[AIActivatorDevice] AI 装置已启动！消耗 Token: {tokens}, 最终难度: {calculatedDifficulty}");
+        Debug.Log($"[AIActivatorDevice] AI 装置已启动！投入 Token: {tokens}, 追逐速度倍率: {calculatedDifficulty}");
     }
 
     public void ResetActivation()

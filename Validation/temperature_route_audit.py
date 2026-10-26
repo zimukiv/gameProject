@@ -66,7 +66,10 @@ for name in ice_names:
     check(math.hypot(x-ax,y-ay) < float(value(a,'controlRadius')), f'{name} in control range')
 
 permanent = ['Start ground','Middle ground','Physics upper ledge','Physics return floor','Finish ground','Chase platform']
-for name in ['Thermal controller A','Thermal controller B','Room 2 checkpoint','Room 3 checkpoint','AI activation device','Exit']:
+check('Room 2 checkpoint' not in objects, 'Upper-ledge checkpoint removed')
+check(sum('Assembly-CSharp::Checkpoint\n' in b for _,b in docs.values()) == 1,
+      'Physics level has exactly one checkpoint')
+for name in ['Thermal controller A','Thermal controller B','Room 3 checkpoint','AI activation device','Exit']:
     x,y,_ = vector(comp(name,4)[1],'m_LocalPosition')
     check(any(l+.3 < x < r-.3 and 0 <= y-top <= 1.5 for l,_,r,top in map(bounds,permanent)), f'{name} on permanent safe ground')
 for name in ['Thermal controller A','Thermal controller B']:
@@ -77,6 +80,11 @@ speed = float(value(player,'moveSpeed'))
 jump = float(value(player,'jumpVelocity'))
 gravity = float(value(comp('Player',50)[1],'m_GravityScale')) * 9.81
 max_rise = jump*jump/(2*gravity)
+# A missed jump must allow walking back to A without a dash or crouch.
+player_height = vector(comp('Player',4)[1],'m_LocalScale')[1] * vector(comp('Player',61)[1],'m_Size')[1]
+for name in ('Ice step 1','Ice step 2','Ice step 3'):
+    check(bounds(name)[1]-bounds('Start ground')[3] >= player_height+.2,
+          f'{name} leaves standing-height recovery clearance')
 route = ['Start ground','Ice step 1','Ice step 2','Ice step 3','Physics upper ledge']
 for source,target in zip(route,route[1:]):
     l1,_,r1,top1 = bounds(source)
@@ -111,7 +119,7 @@ vent_x = vector(comp('Air vent',4)[1],'m_LocalPosition')[0]
 _,device = comp('AI activation device',script='AIActivatorDevice')
 check(value(device,'autoActivateOnContact') == '0' and value(device,'showInteractionGuide') == '1',
       'AI requires manual interaction and has a visible guide')
-for name in ['Room 2 checkpoint','Room 3 checkpoint']:
+for name in ['Room 3 checkpoint']:
     check(value(comp(name,script='Checkpoint')[1],'useFlagVisual') == '1', f'{name} uses a flag')
 cp_x = vector(comp('Room 3 checkpoint',4)[1],'m_LocalPosition')[0]
 landing_left,_,landing_right,landing_top = bounds('Chase platform')
@@ -128,8 +136,13 @@ landing_x = entry_x+speed*landing_time
 check(landing_left+.6 < landing_x < landing_right-.6, 'Holding right lands with horizontal margin')
 check(landing_left > bounds('Air vent')[2]+.4, 'Vent has an open vertical shaft')
 _,rail = comp('Railgun',61)
-check(value(rail,'m_IsTrigger') == '1', 'Railgun entry cannot block walking')
+check(value(rail,'m_IsTrigger') == '0', 'Railgun is a solid boarding platform')
+check(vector(rail,'m_Offset') == (0,0) and vector(rail,'m_Size') == (1,1), 'Rail collider matches visible platform')
+check(value(comp('Railgun',50)[1],'m_BodyType') == '1', 'Rail carrier has a kinematic body')
 rail_x = vector(comp('Railgun',4)[1],'m_LocalPosition')[0]
+check(vector(comp('Railgun end',4)[1],'m_LocalPosition')[1] == vector(comp('Railgun',4)[1],'m_LocalPosition')[1]
+      and vector(comp('Railgun',script='RailgunBlock')[1],'launchDirection') == (1,0),
+      'Carrier path and player exit are horizontal to the right')
 touchdown_x = landing_right+speed*math.sqrt(2*rise/gravity)
 check(bounds('Railgun')[0]-.4 > touchdown_x+.2, 'Runway allows landing before entering railgun')
 check(ai_x < rail_x < goal_x, 'Railgun follows deliberate AI activation')

@@ -1,0 +1,2 @@
+DASH_PICKUP_PASS tokens=1 duringDash=true
+RAIL_PICKUPS_PASS actualRoom=AI追逐1 tokens=2 recharge=1 charges=3 score=200 duplicate=none endpoint/launch=unchanged

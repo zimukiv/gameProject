@@ -92,9 +92,17 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (!CanControl() || scriptedMotionOwner != null || externalMotionTimer > 0f)
+        if (!CanControl() || externalMotionTimer > 0f)
         {
             inputBuffer.Clear();
+            return;
+        }
+        if (scriptedMotionOwner != null)
+        {
+            if (scriptedMotionOwner is RailgunBlock)
+                inputBuffer.Sample(false, false, false, false,
+                    GameInput.WasPressed(KeyCode.Space) || GameInput.WasPressed(KeyCode.W), false);
+            else inputBuffer.Clear();
             return;
         }
         inputBuffer.Sample(GameInput.IsHeld(KeyCode.A), GameInput.IsHeld(KeyCode.D),
@@ -109,9 +117,16 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!CanControl() || scriptedMotionOwner != null)
+        if (!CanControl())
         {
             inputBuffer.Clear();
+            return;
+        }
+        if (scriptedMotionOwner != null)
+        {
+            var ridingCommand = inputBuffer.Consume();
+            if (ridingCommand.jump && scriptedMotionOwner is RailgunBlock carrier)
+                carrier.TryJumpOff(this);
             return;
         }
         var command = inputBuffer.Consume();

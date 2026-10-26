@@ -4564,8 +4564,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   isHunting: 0
-  baseChaseSpeed: 5.5
-  currentSpeed: 5.5
+  baseChaseSpeed: 14
+  currentSpeed: 14
   difficultyMultiplier: 1
   skillType: 1
   skillTriggerDistance: 5
@@ -5839,7 +5839,7 @@ MonoBehaviour:
   interactKey: 101
   autoActivateOnContact: 1
   baseDifficulty: 1
-  difficultyPerToken: 0.1
+  difficultyPerToken: 0.03
   activeVFX: {fileID: 0}
   activationAudio: {fileID: 0}
   deviceRenderer: {fileID: 1628091264}

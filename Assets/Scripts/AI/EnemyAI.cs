@@ -21,8 +21,8 @@ public class EnemyAI : MonoBehaviour
 
     [Header("AI Phase & Difficulty")]
     public bool isHunting = false;
-    public float baseChaseSpeed = 5.5f;
-    public float currentSpeed = 5.5f;
+    public float baseChaseSpeed = 14f;
+    public float currentSpeed = 14f;
     public float difficultyMultiplier = 1.0f;
 
     [Header("Skill Parameters")]
@@ -44,6 +44,7 @@ public class EnemyAI : MonoBehaviour
     private Rigidbody2D rb;
     private Transform playerTransform;
     private Collider2D bodyCollider;
+    private Vector3 initialPosition;
     private float knockbackRemaining;
     private Vector2 knockbackVelocity;
 
@@ -52,6 +53,7 @@ public class EnemyAI : MonoBehaviour
         Instance = this;
         rb = GetComponent<Rigidbody2D>();
         bodyCollider = GetComponent<Collider2D>();
+        initialPosition = transform.position;
     }
 
     private void Start()
@@ -80,7 +82,7 @@ public class EnemyAI : MonoBehaviour
         currentSpeed = baseChaseSpeed * difficultyMultiplier;
         skillCooldownTimer = Mathf.Max(skillCooldownTimer, 2.5f);
         chaseStartDelay = 1f;
-        Debug.Log($"[EnemyAI] AI 进入狂暴追击模式！速度: {currentSpeed}");
+        Debug.Log($"[EnemyAI] AI 开始追逐！Token 削弱后的速度: {currentSpeed}");
     }
 
     private void HandlePlayerRespawned()
@@ -92,12 +94,13 @@ public class EnemyAI : MonoBehaviour
         isExecutingSkill = false;
         var player = PlayerController.Instance;
         if (player != null) playerTransform = player.transform;
-        if (playerTransform != null)
-        {
-            transform.position = playerTransform.position + Vector3.left * 8f;
-            rb.linearVelocity = Vector2.zero;
-        }
-        if (GameManager.Instance != null && GameManager.Instance.CurrentState == GameManager.GameState.FastPacedPhase)
+        bool resumeChase = GameManager.Instance != null &&
+            GameManager.Instance.CurrentState == GameManager.GameState.FastPacedPhase;
+        // Exploration rolls back the encounter; chase checkpoints retain a safe head start.
+        transform.position = resumeChase && playerTransform != null
+            ? playerTransform.position + Vector3.left * 8f : initialPosition;
+        rb.linearVelocity = Vector2.zero;
+        if (resumeChase)
             HandleAIActivated(0, GameManager.Instance.currentAIDifficulty);
         else ResetChase();
     }
@@ -236,7 +239,8 @@ public class EnemyAI : MonoBehaviour
         if (player != null)
         {
             Vector2 pull = ((Vector2)transform.position - (Vector2)playerTransform.position).normalized;
-            player.ForceLaunch(pull * 9f * difficultyMultiplier);
+            // Token weakening controls AI movement speed, not the player's knockback strength.
+            player.ForceLaunch(pull * 9f);
         }
         yield return new WaitForSeconds(.4f);
         isExecutingSkill = false;
@@ -308,6 +312,8 @@ public class EnemyAI : MonoBehaviour
         StopAllCoroutines();
         isExecutingSkill = false;
         isHunting = false;
+        difficultyMultiplier = 1f;
+        currentSpeed = baseChaseSpeed;
         knockbackRemaining = 0f;
         chaseStartDelay = 0f;
         rb.linearVelocity = Vector2.zero;

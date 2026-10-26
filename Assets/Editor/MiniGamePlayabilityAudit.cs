@@ -70,7 +70,8 @@ public static class MiniGamePlayabilityAudit
             "Level" + level + ": pause or completion UI missing", failures);
 
         var checkpoints = UnityEngine.Object.FindObjectsOfType<Checkpoint>();
-        Require(checkpoints.Length >= 2, "Level" + level + ": expected room checkpoints", failures);
+        Require(level == 1 ? checkpoints.Length == 1 : checkpoints.Length >= 2,
+            "Level" + level + ": expected " + (level == 1 ? "one pre-vent checkpoint" : "room checkpoints"), failures);
         foreach (var checkpoint in checkpoints)
             Require(HasGroundUnder(checkpoint.transform.position),
                 "Level" + level + ": checkpoint " + checkpoint.name + " respawns over a gap", failures);

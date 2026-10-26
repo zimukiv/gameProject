@@ -194,6 +194,7 @@ public static class MiniGameAutoSetup
         Trigger("Big token", new Vector2(19, 1.2f), Vector2.one * .8f, new Color(1, .7f, .1f)).AddComponent<BigTokenItem>();
         Trigger("Room 2 checkpoint", new Vector2(4.5f, -2), new Vector2(.7f, 2), Color.green).AddComponent<Checkpoint>();
         var activator = Trigger("AI activation device", new Vector2(11, -2), new Vector2(1, 2), Color.cyan).AddComponent<AIActivatorDevice>();
+        activator.difficultyPerToken = .03f;
         activator.autoActivateOnContact = true;
         activator.deviceRenderer = activator.GetComponent<SpriteRenderer>();
         Trigger("Room 3 checkpoint", new Vector2(16.8f, -2), new Vector2(.7f, 2), Color.green).AddComponent<Checkpoint>();
@@ -213,6 +214,7 @@ public static class MiniGameAutoSetup
         enemyBody.freezeRotation = true;
         enemy.AddComponent<BoxCollider2D>().isTrigger = true;
         var ai = enemy.AddComponent<EnemyAI>();
+        ai.baseChaseSpeed = ai.currentSpeed = 14f;
         ai.skillType = level == 1 ? EnemyAI.AISkillType.BurstDash : level == 2 ? EnemyAI.AISkillType.CalculusDrift : EnemyAI.AISkillType.DeadlinePressure;
         ai.teleportNodes = new[] { Point("AI teleport 1", new Vector2(13, -2)), Point("AI teleport 2", new Vector2(23, -2)) };
 
@@ -240,7 +242,8 @@ public static class MiniGameAutoSetup
         Place("Jump platform B", new Vector2(2, 1.4f), new Vector2(1.6f, .4f));
         GameObject.Find("Jump platform A").name = "Ice step 2";
         GameObject.Find("Jump platform B").name = "Ice step 3";
-        var ice1 = Square("Ice step 1", new Vector2(-2, -1.8f), new Vector2(1.6f, .4f), Color.cyan, true).AddComponent<IceBlock>();
+        // Keep a standing-height return path below the first step after a missed jump.
+        var ice1 = Square("Ice step 1", new Vector2(-2, -1.2f), new Vector2(1.6f, .4f), Color.cyan, true).AddComponent<IceBlock>();
         var ice2 = GameObject.Find("Ice step 2").AddComponent<IceBlock>();
         var ice3 = GameObject.Find("Ice step 3").AddComponent<IceBlock>();
         var wall = Square("Ice wall", new Vector2(10.8f, 4), new Vector2(.9f, 4), Color.cyan, true).AddComponent<IceBlock>();
@@ -263,7 +266,7 @@ public static class MiniGameAutoSetup
         var backdrop = Square("Temperature backdrop", new Vector2(1, 1.5f), new Vector2(26, 12), a.hotFilterColor).GetComponent<SpriteRenderer>();
         backdrop.sortingOrder = -5;
         a.roomFilterOverlay = b.roomFilterOverlay = backdrop;
-        Place("Room 2 checkpoint", new Vector2(6, 3), new Vector2(.7f, 2));
+        Object.DestroyImmediate(GameObject.Find("Room 2 checkpoint"));
         string[] downstream = { "Finish ground", "Moving platform", "Moving start", "Moving end", "Timed platform",
             "Big token", "Room 3 checkpoint", "AI activation device", "AI pursuer", "AI teleport 1", "AI teleport 2",
             "Exit", "AI locked collectible", "Chase platform", "Secret shelf" };
@@ -274,8 +277,7 @@ public static class MiniGameAutoSetup
         Place("Finish ground", new Vector2(41, -3.5f), new Vector2(30, 1));
         Place("Chase platform", new Vector2(32, 1.55f), new Vector2(5, .5f));
         Place("Room 3 checkpoint", new Vector2(23, -2), new Vector2(.7f, 2));
-        foreach (string name in new[] { "Room 2 checkpoint", "Room 3 checkpoint" })
-            GameObject.Find(name).GetComponent<Checkpoint>().useFlagVisual = true;
+        GameObject.Find("Room 3 checkpoint").GetComponent<Checkpoint>().useFlagVisual = true;
         Place("Big token", new Vector2(31.5f, 2.5f), Vector2.one * .8f);
         Place("AI activation device", new Vector2(33, 2.65f), new Vector2(1, 1.5f));
         var device = GameObject.Find("AI activation device").GetComponent<AIActivatorDevice>();
@@ -291,7 +293,7 @@ public static class MiniGameAutoSetup
         timedGuide.showGuide = true;
         timedGuide.optionalCollectible = GameObject.Find("AI locked collectible").GetComponent<CollectibleItem>();
         Place("Exit", new Vector2(52, -2), new Vector2(1.2f, 2.5f));
-        Vector2[] tokenPositions = { new Vector2(-6, -2.3f), new Vector2(-2, -.9f), new Vector2(0, .7f),
+        Vector2[] tokenPositions = { new Vector2(-6, -2.3f), new Vector2(-2, -.3f), new Vector2(0, .7f),
             new Vector2(2, 2.3f), new Vector2(5, 2.8f), new Vector2(8, 2.8f), new Vector2(13, 2.8f) };
         for (int i = 0; i < tokenPositions.Length; i++) GameObject.Find("Token " + i).transform.position = tokenPositions[i];
         Place("Fall death", new Vector2(15, -10), new Vector2(90, 1));
@@ -302,16 +304,19 @@ public static class MiniGameAutoSetup
         air.isContinuous = true;
         air.upwardForce = 19;
         air.guideText = "喷气口 ↑\n向右落上高台 →";
-        var rail = Square("Railgun", new Vector2(41, -2.9f), new Vector2(2, .2f), platform, true);
-        rail.layer = 0;
+        var rail = Square("Railgun", new Vector2(41, -2.9f), new Vector2(2, .2f), new Color(1f, .65f, .1f), true);
         var entry = rail.GetComponent<BoxCollider2D>();
-        entry.isTrigger = true;
-        entry.size = new Vector2(1, 7);
-        entry.offset = new Vector2(0, 2.5f);
+        entry.isTrigger = false;
+        entry.size = Vector2.one;
+        entry.offset = Vector2.zero;
+        var carrier = rail.AddComponent<Rigidbody2D>();
+        carrier.bodyType = RigidbodyType2D.Kinematic;
+        carrier.gravityScale = 0;
+        carrier.freezeRotation = true;
         var gun = rail.AddComponent<RailgunBlock>();
-        gun.launchEndPoint = Point("Railgun end", new Vector2(44, -2.35f));
+        gun.launchEndPoint = Point("Railgun end", new Vector2(44, -2.9f));
         string[] permanentNames = { "Start ground", "Middle ground", "Finish ground", "Physics upper ledge",
-            "Physics ceiling", "Physics return floor", "Chase platform", "Secret shelf", "Railgun" };
+            "Physics ceiling", "Physics return floor", "Chase platform", "Secret shelf" };
         foreach (string name in permanentNames)
             GameObject.Find(name).GetComponent<SpriteRenderer>().color = new Color(.22f, .29f, .36f);
     }

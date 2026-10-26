@@ -1,0 +1,736 @@
+VBCSCompilerPreWarmer: watching VBCSCompiler (PID 50512)
+VBCSCompilerPreWarmer: pre-warm launched (dotnet PID 51500)
+VBCSCompiler prewarm took 23.16 ms
+[Licensing::Module] Trying to connect to existing licensing client channel...
+Built from '6000.6/staging' branch; Version is '6000.6.4f1 (12bfff696524) revision 1228799'; Using compiler version '194234433'; Build Type 'Release'
+OS: 'Windows 11  (10.0.26200) CoreCountrySpecific' Language: 'zh' Physical Memory: 16107 MB
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-24425" at "2026-10-26T05:47:03.1461556Z"
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
+System  architecture: x64
+Process architecture: x64
+Date: 2026-10-26T05:47:03Z
+[Licensing::Client] Code 1 while verifying Licensing Client signature (process Id: 34588, path: "D:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Error: HandshakeResponse reported an error:
+	ResponseCode: 505
+	ResponseStatus: Unsupported protocol version '1.18.3'.
+[Licensing::Module] Error: Failed to handshake to channel: "LicenseClient-24425"
+[Licensing::IpcConnector] LicenseClient-24425 channel disconnected successfully.
+[Licensing::IpcConnector] Channel LicenseClient-24425-6000.6.4 doesn't exist
+[Licensing::Module] Successfully launched the LicensingClient (PId: 9300)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-24425-6000.6.4" at "2026-10-26T05:47:03.7438019Z"
+
+COMMAND LINE ARGUMENTS:
+D:\Program Files\Unity\Hub\Editor\6000.6.4f1\Editor\Unity.exe
+-batchmode
+-quit
+-projectPath
+D:\minigame\B-three-levels-demo
+-executeMethod
+RoomLabExactBuild.RebuildConnected
+-logFile
+D:\minigame\B-three-levels-demo\Validation\LatestRoomLabEvidence\escape-menu-build.txt
+Successfully changed project path to: D:\minigame\B-three-levels-demo
+D:/minigame/B-three-levels-demo
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gfx=262144"
+    "memorysetup-remapper-allocator-initial-capacity=32768"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-main-allocator-mimalloc-enabled=1"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+Logging is directed to a specific file, skipping project log.
+Player connection [58128]  Target information:
+
+Player connection [58128]  * "[IP] 172.27.111.62 [Port] 55504 [Flags] 2 [Guid] 3703980616 [EditorId] 3703980616 [Version] 1048832 [Id] WindowsEditor(7,forever) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+
+Player connection [58128] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [58128] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Input System module state changed to: Initialized.
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 9300, path: "D:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/Resources/Licensing/Client/Unity.Licensing.Client.exe")
+[Licensing::Module] LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.18.3+d7ffd15
+  Session Id:              4453ae6eec6e457e9a6963f87117b454
+  Correlation Id:          bd40389844cde27be839455923fe16f1
+  External correlation Id: 6918190156605107084
+  Machine Id:              2LeztyWh2JgntGYL/uQCwMxc1xk=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-24425-6000.6.4" (connect: 0.56s, validation: 0.13s, handshake: 0.13s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-24425-6000.6.4-notifications" at "2026-10-26T05:47:04.0071718Z"
+[Licensing::Module] Connected to LicensingClient (PId: 9300, launch time: 0.01, total connection time: 0.83s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] License group:
+  Id: F4-H499-J2KS-DTRH-VDZX-XXXX
+  Product: Unity Personal
+  Type: ULF
+  Expiration: 2026-12-02T05:37:32Z
+[Licensing::Client] Successfully updated license, isAsync: True, time: 0.02
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Licensing Background thread has ended after 0.95s
+[Package Manager] Connected to IPC stream "Upm-56568" after 0.5 seconds.
+[Licensing::Client] Successfully resolved entitlement details
+Library Redirect Path: Library/
+Launching Unity Data Store - D:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/Tools/Unity.DataStore.exe 
+Unity Data Store artifact dir = Library/DataStore, working dir = D:/minigame/B-three-levels-demoUnity Data Store running and initialised
+[Physics::Module] Selected backend (deferred post-plugins).
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+Initialize engine version: 6000.6.4f1 (12bfff696524)
+[EntityIdStore] init: VM path (explicit commit), pageSize=4096, blockCount=1048576, entitiesPerBlock=256, slots reserved=4294967296 bytes
+[Subsystems] Discovering subsystems at path D:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/minigame/B-three-levels-demo/Assets
+GfxDevice: creating device client; kGfxThreadingModeNonThreaded
+d3d12: failed to query info queue interface (0x80004002).
+Direct3D:
+    Version:         Direct3D 12 [level 12.2]
+    Renderer:        NVIDIA GeForce RTX 5060 Laptop GPU (ID=0x2d59)
+    Vendor:          NVIDIA
+    VRAM:            7810 MB
+    App VRAM Budget: 7042 MB
+    Driver:          32.0.15.8205
+Initialize mono
+Mono path[0] = 'D:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/Managed'
+Mono path[1] = 'D:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/BCLExtensions/runtime/netstandard2.1'
+Mono path[2] = 'D:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'D:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56568
+CodeReloadManager initialized
+ImportWorker Server TCP listen port: 0
+AcceleratorClientConnectionCallback - disconnected - :0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: D:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.002673 seconds.
+Native extension for WindowsStandalone target not found
+Package Manager log level set to [2]
+ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  1.215 seconds
+Domain Reload Profiling: 1924ms
+	BeginReloadAssembly (217ms)
+		CreateAndSetChildDomain (15ms)
+	RebuildCommonClasses (8ms)
+	RebuildNativeTypeToScriptingClass (25ms)
+	initialDomainReloadingComplete (85ms)
+	LoadAllAssembliesAndSetupDomain (371ms)
+		LoadAssemblies (200ms)
+		TypeCache.Refresh (263ms)
+			TypeCache.ScanAssembly (242ms)
+		AnalyzeDomain (1ms)
+	FinalizeReload (1217ms)
+		SetupLoadedEditorAssemblies (0ms)
+			LogAssemblyErrors (3ms)
+			InitializePlatformSupportModulesInManaged (3ms)
+			BeforeProcessingInitializeOnLoad (123ms)
+			ProcessInitializeOnLoadAttributes (144ms)
+			ProcessInitializeOnLoadMethodAttributes (653ms)
+[Licensing::Client] Successfully resolved entitlement details
+Application.AssetDatabase Initial Refresh Start
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 10 packages:
+  Built-in packages:
+    com.unity.ugui@2.6.0 (location: D:\minigame\B-three-levels-demo\Library\PackageCache\com.unity.ugui@0727b404f3a0)
+    com.unity.modules.audio@1.0.0 (location: D:\minigame\B-three-levels-demo\Library\PackageCache\com.unity.modules.audio)
+    com.unity.modules.imgui@1.0.0 (location: D:\minigame\B-three-levels-demo\Library\PackageCache\com.unity.modules.imgui)
+    com.unity.modules.imageconversion@1.0.0 (location: D:\minigame\B-three-levels-demo\Library\PackageCache\com.unity.modules.imageconversion)
+    com.unity.modules.jsonserialize@1.0.0 (location: D:\minigame\B-three-levels-demo\Library\PackageCache\com.unity.modules.jsonserialize)
+    com.unity.modules.particlesystem@1.0.0 (location: D:\minigame\B-three-levels-demo\Library\PackageCache\com.unity.modules.particlesystem)
+    com.unity.modules.physics2d@1.0.0 (location: D:\minigame\B-three-levels-demo\Library\PackageCache\com.unity.modules.physics2d)
+    com.unity.modules.ui@1.0.0 (location: D:\minigame\B-three-levels-demo\Library\PackageCache\com.unity.modules.ui)
+    com.unity.modules.physicscore2d@1.0.0 (location: D:\minigame\B-three-levels-demo\Library\PackageCache\com.unity.modules.physicscore2d)
+    com.unity.modules.physics@1.0.0 (location: D:\minigame\B-three-levels-demo\Library\PackageCache\com.unity.modules.physics)
+[Subsystems] No new subsystems found in resolved package list.
+[Package Manager] Done registering packages in 0.03 seconds
+[ScriptCompilation] Requested script compilation because: AssetDatabase observed changes in script compilation related files
+Starting: D:\Program Files\Unity\Hub\Editor\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: D:/minigame/B-three-levels-demo
+DisplayProgressbar: Compiling Scripts
+ExitCode: 0 Duration: 1s446ms
+[220/247    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[239/247    1s] Csc Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp.dll (+2 others)
+Assets\Scripts\Core\SceneBootstrap.cs(37,13): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindAnyObjectByType instead.'
+
+Assets\Scripts\UI\MenuActions.cs(8,32): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Scripts\Core\SaveManager.cs(179,35): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Scripts\LevelThemes\PhysicsTheme\ThermalControllerBlock.cs(93,34): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Scripts\LevelThemes\PhysicsTheme\ThermalControllerBlock.cs(100,81): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Scripts\LevelThemes\PhysicsTheme\ThermalControllerBlock.cs(111,34): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+[241/247    0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Assembly-CSharp-Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp-Editor.dll, with 146 defines and 301 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[242/247    0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Assembly-CSharp.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/Assembly-CSharp.dll, with 148 defines and 263 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[244/247    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp.pdb
+[245/247    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp.dll
+*** Tundra build success (1.37 seconds), 6 items updated, 247 evaluated
+Assets\Scripts\Core\SceneBootstrap.cs(37,13): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindAnyObjectByType instead.'
+Assets\Scripts\UI\MenuActions.cs(8,32): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+Assets\Scripts\Core\SaveManager.cs(179,35): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+Assets\Scripts\LevelThemes\PhysicsTheme\ThermalControllerBlock.cs(93,34): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+Assets\Scripts\LevelThemes\PhysicsTheme\ThermalControllerBlock.cs(100,81): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+Assets\Scripts\LevelThemes\PhysicsTheme\ThermalControllerBlock.cs(111,34): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+Total cache size 79117640
+AssetDatabase: script compilation time: 2.355598s
+Total cache size after purge 79117640, took 00:00:00.1786683
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+ScheduleIndexationOnStartup MainProcess:True IndexOnStartup:True
+Scripting: successfully reloaded assembly
+- Finished resetting the current domain, in  0.530 seconds
+Domain Reload Profiling: 1215ms
+	BeginReloadAssembly (412ms)
+		DisableScriptedObjects (62ms)
+		CreateAndSetChildDomain (75ms)
+	RebuildCommonClasses (11ms)
+	RebuildNativeTypeToScriptingClass (18ms)
+	initialDomainReloadingComplete (69ms)
+	LoadAllAssembliesAndSetupDomain (172ms)
+		LoadAssemblies (204ms)
+		TypeCache.Refresh (14ms)
+			TypeCache.ScanAssembly (6ms)
+		AnalyzeDomain (16ms)
+			BuildScriptInfoCaches (11ms)
+			ResolveRequiredComponents (3ms)
+	FinalizeReload (532ms)
+		SetupLoadedEditorAssemblies (0ms)
+			BeforeProcessingInitializeOnLoad (118ms)
+			ProcessInitializeOnLoadAttributes (73ms)
+			ProcessInitializeOnLoadMethodAttributes (48ms)
+			AfterProcessingInitializeOnLoad (3ms)
+		AwakeInstancesAfterBackupRestoration (53ms)
+Starting new worker id: 0 with log in D:/minigame/B-three-levels-demo/Logs/AssetImportWorkerHW0.log
+
+Asset Pipeline Refresh (id=7d42b15a74e1faa45a64ba8d9bcd466d): Total: 4.051 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	(Values over 0.05ms)
+	Summary:
+		Imports: total=0 (actual=0, local cache=0, cache server=0)
+		Asset DB Process Time: managed=0 ms, native=774 ms
+		Asset DB Callback time: managed=121 ms, native=47 ms
+		Scripting: domain reloads=1, domain reload time=738 ms, compile time=2360 ms, other=8 ms
+		Project Asset Count: scripts=146, non-scripts=58
+		Asset File Changes: new=0, changed=1, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokePackagesCallback: 35.435ms
+	ApplyChangesToAssetFolders: 0.848ms
+	Scan: 42.755ms
+	Collect global state as custom dependencies: 18.071ms
+	OnSourceAssetsModified: 1.053ms
+	CategorizeScriptCompilationAssets: 1.307ms
+	ProcessAssetsWithTransientArtifactChanges: 15.523ms
+	CategorizeAssets: 1.709ms
+	CompileScripts: 2359.581ms
+	ImportOutOfDateAssets: 564.851ms (534.404ms without children)
+		UnloadImportedAssets: 0.107ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 0.055ms
+		ImportSchedulerStart: 30.277ms
+	PostProcessAllAssets: 126.585ms
+		VCAutoAddAssetPostprocess 2.094ms
+		ShaderAssetModifiedCallback 0.474ms
+		PostProcessCallbackCreateDeferredMaterials 0.426ms
+		WindowTitlePostprocess 0.190ms
+		MonoPostProcessAllAssets: 121.297ms
+			SyncVS.PostprocessSyncProject 39.351ms
+			AssetPostprocessor.OnPostprocessAllAssets 22.129ms
+			StyleCatalogPostProcessor.OnPostprocessAllAssets 17.206ms
+			WindowAssetPostprocessingWatcher.OnPostprocessAllAssets 11.555ms
+			BuilderAssetPostprocessor.OnPostprocessAllAssets 8.750ms
+			AssetChangedListener.OnPostprocessAllAssets 2.148ms
+			RetainedModeAssetPostprocessor.OnPostprocessAllAssets 1.503ms
+			EditModeScopePostprocessor.OnPostprocessAllAssets 1.149ms
+			ArtifactBrowserPostProcessor.OnPostprocessAllAssets 1.146ms
+			SpeedTree9Postprocessor.OnPostprocessAllAssets 0.798ms
+			TextAssetPostProcessor.OnPostprocessAllAssets 0.583ms
+			ConfigAssetsTracker.OnPostprocessAllAssets 0.479ms
+			AudioMixerPostprocessor.OnPostprocessAllAssets 0.459ms
+			AssetDatabaseCallbacks.OnPostprocessAllAssets 0.383ms
+			ReferencedClipsPostProcessor.OnPostprocessAllAssets 0.351ms
+			TMPro_TexturePostProcessor.OnPostprocessAllAssets 0.313ms
+			ScenarioDriftAssetsTracker.OnPostprocessAllAssets 0.267ms
+			AssetEvents.OnPostprocessAllAssets 0.251ms
+			TerrainToolbarOverlayPostProcessor.OnPostprocessAllAssets 0.206ms
+			SpeedTreePostProcessor.OnPostprocessAllAssets 0.162ms
+			ThemePostprocessor.OnPostprocessAllAssets 0.133ms
+			AudioContainerPostProcessor.OnPostprocessAllAssets 0.104ms
+			RenderPipelineGlobalSettingsPostprocessor.OnPostprocessAllAssets 0.104ms
+	PostAssetChangesProfiler: 9.506ms
+	UnloadStreamsBegin: 2.516ms
+	Untracked: 831.172ms
+
+Application.AssetDatabase Initial Refresh End
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.04 seconds
+Scanning for USB devices : 8.360ms
+Initializing Unity extensions:
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-AI 大人，拜托了
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 444 unused Assets / (0.5 MB). Loaded Objects now: 1185.
+Memory consumption went from 237.6 MB to 237.0 MB.
+Total: 9.360100 ms (FindLiveObjects: 0.173200 ms CreateObjectMapping: 0.022700 ms MarkObjects: 8.067800 ms  DeleteObjects: 0.682300 ms)
+
+Starting: D:\Program Files\Unity\Hub\Editor\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aESkipCompile.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssembliesAndTypeDB
+WorkingDir: D:/minigame/B-three-levels-demo
+ExitCode: 0 Duration: 0s500ms
+[2/3        0s] BuildPlayerDataGenerator Library/BuildPlayerData/Editor/TypeDb-All.json
+*** Tundra build success (0.42 seconds), 1 items updated, 3 evaluated
+Asset Pipeline Refresh (id=a84afab3f5401cd4491dd496ed90aaa6): Total: 0.007 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+[ScriptCompilation] Requested script compilation because: Recompiling scripts for player build.
+BuildPlayer: start building target 19
+Starting: D:\Program Files\Unity\Hub\Editor\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --defer-dag-verification --dagfile="Library/Bee/1900b0aP.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssembliesAndTypeDB
+WorkingDir: D:/minigame/B-three-levels-demo
+Total cache size 79117640
+Total cache size after purge 79117640, took 00:00:00.2639484
+ExitCode: 0 Duration: 2s441ms
+[ 87/103    0s] ILPP-Configuration Library/ilpp-configuration.nevergeneratedoutput
+[ 91/103    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.InternalAPIEngineBridge.004.dll
+[ 92/103    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.InternalAPIEngineBridge.004.pdb
+[ 93/103    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.pdb
+[ 94/103    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.pdb
+[ 95/103    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.dll
+[ 96/103    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.dll
+[ 97/103    1s] Csc Library/Bee/artifacts/1900b0aP.dag/Assembly-CSharp.dll (+2 others)
+Assets\Scripts\Core\SceneBootstrap.cs(37,13): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindAnyObjectByType instead.'
+
+Assets\Scripts\UI\MenuActions.cs(8,32): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Scripts\Core\SaveManager.cs(179,35): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Scripts\LevelThemes\PhysicsTheme\ThermalControllerBlock.cs(93,34): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Scripts\LevelThemes\PhysicsTheme\ThermalControllerBlock.cs(100,81): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+
+Assets\Scripts\LevelThemes\PhysicsTheme\ThermalControllerBlock.cs(111,34): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+[ 98/103    0s] ILPostProcess Library/Bee/artifacts/1900b0aP.dag/post-processed/Assembly-CSharp.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aP.dag/Assembly-CSharp.dll, with 135 defines and 191 references
+
+processors: zzzUnity.Burst.CodeGen.BurstILPostProcessor
+
+1 processor(s) skipped this assembly
+[ 99/103    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Assembly-CSharp.pdb
+[100/103    0s] CopyFiles Library/Bee/PlayerScriptAssemblies/Assembly-CSharp.dll
+[102/103    0s] BuildPlayerDataGenerator Library/BuildPlayerData/Player/RuntimeInitializeOnLoads.json (+1 other)
+*** Tundra build success (2.38 seconds), 12 items updated, 103 evaluated
+Assets\Scripts\Core\SceneBootstrap.cs(37,13): warning CS0618: 'Object.FindObjectOfType<T>()' is obsolete: 'Object.FindObjectOfType has been deprecated. Use Object.FindAnyObjectByType instead.'
+Assets\Scripts\UI\MenuActions.cs(8,32): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+Assets\Scripts\Core\SaveManager.cs(179,35): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+Assets\Scripts\LevelThemes\PhysicsTheme\ThermalControllerBlock.cs(93,34): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+Assets\Scripts\LevelThemes\PhysicsTheme\ThermalControllerBlock.cs(100,81): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+Assets\Scripts\LevelThemes\PhysicsTheme\ThermalControllerBlock.cs(111,34): warning CS0618: 'Object.FindObjectsOfType<T>(bool)' is obsolete: 'Object.FindObjectsOfType has been deprecated. Use Object.FindObjectsByType instead which lets you decide whether you need the results sorted or not.  FindObjectsOfType sorts the results by InstanceID but if you do not need this using FindObjectSortMode.None is considerably faster.'
+Not rebuilding Data files -- no changes
+Worker ready: AssetImportWorkerHW0 0
+
+
+Mono dependencies included in the build
+Dependency assembly - System.ServiceModel.Web.dll
+Dependency assembly - System.Deployment.dll
+Dependency assembly - System.IdentityModel.dll
+Dependency assembly - System.Reactive.Windows.Threading.dll
+Dependency assembly - System.Net.WebSockets.Client.dll
+Dependency assembly - System.Security.SecureString.dll
+Dependency assembly - System.Reactive.Linq.dll
+Dependency assembly - System.Reflection.DispatchProxy.dll
+Dependency assembly - System.Reactive.Providers.dll
+Dependency assembly - System.Transactions.dll
+Dependency assembly - System.Security.Cryptography.Pkcs.dll
+Dependency assembly - System.Data.Services.dll
+Dependency assembly - Mono.Tasklets.dll
+Dependency assembly - System.Web.DynamicData.dll
+Dependency assembly - System.Web.WebPages.Deployment.dll
+Dependency assembly - System.Resources.ReaderWriter.dll
+Dependency assembly - System.Data.dll
+Dependency assembly - Unity.InternalAPIEngineBridge.004.dll
+Dependency assembly - System.Security.Cryptography.Cng.dll
+Dependency assembly - Commons.Xml.Relaxng.dll
+Dependency assembly - Mono.Management.dll
+Dependency assembly - System.Net.Cache.dll
+Dependency assembly - WebMatrix.Data.dll
+Dependency assembly - Mono.Options.dll
+Dependency assembly - System.Net.WebHeaderCollection.dll
+Dependency assembly - System.Security.Cryptography.Encoding.dll
+Dependency assembly - System.Net.Primitives.dll
+Dependency assembly - System.Xml.XPath.XDocument.dll
+Dependency assembly - System.Security.Cryptography.Encryption.ECDiffieHellman.dll
+Dependency assembly - System.Linq.Parallel.dll
+Dependency assembly - System.ObjectModel.dll
+Dependency assembly - Mono.Messaging.dll
+Dependency assembly - System.Runtime.InteropServices.WindowsRuntime.dll
+Dependency assembly - System.Net.Mail.dll
+Dependency assembly - WindowsBase.dll
+Dependency assembly - System.Web.Routing.dll
+Dependency assembly - System.Xml.dll
+Dependency assembly - System.ValueTuple.dll
+Dependency assembly - System.Security.Cryptography.Csp.dll
+Dependency assembly - Assembly-CSharp.dll
+Dependency assembly - System.IO.FileSystem.Primitives.dll
+Dependency assembly - System.ServiceModel.NetTcp.dll
+Dependency assembly - System.Security.AccessControl.dll
+Dependency assembly - Microsoft.Win32.Registry.dll
+Dependency assembly - System.Web.Extensions.dll
+Dependency assembly - System.Threading.ThreadPool.dll
+Dependency assembly - System.IO.FileSystem.DriveInfo.dll
+Dependency assembly - Microsoft.Web.Infrastructure.dll
+Dependency assembly - System.ServiceModel.Routing.dll
+Dependency assembly - System.Text.Json.dll
+Dependency assembly - System.ComponentModel.TypeConverter.dll
+Dependency assembly - Mono.CSharp.dll
+Dependency assembly - System.Data.Common.dll
+Dependency assembly - System.Runtime.CompilerServices.VisualC.dll
+Dependency assembly - System.Diagnostics.TraceEvent.dll
+Dependency assembly - System.Net.Http.Formatting.dll
+Dependency assembly - Microsoft.Build.Tasks.v4.0.dll
+Dependency assembly - System.Reactive.Core.dll
+Dependency assembly - System.Security.Cryptography.X509Certificates.dll
+Dependency assembly - System.Threading.dll
+Dependency assembly - System.Threading.Thread.dll
+Dependency assembly - System.dll
+Dependency assembly - System.ServiceModel.Security.dll
+Dependency assembly - System.IO.Compression.FileSystem.dll
+Dependency assembly - System.Design.dll
+Dependency assembly - System.Web.Abstractions.dll
+Dependency assembly - I18N.CJK.dll
+Dependency assembly - System.Threading.AccessControl.dll
+Dependency assembly - I18N.MidEast.dll
+Dependency assembly - System.Net.Http.Rtc.dll
+Dependency assembly - Mono.Messaging.RabbitMQ.dll
+Dependency assembly - System.Reactive.Windows.Forms.dll
+Dependency assembly - System.ServiceModel.Discovery.dll
+Dependency assembly - System.Security.Cryptography.Hashing.dll
+Dependency assembly - System.Threading.Tasks.dll
+Dependency assembly - System.Diagnostics.DiagnosticSource.dll
+Dependency assembly - Novell.Directory.Ldap.dll
+Dependency assembly - System.Runtime.Serialization.Xml.dll
+Dependency assembly - System.Net.Utilities.dll
+Dependency assembly - System.Runtime.Serialization.Formatters.Soap.dll
+Dependency assembly - System.Security.Cryptography.RandomNumberGenerator.dll
+Dependency assembly - System.ServiceModel.Internals.dll
+Dependency assembly - System.Net.Http.dll
+Dependency assembly - System.Linq.Expressions.dll
+Dependency assembly - System.Diagnostics.Tools.dll
+Dependency assembly - System.Runtime.DurableInstancing.dll
+Dependency assembly - System.Reflection.Emit.Lightweight.dll
+Dependency assembly - System.Net.dll
+Dependency assembly - System.Diagnostics.Contracts.dll
+Dependency assembly - System.Resources.Writer.dll
+Dependency assembly - Mono.Posix.dll
+Dependency assembly - System.Net.Sockets.dll
+Dependency assembly - System.Security.Principal.dll
+Dependency assembly - System.ServiceModel.Http.dll
+Dependency assembly - System.Workflow.ComponentModel.dll
+Dependency assembly - System.EnterpriseServices.dll
+Dependency assembly - System.Net.NameResolution.dll
+Dependency assembly - System.Diagnostics.Tracing.dll
+Dependency assembly - System.Security.Cryptography.RSA.dll
+Dependency assembly - System.IO.MemoryMappedFiles.dll
+Dependency assembly - Mono.Profiler.Log.dll
+Dependency assembly - System.Threading.Timer.dll
+Dependency assembly - System.Collections.dll
+Dependency assembly - CustomMarshalers.dll
+Dependency assembly - System.Reflection.TypeExtensions.dll
+Dependency assembly - System.Runtime.Remoting.dll
+Dependency assembly - System.ComponentModel.Primitives.dll
+Dependency assembly - System.Memory.dll
+Dependency assembly - System.Xml.XmlSerializer.dll
+Dependency assembly - System.Net.NetworkInformation.dll
+Dependency assembly - System.Workflow.Runtime.dll
+Dependency assembly - System.Reflection.Primitives.dll
+Dependency assembly - Accessibility.dll
+Dependency assembly - System.Web.Services.dll
+Dependency assembly - System.Threading.Tasks.Parallel.dll
+Dependency assembly - I18N.Other.dll
+Dependency assembly - System.Text.RegularExpressions.dll
+Dependency assembly - System.Runtime.Numerics.dll
+Dependency assembly - System.Net.ServicePoint.dll
+Dependency assembly - System.DirectoryServices.Protocols.dll
+Dependency assembly - System.Diagnostics.TextWriterTraceListener.dll
+Dependency assembly - Microsoft.Win32.Primitives.dll
+Dependency assembly - System.Security.Cryptography.DeriveBytes.dll
+Dependency assembly - System.ComponentModel.DataAnnotations.dll
+Dependency assembly - System.Threading.Tasks.Extensions.dll
+Dependency assembly - System.Linq.dll
+Dependency assembly - System.Web.Razor.dll
+Dependency assembly - System.Windows.dll
+Dependency assembly - SystemWebTestShim.dll
+Dependency assembly - System.Runtime.Serialization.Json.dll
+Dependency assembly - System.Security.Principal.Windows.dll
+Dependency assembly - Microsoft.Build.dll
+Dependency assembly - System.Core.dll
+Dependency assembly - Mono.Http.dll
+Dependency assembly - System.Globalization.Calendars.dll
+Dependency assembly - Mono.Data.Sqlite.dll
+Dependency assembly - System.Reactive.Interfaces.dll
+Dependency assembly - System.Diagnostics.FileVersionInfo.dll
+Dependency assembly - System.IO.Hashing.dll
+Dependency assembly - System.Web.Http.SelfHost.dll
+Dependency assembly - System.Net.Ping.dll
+Dependency assembly - System.Text.Encoding.dll
+Dependency assembly - Microsoft.Extensions.DependencyInjection.Abstractions.dll
+Dependency assembly - System.Data.Services.Client.dll
+Dependency assembly - System.ServiceModel.Primitives.dll
+Dependency assembly - System.Data.Linq.dll
+Dependency assembly - Mono.Simd.dll
+Dependency assembly - System.AppContext.dll
+Dependency assembly - System.Security.dll
+Dependency assembly - System.Reactive.Debugger.dll
+Dependency assembly - RabbitMQ.Client.dll
+Dependency assembly - System.Workflow.Activities.dll
+Dependency assembly - System.Runtime.Serialization.Primitives.dll
+Dependency assembly - System.Text.Encodings.Web.dll
+Dependency assembly - System.IdentityModel.Selectors.dll
+Dependency assembly - System.Diagnostics.StackTrace.dll
+Dependency assembly - System.IO.Compression.ZipFile.dll
+Dependency assembly - System.Web.WebPages.Razor.dll
+Dependency assembly - System.Diagnostics.Process.dll
+Dependency assembly - System.Runtime.dll
+Dependency assembly - mscorlib.dll
+Dependency assembly - System.Runtime.CompilerServices.Unsafe.dll
+Dependency assembly - monodoc.dll
+Dependency assembly - Microsoft.Extensions.Logging.Abstractions.dll
+Dependency assembly - PEAPI.dll
+Dependency assembly - System.Resources.Reader.dll
+Dependency assembly - Mono.Security.dll
+Dependency assembly - System.ComponentModel.Composition.dll
+Dependency assembly - System.Messaging.dll
+Dependency assembly - System.Globalization.dll
+Dependency assembly - Mono.Cairo.dll
+Dependency assembly - SMDiagnostics.dll
+Dependency assembly - System.Diagnostics.Debug.dll
+Dependency assembly - UnityEngine.UI.dll
+Dependency assembly - System.Net.HttpListener.dll
+Dependency assembly - System.Net.Requests.dll
+Dependency assembly - System.Web.Mobile.dll
+Dependency assembly - System.Collections.Specialized.dll
+Dependency assembly - System.IO.FileSystem.AccessControl.dll
+Dependency assembly - System.Reactive.Runtime.Remoting.dll
+Dependency assembly - Microsoft.Build.Framework.dll
+Dependency assembly - System.Data.Entity.dll
+Dependency assembly - System.IO.Compression.dll
+Dependency assembly - cscompmgd.dll
+Dependency assembly - System.Configuration.Install.dll
+Dependency assembly - System.Reflection.Emit.dll
+Dependency assembly - System.Runtime.Loader.dll
+Dependency assembly - System.Buffers.dll
+Dependency assembly - System.Web.Http.dll
+Dependency assembly - System.Xml.ReaderWriter.dll
+Dependency assembly - System.ComponentModel.dll
+Dependency assembly - I18N.West.dll
+Dependency assembly - System.Net.AuthenticationManager.dll
+Dependency assembly - System.Reflection.Extensions.dll
+Dependency assembly - System.Security.Cryptography.Encryption.dll
+Dependency assembly - Microsoft.CSharp.dll
+Dependency assembly - System.Json.dll
+Dependency assembly - System.Json.Microsoft.dll
+Dependency assembly - System.Security.Cryptography.Primitives.dll
+Dependency assembly - System.Linq.Queryable.dll
+Dependency assembly - System.ServiceProcess.ServiceController.dll
+Dependency assembly - Unity.TextMeshPro.dll
+Dependency assembly - System.Xml.Xsl.Primitives.dll
+Dependency assembly - System.Net.WebSockets.dll
+Dependency assembly - I18N.Rare.dll
+Dependency assembly - System.ServiceProcess.dll
+Dependency assembly - System.Windows.Forms.dll
+Dependency assembly - System.Numerics.Vectors.dll
+Dependency assembly - System.Drawing.dll
+Dependency assembly - System.Net.Http.WebRequest.dll
+Dependency assembly - System.Security.Cryptography.Hashing.Algorithms.dll
+Dependency assembly - System.Net.Security.dll
+Dependency assembly - System.DirectoryServices.dll
+Dependency assembly - System.Dynamic.dll
+Dependency assembly - Mono.WebBrowser.dll
+Dependency assembly - System.Runtime.Serialization.dll
+Dependency assembly - netstandard.dll
+Dependency assembly - Mono.Parallel.dll
+Dependency assembly - System.Xaml.dll
+Dependency assembly - System.Runtime.Serialization.Formatters.dll
+Dependency assembly - System.Globalization.Extensions.dll
+Dependency assembly - System.Reflection.Metadata.dll
+Dependency assembly - System.Security.Cryptography.Encryption.ECDsa.dll
+Dependency assembly - System.Reflection.Context.dll
+Dependency assembly - System.Windows.Forms.DataVisualization.dll
+Dependency assembly - System.Runtime.InteropServices.dll
+Dependency assembly - IBM.Data.DB2.dll
+Dependency assembly - System.Web.dll
+Dependency assembly - System.Collections.Immutable.dll
+Dependency assembly - System.IO.Pipes.dll
+Dependency assembly - Mono.Btls.Interface.dll
+Dependency assembly - System.Runtime.Extensions.dll
+Dependency assembly - System.Xml.XmlDocument.dll
+Dependency assembly - System.ServiceModel.dll
+Dependency assembly - System.Diagnostics.TraceSource.dll
+Dependency assembly - System.Security.Claims.dll
+Dependency assembly - System.Web.Http.WebHost.dll
+Dependency assembly - System.Reflection.Emit.ILGeneration.dll
+Dependency assembly - Microsoft.Bcl.AsyncInterfaces.dll
+Dependency assembly - System.ServiceModel.Activation.dll
+Dependency assembly - System.Configuration.dll
+Dependency assembly - System.Collections.Concurrent.dll
+Dependency assembly - System.Xml.XDocument.dll
+Dependency assembly - System.IO.dll
+Dependency assembly - System.Web.WebPages.dll
+Dependency assembly - System.ComponentModel.EventBasedAsync.dll
+Dependency assembly - System.Web.ApplicationServices.dll
+Dependency assembly - System.Drawing.Design.dll
+Dependency assembly - System.Management.dll
+Dependency assembly - System.Security.Cryptography.Encryption.Aes.dll
+Dependency assembly - System.IO.IsolatedStorage.dll
+Dependency assembly - System.Collections.NonGeneric.dll
+Dependency assembly - System.Drawing.Primitives.dll
+Dependency assembly - System.Data.DataSetExtensions.dll
+Dependency assembly - System.IO.FileSystem.Watcher.dll
+Dependency assembly - System.Data.OracleClient.dll
+Dependency assembly - System.Xml.Serialization.dll
+Dependency assembly - System.Dynamic.Runtime.dll
+Dependency assembly - System.Threading.Tasks.Dataflow.dll
+Dependency assembly - System.Reactive.Experimental.dll
+Dependency assembly - ICSharpCode.SharpZipLib.dll
+Dependency assembly - System.Web.Extensions.Design.dll
+Dependency assembly - Microsoft.Build.Utilities.v4.0.dll
+Dependency assembly - Microsoft.Win32.Registry.AccessControl.dll
+Dependency assembly - I18N.dll
+Dependency assembly - System.Runtime.Caching.dll
+Dependency assembly - System.Reactive.PlatformServices.dll
+Dependency assembly - System.Numerics.dll
+Dependency assembly - System.Reflection.dll
+Dependency assembly - System.Console.dll
+Dependency assembly - Mono.CompilerServices.SymbolWriter.dll
+Dependency assembly - System.Resources.ResourceManager.dll
+Dependency assembly - System.Runtime.Handles.dll
+Dependency assembly - Mono.Data.Tds.dll
+Dependency assembly - System.IO.FileSystem.dll
+Dependency assembly - System.Security.Cryptography.Algorithms.dll
+Dependency assembly - System.Text.Encoding.CodePages.dll
+Dependency assembly - Mono.Security.Win32.dll
+Dependency assembly - System.Security.Cryptography.OpenSsl.dll
+Dependency assembly - System.Data.SqlClient.dll
+Dependency assembly - System.IO.UnmanagedMemoryStream.dll
+Dependency assembly - System.ServiceModel.Duplex.dll
+Dependency assembly - System.Web.RegularExpressions.dll
+Dependency assembly - System.Runtime.InteropServices.RuntimeInformation.dll
+Dependency assembly - System.Xml.XPath.dll
+Dependency assembly - System.Web.Mvc.dll
+Dependency assembly - System.Threading.Overlapped.dll
+Dependency assembly - System.Xml.XPath.XmlDocument.dll
+Dependency assembly - Microsoft.VisualC.dll
+Dependency assembly - Mono.XBuild.Tasks.dll
+Dependency assembly - Mono.C5.dll
+Dependency assembly - System.ComponentModel.Annotations.dll
+Dependency assembly - System.Security.Cryptography.ProtectedData.dll
+Dependency assembly - Microsoft.Build.Engine.dll
+Dependency assembly - System.Text.Encoding.Extensions.dll
+Dependency assembly - System.Xml.Linq.dll
+Dependency assembly - System.Reactive.Observable.Aliases.dll
+
+Total cache size 79117640
+Total cache size after purge 79117640, took 00:00:00.1864351
+Starting: D:\Program Files\Unity\Hub\Editor\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --dagfile="Library/Bee/Player7f480113.dag" --profile="Library/Bee/backend1.traceevents" Player
+WorkingDir: D:/minigame/B-three-levels-demo
+DisplayProgressbar: Incremental Player Build
+ExitCode: 4 Duration: 2s248ms
+Starting: D:\Program Files\Unity\Hub\Editor\6000.6.4f1\Editor\Data\DotNetSdk\dotnet.exe "D:\Program Files\Unity\Hub\Editor\6000.6.4f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\WinPlayerBuildProgram.exe" "D:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/Bee;D:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Data/Tools/BuildPipeline" "Library/Bee/Player7f480113.dag.json" "Library/Bee/Player7f480113-inputdata.json" "Library\Bee\buildprogram0.traceevents"
+WorkingDir: D:/minigame/B-three-levels-demo
+ExitCode: 0 Duration: 0s476ms
+Starting: D:\Program Files\Unity\Hub\Editor\6000.6.4f1\Editor\Data\Tools\BuildPipeline\bee_backend.exe --ipc --dagfile="Library/Bee/Player7f480113.dag" --dagfilejson="Library\Bee\Player7f480113.dag.json" --profile="Library/Bee/backend2.traceevents" Player
+WorkingDir: D:/minigame/B-three-levels-demo
+ExitCode: 0 Duration: 0s162ms
+
+-------------------------------------------------------------------------------
+Build Report
+Information on used Assets is not available, since player data was not rebuilt.
+Do a clean build to view the Asset build report information.
+-------------------------------------------------------------------------------
+Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 24 unused Assets / (0.8 MB). Loaded Objects now: 1203.
+Memory consumption went from 245.7 MB to 244.9 MB.
+Total: 11.694100 ms (FindLiveObjects: 0.288400 ms CreateObjectMapping: 0.024900 ms MarkObjects: 10.547500 ms  DeleteObjects: 0.615700 ms)
+
+DisplayProgressNotification: Build Successful
+Build Finished, Result: Success.
+Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
+Loaded scene 'Temp/__Backupscenes/0.backup'
+	Deserialize:            1.520 ms
+	Integration:            13.330 ms
+	Integration of assets:  0.007 ms
+	Thread Wait Time:       0.044 ms
+	Total Operation Time:   14.900 ms
+Unloading 0 unused Assets / (Unknown). Loaded Objects now: 1202.
+Memory consumption went from 242.2 MB to 242.2 MB.
+Total: 8.360900 ms (FindLiveObjects: 0.201800 ms CreateObjectMapping: 0.018800 ms MarkObjects: 7.927600 ms  DeleteObjects: 0.022300 ms)
+
+##utp:{"success":true,"type":"PlayerBuildInfo","version":2,"phase":"Immediate","time":1792993639236,"processId":56568,"steps":[{"description":"Call PrepareForBuild callbacks","duration":1},{"description":"Call internal build started callbacks","duration":1},{"description":"Preprocess Player","duration":18},{"description":"Save scenes before build","duration":0},{"description":"Prepare For Build","duration":14},{"description":"ProducePlayerScriptAssemblies","duration":3364},{"description":"Verify Build setup","duration":82},{"description":"Prepare assets for target platform","duration":5},{"description":"Prepare splash screen","duration":8},{"description":"Run script only build","duration":35},{"description":"Build scripts DLLs","duration":14},{"description":"Postprocess built player","duration":3183},{"description":"Call Post-Process callbacks","duration":24}],"duration":6749}
+Total cache size 79117640
+Total cache size after purge 79117640, took 00:00:00.2445433
+ROOMLAB_CONNECTED_REBUILD_PASS D:\minigame\RoomLab-2.5.2-Unity-Connected-20261026\RoomLabUnity.exe
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+RoomLabExactBuild:RebuildConnected () (at Assets/Editor/RoomLabImport/RoomLabExactBuild.cs:19)
+
+(Filename: Assets/Editor/RoomLabImport/RoomLabExactBuild.cs Line: 19)
+
+Batchmode quit successfully invoked - shutting down!
+Curl error 42: Callback aborted
+[Physics::Module] Cleanup current backend.
+[Physics::Module] Id: 0xf2b8ea05
+Input System module state changed to: ShutdownInProgress.
+Input Polling Thread exited.
+Input System module state changed to: Shutdown.
+[Licensing::IpcConnector] LicenseClient-24425-6000.6.4-notifications channel disconnected successfully.
+[Licensing::IpcConnector] LicenseClient-24425-6000.6.4 channel disconnected successfully.
+Lingering sessions upon destruction of worker manager
+Unity Data Store service was successfully shut down
+UDS shutting down local client system
+AcceleratorClientConnectionCallback - disconnected - :0
+Cleanup mono
+CodeReloadManager destroyed
+Exiting batchmode successfully now!
+[ExitDontLaunchBugReporter] Exiting without the bug reporter. Application will exit with return code 0

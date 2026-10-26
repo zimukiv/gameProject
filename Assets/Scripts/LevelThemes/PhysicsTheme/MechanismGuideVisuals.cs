@@ -22,7 +22,7 @@ public class MechanismGuideVisuals : MonoBehaviour
     {
         var guide = owner.gameObject.AddComponent<MechanismGuideVisuals>();
         guide.rail = owner;
-        guide.Build(3, new Color(1f, .75f, .2f), "电磁炮 →", 1.5f);
+        guide.Build(3, new Color(1f, .75f, .2f), "电磁弹射平台\n跳上平台，一起弹射 →\n空格 / W 跳离", 2.6f);
     }
 
     private void Build(int count, Color color, string label, float signHeight)
@@ -95,16 +95,18 @@ public class MechanismGuideVisuals : MonoBehaviour
         }
         else
         {
+            Vector3 start = rail.LaunchStartPosition;
+            sign.position = start + Vector3.up * 2.6f;
             Vector3 end = rail.launchEndPoint != null ? rail.launchEndPoint.position
-                : transform.position + (Vector3)rail.launchDirection * 5f;
-            Vector3 direction = (end - transform.position).normalized;
+                : start + (Vector3)rail.launchDirection * 5f;
+            Vector3 direction = (end - start).normalized;
             Vector3 across = new Vector3(-direction.y, direction.x, 0f);
             // Draw the actual route and a second rail, with a clear exit arrow.
             for (int i = 0; i < 2; i++)
             {
                 Vector3 offset = across * (i == 0 ? .12f : -.12f);
                 lines[i].positionCount = 2;
-                lines[i].SetPosition(0, transform.position + offset);
+                lines[i].SetPosition(0, start + offset);
                 lines[i].SetPosition(1, end + offset);
             }
             Vector3 exitDirection = ((Vector3)rail.launchDirection).normalized;

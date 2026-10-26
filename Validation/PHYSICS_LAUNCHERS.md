@@ -1,5 +1,7 @@
 # 物理关喷气与弹射试玩改动（2026-10-23）
 
+> 当前电磁炮已改为 [载人弹射平台](RAIL_CARRIER.md)，下文记录首次迭代，不再代表当前登乘方式。
+
 这是首次喷射控制调整的记录。随后已整理喷气段布局、旗子检查点和主动启动 AI，并完成真实 Unity 路线验证，当前试玩说明见 `VENT_ROUTE.md`。
 
 打开本工程的 `Assets/Scenes/Level1.unity`，等待 Unity 编译结束后 Play 即可。无需执行 Rebuild generated scenes。新增标识和导轨在运行时生成，不会写回场景。

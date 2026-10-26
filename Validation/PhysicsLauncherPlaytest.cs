@@ -152,7 +152,7 @@ public class PhysicsLauncherTestRunner : MonoBehaviour
         Check(vent.GetComponentsInChildren<LineRenderer>().Length == 3, "Vent creates visible airflow");
         Check(rail.GetComponentsInChildren<LineRenderer>().Length == 3, "Rail creates track and exit arrow");
         Check(vent.GetComponentInChildren<TextMesh>().text.Contains("喷气口"), "Vent has Chinese sign");
-        Check(rail.GetComponentInChildren<TextMesh>().text.Contains("电磁炮"), "Rail has Chinese sign");
+        Check(rail.GetComponentInChildren<TextMesh>().text.Contains("弹射平台"), "Rail has Chinese boarding sign");
 
         var camera = new GameObject("Preview camera").AddComponent<Camera>();
         camera.orthographic = true;

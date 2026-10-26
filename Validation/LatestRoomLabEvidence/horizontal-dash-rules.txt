@@ -1,0 +1,1 @@
+HORIZONTAL_DASH_PASS directions=32 duration=unchanged free/paid/cap/empty=pass
