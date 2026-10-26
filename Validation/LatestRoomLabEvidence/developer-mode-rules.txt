@@ -1,0 +1,8 @@
+DEVELOPER_MODE_PASS default=off rooms=11 spikeImmune=true aiDeathAndTheftImmune=true fall=entryWithoutReset manualRetry=preserved offRestoresDeaths=true modeGate=true roomAndPauseCarry=true
+INSTANT_FREEZE_PASS plates=4 blocks=317 actorOverlapCases=4 sameCall=true collisionAndVisual=true overlappingZones=true standingMeltDelay=preserved
+OLD_INPUT_REPRODUCED presses=2 delivered=1 charges=3
+OLD_RENDERER_REPRODUCED presses=1 dashes=2 secondPress=blocked charges=2
+SINGLE_PRESS_PASS firstPress=free stock=3 secondPress=paid stock=2
+DASH_INPUT_PASS batchedPresses=2 paidConsumed=1 thirdBlocked=true gaps=0/50/150/250/350ms reverse=true substepQueue=true pauseClear=true respawnDiscard=true
+DASH_RESOURCES_PASS free=landing-refill-unlimited paidStock=3 paidPerLanding=1 airborneCombo=2 freeOnlyCycles=20 airRefillDoesNotReset=true wall/ceiling=noReset roomCarry=true respawnReset=true noTotalCountGate=true
+RESPAWN_PASS rooms=11 buffer=0.5s frozenTicks=60 inputDropped=true pause/resume=pass repeatedRetry=ignored deaths=fall/spike/ai

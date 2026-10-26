@@ -1,0 +1,15 @@
+{
+  "tag": "20261026-v2",
+  "archive": "D:\\minigame\\资料\\试玩导出\\RoomLab-试玩版-20261026-v2.zip",
+  "sha256": "fef562d7b3098865c9a324432c7a0b67ed127137ab4961022c96db012ea85e03",
+  "zipBytes": 194375363,
+  "fileCount": 308,
+  "allFileHashesVerified": true,
+  "currentRuntimeAppVerified": true,
+  "extractedExecutable": "D:\\minigame\\B-three-levels-demo\\.roomlab-downloads\\playtest-export-validation-20261026-v2\\RoomLab-Playtest-20261026-v2\\RoomLabUnity.exe",
+  "unityVerification": "PASS rooms=11 textures=11 exitCode=0",
+  "runtimeVerification": "PASS checks=350 rooms=11",
+  "developerModeVerification": "PASS default off, spike/AI/fall protection",
+  "instantFreezeVerification": "PASS plates=4 blocks=317",
+  "iceParkourMeltVerification": "PASS 25 blocks at 2 seconds"
+}

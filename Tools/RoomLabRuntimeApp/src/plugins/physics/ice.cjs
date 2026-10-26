@@ -25,6 +25,17 @@ module.exports = {
   surface(ctx, o) {
     return { friction: o.params.friction, acceleration: 430 };
   },
+  onTemperatureChange(ctx, o, s, next) {
+    if (next !== 'cold') return;
+    const create = !s.solid;
+    s.solid = true;
+    s.standing = 0;
+    s.respawnRemaining = 0;
+    if (create) {
+      s.generation++;
+      ctx.emit('ice-create', { id: o.id, reason: 'cold' });
+    }
+  },
   tick(ctx, o, s, dt) {
     const cold = ctx.temperature(o) === 'cold';
     if (!cold) {

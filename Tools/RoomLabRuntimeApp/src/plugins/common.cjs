@@ -17,7 +17,16 @@ module.exports = [
   { ...base, type: 'common.coin', name: '大 token', glyph: 'T' },
   { ...base, type: 'common.small', name: '小 token', glyph: '+' },
   { ...base, type: 'common.collectible', name: '收藏品', glyph: '★' },
-  { ...base, type: 'common.spike', name: '尖刺', glyph: '^' },
+  {
+    ...base, type: 'common.checkpoint', name: '存档点', glyph: '⚑',
+    slots: ['idle', 'active'], trigger: 'region',
+    onTrigger(ctx, o) { ctx.saveCheckpoint(o); },
+    visual(ctx, o) { return ctx.activeCheckpoint === o.id ? 'active' : 'idle'; },
+  },
+  { ...base, type: 'common.spike', name: '尖刺', glyph: '◠',
+    defaults: { direction: 'up' },
+    schema: [{ key: 'direction', label: '半圆朝向（底边贴墙）', kind: 'select', values: ['up', 'down', 'left', 'right'] }],
+  },
   {
     ...base,
     type: 'common.aiStart',

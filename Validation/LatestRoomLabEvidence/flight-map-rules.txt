@@ -1,0 +1,1 @@
+FLIGHT_MAP_PASS rooms=11 directions=8 diagonalNormalized=true hover=true noclip=true bounds=true resourcesUnchanged=true safeExit=true normalGravityRestored=true pauseAndRetry=true atlas=11 roomFit=true mapReadOnly=true

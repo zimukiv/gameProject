@@ -1,0 +1,1 @@
+ROOMLAB_EXACT_CONFORMANCE_PASS checks=176 rooms=11 preview=D:\minigame\B-three-levels-demo\.roomlab-runtime\exact-preview.png

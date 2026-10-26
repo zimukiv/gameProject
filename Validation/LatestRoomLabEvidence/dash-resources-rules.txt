@@ -1,0 +1,1 @@
+DASH_RESOURCES_PASS free=landing-refill-unlimited paidStock=3 paidPerLanding=1 airborneCombo=2 freeOnlyCycles=20 airRefillDoesNotReset=true wall/ceiling=noReset roomCarry=true respawnReset=true noTotalCountGate=true

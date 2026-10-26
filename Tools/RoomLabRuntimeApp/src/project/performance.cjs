@@ -1,6 +1,7 @@
 'use strict';
 const defaults = {
   speed: 220,
+  moveAccelerationTime: 0.1,
   gravity: 1500,
   jump: 560,
   maxFall: 900,
@@ -19,6 +20,7 @@ function resolve(settings) {
         throw Error('运动参数 ' + key + ' 需要有效数字');
       result[key] = n;
     }
+  if (result.moveAccelerationTime <= 0) throw Error('水平起步加速时间必须大于 0');
   return result;
 }
 module.exports = { defaults, resolve };

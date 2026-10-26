@@ -1,0 +1,1 @@
+SPIKES_PASS cases=24 visualRadius=14 dangerRadius=11 fullCellBlocking=removed normalFloor=pass

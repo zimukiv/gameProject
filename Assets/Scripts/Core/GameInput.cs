@@ -13,6 +13,9 @@ public static class GameInput
 #endif
     public static bool IsHeld(KeyCode key) => Read(key, false);
     public static bool WasPressed(KeyCode key) => Read(key, true);
+    // Rebindable controls must read the chosen physical key without legacy aliases.
+    public static bool IsHeldExact(KeyCode key) => ReadSingle(key, false);
+    public static bool WasPressedExact(KeyCode key) => ReadSingle(key, true);
 
     private static bool Read(KeyCode key, bool pressedThisFrame)
     {

@@ -1,0 +1,5 @@
+ROOMLAB_DEVELOPER_BRIDGE_PASS pausedToggle=true roomSelectionCarry=true manualRetry=true disablingModeClearsLock=true
+ROOMLAB_FLIGHT_MAP_BRIDGE_PASS flight=true atlas=11 mapFrozen=true otherRoomReadOnly=true zoomPan=true modeGate=true noInputLeak=true
+ROOMLAB_CHECKPOINT_BRIDGE_PASS actualFlightToFlag=true contactSave=true retrySpawn=true resourcesRestored=true buffer=0.5s
+ROOMLAB_REAL_AIR_COMBO_PASS firstPress=free stock=3 secondPress=reverse-paid stock=2 thirdPress=blocked
+ROOMLAB_EXACT_CONFORMANCE_PASS checks=362 rooms=11 preview=D:\minigame\B-three-levels-demo\.roomlab-downloads\playtest-export-validation-20261026-v3\RoomLab-Playtest-20261026-v3\RoomLabRuntime\exact-preview.png

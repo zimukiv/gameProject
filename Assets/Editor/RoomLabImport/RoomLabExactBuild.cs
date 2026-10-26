@@ -10,6 +10,7 @@ public static class RoomLabExactBuild
     // Rebuild the connected scene without recreating scenes or changing PlayerSettings.
     public static void RebuildConnected()
     {
+        RoomLabKeyBindingsCheck.Run();
         string output=Environment.GetEnvironmentVariable("ROOMLAB_EXACT_OUTPUT");
         if(string.IsNullOrEmpty(output))throw new IOException("Output path required");
         var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions{

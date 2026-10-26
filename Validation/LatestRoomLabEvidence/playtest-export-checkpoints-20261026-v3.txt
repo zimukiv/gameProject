@@ -1,0 +1,1 @@
+CHECKPOINTS_PASS flags=7 deathRoutes=21 actualContact=true position/resources/score/credits/temperature=restored aiSpawnRelative=true latestWins=true respawnBuffer=0.5s inputDropped=true flightDoesNotSave=true roomReset=true

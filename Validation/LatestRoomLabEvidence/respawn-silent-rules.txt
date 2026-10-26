@@ -1,0 +1,1 @@
+RESPAWN_PASS rooms=11 buffer=0.5s frozenTicks=60 inputDropped=true pause/resume=pass repeatedRetry=ignored deaths=fall/spike/ai

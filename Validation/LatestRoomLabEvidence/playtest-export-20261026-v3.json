@@ -1,0 +1,15 @@
+{
+  "tag": "20261026-v3",
+  "archive": "D:\\minigame\\资料\\试玩导出\\RoomLab-试玩版-20261026-v3.zip",
+  "sha256": "259a9fcd08c2d81c4a1ebf9033def1c1b990ae8b60a7eb92b9bfb382d3151d49",
+  "zipBytes": 194384060,
+  "fileCount": 309,
+  "allFileHashesVerified": true,
+  "currentRuntimeAppVerified": true,
+  "extractedExecutable": "D:\\minigame\\B-three-levels-demo\\.roomlab-downloads\\playtest-export-validation-20261026-v3\\RoomLab-Playtest-20261026-v3\\RoomLabUnity.exe",
+  "unityVerification": "PASS rooms=11 textures=11 exitCode=0",
+  "runtimeVerification": "PASS checks=362 rooms=11",
+  "checkpointVerification": "PASS flags=7 deathRoutes=21 actualContact=true retryRestore=true buffer=0.5s",
+  "developerFlightMapVerification": "PASS flight=true atlas=11 mapFrozen=true zoomPan=true",
+  "airDoubleDashVerification": "PASS free then paid, third press blocked"
+}

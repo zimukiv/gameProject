@@ -1,6 +1,6 @@
 # 当前版本：RoomLab 2.5.2 完整连线导入版
 
-**程序 B 请先读 [2026-10-26 最新交接说明](Handoff/ROOMLAB_20261026.md)。** GitHub 分支为 `codex/roomlab-handoff-2026-10-26`。
+**程序 B 请先读 [DDL1.3 试玩 v3 最新交接说明](Handoff/ROOMLAB_DDL13_V3_20261026.md)。** GitHub 分支为 `codex/roomlab-ddl13-v3-handoff-2026-10-26`，完整试玩包见 [v3 Release](https://github.com/zimukiv/gameProject/releases/tag/roomlab-playtest-20261026-v3)。
 
 拉取后在仓库根目录执行 `Tools/RoomLabExactHost/setup-runtime.ps1`，准备仓库内 `.roomlab-runtime`，然后用 Unity 6000.6.4f1 打开 `Assets/RoomLabExactConnected/RoomLabExact.unity`。运行器源码、11 房间数据及素材已纳入 `Tools/RoomLabRuntimeApp`，后续修改该目录并重跑初始化脚本同步。构建用 `Tools/RoomLabExactHost/build-connected.ps1 -UnityExe <Unity.exe路径>`。
 
@@ -12,7 +12,11 @@ Unity Hub 添加本目录 `D:\minigame\B-three-levels-demo`，使用 **Unity 600
 直接试玩：`D:\minigame\RoomLab-2.5.2-Unity-Connected-20261026\RoomLabUnity.exe`。
 Unity 编辑器和试玩程序共用该目录的 `RoomLabRuntime`，请完整保留试玩目录。
 
-当前策划数据为 `D:\minigame\策划\第一大关 · 物理 DDL.zip`，共 11 房间、10 连线。
+最新分发包：`D:\minigame\资料\试玩导出\RoomLab-试玩版-20261026-v3.zip`。完整解压后运行其中的 `RoomLabUnity.exe`，无需安装 Unity。包含 DDL1.3、7 个存档点、键位设置、开发者锁血/飞行/地图预览，以及此前的双冲刺、温控立即结冰和 2 秒冰块调整；开包说明见 `开始试玩.txt`，完整性与独立目录启动验证见 [v3 导出记录](Validation/LatestRoomLabEvidence/playtest-export-20261026-v3.json)。旧同日无版本后缀及 v2 ZIP 为历史版。
+
+重新打包已构建的当前版本可用 `python Tools/RoomLabExactHost/export-playtest.py --tag YYYYMMDD-vN`；脚本校验运行器源码、打包完整性和解压后文件哈希，不覆盖已有版本。
+
+当前策划数据为 `D:\minigame\策划\第一大关 · 物理 DDL1.3.zip`，共 11 房间、10 连线，新增 7 个可用存档点。越界温控区已兼容处理，保留本地 2 秒冰块与尖刺朝向；具体变化、检查和备份见 [DDL 1.3 导入记录](Validation/DDL_1_3_IMPORT.md)。此前的 v2 分发 ZIP 保留原导出内容。
 规则与画面基于 RoomLab 2.5.2 原核心，包含用户要求的水平冲刺、Esc 菜单及导轨拾取修复，详见 [当前导入说明](Validation/ROOMLAB_EXACT.md) 和 [Bug 修复日志](Validation/BUGFIX_LOG.md)。
 
 ---

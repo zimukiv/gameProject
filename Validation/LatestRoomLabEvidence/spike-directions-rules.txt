@@ -1,0 +1,1 @@
+SPIKES_PASS cases=96 assigned=225 directions=4 wall/ceiling/floor/floating=pass visualRadius=14 dangerRadius=11 fullCellBlocking=removed normalFloor=pass

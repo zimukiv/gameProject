@@ -1,0 +1,10 @@
+DDL1.1 import: existing local gameplay code preserved.
+Model validation: errors=0 warnings=0; all 11 room Engine constructors succeeded.
+Candidate data: identical to the designer ZIP except 215 explicit spike directions; 208 preserved, 7 inferred.
+CONNECTIONS_PASS rooms=11 roomChanges=10 finalExits=1 respawnBufferOnNormalTransition=none
+MOVE_ACCELERATION_PASS ramp=0.1s speed=220 tap50ms=3.208px previous=11.000px ground/air/left/right/reverse/release/crouch=pass dash/launch/ice=pass
+RESPAWN_PASS rooms=11 buffer=0.5s frozenTicks=60 inputDropped=true pause/resume=pass repeatedRetry=ignored deaths=fall/spike/ai
+SPIKES_PASS cases=96 assigned=215 directions=4 wall/ceiling/floor/floating=pass visualRadius=14 dangerRadius=11 fullCellBlocking=removed normalFloor=pass
+HORIZONTAL_DASH_PASS directions=32 duration=unchanged free/paid/cap/empty=pass
+DASH_PICKUP_PASS tokens=1 duringDash=true
+RAIL_PICKUPS_PASS actualRoom=AI追逐1 tokens=2 recharge=1 charges=3 score=200 duplicate=none endpoint/launch=unchanged

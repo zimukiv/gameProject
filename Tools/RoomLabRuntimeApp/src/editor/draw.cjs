@@ -4,6 +4,26 @@ const Registry = require('../plugins/registry.cjs'),
 const GraphLayout = require('./graph-layout.cjs');
 const Temperature = require('../project/temperature.cjs');
 const Collision = require('../project/collision.cjs');
+const Spikes = require('../project/spikes.cjs');
+function drawSpike(ctx, rect, direction) {
+  const { x, y, radius, angle } = Spikes.geometry(rect, direction);
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.arc(0, 0, radius, Math.PI, Math.PI * 2);
+  ctx.closePath();
+  ctx.fillStyle = '#d95863';
+  ctx.fill();
+  ctx.strokeStyle = '#ffb2a3';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(0, 0, Math.max(0, radius - 4), Math.PI * 1.15, Math.PI * 1.8);
+  ctx.strokeStyle = '#ffccb8';
+  ctx.stroke();
+  ctx.restore();
+}
 function ghostBorder(ctx, rect) {
   ctx.save();
   ctx.lineWidth = 3;
@@ -231,7 +251,9 @@ function drawRoom(
       game?.credited?.has(r.id + '/' + o.id)
     )
       continue;
-    if (!drawImage(ctx, assetURL(id), rect, a, game?.roomTime || 0)) {
+    if (o.type === 'common.spike') {
+      drawSpike(ctx, rect, o.params?.direction);
+    } else if (!drawImage(ctx, assetURL(id), rect, a, game?.roomTime || 0)) {
       ctx.fillStyle =
         o.type === 'physics.ice' ? '#3c81b455' : d.collider === 'pad' ? '#345e6255' : '#344455';
       if (!d.hollow) ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
@@ -249,7 +271,11 @@ function drawRoom(
         'center',
       );
     }
-    if (!Collision.enabled(o, 'objects', d)) ghostBorder(ctx, rect);
+    if (o.type !== 'common.spike' && !Collision.enabled(o, 'objects', d)) ghostBorder(ctx, rect);
+    if (o.type === 'common.checkpoint' && slot === 'active') {
+      ctx.strokeStyle = '#ffd36e';ctx.lineWidth = 2;
+      ctx.strokeRect(rect.x + 1, rect.y + 1, rect.w - 2, rect.h - 2);ctx.lineWidth = 1;
+    }
     if (o.type === 'physics.ice' && game)
       text(
         ctx,

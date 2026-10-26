@@ -9,7 +9,10 @@ const dt = 1 / 120;
 
 // A normal dash already supports pickups, including collision-enabled tokens.
 const dash = new Engine(project, course.id, room.id);
-const token = dash.room.objects.find(o => o.type === 'common.small');
+// DDL1.3 makes the actual small Tokens non-solid. Retain explicit solid-token
+// coverage in this isolated fixture; the rail test below uses untouched level data.
+const token = structuredClone(dash.room.objects.find(o => o.type === 'common.small'));
+token.collision = true;
 dash.room.objects = [token]; dash.room.tiles = []; dash.room.movables = []; dash.room.zones = []; dash.room.exits = [];
 Object.assign(dash.player, { x: token.x * 32 - dash.player.w - 1, y: token.y * 32 + 1, grounded: false });
 dash.update(dt, { right: true, dashPressed: true });

@@ -1,0 +1,2 @@
+ROOMLAB_REAL_AIR_COMBO_PASS firstPress=free stock=3 secondPress=reverse-paid stock=2 thirdPress=blocked
+ROOMLAB_EXACT_CONFORMANCE_PASS checks=346 rooms=11 preview=D:\minigame\B-three-levels-demo\.roomlab-runtime\exact-preview.png

@@ -1,0 +1,3 @@
+ROOMLAB_RUNTIME_READY D:\minigame\B-three-levels-demo\.roomlab-runtime
+Edit Tools/RoomLabRuntimeApp, then rerun this script to refresh the runtime copy.
+ROOMLAB_BUILD_READY D:\minigame\B-three-levels-demo\Builds\RoomLabConnected

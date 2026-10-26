@@ -1,0 +1,1896 @@
+{
+  "sourceZip": "D:\\minigame\\策划\\第一大关 · 物理 DDL1.1.zip",
+  "sourceZipSHA256": "dceea62ef2ef7f0b33b2fca6d54a1436f46295b7739823f0da6f598910ab908b",
+  "backup": "D:\\minigame\\资料\\关卡版本备份\\RoomLab-DDL1.0-导入1.1前-20261026.zip",
+  "backupSHA256": "93ff89da47a76871cac26918526a554218a0514aea9ba1b72e15c232bda93693",
+  "old": {
+    "courses": 1,
+    "rooms": 11,
+    "connections": 10,
+    "tiles": 1315,
+    "objects": 667,
+    "types": {
+      "common.coin": 13,
+      "physics.jet": 32,
+      "physics.rail": 14,
+      "physics.ice": 351,
+      "common.small": 16,
+      "common.spike": 225,
+      "physics.thermal": 4,
+      "common.aiStartHollow": 1,
+      "common.collectible": 6,
+      "common.portalIn": 1,
+      "common.portalOut": 2,
+      "common.aiStart": 2
+    }
+  },
+  "new": {
+    "courses": 1,
+    "rooms": 11,
+    "connections": 10,
+    "tiles": 1311,
+    "objects": 693,
+    "types": {
+      "common.coin": 13,
+      "physics.jet": 32,
+      "common.small": 52,
+      "physics.rail": 12,
+      "physics.ice": 350,
+      "common.spike": 215,
+      "physics.thermal": 4,
+      "common.aiStartHollow": 1,
+      "common.collectible": 8,
+      "common.portalIn": 1,
+      "common.portalOut": 2,
+      "common.aiStart": 3
+    }
+  },
+  "connectionsUnchanged": true,
+  "globalSettingsUnchanged": true,
+  "assetFilesChanged": [],
+  "spikeDirections": {
+    "total": 215,
+    "preserved": 208,
+    "inferred": 7
+  },
+  "gameplayCodePreserved": true,
+  "preservedCodeHashes": {
+    "index.html": "4e6f5a9a314caf0a0b305d9fc465d1cc07431b0850ff7456b61edb09c64a6488",
+    "main.cjs": "7acd70849d24c7ed7190419c3b1dbaec143c5b9ffb1e31d6fb4fd50a2fbc44e2",
+    "renderer.cjs": "1c6fa0891783c92fb825c700b30dbb3bc019f427bbcd2d71adca8ec7f9b62e56",
+    "src/assets/catalog.cjs": "b2bd5400c6bb92ff5289c8925109b92c7e95f3ea0e1455a239184e381d581520",
+    "src/assets/manager.cjs": "334c31c0c4cd072dcff74b5ef27f04902e95fd5de5fc6a5587b562c10ee4c760",
+    "src/assets/seeds.cjs": "f87c7e0ae123a067ad186399ca27a18b595d986d383ac9acc5f14b0fe967193f",
+    "src/cloud/codec.cjs": "5755932d243b328d915e0503cc4bec2a70f1524731e8616c85aea9543bff5e68",
+    "src/cloud/connection.cjs": "8e9075cf247a7e4f77e10d7d451e7f1a9879970cf40155f05a03f3b4d5126941",
+    "src/cloud/live.cjs": "a9b268e7d155345635ca380bddc9a322e828fcd7aa9ffc564e19e190942cbbe2",
+    "src/cloud/repository.cjs": "6f569be88aab1694a69fe9bff34e66eac25669f31bb6caef1d7ad3de63df0952",
+    "src/cloud/service.cjs": "d036ca2643d37dcaf0c3a2a5922ff2363f82d124fc45af504beb564569051682",
+    "src/cloud/windows-http.cjs": "97a386ca7a6d710e4d66804c88592e332124410520aea72de3f018848a1d343a",
+    "src/desktop/main.cjs": "2bc965c2f99de18c705ba8cc715f95c8c68204cb181b871eea83ad916bbd0cde",
+    "src/desktop/preload.cjs": "16724c7afaf23d6c4809266ef1cea96e09aff70f7b1f11a59c456ca3a0985487",
+    "src/desktop/project-files.cjs": "49f05537f032952925ee42764b4323c9d57aeff05c414a789a0c0c5ae905d4cd",
+    "src/editor/app.cjs": "8e7cc1b0b9ff54030486b331bb1b88f16b81ca4f7f12b08bb26c9f5cfac22686",
+    "src/editor/cloud-controller.cjs": "f2f9fb47b6d470b5760ea1707aba857ac8145efe970cd960994583440340aefc",
+    "src/editor/cloud-graph-panel.cjs": "6a0eb8adc8b6558e5f21b7a316cd6a566944c6c2610623108fc00f86f54d7f50",
+    "src/editor/dom.cjs": "e89a4977b8f2c105bc503bf94b1ef08787f4bfaadb7b8dd468d2353f76581ffe",
+    "src/editor/draw.cjs": "cc89947e4473f9cb5458ff6abd0ef574ea6763aa4f9ae3054f57b3ea33d16cc1",
+    "src/editor/graph-layout.cjs": "c227976b93bfe842510cd8af7804811944ee93fbb49c21dddd56ceba7dc82e3f",
+    "src/editor/history.cjs": "6790b6df094cce8a6b50aed2188ff5dfc2012e86eb9e92dc8e06f885f2e9d5c0",
+    "src/editor/index.html": "70ea4a275dce6e631c82aebbd91fbb617a7015d1e357eeb376cf4640dc0bd958",
+    "src/editor/palette.cjs": "c4a7dc3f6a0b3b5c87709dfc93983ce704a7848849727ae0b7a8608b8df8b631",
+    "src/editor/rail-node-panel.cjs": "fe8f083ef1e527fc6f1acb66e47339c1e14e35ea7838785a1680fd0b27e85565",
+    "src/editor/region-handles.cjs": "f09237a2a15ecf2f9b7c8bb4b0043c9d09476626632e599abb5b040866887e2d",
+    "src/editor/room-camera-panel.cjs": "3e83acd85e081c92db1a9b845c67872b2a2d31b22026a24c126ec0927eadd897",
+    "src/editor/room-transfer.cjs": "cdeaf18917809b7d9924bb6a82bf631c62f924fdbbe21762e651d92426aa80ae",
+    "src/editor/store.cjs": "de8d0d5c0f6935f0005ac4ea4c5bfeb705c354d3af4a24376b671e6e7e89c893",
+    "src/editor/style.css": "3bc93c66d77f2bf20ad9bb115d1ca4a9ff994dd384d41b3976deebeb0d32d8b8",
+    "src/editor/trace-manager.cjs": "3c9724a91c201271e83de13ec9906259b75ef3a795c22e9710a2c6c7a9a63119",
+    "src/editor/worktree-panel.cjs": "77926946c749841e68395640ab24a82454caa89f89c0d254c11830fb76560cf4",
+    "src/plugins/common.cjs": "088d15ce8a549213c5a0affd19af8808e8b982cced14b9b1018282fab3223972",
+    "src/plugins/legacy.cjs": "e70d70a364f8f7673a94d9cf9fe0e595895acf7d731cf145df903f082ef35d89",
+    "src/plugins/registry.cjs": "b2ce72557240b6c6221c0a289ba0f6c2ddee97c1de07317f7bb6402baa3186d2",
+    "src/project/archive.cjs": "983cb5f8801a88451a62e162c99f0615e9e87f2e187a7218c9bcb7f25c4218ce",
+    "src/project/collision.cjs": "5bbf7308fb2dfb4ddfc95bb42e3215192004c2c673d2a83fabb38230de6435d7",
+    "src/project/courses.cjs": "af4def9306aab0570acd9114ef8360edf9d4e75d99e4f2c844882364c0c39c41",
+    "src/project/jet-params.cjs": "bf95b51d699a56784badd7860d9aaa27eb4ced11df46b301c0cacc3a60915202",
+    "src/project/merge.cjs": "efe9887ad807104981d154b42b1af8169b104fa29790cfe5fa78fa6f15041d6d",
+    "src/project/model.cjs": "b02e319f0f7f00d3e4d35268a462fa18908b5c7f9bca3e985879299f6765e970",
+    "src/project/performance.cjs": "57e1bc542e6c053577fc27858a1136d23ac332c5d3fa958366b3b2d269a6bbf6",
+    "src/project/play-camera.cjs": "b790d4bd413c5f3578d189cbac76e153da1a00a70f0aa4a20e31ebf236712242",
+    "src/project/play-traces.cjs": "3fba50563826ce1fb1de4a696d21a7f90a23e52d4fc54dae9b0b4b3109406411",
+    "src/project/rail-nodes.cjs": "8f6778bd7f125bc185c4d9d729c8417ada986b3493f156a4d9d99a27cd047785",
+    "src/project/room-export.cjs": "ce5be10bce333c571754956782fb5c485d122aa2b243db29355d2a081ea26cc0",
+    "src/project/room-import.cjs": "ac3a8500990ac4adaad0194681d50de1113d935e49129d51077e692d36545628",
+    "src/project/room-limits.cjs": "bcc9d610528fd9901d6556897fe5d367598ea8ae7e51ed5bd67cab2c3671ffc4",
+    "src/project/selection.cjs": "67153527d9efb78110e4d5334f6f8f6efd57cfce423ea4d64a262eac017a4b27",
+    "src/project/spikes.cjs": "6e58324281753e8ddcd650819ebf7cbfdb09afd6ac2ba412ed8ae5ded67c0ef4",
+    "src/project/temperature.cjs": "29a58515e36a3e8e25ac69137817a0e599e7c87108b208b7cd98fe52f9526645",
+    "src/runtime/engine.cjs": "88b75f6b2f3d3cc75e6cec80b5eb9b3586673d393dec82fa78a403722d71a61b",
+    "src/shared/utils.cjs": "dbd216d20cbfbe63494c6bd8979e7fb2d0957bb66e4f859973780830bae6a81b",
+    "src/editor/pages/assets.cjs": "62977cf485bfee64c77338b09b38e9f3e3ddd52d8498b2217fd08a2b7762eb79",
+    "src/editor/pages/bindings.cjs": "98c00ace01fa63467fcff34a90c99b596887b53f1d2aa0c5b0e6ab9bc59c74f3",
+    "src/editor/pages/course.cjs": "166f897b826e6548d16ddaddaffde784945f674786a5c1f90cf10043b9adc3c2",
+    "src/editor/pages/definitions.cjs": "2f2c659cfe7e97dc14a801d42483632c641457bf21ddadbde0d60af7320542cb",
+    "src/editor/pages/home.cjs": "e8ac7130b6676da1d9863f69c0b7f2f03fa957e1dfad49b8b73892f1d242fb5a",
+    "src/editor/pages/play.cjs": "d13a6d46de4e0d257860137e8284a7dc2b6a25a1938f101ed9412f07f59bae7c",
+    "src/editor/pages/room.cjs": "c7c32afba4c637d515d44bc8262080455b9104dca4055f18a69c1a6baaade4b2",
+    "src/plugins/physics/ice.cjs": "a28284126a656c1f9ce2aa8a001d7131a6ff35712f856decc1660a8ebd7c2e76",
+    "src/plugins/physics/jet.cjs": "6a8223d84fc14e722d88bd10869d123caab8491e46a75415f9fbaec434825b80",
+    "src/plugins/physics/rail.cjs": "a50f6b6ecf9186fead70fb766ddc7bf009905b2e768fc44115735cbca8f9e5c1",
+    "src/plugins/physics/thermal.cjs": "830d829b02b55aeb35cd1c83f0ef0224af48bba92236b7743fdb093ef9204d66"
+  },
+  "rooms": [
+    {
+      "room": "喷气起跳",
+      "id": "jet-room",
+      "fields": {},
+      "tiles": {
+        "added": [],
+        "removed": []
+      },
+      "objects": {
+        "added": [
+          {
+            "id": "block-mvp2acur-mzgdmg",
+            "type": "common.small",
+            "x": 5,
+            "y": 12
+          },
+          {
+            "id": "block-mvp2aetm-elzfgj",
+            "type": "common.small",
+            "x": 4,
+            "y": 10
+          },
+          {
+            "id": "block-mvp2ad56-htjvt6",
+            "type": "common.small",
+            "x": 6,
+            "y": 11
+          }
+        ],
+        "removed": [],
+        "changed": []
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      }
+    },
+    {
+      "room": "电磁加速",
+      "id": "rail-room",
+      "fields": {},
+      "tiles": {
+        "added": [],
+        "removed": []
+      },
+      "objects": {
+        "added": [
+          {
+            "id": "block-mvp2ao4u-zrdngz",
+            "type": "common.small",
+            "x": 6,
+            "y": 14
+          },
+          {
+            "id": "block-mvp2iglr-8ed32q",
+            "type": "common.small",
+            "x": 23,
+            "y": 4
+          },
+          {
+            "id": "block-mvp2ij9z-mv0w4s",
+            "type": "common.small",
+            "x": 24,
+            "y": 11
+          }
+        ],
+        "removed": [
+          {
+            "id": "fuel-e",
+            "type": "common.coin",
+            "x": 3,
+            "y": 14
+          },
+          {
+            "id": "block-mvncsuf6-j0d8qx",
+            "type": "common.coin",
+            "x": 24,
+            "y": 4
+          }
+        ],
+        "changed": []
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      }
+    },
+    {
+      "room": "冰 跑酷",
+      "id": "room-mv0w2u2r-qkzk40",
+      "fields": {
+        "graph": {
+          "old": {
+            "x": 1473.3730567730397,
+            "y": 691.6594576717458
+          },
+          "new": {
+            "x": 1493.3360232324424,
+            "y": 686.3400210715881
+          }
+        }
+      },
+      "tiles": {
+        "added": [],
+        "removed": []
+      },
+      "objects": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      }
+    },
+    {
+      "room": "冲刺锻炼",
+      "id": "room-mv0wnwtu-dxmqc7",
+      "fields": {},
+      "tiles": {
+        "added": [],
+        "removed": []
+      },
+      "objects": {
+        "added": [
+          {
+            "id": "block-mvp2i35u-1x4ogr",
+            "type": "common.small",
+            "x": 14,
+            "y": 7
+          },
+          {
+            "id": "block-mvp2i4x8-4g76uc",
+            "type": "common.small",
+            "x": 5,
+            "y": 2
+          }
+        ],
+        "removed": [],
+        "changed": []
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      }
+    },
+    {
+      "room": "冰引入",
+      "id": "room-mvaapi4e-crbnks",
+      "fields": {},
+      "tiles": {
+        "added": [],
+        "removed": []
+      },
+      "objects": {
+        "added": [
+          {
+            "id": "block-mvp2hfy6-4ga4ej",
+            "type": "common.small",
+            "x": 19,
+            "y": 14
+          },
+          {
+            "id": "block-mvp2hlxj-iwja9g",
+            "type": "common.coin",
+            "x": 18,
+            "y": 7
+          },
+          {
+            "id": "block-mvp2hskz-dvzkxy",
+            "type": "common.small",
+            "x": 26,
+            "y": 3
+          },
+          {
+            "id": "block-mvp2hwy6-qem9l6",
+            "type": "common.small",
+            "x": 5,
+            "y": 3
+          },
+          {
+            "id": "block-mvp2hvzw-l2aoek",
+            "type": "common.small",
+            "x": 14,
+            "y": 2
+          }
+        ],
+        "removed": [],
+        "changed": []
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      }
+    },
+    {
+      "room": "喷气跳跃熟悉",
+      "id": "room-mvaapqu4-6xob5m",
+      "fields": {},
+      "tiles": {
+        "added": [],
+        "removed": [
+          {
+            "x": 9,
+            "y": 6
+          }
+        ]
+      },
+      "objects": {
+        "added": [
+          {
+            "id": "block-mvp2h02n-0z3cte",
+            "type": "common.small",
+            "x": 9,
+            "y": 6
+          },
+          {
+            "id": "block-mvp2h2la-kucmc0",
+            "type": "common.small",
+            "x": 13,
+            "y": 12
+          }
+        ],
+        "removed": [
+          {
+            "id": "block-mvndz4hr-w903wl",
+            "type": "common.small",
+            "x": 9,
+            "y": 5
+          }
+        ],
+        "changed": []
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      }
+    },
+    {
+      "room": "8",
+      "id": "room-mvndxqmk-k9xt7n",
+      "fields": {},
+      "tiles": {
+        "added": [],
+        "removed": []
+      },
+      "objects": {
+        "added": [
+          {
+            "id": "block-mvp2g0sl-csdhjw",
+            "type": "common.small",
+            "x": 14,
+            "y": 4
+          },
+          {
+            "id": "block-mvp2fvvg-j89epa",
+            "type": "common.small",
+            "x": 18,
+            "y": 8
+          },
+          {
+            "id": "block-mvp2g2oa-uguku3",
+            "type": "common.small",
+            "x": 0,
+            "y": 5
+          },
+          {
+            "id": "block-mvp2gi4h-57r8eh",
+            "type": "common.small",
+            "x": 10,
+            "y": 14
+          },
+          {
+            "id": "block-mvp2grj1-ck56sn",
+            "type": "common.small",
+            "x": 27,
+            "y": 6
+          },
+          {
+            "id": "block-mvp2gppd-sh1ln5",
+            "type": "common.small",
+            "x": 13,
+            "y": 0
+          },
+          {
+            "id": "block-mvp2fupq-b4buy5",
+            "type": "common.small",
+            "x": 5,
+            "y": 13
+          }
+        ],
+        "removed": [
+          {
+            "id": "block-mvomm063-tpczsa",
+            "type": "physics.ice",
+            "x": 10,
+            "y": 14
+          }
+        ],
+        "changed": []
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      }
+    },
+    {
+      "room": "AI追逐1",
+      "id": "room-mvnf7n9x-0t6ggh",
+      "fields": {
+        "graph": {
+          "old": {
+            "x": 1815.062479509128,
+            "y": 973.6215919144993
+          },
+          "new": {
+            "x": 1811.4735101461372,
+            "y": 973.6215919144993
+          }
+        },
+        "playCamera": {
+          "old": null,
+          "new": {
+            "mode": "follow",
+            "cols": 30,
+            "rows": 17
+          }
+        },
+        "playTraces": {
+          "old": {
+            "count": 1,
+            "points": 3731
+          },
+          "new": {
+            "count": 4,
+            "points": 4577
+          }
+        }
+      },
+      "tiles": {
+        "added": [],
+        "removed": [
+          {
+            "x": 48,
+            "y": 4
+          },
+          {
+            "x": 46,
+            "y": 7
+          },
+          {
+            "x": 48,
+            "y": 5
+          },
+          {
+            "x": 48,
+            "y": 3
+          },
+          {
+            "x": 48,
+            "y": 6
+          }
+        ]
+      },
+      "objects": {
+        "added": [
+          {
+            "id": "block-mvou42v7-huoqd5",
+            "type": "common.spike",
+            "x": 41,
+            "y": 12
+          },
+          {
+            "id": "block-mvoueugd-z6mvqr",
+            "type": "physics.ice",
+            "x": 48,
+            "y": 3
+          },
+          {
+            "id": "block-mvoueui9-9rl5x5",
+            "type": "physics.ice",
+            "x": 48,
+            "y": 5
+          },
+          {
+            "id": "block-mvoueuly-zzifts",
+            "type": "physics.ice",
+            "x": 48,
+            "y": 6
+          },
+          {
+            "id": "block-mvp2flpt-w9uyjr",
+            "type": "common.coin",
+            "x": 49,
+            "y": 10
+          },
+          {
+            "id": "block-mvoueugm-fa2zxm",
+            "type": "physics.ice",
+            "x": 48,
+            "y": 4
+          }
+        ],
+        "removed": [
+          {
+            "id": "block-mvnipxed-wg33oc",
+            "type": "common.spike",
+            "x": 41,
+            "y": 12
+          },
+          {
+            "id": "block-mvnipxjv-lafc1e",
+            "type": "common.spike",
+            "x": 42,
+            "y": 12
+          }
+        ],
+        "changed": [
+          {
+            "id": "block-mvniypu6-okgitg",
+            "changes": {
+              "params": {
+                "old": {
+                  "acceleration": 2400,
+                  "allowExit": true,
+                  "cooldown": 2,
+                  "launchAngle": -110,
+                  "maxSpeed": 600,
+                  "path": [
+                    {
+                      "id": "rail-node-mvniypu6-v6cqo8",
+                      "parentId": "block-mvniypu6-okgitg",
+                      "x": 54.5,
+                      "y": 14.5
+                    },
+                    {
+                      "id": "rail-node-mvniypu6-iqfelz",
+                      "parentId": "block-mvniypu6-okgitg",
+                      "x": 50,
+                      "y": 14.5
+                    },
+                    {
+                      "id": "rail-node-mvniyz0p-51mvsw",
+                      "parentId": "block-mvniypu6-okgitg",
+                      "x": 38,
+                      "y": 14.5
+                    },
+                    {
+                      "id": "rail-node-mvniyzhc-j74abs",
+                      "parentId": "block-mvniypu6-okgitg",
+                      "x": 34,
+                      "y": 12.5
+                    }
+                  ]
+                },
+                "new": {
+                  "path": [
+                    {
+                      "id": "rail-node-mvniypu6-v6cqo8",
+                      "parentId": "block-mvniypu6-okgitg",
+                      "x": 54.5,
+                      "y": 14.5
+                    },
+                    {
+                      "id": "rail-node-mvniypu6-iqfelz",
+                      "parentId": "block-mvniypu6-okgitg",
+                      "x": 50,
+                      "y": 14.5
+                    },
+                    {
+                      "id": "rail-node-mvniyz0p-51mvsw",
+                      "parentId": "block-mvniypu6-okgitg",
+                      "x": 38,
+                      "y": 14.5
+                    },
+                    {
+                      "id": "rail-node-mvniyzhc-j74abs",
+                      "parentId": "block-mvniypu6-okgitg",
+                      "x": 34,
+                      "y": 12.5
+                    }
+                  ],
+                  "acceleration": 2400,
+                  "maxSpeed": 600,
+                  "launchAngle": -116,
+                  "cooldown": 2,
+                  "allowExit": true
+                }
+              }
+            }
+          },
+          {
+            "id": "block-mvnji083-9e4bh4",
+            "changes": {
+              "x": {
+                "old": 47,
+                "new": 46
+              }
+            }
+          },
+          {
+            "id": "block-mvnjmle6-llpykc",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          }
+        ]
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      }
+    },
+    {
+      "room": "新房间 10",
+      "id": "room-mvnf7nel-q8wikm",
+      "fields": {
+        "graph": {
+          "old": {
+            "x": 1808.8698330733118,
+            "y": 694.7013264391138
+          },
+          "new": {
+            "x": 1839.827009536612,
+            "y": 686.2583581373455
+          }
+        }
+      },
+      "tiles": {
+        "added": [],
+        "removed": []
+      },
+      "objects": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      }
+    },
+    {
+      "room": "新房间 12",
+      "id": "room-mvnf7nm5-vf4wbu",
+      "fields": {
+        "graph": {
+          "old": {
+            "x": 3138.5484477022324,
+            "y": 534.9100820371065
+          },
+          "new": {
+            "x": 3112.528645717547,
+            "y": 494.5340249936727
+          }
+        }
+      },
+      "tiles": {
+        "added": [
+          {
+            "x": 13,
+            "y": 16,
+            "collision": true
+          },
+          {
+            "x": 8,
+            "y": 12,
+            "collision": true
+          },
+          {
+            "x": 9,
+            "y": 13,
+            "collision": true
+          },
+          {
+            "x": 0,
+            "y": 16,
+            "collision": true
+          },
+          {
+            "x": 0,
+            "y": 10,
+            "collision": true
+          },
+          {
+            "x": 16,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 1,
+            "y": 7,
+            "collision": true
+          },
+          {
+            "x": 3,
+            "y": 8,
+            "collision": true
+          },
+          {
+            "x": 2,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 0,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 1,
+            "y": 10,
+            "collision": true
+          },
+          {
+            "x": 7,
+            "y": 15,
+            "collision": true
+          },
+          {
+            "x": 2,
+            "y": 10,
+            "collision": true
+          },
+          {
+            "x": 1,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 23,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 25,
+            "y": 15,
+            "collision": true
+          },
+          {
+            "x": 2,
+            "y": 13,
+            "collision": true
+          },
+          {
+            "x": 1,
+            "y": 16,
+            "collision": true
+          },
+          {
+            "x": 10,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 23,
+            "y": 16,
+            "collision": true
+          },
+          {
+            "x": 9,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 2,
+            "y": 12,
+            "collision": true
+          },
+          {
+            "x": 13,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 8,
+            "y": 15,
+            "collision": true
+          },
+          {
+            "x": 2,
+            "y": 6,
+            "collision": true
+          },
+          {
+            "x": 9,
+            "y": 11,
+            "collision": true
+          },
+          {
+            "x": 9,
+            "y": 15,
+            "collision": true
+          },
+          {
+            "x": 1,
+            "y": 12,
+            "collision": true
+          },
+          {
+            "x": 15,
+            "y": 15,
+            "collision": true
+          },
+          {
+            "x": 7,
+            "y": 13,
+            "collision": true
+          },
+          {
+            "x": 24,
+            "y": 16,
+            "collision": true
+          },
+          {
+            "x": 2,
+            "y": 9,
+            "collision": true
+          },
+          {
+            "x": 14,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 23,
+            "y": 15,
+            "collision": true
+          },
+          {
+            "x": 2,
+            "y": 8,
+            "collision": true
+          },
+          {
+            "x": 1,
+            "y": 11,
+            "collision": true
+          },
+          {
+            "x": 1,
+            "y": 8,
+            "collision": true
+          },
+          {
+            "x": 10,
+            "y": 15,
+            "collision": true
+          },
+          {
+            "x": 0,
+            "y": 8,
+            "collision": true
+          },
+          {
+            "x": 7,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 8,
+            "y": 13,
+            "collision": true
+          },
+          {
+            "x": 9,
+            "y": 12,
+            "collision": true
+          },
+          {
+            "x": 13,
+            "y": 15,
+            "collision": true
+          },
+          {
+            "x": 0,
+            "y": 15,
+            "collision": true
+          },
+          {
+            "x": 3,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 1,
+            "y": 15,
+            "collision": true
+          },
+          {
+            "x": 25,
+            "y": 16,
+            "collision": true
+          },
+          {
+            "x": 3,
+            "y": 9,
+            "collision": true
+          },
+          {
+            "x": 24,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 0,
+            "y": 9,
+            "collision": true
+          },
+          {
+            "x": 0,
+            "y": 13,
+            "collision": true
+          },
+          {
+            "x": 10,
+            "y": 13,
+            "collision": true
+          },
+          {
+            "x": 3,
+            "y": 12,
+            "collision": true
+          },
+          {
+            "x": 15,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 1,
+            "y": 6,
+            "collision": true
+          },
+          {
+            "x": 2,
+            "y": 16,
+            "collision": true
+          },
+          {
+            "x": 3,
+            "y": 15,
+            "collision": true
+          },
+          {
+            "x": 3,
+            "y": 10,
+            "collision": true
+          },
+          {
+            "x": 24,
+            "y": 15,
+            "collision": true
+          },
+          {
+            "x": 9,
+            "y": 16,
+            "collision": true
+          },
+          {
+            "x": 2,
+            "y": 15,
+            "collision": true
+          },
+          {
+            "x": 8,
+            "y": 11,
+            "collision": true
+          },
+          {
+            "x": 14,
+            "y": 15,
+            "collision": true
+          },
+          {
+            "x": 8,
+            "y": 16,
+            "collision": true
+          },
+          {
+            "x": 7,
+            "y": 12,
+            "collision": true
+          },
+          {
+            "x": 1,
+            "y": 9,
+            "collision": true
+          },
+          {
+            "x": 3,
+            "y": 13,
+            "collision": true
+          },
+          {
+            "x": 8,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 0,
+            "y": 12,
+            "collision": true
+          },
+          {
+            "x": 1,
+            "y": 13,
+            "collision": true
+          },
+          {
+            "x": 25,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 3,
+            "y": 16,
+            "collision": true
+          },
+          {
+            "x": 3,
+            "y": 11,
+            "collision": true
+          },
+          {
+            "x": 27,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 3,
+            "y": 7,
+            "collision": true
+          },
+          {
+            "x": 26,
+            "y": 14,
+            "collision": true
+          },
+          {
+            "x": 0,
+            "y": 11,
+            "collision": true
+          },
+          {
+            "x": 0,
+            "y": 7,
+            "collision": true
+          },
+          {
+            "x": 2,
+            "y": 11,
+            "collision": true
+          },
+          {
+            "x": 2,
+            "y": 7,
+            "collision": true
+          },
+          {
+            "x": 7,
+            "y": 16,
+            "collision": true
+          }
+        ],
+        "removed": [
+          {
+            "x": 8,
+            "y": 15
+          },
+          {
+            "x": 27,
+            "y": 14
+          },
+          {
+            "x": 3,
+            "y": 15
+          },
+          {
+            "x": 18,
+            "y": 14
+          },
+          {
+            "x": 17,
+            "y": 15
+          },
+          {
+            "x": 14,
+            "y": 14
+          },
+          {
+            "x": 21,
+            "y": 14
+          },
+          {
+            "x": 6,
+            "y": 15
+          },
+          {
+            "x": 9,
+            "y": 16
+          },
+          {
+            "x": 9,
+            "y": 15
+          },
+          {
+            "x": 24,
+            "y": 14
+          },
+          {
+            "x": 10,
+            "y": 16
+          },
+          {
+            "x": 4,
+            "y": 14
+          },
+          {
+            "x": 8,
+            "y": 14
+          },
+          {
+            "x": 22,
+            "y": 15
+          },
+          {
+            "x": 20,
+            "y": 14
+          },
+          {
+            "x": 1,
+            "y": 16
+          },
+          {
+            "x": 2,
+            "y": 16
+          },
+          {
+            "x": 11,
+            "y": 15
+          },
+          {
+            "x": 12,
+            "y": 14
+          },
+          {
+            "x": 22,
+            "y": 14
+          },
+          {
+            "x": 19,
+            "y": 15
+          },
+          {
+            "x": 13,
+            "y": 16
+          },
+          {
+            "x": 20,
+            "y": 16
+          },
+          {
+            "x": 13,
+            "y": 14
+          },
+          {
+            "x": 5,
+            "y": 16
+          },
+          {
+            "x": 9,
+            "y": 14
+          },
+          {
+            "x": 5,
+            "y": 15
+          },
+          {
+            "x": 14,
+            "y": 15
+          },
+          {
+            "x": 10,
+            "y": 15
+          },
+          {
+            "x": 7,
+            "y": 15
+          },
+          {
+            "x": 19,
+            "y": 16
+          },
+          {
+            "x": 2,
+            "y": 15
+          },
+          {
+            "x": 5,
+            "y": 14
+          },
+          {
+            "x": 20,
+            "y": 15
+          },
+          {
+            "x": 10,
+            "y": 14
+          },
+          {
+            "x": 2,
+            "y": 14
+          },
+          {
+            "x": 23,
+            "y": 15
+          },
+          {
+            "x": 25,
+            "y": 15
+          },
+          {
+            "x": 14,
+            "y": 16
+          },
+          {
+            "x": 23,
+            "y": 14
+          },
+          {
+            "x": 25,
+            "y": 14
+          },
+          {
+            "x": 16,
+            "y": 14
+          },
+          {
+            "x": 15,
+            "y": 15
+          },
+          {
+            "x": 1,
+            "y": 15
+          },
+          {
+            "x": 13,
+            "y": 15
+          },
+          {
+            "x": 23,
+            "y": 16
+          },
+          {
+            "x": 15,
+            "y": 16
+          },
+          {
+            "x": 15,
+            "y": 14
+          },
+          {
+            "x": 26,
+            "y": 14
+          },
+          {
+            "x": 0,
+            "y": 14
+          },
+          {
+            "x": 0,
+            "y": 16
+          },
+          {
+            "x": 18,
+            "y": 15
+          },
+          {
+            "x": 22,
+            "y": 16
+          },
+          {
+            "x": 3,
+            "y": 14
+          },
+          {
+            "x": 24,
+            "y": 16
+          },
+          {
+            "x": 16,
+            "y": 15
+          },
+          {
+            "x": 0,
+            "y": 15
+          },
+          {
+            "x": 24,
+            "y": 15
+          },
+          {
+            "x": 19,
+            "y": 14
+          },
+          {
+            "x": 4,
+            "y": 15
+          },
+          {
+            "x": 11,
+            "y": 14
+          },
+          {
+            "x": 21,
+            "y": 15
+          },
+          {
+            "x": 11,
+            "y": 16
+          },
+          {
+            "x": 7,
+            "y": 16
+          },
+          {
+            "x": 17,
+            "y": 14
+          },
+          {
+            "x": 3,
+            "y": 16
+          },
+          {
+            "x": 7,
+            "y": 14
+          },
+          {
+            "x": 4,
+            "y": 16
+          },
+          {
+            "x": 6,
+            "y": 14
+          },
+          {
+            "x": 17,
+            "y": 16
+          },
+          {
+            "x": 6,
+            "y": 16
+          },
+          {
+            "x": 16,
+            "y": 16
+          },
+          {
+            "x": 12,
+            "y": 15
+          },
+          {
+            "x": 18,
+            "y": 16
+          },
+          {
+            "x": 25,
+            "y": 16
+          },
+          {
+            "x": 1,
+            "y": 14
+          },
+          {
+            "x": 8,
+            "y": 16
+          },
+          {
+            "x": 21,
+            "y": 16
+          }
+        ]
+      },
+      "objects": {
+        "added": [
+          {
+            "id": "block-mvp28so1-2k1uz0",
+            "type": "common.spike",
+            "x": 8,
+            "y": 10
+          },
+          {
+            "id": "block-mvp2iwqp-x08ltf",
+            "type": "common.small",
+            "x": 3,
+            "y": 6
+          },
+          {
+            "id": "block-mvp28p6v-1g0aux",
+            "type": "common.spike",
+            "x": 7,
+            "y": 11
+          },
+          {
+            "id": "block-mvp27wwf-s51zw0",
+            "type": "common.spike",
+            "x": 13,
+            "y": 13
+          },
+          {
+            "id": "block-mvp29maw-p2fk77",
+            "type": "common.spike",
+            "x": 10,
+            "y": 12
+          },
+          {
+            "id": "block-mvp27x5r-91k436",
+            "type": "common.spike",
+            "x": 14,
+            "y": 13
+          },
+          {
+            "id": "block-mvp2v91e-pixpqn",
+            "type": "common.aiStart",
+            "x": 0,
+            "y": 6
+          },
+          {
+            "id": "block-mvp28r8e-2mfxfw",
+            "type": "common.collectible",
+            "x": 9,
+            "y": 10
+          },
+          {
+            "id": "block-mvp27x9k-l0imh8",
+            "type": "common.spike",
+            "x": 15,
+            "y": 13
+          }
+        ],
+        "removed": [
+          {
+            "id": "block-mvoo73pz-dzdaaa",
+            "type": "common.spike",
+            "x": 8,
+            "y": 13
+          },
+          {
+            "id": "block-mvoo73vq-tlxldi",
+            "type": "common.spike",
+            "x": 11,
+            "y": 13
+          },
+          {
+            "id": "block-mvoo73nr-hezcba",
+            "type": "common.spike",
+            "x": 7,
+            "y": 13
+          },
+          {
+            "id": "block-mvoo73xr-u883dq",
+            "type": "common.spike",
+            "x": 12,
+            "y": 13
+          },
+          {
+            "id": "block-mvoo743z-lc8t1b",
+            "type": "common.spike",
+            "x": 15,
+            "y": 13
+          },
+          {
+            "id": "block-mvoo7546-psdwkn",
+            "type": "common.spike",
+            "x": 3,
+            "y": 13
+          },
+          {
+            "id": "block-mvoo748s-3s8wvm",
+            "type": "common.spike",
+            "x": 16,
+            "y": 13
+          },
+          {
+            "id": "block-mvoo74fz-5kn8pu",
+            "type": "common.spike",
+            "x": 17,
+            "y": 13
+          },
+          {
+            "id": "block-mvoo73rr-tcu8k2",
+            "type": "common.spike",
+            "x": 9,
+            "y": 13
+          },
+          {
+            "id": "block-mvoo73am-f3k06j",
+            "type": "common.spike",
+            "x": 4,
+            "y": 13
+          },
+          {
+            "id": "block-mvoo73zm-c4wf2o",
+            "type": "common.spike",
+            "x": 13,
+            "y": 13
+          },
+          {
+            "id": "block-mvoo73hn-nzdza0",
+            "type": "common.spike",
+            "x": 5,
+            "y": 13
+          },
+          {
+            "id": "block-mvoo73ts-wuleyv",
+            "type": "common.spike",
+            "x": 10,
+            "y": 13
+          },
+          {
+            "id": "block-mvoo741x-pijcug",
+            "type": "common.spike",
+            "x": 14,
+            "y": 13
+          },
+          {
+            "id": "block-mvoo73lj-yvd6mo",
+            "type": "common.spike",
+            "x": 6,
+            "y": 13
+          }
+        ],
+        "changed": []
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": [
+          {
+            "id": "room-mvnf7nm5-vf4wbu-entry",
+            "changes": {
+              "x": {
+                "old": 1,
+                "new": 0
+              },
+              "y": {
+                "old": 13,
+                "new": 5
+              }
+            }
+          }
+        ]
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": [
+          {
+            "id": "exit-mvnf7nm5-u58mar",
+            "changes": {
+              "x": {
+                "old": 19,
+                "new": 27
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "room": "XX",
+      "id": "room-mvnkr562-1ihb3g",
+      "fields": {
+        "graph": {
+          "old": {
+            "x": 2461.1312924947015,
+            "y": 495.0047140365705
+          },
+          "new": {
+            "x": 2461.131292494702,
+            "y": 495.0047140365705
+          }
+        },
+        "playCamera": {
+          "old": {
+            "cols": 30,
+            "mode": "room",
+            "rows": 17
+          },
+          "new": {
+            "mode": "follow",
+            "cols": 30,
+            "rows": 17
+          }
+        }
+      },
+      "tiles": {
+        "added": [],
+        "removed": []
+      },
+      "objects": {
+        "added": [
+          {
+            "id": "block-mvp2jmyp-wbrzih",
+            "type": "common.small",
+            "x": 39,
+            "y": 37
+          },
+          {
+            "id": "block-mvp2lzy2-olrw2o",
+            "type": "physics.ice",
+            "x": 51,
+            "y": 20
+          },
+          {
+            "id": "block-mvp2jvdv-euad7w",
+            "type": "common.small",
+            "x": 42,
+            "y": 15
+          },
+          {
+            "id": "block-mvp2knc8-gk0znx",
+            "type": "common.small",
+            "x": 18,
+            "y": 38
+          },
+          {
+            "id": "block-mvp2k1i6-ey9jxz",
+            "type": "common.small",
+            "x": 19,
+            "y": 13
+          },
+          {
+            "id": "block-mvp2lm6j-ef0ilt",
+            "type": "physics.ice",
+            "x": 53,
+            "y": 36
+          },
+          {
+            "id": "block-mvp2lnxw-o4plxb",
+            "type": "common.small",
+            "x": 52,
+            "y": 36
+          },
+          {
+            "id": "block-mvp2m06z-nilg7w",
+            "type": "physics.ice",
+            "x": 50,
+            "y": 20
+          },
+          {
+            "id": "block-mvp2k5q2-341wdl",
+            "type": "common.small",
+            "x": 17,
+            "y": 22
+          },
+          {
+            "id": "block-mvp2jtx5-f7gdvr",
+            "type": "common.small",
+            "x": 45,
+            "y": 21
+          },
+          {
+            "id": "block-mvp2km2n-v7dpnp",
+            "type": "common.small",
+            "x": 10,
+            "y": 47
+          },
+          {
+            "id": "block-mvp2llpr-742f6z",
+            "type": "physics.ice",
+            "x": 52,
+            "y": 35
+          },
+          {
+            "id": "block-mvp2jkj0-o3a3cr",
+            "type": "common.small",
+            "x": 52,
+            "y": 38
+          },
+          {
+            "id": "block-mvp2ka01-ye0kr6",
+            "type": "common.small",
+            "x": 1,
+            "y": 21
+          },
+          {
+            "id": "block-mvp2lxzw-h90uni",
+            "type": "common.small",
+            "x": 51,
+            "y": 22
+          },
+          {
+            "id": "block-mvp2jstr-1inhpv",
+            "type": "common.small",
+            "x": 45,
+            "y": 24
+          },
+          {
+            "id": "block-mvp2juny-3fze2m",
+            "type": "common.small",
+            "x": 45,
+            "y": 18
+          },
+          {
+            "id": "block-mvp2m49r-a4yljg",
+            "type": "common.collectible",
+            "x": 53,
+            "y": 15
+          },
+          {
+            "id": "block-mvp2jc4s-r4emtx",
+            "type": "common.small",
+            "x": 38,
+            "y": 55
+          },
+          {
+            "id": "block-mvp2koek-qgvpmy",
+            "type": "common.small",
+            "x": 29,
+            "y": 39
+          }
+        ],
+        "removed": [
+          {
+            "id": "object-mvnkr562-rynyda",
+            "type": "physics.rail",
+            "x": 56,
+            "y": 53
+          },
+          {
+            "id": "block-mvo0ahxk-16m6cf",
+            "type": "physics.ice",
+            "x": 51,
+            "y": 21
+          },
+          {
+            "id": "block-mvom6ud2-ilz1kr",
+            "type": "physics.ice",
+            "x": 53,
+            "y": 36
+          },
+          {
+            "id": "block-mvom6td8-7s7t9e",
+            "type": "physics.ice",
+            "x": 52,
+            "y": 35
+          },
+          {
+            "id": "block-mvo0ah4r-tulcmt",
+            "type": "physics.ice",
+            "x": 51,
+            "y": 20
+          },
+          {
+            "id": "block-mvo0ahpv-kk7ak5",
+            "type": "physics.ice",
+            "x": 51,
+            "y": 23
+          },
+          {
+            "id": "object-mvnkr562-6lrms9",
+            "type": "physics.rail",
+            "x": 59,
+            "y": 53
+          },
+          {
+            "id": "block-mvo0ahwe-htjs6p",
+            "type": "physics.ice",
+            "x": 51,
+            "y": 22
+          },
+          {
+            "id": "block-mvom6tmh-citdk5",
+            "type": "physics.ice",
+            "x": 53,
+            "y": 35
+          },
+          {
+            "id": "block-mvnz05k2-vuvb7p",
+            "type": "physics.ice",
+            "x": 52,
+            "y": 36
+          }
+        ],
+        "changed": []
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      }
+    }
+  ],
+  "verification": {
+    "modelErrors": 0,
+    "modelWarnings": 0,
+    "roomsLoaded": 11,
+    "connections": 10,
+    "finalExits": 1,
+    "bridgeChecks": 298,
+    "unityTextures": 11,
+    "unityExitCode": 0,
+    "gameplayRegressions": "pass",
+    "runtimeCodeHashesStillUnchanged": true,
+    "exportedOldZipUnchanged": true
+  },
+  "importedProjectSHA256": "bef6338d6718339111b7d97da2883a3b368a4c115be7d3172842fc94352df273"
+}

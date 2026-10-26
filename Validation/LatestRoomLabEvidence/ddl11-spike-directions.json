@@ -1,0 +1,3083 @@
+[
+  {
+    "room": "冲刺锻炼",
+    "roomId": "room-mv0wnwtu-dxmqc7",
+    "id": "block-mvaacd8n-mq2o1d",
+    "x": 7,
+    "y": 10,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "冲刺锻炼",
+    "roomId": "room-mv0wnwtu-dxmqc7",
+    "id": "block-mvaacdrq-qq37yh",
+    "x": 9,
+    "y": 10,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "冲刺锻炼",
+    "roomId": "room-mv0wnwtu-dxmqc7",
+    "id": "block-mvaacdzq-exocbz",
+    "x": 8,
+    "y": 10,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "冲刺锻炼",
+    "roomId": "room-mv0wnwtu-dxmqc7",
+    "id": "block-mvaacnjv-c9u2vy",
+    "x": 10,
+    "y": 10,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "冲刺锻炼",
+    "roomId": "room-mv0wnwtu-dxmqc7",
+    "id": "block-mvaacnto-01zhhp",
+    "x": 11,
+    "y": 10,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "冲刺锻炼",
+    "roomId": "room-mv0wnwtu-dxmqc7",
+    "id": "block-mvncwzg4-bm7o97",
+    "x": 15,
+    "y": 14,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "8",
+    "roomId": "room-mvndxqmk-k9xt7n",
+    "id": "block-mvneoo8k-fekcdy",
+    "x": 20,
+    "y": 2,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "8",
+    "roomId": "room-mvndxqmk-k9xt7n",
+    "id": "block-mvneop28-mlesq1",
+    "x": 23,
+    "y": 2,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "8",
+    "roomId": "room-mvndxqmk-k9xt7n",
+    "id": "block-mvneoqal-c61tjf",
+    "x": 26,
+    "y": 6,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "8",
+    "roomId": "room-mvndxqmk-k9xt7n",
+    "id": "block-mvneor80-gq0xov",
+    "x": 29,
+    "y": 6,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "8",
+    "roomId": "room-mvndxqmk-k9xt7n",
+    "id": "block-mvneos9t-ndmmwo",
+    "x": 21,
+    "y": 10,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "8",
+    "roomId": "room-mvndxqmk-k9xt7n",
+    "id": "block-mvneosqd-o9n9pl",
+    "x": 23,
+    "y": 10,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvnitab6-i83jlp",
+    "x": 10,
+    "y": 3,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvnitsze-hckb48",
+    "x": 15,
+    "y": 4,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvnitt55-6bxw3j",
+    "x": 16,
+    "y": 4,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvnittco-kjqlnq",
+    "x": 17,
+    "y": 4,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu696-yybnki",
+    "x": 18,
+    "y": 3,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu6g0-7mge8q",
+    "x": 18,
+    "y": 2,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu6o7-f67306",
+    "x": 18,
+    "y": 1,
+    "direction": "right",
+    "supportingDirections": [
+      "down",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu6si-iwpjrc",
+    "x": 19,
+    "y": 1,
+    "direction": "left",
+    "supportingDirections": [
+      "down",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu6y2-6cgojt",
+    "x": 19,
+    "y": 2,
+    "direction": "left",
+    "supportingDirections": [
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu735-dvwn37",
+    "x": 19,
+    "y": 3,
+    "direction": "left",
+    "supportingDirections": [
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu7cf-7gz83t",
+    "x": 19,
+    "y": 4,
+    "direction": "left",
+    "supportingDirections": [
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu7vd-m3k5yd",
+    "x": 21,
+    "y": 4,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu7ys-hp9yww",
+    "x": 21,
+    "y": 3,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu81k-kft0q9",
+    "x": 21,
+    "y": 2,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu847-ymo4bp",
+    "x": 21,
+    "y": 1,
+    "direction": "right",
+    "supportingDirections": [
+      "down",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu8bg-jqq7r4",
+    "x": 22,
+    "y": 1,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu8ed-f72xrq",
+    "x": 23,
+    "y": 1,
+    "direction": "left",
+    "supportingDirections": [
+      "down",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu8k3-nrabx9",
+    "x": 23,
+    "y": 2,
+    "direction": "left",
+    "supportingDirections": [
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu8me-o1da2u",
+    "x": 23,
+    "y": 3,
+    "direction": "left",
+    "supportingDirections": [
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu98s-n0izd8",
+    "x": 25,
+    "y": 2,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniu9b9-r60jtc",
+    "x": 25,
+    "y": 1,
+    "direction": "right",
+    "supportingDirections": [
+      "down",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniua5q-jk6di9",
+    "x": 26,
+    "y": 1,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniubv0-ag9we8",
+    "x": 11,
+    "y": 1,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniuc0v-z7vm2o",
+    "x": 12,
+    "y": 1,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniuc6a-q7l0jt",
+    "x": 13,
+    "y": 1,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniucbd-bzg9do",
+    "x": 14,
+    "y": 1,
+    "direction": "down",
+    "supportingDirections": [
+      "down",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvnixdyj-eqr9ls",
+    "x": 45,
+    "y": 12,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniy9ks-edd9wa",
+    "x": 52,
+    "y": 9,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvniyaew-emup2u",
+    "x": 53,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvnj11jp-pfnqzz",
+    "x": 50,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvnj11te-97n2kk",
+    "x": 51,
+    "y": 9,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvnjirzz-yzsmm8",
+    "x": 48,
+    "y": 2,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvnjk5wp-ubj5ja",
+    "x": 50,
+    "y": 6,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvnjkeqf-pnki25",
+    "x": 54,
+    "y": 5,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "AI追逐1",
+    "roomId": "room-mvnf7n9x-0t6ggh",
+    "id": "block-mvou42v7-huoqd5",
+    "x": 41,
+    "y": 12,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "single supporting wall",
+    "embedded": false,
+    "preserved": false
+  },
+  {
+    "room": "新房间 10",
+    "roomId": "room-mvnf7nel-q8wikm",
+    "id": "block-mvon9sp8-uye3r5",
+    "x": 15,
+    "y": 1,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "新房间 10",
+    "roomId": "room-mvnf7nel-q8wikm",
+    "id": "block-mvon9t8s-2ehftb",
+    "x": 22,
+    "y": 1,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "新房间 10",
+    "roomId": "room-mvnf7nel-q8wikm",
+    "id": "block-mvone2f8-8qlv6y",
+    "x": 10,
+    "y": 2,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "新房间 10",
+    "roomId": "room-mvnf7nel-q8wikm",
+    "id": "block-mvone2ym-doomi4",
+    "x": 9,
+    "y": 3,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "新房间 12",
+    "roomId": "room-mvnf7nm5-vf4wbu",
+    "id": "block-mvp27wwf-s51zw0",
+    "x": 13,
+    "y": 13,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "single supporting wall",
+    "embedded": false,
+    "preserved": false
+  },
+  {
+    "room": "新房间 12",
+    "roomId": "room-mvnf7nm5-vf4wbu",
+    "id": "block-mvp27x5r-91k436",
+    "x": 14,
+    "y": 13,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "single supporting wall",
+    "embedded": false,
+    "preserved": false
+  },
+  {
+    "room": "新房间 12",
+    "roomId": "room-mvnf7nm5-vf4wbu",
+    "id": "block-mvp27x9k-l0imh8",
+    "x": 15,
+    "y": 13,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "single supporting wall",
+    "embedded": false,
+    "preserved": false
+  },
+  {
+    "room": "新房间 12",
+    "roomId": "room-mvnf7nm5-vf4wbu",
+    "id": "block-mvp28p6v-1g0aux",
+    "x": 7,
+    "y": 11,
+    "direction": "left",
+    "supportingDirections": [
+      "up",
+      "left"
+    ],
+    "reason": "corner: supporting wall and adjacent surface run",
+    "embedded": false,
+    "preserved": false
+  },
+  {
+    "room": "新房间 12",
+    "roomId": "room-mvnf7nm5-vf4wbu",
+    "id": "block-mvp28so1-2k1uz0",
+    "x": 8,
+    "y": 10,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "single supporting wall",
+    "embedded": false,
+    "preserved": false
+  },
+  {
+    "room": "新房间 12",
+    "roomId": "room-mvnf7nm5-vf4wbu",
+    "id": "block-mvp29maw-p2fk77",
+    "x": 10,
+    "y": 12,
+    "direction": "right",
+    "supportingDirections": [
+      "up",
+      "right"
+    ],
+    "reason": "corner: supporting wall and adjacent surface run",
+    "embedded": false,
+    "preserved": false
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-7pj3to",
+    "x": 6,
+    "y": 52,
+    "direction": "up",
+    "supportingDirections": [],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-s9q9kr",
+    "x": 7,
+    "y": 52,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-bwsg0t",
+    "x": 8,
+    "y": 52,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-84ya55",
+    "x": 8,
+    "y": 53,
+    "direction": "up",
+    "supportingDirections": [
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-4yuur6",
+    "x": 9,
+    "y": 53,
+    "direction": "up",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-270oz5",
+    "x": 9,
+    "y": 52,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-h1akyt",
+    "x": 7,
+    "y": 49,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-89689c",
+    "x": 8,
+    "y": 49,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-ax0oc1",
+    "x": 9,
+    "y": 49,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-h0ee6c",
+    "x": 10,
+    "y": 49,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-v78zz7",
+    "x": 11,
+    "y": 49,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-shnkgb",
+    "x": 20,
+    "y": 57,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-xjzvv3",
+    "x": 21,
+    "y": 57,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-0k1ynz",
+    "x": 22,
+    "y": 57,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-kynf5e",
+    "x": 24,
+    "y": 57,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-tu122g",
+    "x": 23,
+    "y": 57,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-lbl0ot",
+    "x": 26,
+    "y": 57,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-6w751d",
+    "x": 25,
+    "y": 57,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-5cpj0l",
+    "x": 27,
+    "y": 57,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-q9gfch",
+    "x": 20,
+    "y": 55,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-i2r8yo",
+    "x": 21,
+    "y": 55,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "object-mvnkr562-1js3eg",
+    "x": 22,
+    "y": 55,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnlt7jf-2gh5m8",
+    "x": 11,
+    "y": 54,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnlte19-9rtw3j",
+    "x": 13,
+    "y": 55,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnlzkra-tmgsgs",
+    "x": 40,
+    "y": 15,
+    "direction": "right",
+    "supportingDirections": [
+      "up",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn07y-dmgbk2",
+    "x": 4,
+    "y": 30,
+    "direction": "right",
+    "supportingDirections": [
+      "up",
+      "down",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn0fo-2nd19s",
+    "x": 5,
+    "y": 30,
+    "direction": "right",
+    "supportingDirections": [
+      "up",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn1sd-f9sc59",
+    "x": 8,
+    "y": 28,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn1vt-wdklav",
+    "x": 9,
+    "y": 28,
+    "direction": "up",
+    "supportingDirections": [],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn2d7-4onjf2",
+    "x": 9,
+    "y": 29,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn2n1-gn1bxn",
+    "x": 10,
+    "y": 28,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn2uc-x250qv",
+    "x": 11,
+    "y": 28,
+    "direction": "up",
+    "supportingDirections": [],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn2uw-xnxpft",
+    "x": 11,
+    "y": 29,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn2vg-gmrc7y",
+    "x": 12,
+    "y": 29,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn313-xiaj8r",
+    "x": 12,
+    "y": 30,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn37l-gf9shu",
+    "x": 13,
+    "y": 30,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn3ew-gj3yyp",
+    "x": 14,
+    "y": 30,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn3fu-5xfusy",
+    "x": 14,
+    "y": 29,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn3jz-kyqoi8",
+    "x": 15,
+    "y": 29,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn3q7-hjnfu9",
+    "x": 16,
+    "y": 29,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn3si-i1lr2h",
+    "x": 17,
+    "y": 29,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn3wt-bmsxya",
+    "x": 18,
+    "y": 29,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn407-fdzbpl",
+    "x": 18,
+    "y": 28,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn48c-8aya5x",
+    "x": 19,
+    "y": 28,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn4dp-mqyko3",
+    "x": 20,
+    "y": 28,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn4jg-99nol7",
+    "x": 21,
+    "y": 28,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn4t9-rl3ewz",
+    "x": 22,
+    "y": 28,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn4zx-48ovx8",
+    "x": 22,
+    "y": 29,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn57x-ozndvz",
+    "x": 23,
+    "y": 29,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn5en-es5ae5",
+    "x": 24,
+    "y": 29,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn5gt-f4a2be",
+    "x": 25,
+    "y": 29,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn5lb-6zc7sx",
+    "x": 26,
+    "y": 29,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnvn5nn-f077cv",
+    "x": 27,
+    "y": 29,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcwfz-2be4zp",
+    "x": 0,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "up",
+      "down",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcwk6-uj43ly",
+    "x": 1,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "up",
+      "down",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcwoe-axxj7y",
+    "x": 2,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "up",
+      "down",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcwqc-88ggrm",
+    "x": 3,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "up",
+      "down",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcwtq-xgqyf0",
+    "x": 4,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "up",
+      "down",
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcx9g-kvby7i",
+    "x": 5,
+    "y": 9,
+    "direction": "down",
+    "supportingDirections": [
+      "up",
+      "down",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcxaz-n5abtr",
+    "x": 6,
+    "y": 9,
+    "direction": "down",
+    "supportingDirections": [
+      "up",
+      "down",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcxc3-9m6rut",
+    "x": 7,
+    "y": 9,
+    "direction": "down",
+    "supportingDirections": [
+      "up",
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcxdo-opv903",
+    "x": 8,
+    "y": 9,
+    "direction": "down",
+    "supportingDirections": [],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcxq0-t34hzx",
+    "x": 8,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcxtu-gxp4vj",
+    "x": 9,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcxwb-lyw5b4",
+    "x": 10,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcxy9-g8vrhf",
+    "x": 11,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcxzi-iw2msz",
+    "x": 12,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcy11-a7ubr2",
+    "x": 13,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcy2o-b3pekl",
+    "x": 14,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcy4p-b381ud",
+    "x": 15,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcy5x-k4iqhf",
+    "x": 16,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcy6w-os0hw6",
+    "x": 17,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcygd-pws081",
+    "x": 19,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcz15-3k15si",
+    "x": 20,
+    "y": 9,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcz4k-nnij2x",
+    "x": 21,
+    "y": 9,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcz5m-ngagy2",
+    "x": 22,
+    "y": 9,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcz7m-0k6twc",
+    "x": 23,
+    "y": 9,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwcz93-7wlz8h",
+    "x": 24,
+    "y": 9,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwczd1-9sm0r7",
+    "x": 25,
+    "y": 9,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwczk8-46atf4",
+    "x": 26,
+    "y": 9,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwd00i-fwqv34",
+    "x": 27,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwd04a-uc9wk3",
+    "x": 28,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwd06y-yp84op",
+    "x": 29,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwd09t-eaue8u",
+    "x": 30,
+    "y": 8,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwgy87-verkna",
+    "x": 1,
+    "y": 23,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwgycp-en79oy",
+    "x": 2,
+    "y": 23,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwgyg9-euibr6",
+    "x": 3,
+    "y": 23,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwgyi5-gtvp79",
+    "x": 4,
+    "y": 23,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwgz3i-b9td6a",
+    "x": 5,
+    "y": 23,
+    "direction": "up",
+    "supportingDirections": [],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwgz5d-037jco",
+    "x": 5,
+    "y": 24,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwgz7j-rv2tzi",
+    "x": 5,
+    "y": 25,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwgzc0-ys0kyn",
+    "x": 5,
+    "y": 26,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwgzec-ge2t1p",
+    "x": 5,
+    "y": 27,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwgzhh-9ww6og",
+    "x": 5,
+    "y": 28,
+    "direction": "right",
+    "supportingDirections": [
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnwgzsi-9ju5sy",
+    "x": 5,
+    "y": 29,
+    "direction": "right",
+    "supportingDirections": [
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp1iy-fnwb38",
+    "x": 12,
+    "y": 16,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp1q6-krjeij",
+    "x": 13,
+    "y": 16,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp1s9-uj4k2c",
+    "x": 14,
+    "y": 16,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp1vz-cseq18",
+    "x": 15,
+    "y": 16,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp1z7-l44ihj",
+    "x": 16,
+    "y": 16,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp23h-9wrmta",
+    "x": 17,
+    "y": 16,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp28z-llbrv2",
+    "x": 18,
+    "y": 16,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp2da-s3psnr",
+    "x": 19,
+    "y": 16,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp2p1-ichkj5",
+    "x": 20,
+    "y": 17,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp2xy-ow0kpm",
+    "x": 21,
+    "y": 17,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp38j-oc1wkn",
+    "x": 21,
+    "y": 16,
+    "direction": "up",
+    "supportingDirections": [],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp3cc-0t7rzw",
+    "x": 22,
+    "y": 16,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp3ko-7ue87t",
+    "x": 23,
+    "y": 16,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp3oi-suosa3",
+    "x": 24,
+    "y": 16,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp3si-p4ibpp",
+    "x": 25,
+    "y": 16,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp3vs-w7yfll",
+    "x": 26,
+    "y": 16,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp3w0-loosqg",
+    "x": 26,
+    "y": 17,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp40x-8r7ksf",
+    "x": 27,
+    "y": 17,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp45u-9xvwl5",
+    "x": 27,
+    "y": 18,
+    "direction": "right",
+    "supportingDirections": [
+      "up",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp4eu-7zf6aj",
+    "x": 28,
+    "y": 18,
+    "direction": "up",
+    "supportingDirections": [],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp4fd-3ir533",
+    "x": 28,
+    "y": 19,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp4mi-1ug6uo",
+    "x": 29,
+    "y": 19,
+    "direction": "up",
+    "supportingDirections": [
+      "up"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxp4vc-x6m11b",
+    "x": 30,
+    "y": 19,
+    "direction": "up",
+    "supportingDirections": [
+      "up",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwg0j-i2q1up",
+    "x": 12,
+    "y": 18,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwg8u-fi5phj",
+    "x": 13,
+    "y": 18,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwgg2-sehfww",
+    "x": 14,
+    "y": 18,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwgil-bej6pl",
+    "x": 15,
+    "y": 18,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwglp-xlse48",
+    "x": 16,
+    "y": 18,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwgpn-qzi0gi",
+    "x": 17,
+    "y": 18,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwgvy-mzoh8g",
+    "x": 18,
+    "y": 18,
+    "direction": "down",
+    "supportingDirections": [
+      "down",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwh2s-y4v5wl",
+    "x": 18,
+    "y": 19,
+    "direction": "down",
+    "supportingDirections": [],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwha7-9load8",
+    "x": 19,
+    "y": 19,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwhcm-miriej",
+    "x": 20,
+    "y": 19,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwhgy-xnoggt",
+    "x": 21,
+    "y": 19,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwhm0-qy5ich",
+    "x": 22,
+    "y": 19,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwhon-7913yz",
+    "x": 22,
+    "y": 20,
+    "direction": "down",
+    "supportingDirections": [],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwhrz-t9yyw0",
+    "x": 23,
+    "y": 20,
+    "direction": "down",
+    "supportingDirections": [],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwhu2-wpwgen",
+    "x": 23,
+    "y": 19,
+    "direction": "down",
+    "supportingDirections": [],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwi2e-fvn5wg",
+    "x": 23,
+    "y": 18,
+    "direction": "down",
+    "supportingDirections": [
+      "down",
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwi89-hnmg65",
+    "x": 24,
+    "y": 18,
+    "direction": "down",
+    "supportingDirections": [
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnxwiao-h95qfq",
+    "x": 25,
+    "y": 18,
+    "direction": "down",
+    "supportingDirections": [
+      "down",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny730g-95uyvb",
+    "x": 41,
+    "y": 16,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny7321-4qfy0e",
+    "x": 41,
+    "y": 17,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny732l-dwurij",
+    "x": 40,
+    "y": 17,
+    "direction": "right",
+    "supportingDirections": [
+      "up",
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny733r-nihrow",
+    "x": 40,
+    "y": 18,
+    "direction": "right",
+    "supportingDirections": [
+      "up",
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny735w-9byj63",
+    "x": 40,
+    "y": 19,
+    "direction": "right",
+    "supportingDirections": [
+      "up",
+      "down"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": true,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny73g3-gl12wc",
+    "x": 41,
+    "y": 19,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny73g7-mw5uis",
+    "x": 41,
+    "y": 18,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny73oj-dmyxmf",
+    "x": 41,
+    "y": 20,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny73ps-vgci4k",
+    "x": 41,
+    "y": 21,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny73xc-7evnlh",
+    "x": 41,
+    "y": 22,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny740h-3woe5y",
+    "x": 41,
+    "y": 23,
+    "direction": "right",
+    "supportingDirections": [
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny744f-clsum5",
+    "x": 41,
+    "y": 24,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny747q-ezohp6",
+    "x": 41,
+    "y": 25,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny74cm-h0c9f6",
+    "x": 41,
+    "y": 26,
+    "direction": "right",
+    "supportingDirections": [
+      "right"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny7531-pk6l35",
+    "x": 49,
+    "y": 20,
+    "direction": "left",
+    "supportingDirections": [
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny7550-y8l3c0",
+    "x": 49,
+    "y": 21,
+    "direction": "left",
+    "supportingDirections": [
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny757y-w4i58j",
+    "x": 49,
+    "y": 22,
+    "direction": "left",
+    "supportingDirections": [
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny75bk-kxt643",
+    "x": 49,
+    "y": 23,
+    "direction": "left",
+    "supportingDirections": [
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny75ej-ecuuls",
+    "x": 49,
+    "y": 24,
+    "direction": "left",
+    "supportingDirections": [
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny75ha-kmvtls",
+    "x": 49,
+    "y": 25,
+    "direction": "left",
+    "supportingDirections": [
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvny75lp-i75n1g",
+    "x": 49,
+    "y": 26,
+    "direction": "left",
+    "supportingDirections": [
+      "right",
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  },
+  {
+    "room": "XX",
+    "roomId": "room-mvnkr562-1ihb3g",
+    "id": "block-mvnyum5y-op99io",
+    "x": 28,
+    "y": 49,
+    "direction": "left",
+    "supportingDirections": [
+      "left"
+    ],
+    "reason": "preserved existing direction on compatible support",
+    "embedded": false,
+    "preserved": true
+  }
+]

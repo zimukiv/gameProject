@@ -1,0 +1,1 @@
+385:KEY_BINDINGS_PASS checks=58 actions=7 slots=3 defaults=true remap=true oldKeysDisabled=true conflictGuard=true reservedEsc=true minimumOneKey=true persistence=true invalidSaveFallback=true restoreDefaults=true

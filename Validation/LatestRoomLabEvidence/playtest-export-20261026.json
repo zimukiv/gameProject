@@ -1,0 +1,10 @@
+{
+  "archive": "D:\\minigame\\资料\\试玩导出\\RoomLab-试玩版-20261026.zip",
+  "sha256": "6c2a0169cb78965a4a4fa3a7f28138be86c5b158be1c9b69e25b076a54620bd6",
+  "zipBytes": 194366553,
+  "fileCount": 308,
+  "allFileHashesVerified": true,
+  "currentRuntimeAppVerified": true,
+  "extractedExecutable": "D:\\minigame\\B-three-levels-demo\\.roomlab-downloads\\playtest-export-validation-20261026\\RoomLab-Playtest-20261026\\RoomLabUnity.exe",
+  "unityVerification": "PASS rooms=11 textures=11 exitCode=0"
+}

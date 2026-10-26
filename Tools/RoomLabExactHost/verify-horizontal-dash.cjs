@@ -36,18 +36,19 @@ for (const face of [-1, 1]) for (let mask = 0; mask < 16; mask++) {
   cases++;
 }
 const g = fixture();
-for (let i = 1; i <= 3; i++) {
+for (let i = 1; i <= 2; i++) {
   g.update(1 / 120, { right: true, up: true, dashPressed: true });
   assert.equal(g.player.dashCount, i);
   assert.equal(g.charges, 4 - i);
 }
 g.update(1 / 120, { left: true, dashPressed: true });
-assert.equal(g.player.dashCount, 3);
-assert.equal(g.charges, 1);
+assert.equal(g.player.dashCount, 2);
+assert.equal(g.charges, 2);
+assert.equal(g.player.paidDashUsed, true);
 const empty = fixture();
 empty.player.freeDash = false;
 empty.charges = 0;
 empty.update(1 / 120, { right: true, dashPressed: true });
 assert.equal(empty.player.dashCount, 0);
 assert.equal(empty.player.dash, 0);
-console.log(`HORIZONTAL_DASH_PASS directions=${cases} duration=unchanged free/paid/cap/empty=pass`);
+console.log(`HORIZONTAL_DASH_PASS directions=${cases} duration=unchanged free/paid-once/stock/empty=pass`);

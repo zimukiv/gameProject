@@ -6,9 +6,16 @@ const T = 32;
 const Performance = require('../project/performance.cjs');
 const Temperature = require('../project/temperature.cjs');
 const Collision = require('../project/collision.cjs');
+const Spikes = require('../project/spikes.cjs');
 function direction(input, face) {
   const x = Number(!!input.right) - Number(!!input.left);
   return { x: x || face, y: 0 };
+}
+function accelerateHorizontal(velocity, horizontal, maxSpeed, dt, rampTime) {
+  if (!horizontal) return 0;
+  // Start a fresh ramp when reversing. Releasing ordinary movement still stops immediately.
+  const speed = Math.sign(velocity) === horizontal ? Math.min(Math.abs(velocity), maxSpeed) : 0;
+  return horizontal * Math.min(maxSpeed, speed + (maxSpeed / rampTime) * dt);
 }
 class Engine {
   constructor(project, courseId, roomId, entryId) {
@@ -27,6 +34,7 @@ class Engine {
     this.score = 0;
     this.deaths = 0;
     this.steals = 0;
+    this.developer = { enabled: false, lockHealth: false, flight: false };
     this.events = [];
     this.credited = new Set();
     this.roomCaches = new Map();
@@ -44,6 +52,7 @@ class Engine {
       recharge: 0,
       freeDash: true,
       dashCount: 0,
+      paidDashUsed: false,
     });
   }
   emit(type, extra = {}) {
@@ -75,10 +84,7 @@ class Engine {
         target.type === 'physics.ice'
           ? Temperature.at(this.room, target, this.zoneStates, this.roomEnvironment)
           : this.zoneStates.get(target.params.zoneId) || this.roomEnvironment,
-      setTemperature: (zoneId, value) => {
-        if (zoneId) this.zoneStates.set(zoneId, value);
-        else this.roomEnvironment = value;
-      },
+      setTemperature: (zoneId, value) => this.setTemperature(zoneId, value),
       actorOverlaps: (target) =>
         overlap(this.player, this.objectRect(target)) ||
         (this.ai.active &&
@@ -87,10 +93,25 @@ class Engine {
       launchAI: (target, range, x, y) => this.launchAI(target, range, x, y),
       startRail: (target) => this.startRail(target),
       activateAI: (target) => this.activateAI(target),
+      saveCheckpoint: (target) => this.saveCheckpoint(target),
+      activeCheckpoint: this.checkpoint?.id || null,
       transformGroup: (target, kind) => this.transformGroup(target, kind),
       emit: (type, data) => this.emit(type, data),
       say: (text) => this.say(text),
     };
+  }
+  setTemperature(zoneId, value) {
+    const ice = this.room.objects.filter((o) => o.type === 'physics.ice'),
+      previous = ice.map((o) => this.context(o).temperature(o));
+    if (zoneId) this.zoneStates.set(zoneId, value);
+    else this.roomEnvironment = value;
+    // Synchronize in the switch action itself: drawing and collision queries
+    // must see the frozen blocks before another physics tick or countdown.
+    ice.forEach((o, i) => {
+      const ctx = this.context(o), next = ctx.temperature(o);
+      if (previous[i] !== next)
+        Registry.get(o.type).onTemperatureChange?.(ctx, o, this.objectStates.get(o.id), next);
+    });
   }
   serializeRoom() {
     return clone({
@@ -126,7 +147,7 @@ class Engine {
       this.movableStates = new Map(Object.entries(clone(cache.movables)));
     }
   }
-  loadRoom(id, entryId, resources, carry = null) {
+  loadRoom(id, entryId, resources, carry = null, respawn = null) {
     if (this.room) this.roomCaches.set(this.room.id, this.serializeRoom());
     this.room = this.course.rooms.find((r) => r.id === id);
     if (!this.room) throw new Error('目标房间不存在');
@@ -137,13 +158,13 @@ class Engine {
       recharge: resources.recharge,
     });
     this.player = {
-      x: this.entry.x * T + 4,
-      y: this.entry.y * T + 4,
+      x: respawn?.spawn?.x ?? this.entry.x * T + 4,
+      y: respawn?.spawn?.y ?? this.entry.y * T + 4,
       w: 24,
       h: 28,
       vx: carry?.vx || 0,
       vy: carry?.vy || 0,
-      face: this.entry.face || 1,
+      face: respawn?.spawn?.face || this.entry.face || 1,
       grounded: false,
       coyote: 0,
       buffer: 0,
@@ -152,6 +173,7 @@ class Engine {
       dashY: 0,
       freeDash: resources.freeDash,
       dashCount: resources.dashCount,
+      paidDashUsed: !!resources.paidDashUsed,
       launched: false,
       launchX: 0,
       rail: null,
@@ -187,28 +209,50 @@ class Engine {
     if (!this.lifeBaselines.has(id))
       this.lifeBaselines.set(id, clone(Object.fromEntries(this.objectStates)));
     this.roomTime = 0;
+    this.respawnRemaining = 0;
     this.exitCooldown = 0.4;
     this.playerTrail = [];
     this.aiTrail = [];
     this.mode = 'playing';
     this.message = this.room.notes || this.room.name;
     this.messageTime = 5;
-    this.checkpoint = {
+    this.checkpoint = this.captureCheckpoint(respawn?.spawn || null, respawn?.id || null);
+    this.emit('room-enter', { entryId: this.entry.id });
+    this.flightReturn = null;
+    if (this.developer.flight) this.beginFlight();
+  }
+  captureCheckpoint(spawn = null, id = null) {
+    return {
+      id, spawn,
       resources: {
         tokens: this.tokens,
         charges: this.charges,
         recharge: this.recharge,
         freeDash: this.player.freeDash,
         dashCount: this.player.dashCount,
+        paidDashUsed: this.player.paidDashUsed,
       },
       score: this.score,
       credited: [...this.credited],
       course: clone(this.courseState),
       state: this.serializeRoom(),
     };
-    this.emit('room-enter', { entryId: this.entry.id });
+  }
+  saveCheckpoint(o) {
+    if (this.mode !== 'playing' || this.developer.flight || this.checkpoint.id === o.id) return;
+    const p = this.player, colliders = this.colliders(), spikes = this.room.objects.filter(b => b.type === 'common.spike');
+    const safe = pos => pos.x >= 0 && pos.y >= 0 && pos.x + 24 <= this.room.cols*T && pos.y + 28 <= this.room.rows*T &&
+      !colliders.some(b => overlap({ ...pos, w: 24, h: 28 }, b)) &&
+      !spikes.some(b => Spikes.touches({ ...pos, w: 24, h: 28 }, this.objectRect(b), b.params.direction));
+    let spawn = { x: o.x*T+4, y: o.y*T+4, face: p.face };
+    if (!safe(spawn)) spawn = { x: p.x, y: p.y-(p.crouching ? 10 : 0), face: p.face };
+    if (!safe(spawn)) { this.say('存档点周围没有安全复活位置。'); return; }
+    this.checkpoint = this.captureCheckpoint(spawn, o.id);
+    this.emit('checkpoint', { id: o.id, x: spawn.x, y: spawn.y });
+    this.say('存档点已保存，死亡或重试后从这里继续。');
   }
   retry(reason = '重试当前房间') {
+    if (this.respawnRemaining > 0 && this.mode === 'playing') return;
     const preserved = new Map();
     for (const o of this.room.objects)
       if (o.resetPolicy === 'preserve') preserved.set(o.id, clone(this.objectStates.get(o.id)));
@@ -241,7 +285,7 @@ class Engine {
     this.roomCaches.set(roomId, cp.state);
     this.lifeBaselines.clear();
     this.room = null;
-    this.loadRoom(roomId, entryId, cp.resources);
+    this.loadRoom(roomId, entryId, cp.resources, null, cp);
     for (const o of this.room.objects) {
       if (preserved.has(o.id)) this.objectStates.set(o.id, preserved.get(o.id));
       else if (o.resetPolicy === 'initial') {
@@ -261,7 +305,54 @@ class Engine {
       Registry.get(o.type).afterRetry?.(this.context(o), o, this.objectStates.get(o.id));
     this.player.freeDash = true;
     this.player.dashCount = 0;
-    this.say(reason + '。已恢复当前入口。');
+    this.player.paidDashUsed = false;
+    this.respawnRemaining = 0.5;
+    this.say(reason + (cp.id ? '。已恢复最近存档点。' : '。已恢复当前入口。'));
+  }
+  setDeveloperOptions(options = {}) {
+    const wasFlying = this.developer.flight;
+    this.developer = {
+      enabled: options.enabled === true,
+      lockHealth: options.enabled === true && options.lockHealth === true,
+      flight: options.enabled === true && options.flight === true,
+    };
+    if (!wasFlying && this.developer.flight) this.beginFlight();
+    else if (wasFlying && !this.developer.flight) this.endFlight();
+  }
+  clearFlightMotion() {
+    Object.assign(this.player, { vx: 0, vy: 0, dash: 0, rail: null, launched: false,
+      launchX: 0, grounded: false, support: null, coyote: 0, buffer: 0 });
+  }
+  beginFlight() {
+    const p = this.player;
+    this.flightReturn = { roomId: this.room.id, x: p.x, y: p.y, w: p.w, h: p.h, crouching: p.crouching };
+    this.clearFlightMotion();
+    if (p.crouching) { p.y -= 10; p.h = 28; p.crouching = false; }
+  }
+  endFlight() {
+    const p = this.player, colliders = this.colliders(),
+      spikes = this.room.objects.filter((o) => o.type === 'common.spike');
+    const safe = (rect) => rect.x >= 0 && rect.y >= 0 &&
+      rect.x + rect.w <= this.room.cols * T && rect.y + rect.h <= this.room.rows * T &&
+      !colliders.some((b) => overlap(rect, b)) &&
+      !spikes.some((o) => Spikes.touches(rect, this.objectRect(o), o.params.direction));
+    if (!safe(p)) {
+      const anchor = this.flightReturn?.roomId === this.room.id ? this.flightReturn : null,
+        entry = { x: this.checkpoint?.spawn?.x ?? this.entry.x * T + 4,
+          y: this.checkpoint?.spawn?.y ?? this.entry.y * T + 4, w: p.w, h: 28, crouching: false };
+      let target = anchor && safe(anchor) ? anchor : safe(entry) ? entry : null;
+      if (!target) {
+        // A changing ice block can occupy the old anchor. Find the nearest empty cell.
+        const origin = anchor || entry, candidates = [];
+        for (let y = 0; y < this.room.rows; y++) for (let x = 0; x < this.room.cols; x++)
+          candidates.push({ x: x * T + 4, y: y * T + 4, w: p.w, h: 28, crouching: false });
+        candidates.sort((a, b) => Math.hypot(a.x-origin.x, a.y-origin.y)-Math.hypot(b.x-origin.x, b.y-origin.y));
+        target = candidates.find(safe) || entry;
+      }
+      Object.assign(p, { x: target.x, y: target.y, w: target.w, h: target.h, crouching: target.crouching });
+    }
+    this.clearFlightMotion();
+    this.flightReturn = null;
   }
   togglePause() {
     if (this.mode === 'playing') this.mode = 'paused';
@@ -312,6 +403,8 @@ class Engine {
     for (const o of this.room.objects) {
       const def = Registry.get(o.type),
         s = this.objectStates.get(o.id);
+      // Spikes are hazards with a compact hurt shape, never full-cell solid blocks.
+      if (o.type === 'common.spike') continue;
       const shape = Collision.shape(o, def);
       if (!shape || (def.isSolid && !def.isSolid(this.context(o), o, s))) continue;
       if (
@@ -534,6 +627,7 @@ class Engine {
     this.emit('collect', { id: o.id });
   }
   catchPlayer() {
+    if (this.developer.lockHealth || this.developer.flight) return;
     const a = this.ai,
       p = this.player;
     if (a.processing > 0 || a.cooldown > 0 || p.invulnerable > 0) return;
@@ -646,6 +740,13 @@ class Engine {
   update(dt, input = {}) {
     if (this.mode !== 'playing') return;
     dt = clamp(dt, 0, 1 / 30);
+    // Give the player time to reorient after a death. Freeze the entire round,
+    // including AI/obstacles/timers, and discard input edges during the buffer.
+    if (this.respawnRemaining > 0) {
+      this.respawnRemaining = Math.max(0, this.respawnRemaining - dt);
+      if (this.respawnRemaining < 1e-9) this.respawnRemaining = 0;
+      return;
+    }
     this.elapsed += dt;
     this.roomTime += dt;
     this.messageTime = Math.max(0, this.messageTime - dt);
@@ -667,6 +768,20 @@ class Engine {
         if (s.anim.t === 0.45) s.anim = null;
       }
     const colliders = this.colliders();
+    if (this.developer.flight) {
+      const x = Number(!!input.right) - Number(!!input.left),
+        y = Number(!!input.down) - Number(!!input.up),
+        length = Math.hypot(x, y) || 1, speed = this.config.speed * 2;
+      p.vx = x / length * speed; p.vy = y / length * speed;
+      p.x = clamp(p.x + p.vx * dt, 0, this.room.cols * T - p.w);
+      p.y = clamp(p.y + p.vy * dt, 0, this.room.rows * T - p.h);
+      p.invulnerable = Math.max(0, p.invulnerable - dt);
+      if (x) p.face = x;
+      // Inspection flight does not collect items, fire devices or enter exits.
+      this.updateAI(dt, colliders);
+      this.recordTrails();
+      return;
+    }
     if (p.grounded && p.support) {
       const old = before.find((b) => b.id === p.support),
         now = colliders.find((b) => b.id === p.support);
@@ -696,14 +811,17 @@ class Engine {
     if (horizontal) p.face = horizontal;
     if (
       input.dashPressed &&
-      p.dashCount < 3 &&
-      (p.freeDash || this.charges > 0) &&
+      (p.freeDash || (!p.paidDashUsed && this.charges > 0)) &&
       (!p.rail || p.rail.allowExit)
     ) {
       const d = direction(input, p.face),
         free = p.freeDash;
       if (free) p.freeDash = false;
-      else this.charges--;
+      else {
+        this.charges--;
+        p.paidDashUsed = true;
+      }
+      // Retain the count for diagnostics; it no longer gates either dash allowance.
       p.dashCount++;
       Object.assign(p, {
         vx: 0,
@@ -762,9 +880,9 @@ class Engine {
       } else
         p.vx = p.launched
           ? Math.abs(p.launchX) < 1
-            ? horizontal * this.config.speed
+            ? accelerateHorizontal(p.vx, horizontal, this.config.speed, dt, this.config.moveAccelerationTime)
             : p.launchX + horizontal * 45
-          : horizontal * this.config.speed * (p.crouching ? 0.45 : 1);
+          : accelerateHorizontal(p.vx, horizontal, this.config.speed * (p.crouching ? 0.45 : 1), dt, this.config.moveAccelerationTime);
       p.vy = Math.min(this.config.maxFall, p.vy + this.config.gravity * dt);
     }
     p.x += p.vx * dt;
@@ -803,6 +921,7 @@ class Engine {
     if (p.grounded && !wasGrounded) {
       p.freeDash = true;
       p.dashCount = 0;
+      p.paidDashUsed = false;
       this.emit('land');
     }
     if (p.y < 0) {
@@ -811,18 +930,19 @@ class Engine {
       if (dashing) p.dashY = 0;
     }
     if (p.y > this.room.rows * T + 80) {
+      if (this.developer.lockHealth) {
+        // Recover a fall without resetting the round, resources or death count.
+        Object.assign(p, { x: this.checkpoint.spawn?.x ?? this.entry.x * T + 4,
+          y: this.checkpoint.spawn?.y ?? this.entry.y * T + 4,
+          vx: 0, vy: 0, dash: 0, rail: null, launched: false,
+          grounded: false, support: null, coyote: 0, buffer: 0 });
+        return;
+      }
       this.retry('掉出房间');
       return;
     }
     for (const o of this.room.objects) {
-      const rect = this.objectRect(o);
-      const solidContact =
-        o.collision === true &&
-        overlap({ x: p.x - 0.2, y: p.y - 0.2, w: p.w + 0.4, h: p.h + 0.4 }, rect);
-      if (
-        o.type === 'common.spike' &&
-        (solidContact || overlap(p, { ...rect, y: rect.y + 22, h: 10 }))
-      ) {
+      if (!this.developer.lockHealth && o.type === 'common.spike' && Spikes.touches(p, this.objectRect(o), o.params.direction)) {
         this.retry('碰到尖刺');
         return;
       }
@@ -850,6 +970,7 @@ class Engine {
               recharge: this.recharge,
               freeDash: p.freeDash,
               dashCount: p.dashCount,
+              paidDashUsed: p.paidDashUsed,
             },
             edge.velocity === 'keep' ? { vx: p.vx, vy: p.vy } : null,
           );
@@ -892,6 +1013,9 @@ class Engine {
       steals: this.steals,
       elapsed: this.elapsed,
       roomTime: this.roomTime,
+      respawnRemaining: this.respawnRemaining,
+      checkpointId: this.checkpoint.id,
+      developer: { ...this.developer },
       player: clone(this.player),
       ai: { ...this.ai, trail: undefined, trailLength: this.ai.trail.length },
       courseState: clone(this.courseState),

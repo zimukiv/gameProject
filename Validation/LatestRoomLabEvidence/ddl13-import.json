@@ -1,0 +1,1520 @@
+{
+  "backup": "D:\\minigame\\资料\\关卡版本备份\\RoomLab-DDL1.1-导入1.3前-20261026.zip",
+  "backupSHA256": "93b1f2cfe0d8d12632d788a3e7a423314b96ed10d31a980a0611a49ccd74c654",
+  "beforeCodeHashes": {
+    "index.html": "4e6f5a9a314caf0a0b305d9fc465d1cc07431b0850ff7456b61edb09c64a6488",
+    "main.cjs": "7acd70849d24c7ed7190419c3b1dbaec143c5b9ffb1e31d6fb4fd50a2fbc44e2",
+    "renderer.cjs": "9cba320692d3ef5d777a8293581e8f6e2df2bc6ec5a84d201c1add01c8e0e62a",
+    "src/assets/catalog.cjs": "b2bd5400c6bb92ff5289c8925109b92c7e95f3ea0e1455a239184e381d581520",
+    "src/assets/manager.cjs": "334c31c0c4cd072dcff74b5ef27f04902e95fd5de5fc6a5587b562c10ee4c760",
+    "src/assets/seeds.cjs": "f87c7e0ae123a067ad186399ca27a18b595d986d383ac9acc5f14b0fe967193f",
+    "src/cloud/codec.cjs": "5755932d243b328d915e0503cc4bec2a70f1524731e8616c85aea9543bff5e68",
+    "src/cloud/connection.cjs": "8e9075cf247a7e4f77e10d7d451e7f1a9879970cf40155f05a03f3b4d5126941",
+    "src/cloud/live.cjs": "a9b268e7d155345635ca380bddc9a322e828fcd7aa9ffc564e19e190942cbbe2",
+    "src/cloud/repository.cjs": "6f569be88aab1694a69fe9bff34e66eac25669f31bb6caef1d7ad3de63df0952",
+    "src/cloud/service.cjs": "d036ca2643d37dcaf0c3a2a5922ff2363f82d124fc45af504beb564569051682",
+    "src/cloud/windows-http.cjs": "97a386ca7a6d710e4d66804c88592e332124410520aea72de3f018848a1d343a",
+    "src/desktop/main.cjs": "2bc965c2f99de18c705ba8cc715f95c8c68204cb181b871eea83ad916bbd0cde",
+    "src/desktop/preload.cjs": "16724c7afaf23d6c4809266ef1cea96e09aff70f7b1f11a59c456ca3a0985487",
+    "src/desktop/project-files.cjs": "49f05537f032952925ee42764b4323c9d57aeff05c414a789a0c0c5ae905d4cd",
+    "src/editor/app.cjs": "8e7cc1b0b9ff54030486b331bb1b88f16b81ca4f7f12b08bb26c9f5cfac22686",
+    "src/editor/cloud-controller.cjs": "f2f9fb47b6d470b5760ea1707aba857ac8145efe970cd960994583440340aefc",
+    "src/editor/cloud-graph-panel.cjs": "6a0eb8adc8b6558e5f21b7a316cd6a566944c6c2610623108fc00f86f54d7f50",
+    "src/editor/dom.cjs": "e89a4977b8f2c105bc503bf94b1ef08787f4bfaadb7b8dd468d2353f76581ffe",
+    "src/editor/draw.cjs": "cc89947e4473f9cb5458ff6abd0ef574ea6763aa4f9ae3054f57b3ea33d16cc1",
+    "src/editor/graph-layout.cjs": "c227976b93bfe842510cd8af7804811944ee93fbb49c21dddd56ceba7dc82e3f",
+    "src/editor/history.cjs": "6790b6df094cce8a6b50aed2188ff5dfc2012e86eb9e92dc8e06f885f2e9d5c0",
+    "src/editor/index.html": "70ea4a275dce6e631c82aebbd91fbb617a7015d1e357eeb376cf4640dc0bd958",
+    "src/editor/palette.cjs": "c4a7dc3f6a0b3b5c87709dfc93983ce704a7848849727ae0b7a8608b8df8b631",
+    "src/editor/rail-node-panel.cjs": "fe8f083ef1e527fc6f1acb66e47339c1e14e35ea7838785a1680fd0b27e85565",
+    "src/editor/region-handles.cjs": "f09237a2a15ecf2f9b7c8bb4b0043c9d09476626632e599abb5b040866887e2d",
+    "src/editor/room-camera-panel.cjs": "3e83acd85e081c92db1a9b845c67872b2a2d31b22026a24c126ec0927eadd897",
+    "src/editor/room-transfer.cjs": "cdeaf18917809b7d9924bb6a82bf631c62f924fdbbe21762e651d92426aa80ae",
+    "src/editor/store.cjs": "de8d0d5c0f6935f0005ac4ea4c5bfeb705c354d3af4a24376b671e6e7e89c893",
+    "src/editor/style.css": "3bc93c66d77f2bf20ad9bb115d1ca4a9ff994dd384d41b3976deebeb0d32d8b8",
+    "src/editor/trace-manager.cjs": "3c9724a91c201271e83de13ec9906259b75ef3a795c22e9710a2c6c7a9a63119",
+    "src/editor/worktree-panel.cjs": "77926946c749841e68395640ab24a82454caa89f89c0d254c11830fb76560cf4",
+    "src/plugins/common.cjs": "088d15ce8a549213c5a0affd19af8808e8b982cced14b9b1018282fab3223972",
+    "src/plugins/legacy.cjs": "e70d70a364f8f7673a94d9cf9fe0e595895acf7d731cf145df903f082ef35d89",
+    "src/plugins/registry.cjs": "b2ce72557240b6c6221c0a289ba0f6c2ddee97c1de07317f7bb6402baa3186d2",
+    "src/project/archive.cjs": "983cb5f8801a88451a62e162c99f0615e9e87f2e187a7218c9bcb7f25c4218ce",
+    "src/project/collision.cjs": "5bbf7308fb2dfb4ddfc95bb42e3215192004c2c673d2a83fabb38230de6435d7",
+    "src/project/courses.cjs": "af4def9306aab0570acd9114ef8360edf9d4e75d99e4f2c844882364c0c39c41",
+    "src/project/jet-params.cjs": "bf95b51d699a56784badd7860d9aaa27eb4ced11df46b301c0cacc3a60915202",
+    "src/project/merge.cjs": "efe9887ad807104981d154b42b1af8169b104fa29790cfe5fa78fa6f15041d6d",
+    "src/project/model.cjs": "b02e319f0f7f00d3e4d35268a462fa18908b5c7f9bca3e985879299f6765e970",
+    "src/project/performance.cjs": "57e1bc542e6c053577fc27858a1136d23ac332c5d3fa958366b3b2d269a6bbf6",
+    "src/project/play-camera.cjs": "b790d4bd413c5f3578d189cbac76e153da1a00a70f0aa4a20e31ebf236712242",
+    "src/project/play-traces.cjs": "3fba50563826ce1fb1de4a696d21a7f90a23e52d4fc54dae9b0b4b3109406411",
+    "src/project/rail-nodes.cjs": "8f6778bd7f125bc185c4d9d729c8417ada986b3493f156a4d9d99a27cd047785",
+    "src/project/room-export.cjs": "ce5be10bce333c571754956782fb5c485d122aa2b243db29355d2a081ea26cc0",
+    "src/project/room-import.cjs": "ac3a8500990ac4adaad0194681d50de1113d935e49129d51077e692d36545628",
+    "src/project/room-limits.cjs": "bcc9d610528fd9901d6556897fe5d367598ea8ae7e51ed5bd67cab2c3671ffc4",
+    "src/project/selection.cjs": "67153527d9efb78110e4d5334f6f8f6efd57cfce423ea4d64a262eac017a4b27",
+    "src/project/spikes.cjs": "6e58324281753e8ddcd650819ebf7cbfdb09afd6ac2ba412ed8ae5ded67c0ef4",
+    "src/project/temperature.cjs": "29a58515e36a3e8e25ac69137817a0e599e7c87108b208b7cd98fe52f9526645",
+    "src/runtime/developer-map.cjs": "fc3f072af2684a02910d0d567f61fdfbc184358b83342c876cddbff4fa55abad",
+    "src/runtime/engine.cjs": "d113e1fbf32fe3865c5af2fa7515ff689ed5b2efa378d1d5f8e5a3e552571710",
+    "src/runtime/input-steps.cjs": "b309cd59459f785ca8a6c5ae5d8c9703a2272a1b7a07bcc43a2003f13dbe9aea",
+    "src/shared/utils.cjs": "dbd216d20cbfbe63494c6bd8979e7fb2d0957bb66e4f859973780830bae6a81b",
+    "src/editor/pages/assets.cjs": "62977cf485bfee64c77338b09b38e9f3e3ddd52d8498b2217fd08a2b7762eb79",
+    "src/editor/pages/bindings.cjs": "98c00ace01fa63467fcff34a90c99b596887b53f1d2aa0c5b0e6ab9bc59c74f3",
+    "src/editor/pages/course.cjs": "166f897b826e6548d16ddaddaffde784945f674786a5c1f90cf10043b9adc3c2",
+    "src/editor/pages/definitions.cjs": "2f2c659cfe7e97dc14a801d42483632c641457bf21ddadbde0d60af7320542cb",
+    "src/editor/pages/home.cjs": "e8ac7130b6676da1d9863f69c0b7f2f03fa957e1dfad49b8b73892f1d242fb5a",
+    "src/editor/pages/play.cjs": "d13a6d46de4e0d257860137e8284a7dc2b6a25a1938f101ed9412f07f59bae7c",
+    "src/editor/pages/room.cjs": "c7c32afba4c637d515d44bc8262080455b9104dca4055f18a69c1a6baaade4b2",
+    "src/plugins/physics/ice.cjs": "0e5297bb077ee45eecf40a55176b63818e825fa23629e8537d6a54de2266b72f",
+    "src/plugins/physics/jet.cjs": "6a8223d84fc14e722d88bd10869d123caab8491e46a75415f9fbaec434825b80",
+    "src/plugins/physics/rail.cjs": "a50f6b6ecf9186fead70fb766ddc7bf009905b2e768fc44115735cbca8f9e5c1",
+    "src/plugins/physics/thermal.cjs": "830d829b02b55aeb35cd1c83f0ef0224af48bba92236b7743fdb093ef9204d66"
+  },
+  "spikeDirectionsPreserved": 214,
+  "ice2sPreserved": 25,
+  "zoneRepairs": [
+    {
+      "room": "AI追逐1",
+      "id": "zone-mvnhg8eo-h4brns",
+      "before": {
+        "h": 15,
+        "id": "zone-mvnhg8eo-h4brns",
+        "initial": "cold",
+        "name": "温控区 1",
+        "notes": "",
+        "w": 44,
+        "x": -1,
+        "y": 0
+      },
+      "after": {
+        "h": 15,
+        "id": "zone-mvnhg8eo-h4brns",
+        "initial": "cold",
+        "name": "温控区 1",
+        "notes": "",
+        "w": 43,
+        "x": 0,
+        "y": 0
+      },
+      "inBoundsCoverageUnchanged": true
+    }
+  ],
+  "sourceZip": "D:\\minigame\\策划\\第一大关 · 物理 DDL1.3.zip",
+  "sourceZipSHA256": "5eb70fb595c7e2515d0939ecd05f199e0dab1425129d4be55c99c8bb82cd4212",
+  "originalIncomingValidationError": "AI追逐1 对象越界：zone-mvnhg8eo-h4brns",
+  "checkpointModuleAdded": true,
+  "codeFilesAdaptedForCheckpoints": [
+    "src/editor/draw.cjs",
+    "src/plugins/common.cjs",
+    "src/runtime/engine.cjs"
+  ],
+  "allOtherRuntimeCodePreserved": true,
+  "assetFilesChanged": [],
+  "originalBase": {
+    "rooms": 11,
+    "connections": 10,
+    "tiles": 1311,
+    "objects": 693,
+    "types": {
+      "common.coin": 13,
+      "physics.jet": 32,
+      "common.small": 52,
+      "physics.rail": 12,
+      "physics.ice": 350,
+      "common.spike": 215,
+      "physics.thermal": 4,
+      "common.aiStartHollow": 1,
+      "common.collectible": 8,
+      "common.portalIn": 1,
+      "common.portalOut": 2,
+      "common.aiStart": 3
+    }
+  },
+  "beforeImport": {
+    "rooms": 11,
+    "connections": 10,
+    "tiles": 1311,
+    "objects": 693,
+    "types": {
+      "common.coin": 13,
+      "physics.jet": 32,
+      "common.small": 52,
+      "physics.rail": 12,
+      "physics.ice": 350,
+      "common.spike": 215,
+      "physics.thermal": 4,
+      "common.aiStartHollow": 1,
+      "common.collectible": 8,
+      "common.portalIn": 1,
+      "common.portalOut": 2,
+      "common.aiStart": 3
+    }
+  },
+  "afterImport": {
+    "rooms": 11,
+    "connections": 10,
+    "tiles": 1311,
+    "objects": 695,
+    "types": {
+      "common.coin": 13,
+      "physics.jet": 32,
+      "common.small": 52,
+      "physics.rail": 12,
+      "physics.ice": 350,
+      "common.spike": 214,
+      "physics.thermal": 4,
+      "common.aiStartHollow": 2,
+      "common.collectible": 7,
+      "common.checkpoint": 7,
+      "common.aiStart": 2
+    }
+  },
+  "courses": [
+    {
+      "id": "physics",
+      "fields": {},
+      "connections": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      }
+    }
+  ],
+  "roomChanges": [
+    {
+      "id": "jet-room",
+      "name": "喷气起跳",
+      "fields": {},
+      "objects": {
+        "added": [],
+        "removed": [],
+        "changed": [
+          {
+            "id": "block-mvp2acur-mzgdmg",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2ad56-htjvt6",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2aetm-elzfgj",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          }
+        ]
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "zones": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "movables": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "tiles": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    {
+      "id": "rail-room",
+      "name": "电磁加速",
+      "fields": {},
+      "objects": {
+        "added": [],
+        "removed": [],
+        "changed": [
+          {
+            "id": "block-mvomng3e-h3xl9g",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2ao4u-zrdngz",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2iglr-8ed32q",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2ij9z-mv0w4s",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          }
+        ]
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "zones": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "movables": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "tiles": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    {
+      "id": "room-mv0w2u2r-qkzk40",
+      "name": "冰 跑酷",
+      "fields": {},
+      "objects": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "zones": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "movables": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "tiles": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    {
+      "id": "room-mv0wnwtu-dxmqc7",
+      "name": "冲刺锻炼",
+      "fields": {},
+      "objects": {
+        "added": [],
+        "removed": [],
+        "changed": [
+          {
+            "id": "block-mvp2i35u-1x4ogr",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          }
+        ]
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "zones": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "movables": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "tiles": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    {
+      "id": "room-mvaapi4e-crbnks",
+      "name": "冰引入",
+      "fields": {},
+      "objects": {
+        "added": [],
+        "removed": [],
+        "changed": [
+          {
+            "id": "block-mvp2hfy6-4ga4ej",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2hlxj-iwja9g",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2hskz-dvzkxy",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2hvzw-l2aoek",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2hwy6-qem9l6",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          }
+        ]
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "zones": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "movables": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "tiles": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    {
+      "id": "room-mvaapqu4-6xob5m",
+      "name": "喷气跳跃熟悉",
+      "fields": {},
+      "objects": {
+        "added": [],
+        "removed": [],
+        "changed": [
+          {
+            "id": "block-mvp2h02n-0z3cte",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2h2la-kucmc0",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          }
+        ]
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "zones": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "movables": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "tiles": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    {
+      "id": "room-mvndxqmk-k9xt7n",
+      "name": "8",
+      "fields": {},
+      "objects": {
+        "added": [],
+        "removed": [
+          {
+            "aiId": null,
+            "assetOverrides": {},
+            "h": 1,
+            "id": "block-mvneosqd-o9n9pl",
+            "name": "尖刺",
+            "notes": "",
+            "params": {},
+            "resetPolicy": "checkpoint",
+            "trigger": {
+              "cooldown": 1,
+              "distance": 5,
+              "mode": "none",
+              "once": false,
+              "requiresAI": false
+            },
+            "type": "common.spike",
+            "w": 1,
+            "x": 23,
+            "y": 10
+          }
+        ],
+        "changed": [
+          {
+            "id": "block-mvneor80-gq0xov",
+            "changes": {
+              "collision": {
+                "old": null,
+                "new": true
+              }
+            }
+          },
+          {
+            "id": "block-mvomldli-gw5dko",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2fupq-b4buy5",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2fvvg-j89epa",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2g0sl-csdhjw",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2g2oa-uguku3",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2gi4h-57r8eh",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2gppd-sh1ln5",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2grj1-ck56sn",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          }
+        ]
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "zones": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "movables": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "tiles": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    {
+      "id": "room-mvnf7n9x-0t6ggh",
+      "name": "AI追逐1",
+      "fields": {},
+      "objects": {
+        "added": [
+          {
+            "id": "block-mvp949d5-33wuki",
+            "type": "common.checkpoint",
+            "name": "存档点",
+            "notes": "",
+            "x": 48,
+            "y": 10,
+            "w": 1,
+            "h": 1,
+            "collision": false,
+            "params": {},
+            "trigger": {
+              "mode": "region",
+              "requiresAI": false,
+              "distance": 5,
+              "once": false,
+              "cooldown": 1
+            },
+            "aiId": null,
+            "assetOverrides": {},
+            "resetPolicy": "checkpoint"
+          },
+          {
+            "id": "block-mvp95tu7-khaqp4",
+            "type": "common.checkpoint",
+            "name": "存档点",
+            "notes": "",
+            "x": 3,
+            "y": 11,
+            "w": 1,
+            "h": 1,
+            "collision": false,
+            "params": {},
+            "trigger": {
+              "mode": "region",
+              "requiresAI": false,
+              "distance": 5,
+              "once": false,
+              "cooldown": 1
+            },
+            "aiId": null,
+            "assetOverrides": {},
+            "resetPolicy": "checkpoint"
+          }
+        ],
+        "removed": [
+          {
+            "aiId": null,
+            "assetOverrides": {},
+            "collision": false,
+            "h": 1,
+            "id": "block-mvnjjxhm-qq23vm",
+            "name": "AI 传送入口",
+            "notes": "",
+            "params": {
+              "routeId": "route-1"
+            },
+            "resetPolicy": "checkpoint",
+            "trigger": {
+              "cooldown": 1,
+              "distance": 5,
+              "mode": "none",
+              "once": false,
+              "requiresAI": false
+            },
+            "type": "common.portalIn",
+            "w": 1,
+            "x": 43,
+            "y": 6
+          },
+          {
+            "aiId": null,
+            "assetOverrides": {},
+            "collision": false,
+            "h": 1,
+            "id": "block-mvnjk0ya-ip1jpq",
+            "name": "AI 传送出口",
+            "notes": "",
+            "params": {
+              "routeId": "route-1"
+            },
+            "resetPolicy": "checkpoint",
+            "trigger": {
+              "cooldown": 1,
+              "distance": 5,
+              "mode": "none",
+              "once": false,
+              "requiresAI": false
+            },
+            "type": "common.portalOut",
+            "w": 1,
+            "x": 58,
+            "y": 4
+          }
+        ],
+        "changed": [
+          {
+            "id": "block-mvniwxih-f225yq",
+            "changes": {
+              "params": {
+                "old": {
+                  "friction": 1.4,
+                  "meltAfter": 1,
+                  "respawnDelay": 1,
+                  "zoneId": "zone-mvnhg8eo-h4brns"
+                },
+                "new": {
+                  "friction": 1.4,
+                  "meltAfter": 1,
+                  "respawnDelay": 1,
+                  "zoneId": ""
+                }
+              }
+            }
+          },
+          {
+            "id": "block-mvniyk1k-zyhvos",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvnjmo8s-9vom66",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvnjmouf-fhee7g",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvnjmphm-z8wkr0",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvnjmpzz-deryvc",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvnjmv0r-npmfdw",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvnjmvjy-hbph5r",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2flpt-w9uyjr",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          }
+        ]
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "zones": {
+        "added": [],
+        "removed": [],
+        "changed": [
+          {
+            "id": "zone-mvnhg8eo-h4brns",
+            "changes": {
+              "x": {
+                "old": 0,
+                "new": -1
+              }
+            }
+          }
+        ]
+      },
+      "movables": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "tiles": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    {
+      "id": "room-mvnf7nel-q8wikm",
+      "name": "新房间 10",
+      "fields": {},
+      "objects": {
+        "added": [],
+        "removed": [
+          {
+            "id": "block-mvoo3p1u-hiojap",
+            "type": "common.portalOut",
+            "name": "AI 传送出口",
+            "notes": "",
+            "x": 29,
+            "y": 9,
+            "w": 1,
+            "h": 1,
+            "collision": true,
+            "params": {
+              "routeId": "route-1"
+            },
+            "trigger": {
+              "mode": "none",
+              "requiresAI": false,
+              "distance": 5,
+              "once": false,
+              "cooldown": 1
+            },
+            "aiId": null,
+            "assetOverrides": {},
+            "resetPolicy": "checkpoint"
+          }
+        ],
+        "changed": [
+          {
+            "id": "block-mvoniqsk-w3skhk",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvonisth-d8x3fv",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvoniv41-v9d0uc",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvoniw36-0f2os9",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          }
+        ]
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "zones": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "movables": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "tiles": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    {
+      "id": "room-mvnf7nm5-vf4wbu",
+      "name": "新房间 12",
+      "fields": {},
+      "objects": {
+        "added": [],
+        "removed": [],
+        "changed": [
+          {
+            "id": "block-mvp28r8e-2mfxfw",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2iwqp-x08ltf",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          }
+        ]
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "zones": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "movables": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "tiles": {
+        "added": 0,
+        "removed": 0
+      }
+    },
+    {
+      "id": "room-mvnkr562-1ihb3g",
+      "name": "XX",
+      "fields": {
+        "graph": {
+          "old": {
+            "x": 2461.131292494702,
+            "y": 495.0047140365705
+          },
+          "new": {
+            "x": 2459.9870523553473,
+            "y": 496.1489672052239
+          }
+        }
+      },
+      "objects": {
+        "added": [
+          {
+            "id": "block-mvp938ye-4qb5bx",
+            "type": "common.checkpoint",
+            "name": "存档点",
+            "notes": "",
+            "x": 30,
+            "y": 57,
+            "w": 1,
+            "h": 1,
+            "collision": false,
+            "params": {},
+            "trigger": {
+              "mode": "region",
+              "requiresAI": false,
+              "distance": 5,
+              "once": false,
+              "cooldown": 1
+            },
+            "aiId": null,
+            "assetOverrides": {},
+            "resetPolicy": "checkpoint"
+          },
+          {
+            "id": "block-mvp93ifi-mp5kpb",
+            "type": "common.checkpoint",
+            "name": "存档点",
+            "notes": "",
+            "x": 39,
+            "y": 30,
+            "w": 1,
+            "h": 1,
+            "collision": false,
+            "params": {},
+            "trigger": {
+              "mode": "region",
+              "requiresAI": false,
+              "distance": 5,
+              "once": false,
+              "cooldown": 1
+            },
+            "aiId": null,
+            "assetOverrides": {},
+            "resetPolicy": "checkpoint"
+          },
+          {
+            "id": "block-mvp93jse-3j7nyl",
+            "type": "common.checkpoint",
+            "name": "存档点",
+            "notes": "",
+            "x": 31,
+            "y": 9,
+            "w": 1,
+            "h": 1,
+            "collision": false,
+            "params": {},
+            "trigger": {
+              "mode": "region",
+              "requiresAI": false,
+              "distance": 5,
+              "once": false,
+              "cooldown": 1
+            },
+            "aiId": null,
+            "assetOverrides": {},
+            "resetPolicy": "checkpoint"
+          },
+          {
+            "id": "block-mvp93pe2-qua2si",
+            "type": "common.checkpoint",
+            "name": "存档点",
+            "notes": "",
+            "x": 1,
+            "y": 38,
+            "w": 1,
+            "h": 1,
+            "collision": false,
+            "params": {},
+            "trigger": {
+              "mode": "region",
+              "requiresAI": false,
+              "distance": 5,
+              "once": false,
+              "cooldown": 1
+            },
+            "aiId": null,
+            "assetOverrides": {},
+            "resetPolicy": "checkpoint"
+          },
+          {
+            "id": "block-mvp93rgd-lr7g1e",
+            "type": "common.checkpoint",
+            "name": "存档点",
+            "notes": "",
+            "x": 28,
+            "y": 39,
+            "w": 1,
+            "h": 1,
+            "collision": false,
+            "params": {},
+            "trigger": {
+              "mode": "region",
+              "requiresAI": false,
+              "distance": 5,
+              "once": false,
+              "cooldown": 1
+            },
+            "aiId": null,
+            "assetOverrides": {},
+            "resetPolicy": "checkpoint"
+          },
+          {
+            "id": "block-mvp9xzaa-q4tq5l",
+            "type": "common.small",
+            "name": "小 token",
+            "notes": "",
+            "x": 38,
+            "y": 55,
+            "w": 1,
+            "h": 1,
+            "collision": false,
+            "params": {},
+            "trigger": {
+              "mode": "none",
+              "requiresAI": false,
+              "distance": 5,
+              "once": false,
+              "cooldown": 1
+            },
+            "aiId": null,
+            "assetOverrides": {},
+            "resetPolicy": "checkpoint"
+          }
+        ],
+        "removed": [
+          {
+            "id": "block-mvo0curz-05pvh1",
+            "type": "common.collectible",
+            "name": "收藏品",
+            "notes": "",
+            "x": 26,
+            "y": 23,
+            "w": 1,
+            "h": 1,
+            "collision": true,
+            "params": {},
+            "trigger": {
+              "mode": "none",
+              "requiresAI": false,
+              "distance": 5,
+              "once": false,
+              "cooldown": 1
+            },
+            "aiId": null,
+            "assetOverrides": {},
+            "resetPolicy": "checkpoint"
+          },
+          {
+            "id": "block-mvp2jc4s-r4emtx",
+            "type": "common.small",
+            "name": "小 token",
+            "notes": "",
+            "x": 38,
+            "y": 55,
+            "w": 1,
+            "h": 1,
+            "collision": true,
+            "params": {},
+            "trigger": {
+              "mode": "none",
+              "requiresAI": false,
+              "distance": 5,
+              "once": false,
+              "cooldown": 1
+            },
+            "aiId": null,
+            "assetOverrides": {},
+            "resetPolicy": "checkpoint"
+          }
+        ],
+        "changed": [
+          {
+            "id": "block-mvnxsvjz-z8b2u5",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvnxswac-0x1svb",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvom0fqz-q8bfdm",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              },
+              "trigger": {
+                "old": {
+                  "mode": "foot",
+                  "requiresAI": false,
+                  "distance": 5,
+                  "once": false,
+                  "cooldown": 1
+                },
+                "new": {
+                  "mode": "region",
+                  "requiresAI": false,
+                  "distance": 5,
+                  "once": false,
+                  "cooldown": 1
+                }
+              },
+              "type": {
+                "old": "common.aiStart",
+                "new": "common.aiStartHollow"
+              }
+            }
+          },
+          {
+            "id": "block-mvomi0fq-8kcfny",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvomi3ny-70jpjg",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2jkj0-o3a3cr",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2jmyp-wbrzih",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2jstr-1inhpv",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2jtx5-f7gdvr",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2juny-3fze2m",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2jvdv-euad7w",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2k1i6-ey9jxz",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              },
+              "y": {
+                "old": 13,
+                "new": 14
+              }
+            }
+          },
+          {
+            "id": "block-mvp2k5q2-341wdl",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2ka01-ye0kr6",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2knc8-gk0znx",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          },
+          {
+            "id": "block-mvp2lnxw-o4plxb",
+            "changes": {
+              "collision": {
+                "old": true,
+                "new": false
+              }
+            }
+          }
+        ]
+      },
+      "entries": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "exits": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "zones": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "movables": {
+        "added": [],
+        "removed": [],
+        "changed": []
+      },
+      "tiles": {
+        "added": 0,
+        "removed": 0
+      }
+    }
+  ],
+  "validation": {
+    "modelErrors": 0,
+    "modelWarnings": 0,
+    "rooms": 11,
+    "connections": 10,
+    "checkpointFlags": 7,
+    "checkpointDeathRoutes": 21,
+    "runtimeComparisons": 362,
+    "unity": "PASS rooms=11 textures=11 exitCode=0"
+  },
+  "afterCodeHashes": {
+    "index.html": "4e6f5a9a314caf0a0b305d9fc465d1cc07431b0850ff7456b61edb09c64a6488",
+    "main.cjs": "7acd70849d24c7ed7190419c3b1dbaec143c5b9ffb1e31d6fb4fd50a2fbc44e2",
+    "renderer.cjs": "9cba320692d3ef5d777a8293581e8f6e2df2bc6ec5a84d201c1add01c8e0e62a",
+    "src/assets/catalog.cjs": "b2bd5400c6bb92ff5289c8925109b92c7e95f3ea0e1455a239184e381d581520",
+    "src/assets/manager.cjs": "334c31c0c4cd072dcff74b5ef27f04902e95fd5de5fc6a5587b562c10ee4c760",
+    "src/assets/seeds.cjs": "f87c7e0ae123a067ad186399ca27a18b595d986d383ac9acc5f14b0fe967193f",
+    "src/cloud/codec.cjs": "5755932d243b328d915e0503cc4bec2a70f1524731e8616c85aea9543bff5e68",
+    "src/cloud/connection.cjs": "8e9075cf247a7e4f77e10d7d451e7f1a9879970cf40155f05a03f3b4d5126941",
+    "src/cloud/live.cjs": "a9b268e7d155345635ca380bddc9a322e828fcd7aa9ffc564e19e190942cbbe2",
+    "src/cloud/repository.cjs": "6f569be88aab1694a69fe9bff34e66eac25669f31bb6caef1d7ad3de63df0952",
+    "src/cloud/service.cjs": "d036ca2643d37dcaf0c3a2a5922ff2363f82d124fc45af504beb564569051682",
+    "src/cloud/windows-http.cjs": "97a386ca7a6d710e4d66804c88592e332124410520aea72de3f018848a1d343a",
+    "src/desktop/main.cjs": "2bc965c2f99de18c705ba8cc715f95c8c68204cb181b871eea83ad916bbd0cde",
+    "src/desktop/preload.cjs": "16724c7afaf23d6c4809266ef1cea96e09aff70f7b1f11a59c456ca3a0985487",
+    "src/desktop/project-files.cjs": "49f05537f032952925ee42764b4323c9d57aeff05c414a789a0c0c5ae905d4cd",
+    "src/editor/app.cjs": "8e7cc1b0b9ff54030486b331bb1b88f16b81ca4f7f12b08bb26c9f5cfac22686",
+    "src/editor/cloud-controller.cjs": "f2f9fb47b6d470b5760ea1707aba857ac8145efe970cd960994583440340aefc",
+    "src/editor/cloud-graph-panel.cjs": "6a0eb8adc8b6558e5f21b7a316cd6a566944c6c2610623108fc00f86f54d7f50",
+    "src/editor/dom.cjs": "e89a4977b8f2c105bc503bf94b1ef08787f4bfaadb7b8dd468d2353f76581ffe",
+    "src/editor/draw.cjs": "6edcf52887d2a1cc3a1dc5f27ed86d7878307a3ab089f684bd95cdf234b9ff1d",
+    "src/editor/graph-layout.cjs": "c227976b93bfe842510cd8af7804811944ee93fbb49c21dddd56ceba7dc82e3f",
+    "src/editor/history.cjs": "6790b6df094cce8a6b50aed2188ff5dfc2012e86eb9e92dc8e06f885f2e9d5c0",
+    "src/editor/index.html": "70ea4a275dce6e631c82aebbd91fbb617a7015d1e357eeb376cf4640dc0bd958",
+    "src/editor/palette.cjs": "c4a7dc3f6a0b3b5c87709dfc93983ce704a7848849727ae0b7a8608b8df8b631",
+    "src/editor/rail-node-panel.cjs": "fe8f083ef1e527fc6f1acb66e47339c1e14e35ea7838785a1680fd0b27e85565",
+    "src/editor/region-handles.cjs": "f09237a2a15ecf2f9b7c8bb4b0043c9d09476626632e599abb5b040866887e2d",
+    "src/editor/room-camera-panel.cjs": "3e83acd85e081c92db1a9b845c67872b2a2d31b22026a24c126ec0927eadd897",
+    "src/editor/room-transfer.cjs": "cdeaf18917809b7d9924bb6a82bf631c62f924fdbbe21762e651d92426aa80ae",
+    "src/editor/store.cjs": "de8d0d5c0f6935f0005ac4ea4c5bfeb705c354d3af4a24376b671e6e7e89c893",
+    "src/editor/style.css": "3bc93c66d77f2bf20ad9bb115d1ca4a9ff994dd384d41b3976deebeb0d32d8b8",
+    "src/editor/trace-manager.cjs": "3c9724a91c201271e83de13ec9906259b75ef3a795c22e9710a2c6c7a9a63119",
+    "src/editor/worktree-panel.cjs": "77926946c749841e68395640ab24a82454caa89f89c0d254c11830fb76560cf4",
+    "src/plugins/common.cjs": "1b11dc57f48a292b9f85333f9702e000ac70617bbaec17ff5d99cc0b830cad68",
+    "src/plugins/legacy.cjs": "e70d70a364f8f7673a94d9cf9fe0e595895acf7d731cf145df903f082ef35d89",
+    "src/plugins/registry.cjs": "b2ce72557240b6c6221c0a289ba0f6c2ddee97c1de07317f7bb6402baa3186d2",
+    "src/project/archive.cjs": "983cb5f8801a88451a62e162c99f0615e9e87f2e187a7218c9bcb7f25c4218ce",
+    "src/project/collision.cjs": "5bbf7308fb2dfb4ddfc95bb42e3215192004c2c673d2a83fabb38230de6435d7",
+    "src/project/courses.cjs": "af4def9306aab0570acd9114ef8360edf9d4e75d99e4f2c844882364c0c39c41",
+    "src/project/jet-params.cjs": "bf95b51d699a56784badd7860d9aaa27eb4ced11df46b301c0cacc3a60915202",
+    "src/project/merge.cjs": "efe9887ad807104981d154b42b1af8169b104fa29790cfe5fa78fa6f15041d6d",
+    "src/project/model.cjs": "b02e319f0f7f00d3e4d35268a462fa18908b5c7f9bca3e985879299f6765e970",
+    "src/project/performance.cjs": "57e1bc542e6c053577fc27858a1136d23ac332c5d3fa958366b3b2d269a6bbf6",
+    "src/project/play-camera.cjs": "b790d4bd413c5f3578d189cbac76e153da1a00a70f0aa4a20e31ebf236712242",
+    "src/project/play-traces.cjs": "3fba50563826ce1fb1de4a696d21a7f90a23e52d4fc54dae9b0b4b3109406411",
+    "src/project/rail-nodes.cjs": "8f6778bd7f125bc185c4d9d729c8417ada986b3493f156a4d9d99a27cd047785",
+    "src/project/room-export.cjs": "ce5be10bce333c571754956782fb5c485d122aa2b243db29355d2a081ea26cc0",
+    "src/project/room-import.cjs": "ac3a8500990ac4adaad0194681d50de1113d935e49129d51077e692d36545628",
+    "src/project/room-limits.cjs": "bcc9d610528fd9901d6556897fe5d367598ea8ae7e51ed5bd67cab2c3671ffc4",
+    "src/project/selection.cjs": "67153527d9efb78110e4d5334f6f8f6efd57cfce423ea4d64a262eac017a4b27",
+    "src/project/spikes.cjs": "6e58324281753e8ddcd650819ebf7cbfdb09afd6ac2ba412ed8ae5ded67c0ef4",
+    "src/project/temperature.cjs": "29a58515e36a3e8e25ac69137817a0e599e7c87108b208b7cd98fe52f9526645",
+    "src/runtime/developer-map.cjs": "fc3f072af2684a02910d0d567f61fdfbc184358b83342c876cddbff4fa55abad",
+    "src/runtime/engine.cjs": "9bd9c6bad7c8d5b75dc351bb13033759513722a49ca8ee4c2d4c5dfb89bd3b31",
+    "src/runtime/input-steps.cjs": "b309cd59459f785ca8a6c5ae5d8c9703a2272a1b7a07bcc43a2003f13dbe9aea",
+    "src/shared/utils.cjs": "dbd216d20cbfbe63494c6bd8979e7fb2d0957bb66e4f859973780830bae6a81b",
+    "src/editor/pages/assets.cjs": "62977cf485bfee64c77338b09b38e9f3e3ddd52d8498b2217fd08a2b7762eb79",
+    "src/editor/pages/bindings.cjs": "98c00ace01fa63467fcff34a90c99b596887b53f1d2aa0c5b0e6ab9bc59c74f3",
+    "src/editor/pages/course.cjs": "166f897b826e6548d16ddaddaffde784945f674786a5c1f90cf10043b9adc3c2",
+    "src/editor/pages/definitions.cjs": "2f2c659cfe7e97dc14a801d42483632c641457bf21ddadbde0d60af7320542cb",
+    "src/editor/pages/home.cjs": "e8ac7130b6676da1d9863f69c0b7f2f03fa957e1dfad49b8b73892f1d242fb5a",
+    "src/editor/pages/play.cjs": "d13a6d46de4e0d257860137e8284a7dc2b6a25a1938f101ed9412f07f59bae7c",
+    "src/editor/pages/room.cjs": "c7c32afba4c637d515d44bc8262080455b9104dca4055f18a69c1a6baaade4b2",
+    "src/plugins/physics/ice.cjs": "0e5297bb077ee45eecf40a55176b63818e825fa23629e8537d6a54de2266b72f",
+    "src/plugins/physics/jet.cjs": "6a8223d84fc14e722d88bd10869d123caab8491e46a75415f9fbaec434825b80",
+    "src/plugins/physics/rail.cjs": "a50f6b6ecf9186fead70fb766ddc7bf009905b2e768fc44115735cbca8f9e5c1",
+    "src/plugins/physics/thermal.cjs": "830d829b02b55aeb35cd1c83f0ef0224af48bba92236b7743fdb093ef9204d66"
+  },
+  "syncedRuntimes": [
+    ".roomlab-runtime",
+    "Builds/RoomLabConnected/RoomLabRuntime",
+    "D:/minigame/RoomLab-2.5.2-Unity-Connected-20261026/RoomLabRuntime"
+  ]
+}

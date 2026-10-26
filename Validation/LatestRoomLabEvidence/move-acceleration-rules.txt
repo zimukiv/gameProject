@@ -1,0 +1,1 @@
+MOVE_ACCELERATION_PASS ramp=0.1s speed=220 tap50ms=3.208px previous=11.000px ground/air/left/right/reverse/release/crouch=pass dash/launch/ice=pass

@@ -1,0 +1,12 @@
+{
+  "branch": "codex/roomlab-ddl13-v3-handoff-2026-10-26",
+  "source": "Independent directory populated from the Git index with git checkout-index --all",
+  "runtimeSetup": "PASS setup-runtime.ps1 -ExistingRuntime using the connected build runtime",
+  "checkpoints": "PASS 7 flags, 21 death routes, contact save and full checkpoint restore",
+  "dashInput": "PASS distinct presses, one free then one paid, third blocked, queue and pause/respawn handling",
+  "flightMap": "PASS 11 rooms, normalized flight, hover/noclip/safe exit, read-only atlas and map",
+  "connections": "PASS 11 rooms, 10 transitions, 1 final exit",
+  "runtimeBridge": "PASS checks=362 rooms=11, actual flight-to-checkpoint and retry restore",
+  "exitCode": 0,
+  "notes": "Checks ran against the independently initialized source snapshot, not the working runtime. Existing compatible Electron binaries were reused; no fresh Electron download or Unity rebuild was performed in this handoff check. Exported v3 EXE startup is recorded separately."
+}
