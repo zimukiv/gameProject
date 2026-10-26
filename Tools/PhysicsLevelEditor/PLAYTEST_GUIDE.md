@@ -1,7 +1,7 @@
 # Physics Level Editor Beta r5 · 操作手册
 
-适用产物：`release/PhysicsLevelEditor-win32-x64-beta-r5-playtest.zip`
-（SHA-256 `4EA1DD839DE2FC1D04BE8B3FCF903464F717B23DC68591C9D574EF2B15B379B2`）
+适用产物：`release/PhysicsLevelEditor-r5-win-x64.zip`
+（SHA-256 `24827ecfde91381a9047ffe47fa2d5daed2793e911b13d6971b730bbc5c77ccf`）
 
 本版本的核心能力：在编辑器里修改 Room 1 的 `Start ground` 位置，保存工作副本，
 点击 **试玩 Room 1**，真实的 Unity 游戏会在工作台中间的试玩区域内运行；停止后回到编辑，
@@ -14,7 +14,7 @@
 
 ## 1. 启动
 
-1. 完整解压 `PhysicsLevelEditor-win32-x64-beta-r5-playtest.zip`。
+1. 完整解压 `PhysicsLevelEditor-r5-win-x64.zip`。
 2. 保持解压后的整个文件夹结构不变（`game-runner/` 不能删、不能单独移动）。
 3. 双击 `PhysicsLevelEditor.exe`。
 4. 在 **三关总览** 中点击 **Room 1 · Physics**。
@@ -155,7 +155,7 @@ npm.cmd run package:portable
 打包产物位于 `release/`（已加入 `.gitignore`，不进入 Git）：
 
 - `PhysicsLevelEditor-win32-x64-beta-r5-playtest/`
-- `PhysicsLevelEditor-win32-x64-beta-r5-playtest.zip`
+- `PhysicsLevelEditor-r5-win-x64.zip`
 
 开发期试玩使用 `runner-staging/`（指向隔离工程的 junction，已忽略），
 正式包使用 `game-runner/`。
