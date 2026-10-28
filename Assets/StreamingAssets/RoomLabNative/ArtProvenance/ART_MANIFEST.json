@@ -1,0 +1,2341 @@
+{
+  "version": 1,
+  "sourceType": "AI-generated flat PNG masters; no PSD/layered sources",
+  "generation": "OpenAI built-in image_gen, sequential independent asset prompts stored in source/*_prompt.txt",
+  "coordinateSystem": "top-left source pixels, rect=[x,y,width,height], max exclusive; Unity y=sourceHeight-y-height",
+  "target": {
+    "worldPPU": 32,
+    "tile": [
+      32,
+      32
+    ],
+    "characterCanvas": [
+      32,
+      64
+    ],
+    "characterPivot": [
+      0.5,
+      0.125
+    ],
+    "characterBaselineFromBottom": 8,
+    "filter": "Point",
+    "compression": "None",
+    "mipmaps": false
+  },
+  "assets": {
+    "player_master.png": {
+      "path": "source/player_master.png",
+      "actualSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "prompt": "source/player_prompt.txt",
+      "sprites": [
+        {
+          "name": "idle00",
+          "sourceRect": [
+            42,
+            111,
+            77,
+            194
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            42,
+            111,
+            77,
+            194
+          ],
+          "sourceAnchor": [
+            78,
+            305
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "idle01",
+          "sourceRect": [
+            197,
+            111,
+            77,
+            194
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            197,
+            111,
+            77,
+            194
+          ],
+          "sourceAnchor": [
+            235,
+            305
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "idle02",
+          "sourceRect": [
+            354,
+            111,
+            77,
+            194
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            354,
+            111,
+            77,
+            194
+          ],
+          "sourceAnchor": [
+            392,
+            305
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "idle03",
+          "sourceRect": [
+            510,
+            111,
+            78,
+            194
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            510,
+            111,
+            78,
+            194
+          ],
+          "sourceAnchor": [
+            549,
+            305
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "run00",
+          "sourceRect": [
+            648,
+            117,
+            124,
+            188
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            648,
+            117,
+            124,
+            188
+          ],
+          "sourceAnchor": [
+            705,
+            305
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "run01",
+          "sourceRect": [
+            809,
+            117,
+            116,
+            188
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            809,
+            117,
+            116,
+            188
+          ],
+          "sourceAnchor": [
+            862,
+            305
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "run02",
+          "sourceRect": [
+            961,
+            114,
+            118,
+            182
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            961,
+            114,
+            118,
+            182
+          ],
+          "sourceAnchor": [
+            1019,
+            305
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "run03",
+          "sourceRect": [
+            1115,
+            117,
+            122,
+            188
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            1115,
+            117,
+            122,
+            188
+          ],
+          "sourceAnchor": [
+            1176,
+            305
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "run04",
+          "sourceRect": [
+            27,
+            432,
+            121,
+            185
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            27,
+            432,
+            121,
+            185
+          ],
+          "sourceAnchor": [
+            78,
+            617
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "run05",
+          "sourceRect": [
+            184,
+            430,
+            113,
+            187
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            184,
+            430,
+            113,
+            187
+          ],
+          "sourceAnchor": [
+            235,
+            617
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "jump00",
+          "sourceRect": [
+            350,
+            386,
+            91,
+            185
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            350,
+            386,
+            91,
+            185
+          ],
+          "sourceAnchor": [
+            392,
+            617
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "jump01",
+          "sourceRect": [
+            501,
+            394,
+            97,
+            171
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            501,
+            394,
+            97,
+            171
+          ],
+          "sourceAnchor": [
+            549,
+            617
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "fall00",
+          "sourceRect": [
+            643,
+            426,
+            104,
+            175
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            643,
+            426,
+            104,
+            175
+          ],
+          "sourceAnchor": [
+            705,
+            617
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "fall01",
+          "sourceRect": [
+            753,
+            433,
+            152,
+            180
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            753,
+            433,
+            152,
+            180
+          ],
+          "sourceAnchor": [
+            862,
+            617
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "dash00",
+          "sourceRect": [
+            904,
+            454,
+            163,
+            159
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            904,
+            454,
+            163,
+            159
+          ],
+          "sourceAnchor": [
+            1019,
+            617
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "dash01",
+          "sourceRect": [
+            1048,
+            454,
+            184,
+            140
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            1048,
+            454,
+            184,
+            140
+          ],
+          "sourceAnchor": [
+            1176,
+            617
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "crouch00",
+          "sourceRect": [
+            27,
+            789,
+            104,
+            141
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            27,
+            789,
+            104,
+            141
+          ],
+          "sourceAnchor": [
+            78,
+            930
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "crouch01",
+          "sourceRect": [
+            184,
+            797,
+            106,
+            133
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            184,
+            797,
+            106,
+            133
+          ],
+          "sourceAnchor": [
+            235,
+            930
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "death00",
+          "sourceRect": [
+            333,
+            736,
+            127,
+            194
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            333,
+            736,
+            127,
+            194
+          ],
+          "sourceAnchor": [
+            392,
+            930
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "death01",
+          "sourceRect": [
+            498,
+            738,
+            112,
+            192
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            498,
+            738,
+            112,
+            192
+          ],
+          "sourceAnchor": [
+            549,
+            930
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "death02",
+          "sourceRect": [
+            627,
+            627,
+            157,
+            313
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            643,
+            714,
+            124,
+            212
+          ],
+          "sourceAnchor": [
+            705,
+            930
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        },
+        {
+          "name": "death03",
+          "sourceRect": [
+            784,
+            627,
+            156,
+            313
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            795,
+            750,
+            118,
+            176
+          ],
+          "sourceAnchor": [
+            862,
+            930
+          ],
+          "notes": "Selected connected-body crop; wide fall/dash can contain neighboring alpha noise. death02/03 use coarse cells to retain faded fragments. Component-mask cleanup may be needed."
+        }
+      ],
+      "alphaRange": [
+        0,
+        255
+      ],
+      "animations": {
+        "idle": {
+          "frames": [
+            "idle00",
+            "idle01",
+            "idle02",
+            "idle03"
+          ],
+          "fps": 6,
+          "mode": "loop"
+        },
+        "run": {
+          "frames": [
+            "run00",
+            "run01",
+            "run02",
+            "run03",
+            "run04",
+            "run05"
+          ],
+          "fps": 10,
+          "mode": "loop"
+        },
+        "jump": {
+          "frames": [
+            "jump00",
+            "jump01"
+          ],
+          "fps": 10,
+          "mode": "holdLast"
+        },
+        "fall": {
+          "frames": [
+            "fall00",
+            "fall01"
+          ],
+          "fps": 6,
+          "mode": "loop"
+        },
+        "dash": {
+          "frames": [
+            "dash00",
+            "dash01",
+            "dash01"
+          ],
+          "fps": 14,
+          "mode": "once"
+        },
+        "crouch": {
+          "frames": [
+            "crouch00",
+            "crouch01"
+          ],
+          "fps": 8,
+          "mode": "holdLast"
+        },
+        "death": {
+          "frames": [
+            "death00",
+            "death01",
+            "death02",
+            "death03"
+          ],
+          "fps": 10,
+          "mode": "once"
+        }
+      },
+      "knownDeviation": "22 visible poses rather than 23 unique frames. Dash third animation slot deliberately repeats dash01. Do not describe this as 23 unique generated frames. Source anchors are approximate row registration, not production-rig proof."
+    },
+    "ai_master.png": {
+      "path": "source/ai_master.png",
+      "actualSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "prompt": "source/ai_prompt.txt",
+      "sprites": [
+        {
+          "name": "idle00",
+          "sourceRect": [
+            62,
+            35,
+            230,
+            240
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            91,
+            52,
+            154,
+            210
+          ],
+          "sourceAnchor": [
+            177.0,
+            270
+          ],
+          "notes": "Loose art envelope includes glow; body scale and hover anchor require stable normalization. Source has irregular five-row layout, not the requested four-row grid."
+        },
+        {
+          "name": "idle01",
+          "sourceRect": [
+            374,
+            35,
+            230,
+            240
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            400,
+            52,
+            156,
+            210
+          ],
+          "sourceAnchor": [
+            489.0,
+            270
+          ],
+          "notes": "Loose art envelope includes glow; body scale and hover anchor require stable normalization. Source has irregular five-row layout, not the requested four-row grid."
+        },
+        {
+          "name": "idle02",
+          "sourceRect": [
+            681,
+            35,
+            230,
+            240
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            706,
+            52,
+            159,
+            201
+          ],
+          "sourceAnchor": [
+            796.0,
+            270
+          ],
+          "notes": "Loose art envelope includes glow; body scale and hover anchor require stable normalization. Source has irregular five-row layout, not the requested four-row grid."
+        },
+        {
+          "name": "idle03",
+          "sourceRect": [
+            993,
+            35,
+            230,
+            240
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            1021,
+            55,
+            159,
+            196
+          ],
+          "sourceAnchor": [
+            1108.0,
+            270
+          ],
+          "notes": "Loose art envelope includes glow; body scale and hover anchor require stable normalization. Source has irregular five-row layout, not the requested four-row grid."
+        },
+        {
+          "name": "chase00",
+          "sourceRect": [
+            50,
+            320,
+            250,
+            235
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            75,
+            344,
+            198,
+            207
+          ],
+          "sourceAnchor": [
+            175.0,
+            550
+          ],
+          "notes": "Loose art envelope includes glow; body scale and hover anchor require stable normalization. Source has irregular five-row layout, not the requested four-row grid."
+        },
+        {
+          "name": "chase01",
+          "sourceRect": [
+            360,
+            320,
+            260,
+            235
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            383,
+            347,
+            222,
+            198
+          ],
+          "sourceAnchor": [
+            490.0,
+            550
+          ],
+          "notes": "Loose art envelope includes glow; body scale and hover anchor require stable normalization. Source has irregular five-row layout, not the requested four-row grid."
+        },
+        {
+          "name": "chase02",
+          "sourceRect": [
+            678,
+            320,
+            260,
+            235
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            708,
+            347,
+            209,
+            195
+          ],
+          "sourceAnchor": [
+            808.0,
+            550
+          ],
+          "notes": "Loose art envelope includes glow; body scale and hover anchor require stable normalization. Source has irregular five-row layout, not the requested four-row grid."
+        },
+        {
+          "name": "chase03",
+          "sourceRect": [
+            990,
+            320,
+            260,
+            235
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            999,
+            347,
+            233,
+            199
+          ],
+          "sourceAnchor": [
+            1120.0,
+            550
+          ],
+          "notes": "Loose art envelope includes glow; body scale and hover anchor require stable normalization. Source has irregular five-row layout, not the requested four-row grid."
+        },
+        {
+          "name": "chase04",
+          "sourceRect": [
+            45,
+            600,
+            265,
+            225
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            63,
+            625,
+            232,
+            191
+          ],
+          "sourceAnchor": [
+            177.5,
+            820
+          ],
+          "notes": "Loose art envelope includes glow; body scale and hover anchor require stable normalization. Source has irregular five-row layout, not the requested four-row grid."
+        },
+        {
+          "name": "chase05",
+          "sourceRect": [
+            365,
+            600,
+            265,
+            225
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            376,
+            626,
+            236,
+            191
+          ],
+          "sourceAnchor": [
+            497.5,
+            820
+          ],
+          "notes": "Loose art envelope includes glow; body scale and hover anchor require stable normalization. Source has irregular five-row layout, not the requested four-row grid."
+        },
+        {
+          "name": "skill00",
+          "sourceRect": [
+            680,
+            600,
+            265,
+            225
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            703,
+            625,
+            221,
+            189
+          ],
+          "sourceAnchor": [
+            812.5,
+            820
+          ],
+          "notes": "Loose art envelope includes glow; body scale and hover anchor require stable normalization. Source has irregular five-row layout, not the requested four-row grid."
+        },
+        {
+          "name": "skill01",
+          "sourceRect": [
+            40,
+            830,
+            260,
+            255
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            79,
+            852,
+            185,
+            225
+          ],
+          "sourceAnchor": [
+            170.0,
+            1080
+          ],
+          "notes": "Loose art envelope includes glow; body scale and hover anchor require stable normalization. Source has irregular five-row layout, not the requested four-row grid."
+        },
+        {
+          "name": "skill02",
+          "sourceRect": [
+            350,
+            830,
+            280,
+            255
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            379,
+            849,
+            200,
+            230
+          ],
+          "sourceAnchor": [
+            490.0,
+            1080
+          ],
+          "notes": "Loose art envelope includes glow; body scale and hover anchor require stable normalization. Source has irregular five-row layout, not the requested four-row grid."
+        },
+        {
+          "name": "skill03",
+          "sourceRect": [
+            650,
+            830,
+            300,
+            255
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            690,
+            859,
+            208,
+            220
+          ],
+          "sourceAnchor": [
+            800.0,
+            1080
+          ],
+          "notes": "Loose art envelope includes glow; body scale and hover anchor require stable normalization. Source has irregular five-row layout, not the requested four-row grid."
+        },
+        {
+          "name": "knockback00",
+          "sourceRect": [
+            60,
+            1080,
+            245,
+            174
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            111,
+            1085,
+            143,
+            155
+          ],
+          "sourceAnchor": [
+            182.5,
+            1249
+          ],
+          "notes": "Loose art envelope includes glow; body scale and hover anchor require stable normalization. Source has irregular five-row layout, not the requested four-row grid."
+        },
+        {
+          "name": "knockback01",
+          "sourceRect": [
+            370,
+            1080,
+            260,
+            174
+          ],
+          "targetCanvas": [
+            32,
+            64
+          ],
+          "alpha128BBox": [
+            405,
+            1085,
+            178,
+            153
+          ],
+          "sourceAnchor": [
+            500.0,
+            1249
+          ],
+          "notes": "Loose art envelope includes glow; body scale and hover anchor require stable normalization. Source has irregular five-row layout, not the requested four-row grid."
+        }
+      ],
+      "alphaRange": [
+        0,
+        255
+      ],
+      "animations": {
+        "idle": {
+          "frames": [
+            "idle00",
+            "idle01",
+            "idle02",
+            "idle03"
+          ],
+          "fps": 6,
+          "mode": "loop"
+        },
+        "chase": {
+          "frames": [
+            "chase00",
+            "chase01",
+            "chase02",
+            "chase03",
+            "chase04",
+            "chase05"
+          ],
+          "fps": 10,
+          "mode": "loop"
+        },
+        "skill": {
+          "frames": [
+            "skill00",
+            "skill01",
+            "skill02",
+            "skill03"
+          ],
+          "fps": 12,
+          "mode": "once"
+        },
+        "knockback": {
+          "frames": [
+            "knockback00",
+            "knockback01"
+          ],
+          "fps": 8,
+          "mode": "once"
+        }
+      },
+      "unusedCandidate": "Fourth chase candidate in third source row; skill00 uses charged transition from third chase candidate."
+    },
+    "terrain_pickups_master.png": {
+      "path": "source/terrain_pickups_master.png",
+      "actualSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "prompt": "source/terrain_pickups_prompt.txt",
+      "sprites": [
+        {
+          "name": "groundTopLeft",
+          "sourceRect": [
+            28,
+            48,
+            117,
+            132
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            28,
+            48,
+            117,
+            132
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "groundTopMiddle",
+          "sourceRect": [
+            168,
+            48,
+            135,
+            111
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            168,
+            48,
+            135,
+            111
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "groundTopRight",
+          "sourceRect": [
+            324,
+            48,
+            141,
+            132
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            324,
+            48,
+            141,
+            132
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "groundFill",
+          "sourceRect": [
+            483,
+            48,
+            131,
+            131
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            483,
+            48,
+            131,
+            131
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "wallLeft",
+          "sourceRect": [
+            659,
+            48,
+            80,
+            131
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            659,
+            48,
+            80,
+            131
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "wallRight",
+          "sourceRect": [
+            852,
+            48,
+            78,
+            131
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            852,
+            48,
+            78,
+            131
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "legacyTokenSmall",
+          "sourceRect": [
+            986,
+            83,
+            68,
+            72
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            986,
+            83,
+            68,
+            72
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "legacyTokenBig",
+          "sourceRect": [
+            1100,
+            51,
+            124,
+            129
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            1100,
+            51,
+            124,
+            129
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "spikeUp",
+          "sourceRect": [
+            22,
+            259,
+            136,
+            96
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            22,
+            259,
+            136,
+            96
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "spikeDown",
+          "sourceRect": [
+            177,
+            216,
+            137,
+            101
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            177,
+            216,
+            137,
+            101
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "spikeLeft",
+          "sourceRect": [
+            338,
+            217,
+            98,
+            139
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            338,
+            217,
+            98,
+            139
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "spikeRight",
+          "sourceRect": [
+            498,
+            217,
+            98,
+            139
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            498,
+            217,
+            98,
+            139
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "legacyCollectibleLocked",
+          "sourceRect": [
+            635,
+            221,
+            135,
+            139
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            635,
+            221,
+            135,
+            139
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "legacyCollectibleOpen",
+          "sourceRect": [
+            797,
+            226,
+            124,
+            130
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            797,
+            226,
+            124,
+            130
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "platformLeft",
+          "sourceRect": [
+            951,
+            257,
+            117,
+            71
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            951,
+            257,
+            117,
+            71
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "platformMiddle",
+          "sourceRect": [
+            1089,
+            257,
+            139,
+            54
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            1089,
+            257,
+            139,
+            54
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "platformRight",
+          "sourceRect": [
+            26,
+            434,
+            118,
+            71
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            26,
+            434,
+            118,
+            71
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "iceSolid",
+          "sourceRect": [
+            170,
+            401,
+            131,
+            133
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            170,
+            401,
+            131,
+            133
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "iceCracked",
+          "sourceRect": [
+            325,
+            401,
+            133,
+            133
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            325,
+            401,
+            133,
+            133
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        },
+        {
+          "name": "iceMelted",
+          "sourceRect": [
+            482,
+            439,
+            133,
+            95
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            482,
+            439,
+            133,
+            95
+          ],
+          "notes": "Crop uses measured opaque body. Tile seams not verified. Ground fill includes brass top trim. legacy-prefixed items are superseded by campus atlas and must not be selected for demo."
+        }
+      ],
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    "physics_mechanisms_master.png": {
+      "path": "source/physics_mechanisms_master.png",
+      "actualSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "89b9a479d1c3c110713ae93b1401622b4dc06fd7cb418917c2defbb3ac526ee7",
+      "prompt": "source/physics_mechanisms_prompt.txt",
+      "sprites": [
+        {
+          "name": "coldConsole",
+          "sourceRect": [
+            26,
+            170,
+            262,
+            132
+          ],
+          "targetCanvas": [
+            48,
+            16
+          ],
+          "alpha128BBox": [
+            26,
+            170,
+            262,
+            132
+          ],
+          "sourceAnchor": [
+            157.0,
+            302
+          ],
+          "notes": "Keep collider from source level. legacyStoneExit is rejected for demo; use campus lab doors. jetActive fuses stream and vent; align vent base and avoid scaling collider to plume."
+        },
+        {
+          "name": "hotConsole",
+          "sourceRect": [
+            340,
+            170,
+            263,
+            133
+          ],
+          "targetCanvas": [
+            48,
+            16
+          ],
+          "alpha128BBox": [
+            340,
+            170,
+            263,
+            133
+          ],
+          "sourceAnchor": [
+            471.5,
+            303
+          ],
+          "notes": "Keep collider from source level. legacyStoneExit is rejected for demo; use campus lab doors. jetActive fuses stream and vent; align vent base and avoid scaling collider to plume."
+        },
+        {
+          "name": "jetIdle",
+          "sourceRect": [
+            655,
+            211,
+            259,
+            92
+          ],
+          "targetCanvas": [
+            32,
+            16
+          ],
+          "alpha128BBox": [
+            655,
+            211,
+            259,
+            92
+          ],
+          "sourceAnchor": [
+            784.5,
+            303
+          ],
+          "notes": "Keep collider from source level. legacyStoneExit is rejected for demo; use campus lab doors. jetActive fuses stream and vent; align vent base and avoid scaling collider to plume."
+        },
+        {
+          "name": "jetActive",
+          "sourceRect": [
+            969,
+            49,
+            259,
+            254
+          ],
+          "targetCanvas": [
+            32,
+            80
+          ],
+          "alpha128BBox": [
+            969,
+            49,
+            259,
+            254
+          ],
+          "sourceAnchor": [
+            1098.5,
+            303
+          ],
+          "notes": "Keep collider from source level. legacyStoneExit is rejected for demo; use campus lab doors. jetActive fuses stream and vent; align vent base and avoid scaling collider to plume."
+        },
+        {
+          "name": "railIdle",
+          "sourceRect": [
+            21,
+            477,
+            271,
+            131
+          ],
+          "targetCanvas": [
+            32,
+            16
+          ],
+          "alpha128BBox": [
+            21,
+            477,
+            271,
+            131
+          ],
+          "sourceAnchor": [
+            156.5,
+            608
+          ],
+          "notes": "Keep collider from source level. legacyStoneExit is rejected for demo; use campus lab doors. jetActive fuses stream and vent; align vent base and avoid scaling collider to plume."
+        },
+        {
+          "name": "railCharged",
+          "sourceRect": [
+            336,
+            477,
+            271,
+            131
+          ],
+          "targetCanvas": [
+            32,
+            16
+          ],
+          "alpha128BBox": [
+            336,
+            477,
+            271,
+            131
+          ],
+          "sourceAnchor": [
+            471.5,
+            608
+          ],
+          "notes": "Keep collider from source level. legacyStoneExit is rejected for demo; use campus lab doors. jetActive fuses stream and vent; align vent base and avoid scaling collider to plume."
+        },
+        {
+          "name": "railExtension",
+          "sourceRect": [
+            648,
+            534,
+            271,
+            73
+          ],
+          "targetCanvas": [
+            32,
+            16
+          ],
+          "alpha128BBox": [
+            648,
+            534,
+            271,
+            73
+          ],
+          "sourceAnchor": [
+            783.5,
+            607
+          ],
+          "notes": "Keep collider from source level. legacyStoneExit is rejected for demo; use campus lab doors. jetActive fuses stream and vent; align vent base and avoid scaling collider to plume."
+        },
+        {
+          "name": "notice",
+          "sourceRect": [
+            995,
+            419,
+            206,
+            188
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            995,
+            419,
+            206,
+            188
+          ],
+          "sourceAnchor": [
+            1098.0,
+            607
+          ],
+          "notes": "Keep collider from source level. legacyStoneExit is rejected for demo; use campus lab doors. jetActive fuses stream and vent; align vent base and avoid scaling collider to plume."
+        },
+        {
+          "name": "checkpointIdle",
+          "sourceRect": [
+            67,
+            646,
+            146,
+            286
+          ],
+          "targetCanvas": [
+            32,
+            80
+          ],
+          "alpha128BBox": [
+            67,
+            646,
+            146,
+            286
+          ],
+          "sourceAnchor": [
+            140.0,
+            932
+          ],
+          "notes": "Keep collider from source level. legacyStoneExit is rejected for demo; use campus lab doors. jetActive fuses stream and vent; align vent base and avoid scaling collider to plume."
+        },
+        {
+          "name": "checkpointActive",
+          "sourceRect": [
+            382,
+            646,
+            197,
+            286
+          ],
+          "targetCanvas": [
+            32,
+            80
+          ],
+          "alpha128BBox": [
+            382,
+            646,
+            197,
+            286
+          ],
+          "sourceAnchor": [
+            480.5,
+            932
+          ],
+          "notes": "Keep collider from source level. legacyStoneExit is rejected for demo; use campus lab doors. jetActive fuses stream and vent; align vent base and avoid scaling collider to plume."
+        },
+        {
+          "name": "aiActivatorOff",
+          "sourceRect": [
+            687,
+            714,
+            195,
+            218
+          ],
+          "targetCanvas": [
+            64,
+            96
+          ],
+          "alpha128BBox": [
+            687,
+            714,
+            195,
+            218
+          ],
+          "sourceAnchor": [
+            784.5,
+            932
+          ],
+          "notes": "Keep collider from source level. legacyStoneExit is rejected for demo; use campus lab doors. jetActive fuses stream and vent; align vent base and avoid scaling collider to plume."
+        },
+        {
+          "name": "aiActivatorOn",
+          "sourceRect": [
+            1001,
+            714,
+            194,
+            218
+          ],
+          "targetCanvas": [
+            64,
+            96
+          ],
+          "alpha128BBox": [
+            1001,
+            714,
+            194,
+            218
+          ],
+          "sourceAnchor": [
+            1098.0,
+            932
+          ],
+          "notes": "Keep collider from source level. legacyStoneExit is rejected for demo; use campus lab doors. jetActive fuses stream and vent; align vent base and avoid scaling collider to plume."
+        },
+        {
+          "name": "legacyStoneExitClosed",
+          "sourceRect": [
+            20,
+            962,
+            273,
+            249
+          ],
+          "targetCanvas": [
+            64,
+            96
+          ],
+          "alpha128BBox": [
+            20,
+            962,
+            273,
+            249
+          ],
+          "sourceAnchor": [
+            156.5,
+            1211
+          ],
+          "notes": "Keep collider from source level. legacyStoneExit is rejected for demo; use campus lab doors. jetActive fuses stream and vent; align vent base and avoid scaling collider to plume."
+        },
+        {
+          "name": "legacyStoneExitOpen",
+          "sourceRect": [
+            334,
+            961,
+            274,
+            250
+          ],
+          "targetCanvas": [
+            64,
+            96
+          ],
+          "alpha128BBox": [
+            334,
+            961,
+            274,
+            250
+          ],
+          "sourceAnchor": [
+            471.0,
+            1211
+          ],
+          "notes": "Keep collider from source level. legacyStoneExit is rejected for demo; use campus lab doors. jetActive fuses stream and vent; align vent base and avoid scaling collider to plume."
+        },
+        {
+          "name": "icePlatformSolid",
+          "sourceRect": [
+            644,
+            1129,
+            282,
+            82
+          ],
+          "targetCanvas": [
+            32,
+            16
+          ],
+          "alpha128BBox": [
+            644,
+            1129,
+            282,
+            82
+          ],
+          "sourceAnchor": [
+            785.0,
+            1211
+          ],
+          "notes": "Keep collider from source level. legacyStoneExit is rejected for demo; use campus lab doors. jetActive fuses stream and vent; align vent base and avoid scaling collider to plume."
+        },
+        {
+          "name": "icePlatformCracked",
+          "sourceRect": [
+            958,
+            1129,
+            282,
+            82
+          ],
+          "targetCanvas": [
+            32,
+            16
+          ],
+          "alpha128BBox": [
+            958,
+            1129,
+            282,
+            82
+          ],
+          "sourceAnchor": [
+            1099.0,
+            1211
+          ],
+          "notes": "Keep collider from source level. legacyStoneExit is rejected for demo; use campus lab doors. jetActive fuses stream and vent; align vent base and avoid scaling collider to plume."
+        }
+      ],
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    "campus_interactables_master.png": {
+      "path": "source/campus_interactables_master.png",
+      "actualSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "574500538812710453c02d33fc44eb43e362565abfb5678b23b5c78c138c6fea",
+      "prompt": "source/campus_interactables_prompt.txt",
+      "sprites": [
+        {
+          "name": "tokenSmall",
+          "sourceRect": [
+            110,
+            142,
+            123,
+            126
+          ],
+          "targetCanvas": [
+            15,
+            15
+          ],
+          "alpha128BBox": [
+            110,
+            142,
+            123,
+            126
+          ],
+          "sourceAnchor": [
+            171.5,
+            268
+          ],
+          "notes": "Preferred campus-themed asset; corresponding states must share canvas and floor anchor. Source body crop is measured at alpha128."
+        },
+        {
+          "name": "tokenBig",
+          "sourceRect": [
+            348,
+            82,
+            244,
+            233
+          ],
+          "targetCanvas": [
+            26,
+            26
+          ],
+          "alpha128BBox": [
+            348,
+            82,
+            244,
+            233
+          ],
+          "sourceAnchor": [
+            470.0,
+            315
+          ],
+          "notes": "Preferred campus-themed asset; corresponding states must share canvas and floor anchor. Source body crop is measured at alpha128."
+        },
+        {
+          "name": "collectibleLocked",
+          "sourceRect": [
+            691,
+            98,
+            187,
+            209
+          ],
+          "targetCanvas": [
+            26,
+            28
+          ],
+          "alpha128BBox": [
+            691,
+            98,
+            187,
+            209
+          ],
+          "sourceAnchor": [
+            784.5,
+            307
+          ],
+          "notes": "Preferred campus-themed asset; corresponding states must share canvas and floor anchor. Source body crop is measured at alpha128."
+        },
+        {
+          "name": "collectibleOpen",
+          "sourceRect": [
+            980,
+            98,
+            223,
+            208
+          ],
+          "targetCanvas": [
+            26,
+            28
+          ],
+          "alpha128BBox": [
+            980,
+            98,
+            223,
+            208
+          ],
+          "sourceAnchor": [
+            1091.5,
+            306
+          ],
+          "notes": "Preferred campus-themed asset; corresponding states must share canvas and floor anchor. Source body crop is measured at alpha128."
+        },
+        {
+          "name": "exitClosed",
+          "sourceRect": [
+            40,
+            375,
+            260,
+            310
+          ],
+          "targetCanvas": [
+            64,
+            96
+          ],
+          "alpha128BBox": [
+            40,
+            375,
+            260,
+            310
+          ],
+          "sourceAnchor": [
+            170.0,
+            685
+          ],
+          "notes": "Preferred campus-themed asset; corresponding states must share canvas and floor anchor. Source body crop is measured at alpha128."
+        },
+        {
+          "name": "exitOpen",
+          "sourceRect": [
+            353,
+            375,
+            261,
+            310
+          ],
+          "targetCanvas": [
+            64,
+            96
+          ],
+          "alpha128BBox": [
+            353,
+            375,
+            261,
+            310
+          ],
+          "sourceAnchor": [
+            483.5,
+            685
+          ],
+          "notes": "Preferred campus-themed asset; corresponding states must share canvas and floor anchor. Source body crop is measured at alpha128."
+        },
+        {
+          "name": "noticeScreen",
+          "sourceRect": [
+            694,
+            408,
+            206,
+            273
+          ],
+          "targetCanvas": [
+            32,
+            48
+          ],
+          "alpha128BBox": [
+            694,
+            408,
+            206,
+            273
+          ],
+          "sourceAnchor": [
+            797.0,
+            681
+          ],
+          "notes": "Preferred campus-themed asset; corresponding states must share canvas and floor anchor. Source body crop is measured at alpha128."
+        },
+        {
+          "name": "checkpointScanner",
+          "sourceRect": [
+            1029,
+            423,
+            120,
+            258
+          ],
+          "targetCanvas": [
+            32,
+            80
+          ],
+          "alpha128BBox": [
+            1029,
+            423,
+            120,
+            258
+          ],
+          "sourceAnchor": [
+            1089.0,
+            681
+          ],
+          "notes": "Preferred campus-themed asset; corresponding states must share canvas and floor anchor. Source body crop is measured at alpha128."
+        }
+      ],
+      "alphaRange": [
+        0,
+        255
+      ]
+    },
+    "physics_background_master.png": {
+      "path": "source/physics_background_master.png",
+      "actualSize": [
+        1672,
+        941
+      ],
+      "mode": "RGB",
+      "sha256": "986cf161d871b7b9cc7b55470934121a9c1d1db94a01af795ffab591d172d620",
+      "prompt": "source/physics_background_prompt.txt",
+      "sprites": [],
+      "alphaRange": [
+        255,
+        255
+      ],
+      "targetCanvas": [
+        640,
+        360
+      ],
+      "use": "Static full-room low-contrast campus laboratory backdrop. Not proven seamless; RGB opaque; no separately editable parallax layers."
+    },
+    "physics_cannon_master.png": {
+      "path": "source/physics_cannon_master.png",
+      "actualSize": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "bf51cefdbb52f7560e93167dbe66c7ce0cf8518105a06f9a9452a4ddfe6a6f63",
+      "prompt": "source/physics_cannon_prompt.txt",
+      "sprites": [
+        {
+          "name": "cannonRightIdle",
+          "sourceRect": [
+            17,
+            342,
+            373,
+            202
+          ],
+          "targetCanvas": [
+            64,
+            32
+          ],
+          "alpha128BBox": [
+            17,
+            342,
+            373,
+            202
+          ],
+          "sourceAnchor": [
+            203.5,
+            544
+          ],
+          "notes": "Right-facing cannon can be mirrored for left. Physical support/platform and trajectory must remain distinct from noncolliding barrel background detail. Target dimensions are proposed visual export canvas, not collider edits."
+        },
+        {
+          "name": "cannonRightCharged",
+          "sourceRect": [
+            417,
+            341,
+            373,
+            203
+          ],
+          "targetCanvas": [
+            64,
+            32
+          ],
+          "alpha128BBox": [
+            417,
+            341,
+            373,
+            203
+          ],
+          "sourceAnchor": [
+            603.5,
+            544
+          ],
+          "notes": "Right-facing cannon can be mirrored for left. Physical support/platform and trajectory must remain distinct from noncolliding barrel background detail. Target dimensions are proposed visual export canvas, not collider edits."
+        },
+        {
+          "name": "thermalBlockCold",
+          "sourceRect": [
+            803,
+            284,
+            206,
+            260
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            803,
+            284,
+            206,
+            260
+          ],
+          "sourceAnchor": [
+            906.0,
+            544
+          ],
+          "notes": "Right-facing cannon can be mirrored for left. Physical support/platform and trajectory must remain distinct from noncolliding barrel background detail. Target dimensions are proposed visual export canvas, not collider edits."
+        },
+        {
+          "name": "thermalBlockHot",
+          "sourceRect": [
+            1036,
+            284,
+            206,
+            260
+          ],
+          "targetCanvas": [
+            32,
+            32
+          ],
+          "alpha128BBox": [
+            1036,
+            284,
+            206,
+            260
+          ],
+          "sourceAnchor": [
+            1139.0,
+            544
+          ],
+          "notes": "Right-facing cannon can be mirrored for left. Physical support/platform and trajectory must remain distinct from noncolliding barrel background detail. Target dimensions are proposed visual export canvas, not collider edits."
+        },
+        {
+          "name": "railStart",
+          "sourceRect": [
+            16,
+            844,
+            379,
+            202
+          ],
+          "targetCanvas": [
+            64,
+            32
+          ],
+          "alpha128BBox": [
+            16,
+            844,
+            379,
+            202
+          ],
+          "sourceAnchor": [
+            205.5,
+            1047
+          ],
+          "notes": "Right-facing cannon can be mirrored for left. Physical support/platform and trajectory must remain distinct from noncolliding barrel background detail. Target dimensions are proposed visual export canvas, not collider edits."
+        },
+        {
+          "name": "railMiddle",
+          "sourceRect": [
+            437,
+            907,
+            275,
+            139
+          ],
+          "targetCanvas": [
+            32,
+            16
+          ],
+          "alpha128BBox": [
+            437,
+            907,
+            275,
+            139
+          ],
+          "sourceAnchor": [
+            574.5,
+            1047
+          ],
+          "notes": "Right-facing cannon can be mirrored for left. Physical support/platform and trajectory must remain distinct from noncolliding barrel background detail. Target dimensions are proposed visual export canvas, not collider edits."
+        },
+        {
+          "name": "railEnd",
+          "sourceRect": [
+            751,
+            872,
+            263,
+            174
+          ],
+          "targetCanvas": [
+            32,
+            24
+          ],
+          "alpha128BBox": [
+            751,
+            872,
+            263,
+            174
+          ],
+          "sourceAnchor": [
+            882.5,
+            1047
+          ],
+          "notes": "Right-facing cannon can be mirrored for left. Physical support/platform and trajectory must remain distinct from noncolliding barrel background detail. Target dimensions are proposed visual export canvas, not collider edits."
+        },
+        {
+          "name": "jetActive",
+          "sourceRect": [
+            1031,
+            666,
+            199,
+            381
+          ],
+          "targetCanvas": [
+            32,
+            80
+          ],
+          "alpha128BBox": [
+            1031,
+            666,
+            199,
+            381
+          ],
+          "sourceAnchor": [
+            1130.5,
+            1047
+          ],
+          "notes": "Right-facing cannon can be mirrored for left. Physical support/platform and trajectory must remain distinct from noncolliding barrel background detail. Target dimensions are proposed visual export canvas, not collider edits."
+        }
+      ],
+      "alphaRange": [
+        0,
+        255
+      ],
+      "priority": "Preferred cannon and thermal block match latest first-world physical-device screenshot. Ice intact/cracked from terrain atlas; jet from this or previous physics atlas."
+    }
+  },
+  "limitations": [
+    "Raw masters are not pixel-perfect exports. Actual dimensions differ from requested. Rectangles and alpha measurements are source-pixel measurements, not a claim of 32px output.",
+    "Normalize by nearest sampling with stable animation foot anchors. Preserve death alpha; do not use one global threshold. Sprite registration, seams, palette cleanup and in-game visual QA remain integration work.",
+    "Visuals must not alter RoomLab 2.5.5 colliders or original level JSON.",
+    "No source has editable PSD layers. No background seamlessness has been established."
+  ]
+}

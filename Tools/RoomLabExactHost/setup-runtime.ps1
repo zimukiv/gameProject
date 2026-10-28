@@ -30,6 +30,9 @@ if (!(Test-Path -LiteralPath (Join-Path $runtimeRoot 'RoomLabCore.exe'))) {
     }
 }
 New-Item -ItemType Directory -Path $runtimeApp -Force | Out-Null
+# Replace the copy instead of merging it: a stale file from an earlier stage (for example the
+# retired src/project/zip.cjs) must never survive inside the packaged runtime.
+Get-ChildItem -LiteralPath $runtimeApp -Force | Remove-Item -Recurse -Force
 Copy-Item -Path (Join-Path $sourceApp '*') -Destination $runtimeApp -Recurse -Force
 Write-Output "ROOMLAB_RUNTIME_READY $runtimeRoot"
 Write-Output 'Edit Tools/RoomLabRuntimeApp, then rerun this script to refresh the runtime copy.'

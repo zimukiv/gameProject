@@ -1,0 +1,13 @@
+Use case: stylized-concept. Asset type: production pixel-art PLAYER ANIMATION SPRITE ATLAS for an original university platform game.
+Create ONE 1024x1024 RGBA PNG atlas on TRUE TRANSPARENT alpha. Exactly 8 columns by 4 rows, cell size 128x256, no gaps/no borders/no labels. Every cell is a 4x nearest-neighbor enlargement of a logical 32x64 sprite; use hard square pixel clusters, approximately 16-24 colors, absolutely NO antialiasing, blur, gradients, shadow under feet, text, grid lines, or checkerboard background.
+Character is the SAME gender-neutral university student in all frames: short dark ink-blue hair, mustard ochre jacket, cream undershirt, navy trousers, dark shoes, small coral-red backpack; charming expressive 16-bit side-view game character, facing RIGHT. Main standing body logical 26x42 pixels. Keep center x=16 logical pixels and foot baseline at y=56 (8 pixels above cell bottom), on the exact same canvas. Do not drift position between frames or crop.
+Read cells row-major, left-to-right:
+cells 0-3 four subtle breathing idle poses;
+cells 4-9 six distinct running cycle poses, alternating forward/back legs and arms, head stable;
+cells 10-11 two jump lift poses;
+cells 12-13 two falling poses;
+cells 14-16 three forward horizontal dash poses leaning right;
+cells 17-18 two crouch poses about 55 percent standing body height, same feet baseline;
+cells 19-22 four non-gory pixel dissolve/death poses;
+cells 23-31 completely transparent empty.
+Render only the 23 sprites with extensive transparent space above each body as specified, all independent with no visual connection. Polished intentional hand-placed pixel silhouette and readable jacket/backpack identity, warm student contrasts with future cool teal laboratory. Export exact uniform atlas, not a concept presentation.

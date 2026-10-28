@@ -10,3 +10,19 @@
 *.log
 /.roomlab-runtime/
 /.roomlab-downloads/
+
+# Source release hygiene: retain runtime DLLs, author JSON and frozen oracle fixtures.
+/Tools/**/bin/
+/Tools/**/obj/
+**/__pycache__/
+*.pyc
+/.vs/
+/.idea/
+/Validation/**/isolated-progress/
+/Validation/Native/AIJumpV2/before/Assets/StreamingAssets/
+/Validation/Native/AIJumpV2/before/Assets/RoomLabNative/Presentation/
+/Validation/Native/AIJumpV2/video/
+/Validation/Native/AIJumpV2/video-review-p3/
+/Validation/Native/AIJumpV2/manual/
+
+/Validation/Native/AIJumpV2/production/

@@ -1,0 +1,192 @@
+{
+  "version": 2,
+  "id": "physics-project",
+  "name": "第一大关 · 物理 DDL",
+  "notes": "第一版内容只制作物理关。",
+  "settings": {
+    "freeDashOnLand": true,
+    "maxDashes": 3,
+    "paidStockCap": 3,
+    "performance": {
+      "buffer": 0.12,
+      "coyote": 0.1,
+      "dashDeceleration": 2100,
+      "dashSpeed": 850,
+      "dashTime": 0.22,
+      "gravity": 1500,
+      "jump": 400,
+      "maxFall": 900,
+      "speed": 220
+    },
+    "tileSize": 32
+  },
+  "courses": [
+    {
+      "id": "physics",
+      "name": "物理",
+      "kind": "physics",
+      "notes": "速度、材料与温控",
+      "aiId": "physics-demo-ai",
+      "defaultSize": {
+        "cols": 30,
+        "rows": 17
+      },
+      "artBindings": {},
+      "rooms": [
+        {
+          "id": "p0-respawn-buffer",
+          "name": "respawn-buffer",
+          "notes": "安全教学。踩喷气板向上飞，再向右移动到上层出口。",
+          "cols": 30,
+          "rows": 17,
+          "phase": "slow",
+          "aiId": null,
+          "aiPolicy": "off",
+          "environment": "cold",
+          "graph": {
+            "x": 30,
+            "y": 90
+          },
+          "tiles": [
+            {
+              "x": 0,
+              "y": 10
+            },
+            {
+              "x": 1,
+              "y": 10
+            },
+            {
+              "x": 2,
+              "y": 10
+            },
+            {
+              "x": 3,
+              "y": 10
+            },
+            {
+              "x": 4,
+              "y": 10
+            },
+            {
+              "x": 5,
+              "y": 10
+            },
+            {
+              "x": 6,
+              "y": 10
+            },
+            {
+              "x": 7,
+              "y": 10
+            },
+            {
+              "x": 8,
+              "y": 10
+            },
+            {
+              "x": 9,
+              "y": 10
+            },
+            {
+              "x": 10,
+              "y": 10
+            },
+            {
+              "x": 11,
+              "y": 10
+            },
+            {
+              "x": 12,
+              "y": 10
+            },
+            {
+              "x": 13,
+              "y": 10
+            },
+            {
+              "x": 14,
+              "y": 10
+            },
+            {
+              "x": 15,
+              "y": 10
+            },
+            {
+              "x": 16,
+              "y": 10
+            },
+            {
+              "x": 17,
+              "y": 10
+            },
+            {
+              "x": 18,
+              "y": 10
+            },
+            {
+              "x": 19,
+              "y": 10
+            },
+            {
+              "x": 20,
+              "y": 10
+            },
+            {
+              "x": 21,
+              "y": 10
+            },
+            {
+              "x": 22,
+              "y": 10
+            },
+            {
+              "x": 23,
+              "y": 10
+            },
+            {
+              "x": 24,
+              "y": 10
+            },
+            {
+              "x": 25,
+              "y": 10
+            },
+            {
+              "x": 26,
+              "y": 10
+            },
+            {
+              "x": 27,
+              "y": 10
+            },
+            {
+              "x": 28,
+              "y": 10
+            },
+            {
+              "x": 29,
+              "y": 10
+            }
+          ],
+          "entries": [
+            {
+              "id": "p0-respawn-buffer-entry",
+              "x": 5,
+              "y": 9,
+              "face": 1
+            }
+          ],
+          "exits": [],
+          "objects": [],
+          "movables": [],
+          "zones": []
+        }
+      ],
+      "connections": []
+    }
+  ],
+  "assets": [],
+  "blockDefaults": {},
+  "pluginManifest": {}
+}

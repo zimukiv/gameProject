@@ -1,0 +1,109 @@
+{
+  "checks": 79,
+  "fixture_count": 7,
+  "negative_count": 11,
+  "pillow_test_encoder": "12.3.0",
+  "runtime": "roomlab_images.dll via ctypes x64",
+  "fixtures": [
+    {
+      "file": "gif-disposal-123.gif",
+      "source": "self-authored fixture",
+      "encoded_sha256": "f1cce845f05cee52af53e0f8885c562920ab0a012010e1c2479b4c258b634886",
+      "frame_sha256": [
+        "1308c8d07d8bd47a24e30b627caaf193042efa719622f09c65d5c97eaa9e4c3a",
+        "2fdd04b091810994436ee8cd379fcad2f11bf3c58510695dcb7533b83b66157c",
+        "51e83e196de6d4a1e32f3257a65265da7c98c8738e9124de676d563e98ec4709",
+        "18c7b632ed4e1044c30db1e08b02135e4b3d8cd311ce1ef4274e731db68e6eee"
+      ],
+      "durations_ms": [
+        20,
+        70,
+        110,
+        30
+      ],
+      "play_count": 3
+    },
+    {
+      "file": "gif-static-transparent.gif",
+      "source": "self-authored fixture",
+      "encoded_sha256": "bdb9dd5a5726d3c2e8723277c0b21c90d3a802a867ea522e490bea2dc40e273c",
+      "frame_sha256": [
+        "487ab8536d8b749a6a3615c89b78d23170f1eadb18cc5d1126c38d538b31db50"
+      ],
+      "durations_ms": [
+        0
+      ],
+      "play_count": 1
+    },
+    {
+      "file": "gif-disposal0.gif",
+      "source": "self-authored fixture",
+      "encoded_sha256": "3a12d8a38f4cd1930a5e6f7aec057516c52d6078a9e25e65a107d7592a9f13c2",
+      "frame_sha256": [
+        "1308c8d07d8bd47a24e30b627caaf193042efa719622f09c65d5c97eaa9e4c3a",
+        "2fdd04b091810994436ee8cd379fcad2f11bf3c58510695dcb7533b83b66157c"
+      ],
+      "durations_ms": [
+        10,
+        40
+      ],
+      "play_count": 0
+    },
+    {
+      "file": "gif-opaque-background.gif",
+      "source": "self-authored fixture",
+      "encoded_sha256": "3472dfe0154a9ea98db4b6ba63960ff2f4f5c4439de3eb9ac0e96f58364a7e0d",
+      "frame_sha256": [
+        "c433f7366275539264ae6fbbc36972f8d8a97af697c8cdbcf48aaa452f192e2c",
+        "499641b2243a865d823ff9ccbfe7869706fdcf25f55d648aebbc95b0722539f1"
+      ],
+      "durations_ms": [
+        10,
+        20
+      ],
+      "play_count": 1
+    },
+    {
+      "file": "gif87-static.gif",
+      "source": "self-authored fixture",
+      "encoded_sha256": "d4a37708059005962cde9d37e75369f6b410f729ba6f1350e55b168bdc076e3f",
+      "frame_sha256": [
+        "1308c8d07d8bd47a24e30b627caaf193042efa719622f09c65d5c97eaa9e4c3a"
+      ],
+      "durations_ms": [
+        0
+      ],
+      "play_count": 1
+    },
+    {
+      "file": "webp-static-transparent.webp",
+      "source": "self-authored fixture",
+      "encoded_sha256": "805bb4003e24b8f3e2043a978387b4b20881445899ea902a88b3c7fa1dc360b9",
+      "frame_sha256": [
+        "487ab8536d8b749a6a3615c89b78d23170f1eadb18cc5d1126c38d538b31db50"
+      ],
+      "durations_ms": [
+        0
+      ],
+      "play_count": 1
+    },
+    {
+      "file": "webp-animation.webp",
+      "source": "self-authored fixture",
+      "encoded_sha256": "bde74c0307dc8695415d7dcb66ee47cd7692f6053df3c39971ca71b91490beb8",
+      "frame_sha256": [
+        "1308c8d07d8bd47a24e30b627caaf193042efa719622f09c65d5c97eaa9e4c3a",
+        "2fdd04b091810994436ee8cd379fcad2f11bf3c58510695dcb7533b83b66157c",
+        "51e83e196de6d4a1e32f3257a65265da7c98c8738e9124de676d563e98ec4709",
+        "18c7b632ed4e1044c30db1e08b02135e4b3d8cd311ce1ef4274e731db68e6eee"
+      ],
+      "durations_ms": [
+        20,
+        70,
+        110,
+        30
+      ],
+      "play_count": 2
+    }
+  ]
+}

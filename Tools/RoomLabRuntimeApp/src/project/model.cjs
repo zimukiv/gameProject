@@ -110,6 +110,7 @@ function example() {
   c.exits = [{ id: 'rail-end', name: '提交作业', notes: '结束第一大关', x: 34, y: 8, w: 1, h: 2 }];
   return {
     version: VERSION,
+    compatibility: { runtime: require('./compatibility.cjs').RUNTIME },
     id: 'physics-project',
     name: '第一大关 · 物理 DDL',
     notes: '第一版内容只制作物理关。',
@@ -151,7 +152,10 @@ function example() {
   };
 }
 function migrate(data) {
-  if (data?.version === 2) return Collision.normalize(RailNodes.normalize(clone(data)));
+  if (data?.version === 2)
+    return require('./compatibility.cjs').normalize(
+      Collision.normalize(RailNodes.normalize(clone(data))),
+    );
   if (data?.version !== 1 || !Array.isArray(data.rooms)) throw new Error('不支持的项目版本。');
   const p = example();
   p.id = uid('project');

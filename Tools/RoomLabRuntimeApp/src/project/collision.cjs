@@ -35,6 +35,6 @@ function portable(project) {
           o.trigger = { ...o.trigger, mode: 'region' };
         }
       }
-  return p;
+  return require('./compatibility.cjs').normalize(p);
 }
 module.exports = { enabled, shape, normalize, portable };

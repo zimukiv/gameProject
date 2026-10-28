@@ -71175,6 +71175,11 @@
       ]
     }
   ],
+  "compatibility": {
+    "runtime": "2.5.5",
+    "importedProfile": "friend-2.5.2",
+    "customization": "ddl13-roomlab255"
+  },
   "id": "physics-project",
   "name": "第一大关 · 物理 DDL",
   "notes": "第一版内容只制作物理关。",
@@ -71184,7 +71189,7 @@
     "common.spike": "1.0.0",
     "physics.ice": "1.0.0",
     "physics.jet": "2.0.0",
-    "physics.rail": "1.0.0",
+    "physics.rail": "2.0.0",
     "physics.thermal": "1.0.0",
     "common.checkpoint": "1.0.0"
   },

@@ -94,6 +94,7 @@ class Engine {
       startRail: (target) => this.startRail(target),
       activateAI: (target) => this.activateAI(target),
       saveCheckpoint: (target) => this.saveCheckpoint(target),
+      setCheckpoint: (target) => this.saveCheckpoint(target),
       activeCheckpoint: this.checkpoint?.id || null,
       transformGroup: (target, kind) => this.transformGroup(target, kind),
       emit: (type, data) => this.emit(type, data),
@@ -244,7 +245,15 @@ class Engine {
     const safe = pos => pos.x >= 0 && pos.y >= 0 && pos.x + 24 <= this.room.cols*T && pos.y + 28 <= this.room.rows*T &&
       !colliders.some(b => overlap({ ...pos, w: 24, h: 28 }, b)) &&
       !spikes.some(b => Spikes.touches({ ...pos, w: 24, h: 28 }, this.objectRect(b), b.params.direction));
-    let spawn = { x: o.x*T+4, y: o.y*T+4, face: p.face };
+    // 2.5.5 exports either a solid checkpoint or a hollow (collision:false) region.
+    // Solid flags respawn on top of the block; hollow ones respawn inside the safe cell.
+    const solid = Collision.enabled(o, 'objects', Registry.get(o.type)),
+      centered = o.x * T + Math.max(2, ((o.w || 1) * T - 24) / 2);
+    let spawn = {
+      x: centered,
+      y: solid ? o.y * T - 28 : o.y * T + 4,
+      face: p.face,
+    };
     if (!safe(spawn)) spawn = { x: p.x, y: p.y-(p.crouching ? 10 : 0), face: p.face };
     if (!safe(spawn)) { this.say('存档点周围没有安全复活位置。'); return; }
     this.checkpoint = this.captureCheckpoint(spawn, o.id);
@@ -567,18 +576,20 @@ class Engine {
     const p = this.player;
     for (const o of this.room.objects) {
       const d = Registry.get(o.type),
-        mode = o.trigger?.mode || d.trigger;
+        mode = d.triggerFor?.(o) || o.trigger?.mode || d.trigger;
       if (mode === 'none') continue;
       const s = this.objectStates.get(o.id),
         rect = this.objectRect(o);
-      const occupied =
-        overlap(p, rect) ||
-        (p.grounded &&
-          p.vy >= 0 &&
-          oldBottom <= rect.y + 2 &&
-          Math.abs(p.y + p.h - rect.y) < 1 &&
-          p.x + p.w > rect.x + 2 &&
-          p.x < rect.x + rect.w - 2);
+      const customOccupied = d.triggerOccupied?.(this.context(o), o, p, rect, oldBottom),
+        occupied =
+          customOccupied ??
+          (overlap(p, rect) ||
+            (p.grounded &&
+              p.vy >= 0 &&
+              oldBottom <= rect.y + 2 &&
+              Math.abs(p.y + p.h - rect.y) < 1 &&
+              p.x + p.w > rect.x + 2 &&
+              p.x < rect.x + rect.w - 2));
       if (!occupied) {
         s.firedDuringContact = false;
         continue;

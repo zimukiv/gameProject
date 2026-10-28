@@ -1,4 +1,54 @@
+# RoomLab：物理 DDL 原生 Unity Demo v2
+
+当前维护入口为 **Unity原生物理Demo v2**，只包含第一大关。旧套壳连接版、旧三关场景及其历史v3包保留，见下方历史说明，勿与当前原生v2混用。
+
+- Unity：**6000.6.4f1**；用Unity Hub添加本仓库根目录。
+- 当前场景：`Assets/RoomLabNative/Scenes/PhysicsDemo/NativePhysicsDemo.unity`；打开后点击Play。
+- Windows成品：完整解压 `物理DDL_Demo_群测版_v2_20261029.zip`，运行其中 `RoomLabPhysics.exe`，保留同目录全部数据/DLL。
+- v2源码与成品发布页：[RoomLab Native v2](https://github.com/zimukiv/gameProject/releases/tag/roomlab-native-v2-20261029)。下载包内有文件清单与SHA256；具体构建/试玩状态以该次发布记录为准。
+- 当前作者关卡：`Assets/StreamingAssets/RoomLabNative/AuthoredPhysics/authored-physics.json`，来源《第一大关 · 物理 DDL (3).json》，SHA256 `03b948a705210aafd718306a70947e90b41f7d1fa013a53a4087091d51809836`，11房/10连接。
+- 改动前请先读 [AGENTS.md](AGENTS.md)，先核对远端分支最新提交，再保留并整合本地改动。
+
+## 构建与兼容
+
+Unity菜单 `RoomLab Native/Open pixel physics demo` 可生成当前场景；`RoomLab Native` 的构建逻辑在 `Assets/RoomLabNative/Editor/NativePhysicsDemoEditor.cs`。命令行示例（将路径换成本机安装位置）：
+
+```powershell
+& '<Unity安装目录>/Editor/Unity.exe' -batchmode -quit -projectPath '<本仓库目录>' -executeMethod RoomLab.Native.Editor.NativePhysicsDemoEditor.Build -logFile '<构建日志路径>'
+```
+
+构建输出 `Builds/NativePhysicsDemo-Final/RoomLabPhysics.exe`，需要有效的Unity编辑器授权。项目已有运行所需的Windows x64图像解码插件和字体；来源/许可证见 `Assets/StreamingAssets/RoomLabNative/Licenses` 及各资源provenance文件。上游原生图像解码依赖的全部重建工具链未随本项目提供，不能将此源码包等同于所有第三方库源码。
+
+本包默认 `DemoPhysics`。编辑器2.5.5导出的JSON/ZIP可替换导入；设置里保留 `按2.5.5原规则`，不强改作者触发方式、温区初态、冰块实例数值、自绘素材优先级或原关卡文件。旧规则冻结参考与Demo派生行为分开验证。
+
+## 回归与证据边界
+
+安装完整 .NET 8 SDK 后，可在仓库根运行：
+
+```powershell
+dotnet run --project Tools/RoomLabNative/AIJumpChecks/AIJumpChecks.csproj
+dotnet run --project Tools/RoomLabNative/GameplayChecks/GameplayChecks.csproj
+dotnet run --project Tools/RoomLabNative/ProgressChecks/ProgressChecks.csproj
+dotnet run --project Tools/RoomLabNative/DemoRuleChecks/DemoRuleChecks.csproj
+```
+
+冻结fixture/oracle已随源码保留，普通C#回归不需要重新生成。Node参考生成器用于审计历史来源，需要单独准备原a0ecb6a版本和2.5.5编辑器目录，并设置脚本顶部的 `ROOMLAB_REFERENCE_ROOT` / `ROOMLAB_EDITOR_ROOT`；仓库没有包含相邻编辑器工程或自动为你下载它。**不要为了跑绿而重新生成/覆盖冻结预期。**
+
+`verify-ui-resolution.ps1` 仍含原作者本机G盘路径；异地使用需自行指定等效Unity/工程/输出路径，或按其源码执行相同构建与验证参数，不能声称该脚本异地开箱可跑。
+
+AI视频问题与开发者越界复位修复、回归结果及未覆盖范围见 [本次修复记录](Handoff/AI_JUMP_FIX_V2.md)；独立验收与实际试玩另见发布记录。自动定位出口仅验证连接和结算；开发者选房/锁血/飞行不能算作正常跑关通过。性能及输入延迟仍需要独立实测。
+
+---
+
+# 历史入口：旧套壳连接版与旧三关原型
+
+以下内容保留历史原文。这里的“当前”“最新”、D盘路径及v3均只指对应历史版本，不是上方的原生Unity v2。
+
 # 当前版本：RoomLab 2.5.2 完整连线导入版
+
+**阶段1（2026-10-26）：已接入 RoomLab 编辑器 2.5.5 导出兼容。** 详见 [阶段1兼容日志](Validation/RoomLab255/stage1-runtime-log.md)：支持 2.5.5 项目 JSON/ZIP 导入、朋友版单次迁移、导轨 `sideTrigger`、实体/空心存档点安全复活；未改旧三关场景与共享服务。
+
+导入项目：运行器可用 `RoomLabCore.exe --roomlab-port=<端口> --roomlab-project=<project.json|项目.zip>`（加 `--roomlab-project-dialog` 直接弹选择框），或在游戏内按 Esc → **导入项目（JSON / ZIP）…** 用 Windows 原生对话框选文件。导入会先做迁移、结构与模块校验，失败保留当前游戏，不写回默认 `project.json` 或来源文件。
 
 **程序 B 请先读 [DDL1.3 试玩 v3 最新交接说明](Handoff/ROOMLAB_DDL13_V3_20261026.md)。** GitHub 分支为 `codex/roomlab-ddl13-v3-handoff-2026-10-26`，完整试玩包见 [v3 Release](https://github.com/zimukiv/gameProject/releases/tag/roomlab-playtest-20261026-v3)。
 

@@ -1,0 +1,64 @@
+{
+  "source": "user-selected 存档/第一大关 · 物理 DDL (3).json (2026-10-28 rebase)",
+  "sourceSha256": "03b948a705210aafd718306a70947e90b41f7d1fa013a53a4087091d51809836",
+  "previousSourceSha256": "8049354e56a9ddd841ce08b2aaa40930dc056744e2ce792e8179ad4c455aa776",
+  "sourceSha256History": [
+    "73c0df8eb955f22ae9fa56e30537e87751e2dfab3b45143d81885d873b2a5ad9",
+    "880a65111ff27bc0389da57ac110784a15c412a70fa99f0f2c0aeeb00633ee06",
+    "8049354e56a9ddd841ce08b2aaa40930dc056744e2ce792e8179ad4c455aa776",
+    "03b948a705210aafd718306a70947e90b41f7d1fa013a53a4087091d51809836"
+  ],
+  "bytesPreserved": true,
+  "rebased": "2026-10-28 (3): only room XX changed - one ice added at (52,36), three ice removed, one small token removed. Totals: 11 rooms / 669 objects / 1324 tiles / 8 checkpoints / 190 spikes / 348 ice.",
+  "rules": "Editor255Compat",
+  "importProfile": "EditorAuto",
+  "placeholderNote": "The nine seed-* SVGs are the editor's built-in placeholder art. The runtime treats those ids as unbound so imported levels fall back to the built-in pixel slices instead of rendering flat boxes (reported by testers as \"no art\").",
+  "spikeAudit": "Validation/Native/UI/spike-audit-3.json - 20 spikes share their cell with a solid tile in room XX (14 onTile + 6 buried); unchanged by this rebase.",
+  "assets": [
+    {
+      "id": "seed-metal",
+      "path": "assets/seed-metal.svg",
+      "sha256": "7654dd8c088c1994cb6323b680523ade7007f9489094e7476daa02512fe2333c"
+    },
+    {
+      "id": "seed-ice-solid",
+      "path": "assets/seed-ice-solid.svg",
+      "sha256": "7ced1ed4c5d649cd4f07c0155057df07b83366882c4408a488fff7d6d0fae04d"
+    },
+    {
+      "id": "seed-ice-cracked",
+      "path": "assets/seed-ice-cracked.svg",
+      "sha256": "23e6ac912d5eea83cd55d401f8d26a63e17a41384249ac54faab0d8461c83d9d"
+    },
+    {
+      "id": "seed-jet-idle",
+      "path": "assets/seed-jet-idle.svg",
+      "sha256": "f32967c0f98516ce8390c26bd95604fe670c16d079ccbaf5cef090776ce21992"
+    },
+    {
+      "id": "seed-jet-active",
+      "path": "assets/seed-jet-active.svg",
+      "sha256": "03ce6332f16b0c788d4bdedf6456477120994d74fce51466142a04f612ebfabb"
+    },
+    {
+      "id": "seed-thermal-cold",
+      "path": "assets/seed-thermal-cold.svg",
+      "sha256": "cc606a5d1fdfe79c2f39752f92aafb6f53846b5b856884f13e368145a0e82068"
+    },
+    {
+      "id": "seed-thermal-hot",
+      "path": "assets/seed-thermal-hot.svg",
+      "sha256": "a9acbaee624d85ae5ddb360d7713cc20263d47f14601a68bf923f9e8129d537c"
+    },
+    {
+      "id": "seed-rail-idle",
+      "path": "assets/seed-rail-idle.svg",
+      "sha256": "68f5595b1b90b8769a82ff5163399b6d256b1d3310edb6579084ed75ba099cad"
+    },
+    {
+      "id": "seed-rail-active",
+      "path": "assets/seed-rail-active.svg",
+      "sha256": "4494e03047ab7698589c0baf3b327f3e49efda905bde5eb04c20e224d3a3cf4e"
+    }
+  ]
+}

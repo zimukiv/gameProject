@@ -1,0 +1,816 @@
+{
+  "format": 1,
+  "referenceCommit": "a0ecb6aa4517f14afaa2e32c825fdc71b0d246b6",
+  "sourceProjectSha256": "404098abcf1e3ccf2f856482d95b558f2d62d2e008b08d32bf8d10ba4fbc6c8f",
+  "oracle": "clean committed JS Engine; offline reference only, not native acceptance",
+  "editorVersion": "2.5.5",
+  "editorSources": [
+    {
+      "path": "node_modules/.pnpm/fflate@0.8.2/node_modules/fflate/lib/node.cjs",
+      "sha256": "4fcff4b8d0eb01ed1d34f23e999e5f50976901ff97ead6c60c200f1b6ba9fd89",
+      "bytes": 90380
+    },
+    {
+      "path": "node_modules/.pnpm/fflate@0.8.2/node_modules/fflate/package.json",
+      "sha256": "1f39729fc15f568a3aef326e03b3a2b766ad3b6d43705a11bcb66b2979649c89",
+      "bytes": 3482
+    },
+    {
+      "path": "package.json",
+      "sha256": "ecc22d7e534b9e575b1ee990a35481eca01e53d566df188c7201867b10762b9b",
+      "bytes": 1433
+    },
+    {
+      "path": "src/plugins/common.cjs",
+      "sha256": "227554fee30ee481a4c4586f2a0e8bd7d1247b1fad29ea82ad448ec227b6b170",
+      "bytes": 2048
+    },
+    {
+      "path": "src/plugins/physics/rail.cjs",
+      "sha256": "a909885b65c3ef7901e0e53b04f5812d6ef2c0a6cd3fd449886a533fcb0d6004",
+      "bytes": 2068
+    },
+    {
+      "path": "src/plugins/registry.cjs",
+      "sha256": "b2ce72557240b6c6221c0a289ba0f6c2ddee97c1de07317f7bb6402baa3186d2",
+      "bytes": 3687
+    },
+    {
+      "path": "src/project/archive.cjs",
+      "sha256": "983cb5f8801a88451a62e162c99f0615e9e87f2e187a7218c9bcb7f25c4218ce",
+      "bytes": 1576
+    },
+    {
+      "path": "src/project/collision.cjs",
+      "sha256": "cd011c4c9a0ebed4c72b59bb8fe526e755fea2b0def2532b7436644ca5162e15",
+      "bytes": 1597
+    },
+    {
+      "path": "src/project/compatibility.cjs",
+      "sha256": "b0aad61fdf4e95ef0597621d3618c3b6d3660fa928975999e6913698666915ed",
+      "bytes": 1528
+    },
+    {
+      "path": "src/project/jet-params.cjs",
+      "sha256": "bf95b51d699a56784badd7860d9aaa27eb4ced11df46b301c0cacc3a60915202",
+      "bytes": 1082
+    },
+    {
+      "path": "src/project/model.cjs",
+      "sha256": "16e35403b639485f0ad23b4e9ec1392ecf3443f44be77a1170c4c2b0d3549a96",
+      "bytes": 16816
+    },
+    {
+      "path": "src/project/performance.cjs",
+      "sha256": "c54576cf6dc3eb459cbe1c1ad72daf7e27a17f4601c794ffb399c32fad52a687",
+      "bytes": 604
+    },
+    {
+      "path": "src/project/play-camera.cjs",
+      "sha256": "b790d4bd413c5f3578d189cbac76e153da1a00a70f0aa4a20e31ebf236712242",
+      "bytes": 1852
+    },
+    {
+      "path": "src/project/rail-nodes.cjs",
+      "sha256": "8f6778bd7f125bc185c4d9d729c8417ada986b3493f156a4d9d99a27cd047785",
+      "bytes": 2357
+    },
+    {
+      "path": "src/project/temperature.cjs",
+      "sha256": "29a58515e36a3e8e25ac69137817a0e599e7c87108b208b7cd98fe52f9526645",
+      "bytes": 1533
+    }
+  ],
+  "fixedStep": 0.008333333333333333,
+  "counts": {
+    "courses": 1,
+    "rooms": 11,
+    "connections": 10,
+    "tiles": 1311,
+    "objects": 695,
+    "movables": 0,
+    "checkpoints": 7,
+    "spikes": 214,
+    "assets": 9
+  },
+  "settings": {
+    "freeDashOnLand": true,
+    "maxDashes": 3,
+    "paidStockCap": 3,
+    "performance": {
+      "buffer": 0.12,
+      "coyote": 0.1,
+      "dashDeceleration": 2100,
+      "dashSpeed": 850,
+      "dashTime": 0.22,
+      "gravity": 1500,
+      "jump": 400,
+      "maxFall": 900,
+      "speed": 220
+    },
+    "tileSize": 32
+  },
+  "pluginManifest": {
+    "common.collectible": "1.0.0",
+    "common.small": "1.0.0",
+    "common.spike": "1.0.0",
+    "physics.ice": "1.0.0",
+    "physics.jet": "2.0.0",
+    "physics.rail": "1.0.0",
+    "physics.thermal": "1.0.0",
+    "common.checkpoint": "1.0.0"
+  },
+  "rooms": [
+    {
+      "id": "jet-room",
+      "name": "喷气起跳",
+      "cols": 30,
+      "rows": 17,
+      "tiles": 164,
+      "objects": 7,
+      "checkpoints": 0,
+      "playCamera": {
+        "mode": "room"
+      }
+    },
+    {
+      "id": "rail-room",
+      "name": "电磁加速",
+      "cols": 36,
+      "rows": 18,
+      "tiles": 140,
+      "objects": 8,
+      "checkpoints": 0,
+      "playCamera": {
+        "mode": "room"
+      }
+    },
+    {
+      "id": "room-mv0w2u2r-qkzk40",
+      "name": "冰 跑酷",
+      "cols": 30,
+      "rows": 17,
+      "tiles": 27,
+      "objects": 31,
+      "checkpoints": 0,
+      "playCamera": {
+        "mode": "room"
+      }
+    },
+    {
+      "id": "room-mv0wnwtu-dxmqc7",
+      "name": "冲刺锻炼",
+      "cols": 30,
+      "rows": 17,
+      "tiles": 123,
+      "objects": 10,
+      "checkpoints": 0,
+      "playCamera": {
+        "mode": "room"
+      }
+    },
+    {
+      "id": "room-mvaapi4e-crbnks",
+      "name": "冰引入",
+      "cols": 30,
+      "rows": 17,
+      "tiles": 88,
+      "objects": 50,
+      "checkpoints": 0,
+      "playCamera": {
+        "mode": "room"
+      }
+    },
+    {
+      "id": "room-mvaapqu4-6xob5m",
+      "name": "喷气跳跃熟悉",
+      "cols": 30,
+      "rows": 17,
+      "tiles": 49,
+      "objects": 6,
+      "checkpoints": 0,
+      "playCamera": {
+        "mode": "room"
+      }
+    },
+    {
+      "id": "room-mvndxqmk-k9xt7n",
+      "name": "8",
+      "cols": 30,
+      "rows": 17,
+      "tiles": 75,
+      "objects": 50,
+      "checkpoints": 0,
+      "playCamera": {
+        "mode": "room"
+      }
+    },
+    {
+      "id": "room-mvnf7n9x-0t6ggh",
+      "name": "AI追逐1",
+      "cols": 60,
+      "rows": 15,
+      "tiles": 84,
+      "objects": 73,
+      "checkpoints": 2,
+      "playCamera": {
+        "mode": "follow",
+        "cols": 30,
+        "rows": 17
+      }
+    },
+    {
+      "id": "room-mvnf7nel-q8wikm",
+      "name": "新房间 10",
+      "cols": 30,
+      "rows": 17,
+      "tiles": 67,
+      "objects": 11,
+      "checkpoints": 0,
+      "playCamera": {
+        "mode": "room"
+      }
+    },
+    {
+      "id": "room-mvnf7nm5-vf4wbu",
+      "name": "新房间 12",
+      "cols": 30,
+      "rows": 17,
+      "tiles": 92,
+      "objects": 9,
+      "checkpoints": 0,
+      "playCamera": {
+        "mode": "room"
+      }
+    },
+    {
+      "id": "room-mvnkr562-1ihb3g",
+      "name": "XX",
+      "cols": 60,
+      "rows": 60,
+      "tiles": 402,
+      "objects": 440,
+      "checkpoints": 5,
+      "playCamera": {
+        "mode": "follow",
+        "cols": 30,
+        "rows": 17
+      }
+    }
+  ],
+  "assets": [
+    {
+      "id": "seed-metal",
+      "path": "assets/seed-metal.svg",
+      "mime": "image/svg+xml",
+      "sha256": "7654dd8c088c1994cb6323b680523ade7007f9489094e7476daa02512fe2333c"
+    },
+    {
+      "id": "seed-ice-solid",
+      "path": "assets/seed-ice-solid.svg",
+      "mime": "image/svg+xml",
+      "sha256": "7ced1ed4c5d649cd4f07c0155057df07b83366882c4408a488fff7d6d0fae04d"
+    },
+    {
+      "id": "seed-ice-cracked",
+      "path": "assets/seed-ice-cracked.svg",
+      "mime": "image/svg+xml",
+      "sha256": "23e6ac912d5eea83cd55d401f8d26a63e17a41384249ac54faab0d8461c83d9d"
+    },
+    {
+      "id": "seed-jet-idle",
+      "path": "assets/seed-jet-idle.svg",
+      "mime": "image/svg+xml",
+      "sha256": "f32967c0f98516ce8390c26bd95604fe670c16d079ccbaf5cef090776ce21992"
+    },
+    {
+      "id": "seed-jet-active",
+      "path": "assets/seed-jet-active.svg",
+      "mime": "image/svg+xml",
+      "sha256": "03ce6332f16b0c788d4bdedf6456477120994d74fce51466142a04f612ebfabb"
+    },
+    {
+      "id": "seed-thermal-cold",
+      "path": "assets/seed-thermal-cold.svg",
+      "mime": "image/svg+xml",
+      "sha256": "cc606a5d1fdfe79c2f39752f92aafb6f53846b5b856884f13e368145a0e82068"
+    },
+    {
+      "id": "seed-thermal-hot",
+      "path": "assets/seed-thermal-hot.svg",
+      "mime": "image/svg+xml",
+      "sha256": "a9acbaee624d85ae5ddb360d7713cc20263d47f14601a68bf923f9e8129d537c"
+    },
+    {
+      "id": "seed-rail-idle",
+      "path": "assets/seed-rail-idle.svg",
+      "mime": "image/svg+xml",
+      "sha256": "68f5595b1b90b8769a82ff5163399b6d256b1d3310edb6579084ed75ba099cad"
+    },
+    {
+      "id": "seed-rail-active",
+      "path": "assets/seed-rail-active.svg",
+      "mime": "image/svg+xml",
+      "sha256": "4494e03047ab7698589c0baf3b327f3e49efda905bde5eb04c20e224d3a3cf4e"
+    }
+  ],
+  "sources": [
+    {
+      "path": "Tools/RoomLabRuntimeApp/project.json",
+      "sha256": "404098abcf1e3ccf2f856482d95b558f2d62d2e008b08d32bf8d10ba4fbc6c8f",
+      "bytes": 1849516,
+      "extractedRawSha256": "cc58d9fe385d08f4a8e4fdf61bc3cf763fa39e2a2dc17cdc52ece8eb497bcacf",
+      "extractedRawBytes": 1920725
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/assets/catalog.cjs",
+      "sha256": "b2bd5400c6bb92ff5289c8925109b92c7e95f3ea0e1455a239184e381d581520",
+      "bytes": 3071,
+      "extractedRawSha256": "0c3659ad220374fc1bf9c663a3dd42ecb522bc7e1e0b2e6ebde5eb678d13ca17",
+      "extractedRawBytes": 3149
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/assets/manager.cjs",
+      "sha256": "334c31c0c4cd072dcff74b5ef27f04902e95fd5de5fc6a5587b562c10ee4c760",
+      "bytes": 4645,
+      "extractedRawSha256": "4cbad2cc6f29eaaa21496cf0b958b3ecc1fc373794860c0e1c3a1cf0498abacc",
+      "extractedRawBytes": 4785
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/assets/seeds.cjs",
+      "sha256": "f87c7e0ae123a067ad186399ca27a18b595d986d383ac9acc5f14b0fe967193f",
+      "bytes": 3451,
+      "extractedRawSha256": "f64b9734fe3b90b080533da819470f66ab96bab8374b6038bd36c87855d5680f",
+      "extractedRawBytes": 3563
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/cloud/codec.cjs",
+      "sha256": "5755932d243b328d915e0503cc4bec2a70f1524731e8616c85aea9543bff5e68",
+      "bytes": 3409,
+      "extractedRawSha256": "7a46f9fd1a18892bec9db442b4020f3c787c9f3f868fab6824cfec83446087b6",
+      "extractedRawBytes": 3506
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/cloud/connection.cjs",
+      "sha256": "8e9075cf247a7e4f77e10d7d451e7f1a9879970cf40155f05a03f3b4d5126941",
+      "bytes": 6803,
+      "extractedRawSha256": "e3da0191b617b98561aa1bd71e53c2ebe7a09d73dbc8a70e109f76cda2b9e07e",
+      "extractedRawBytes": 6992
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/cloud/live.cjs",
+      "sha256": "a9b268e7d155345635ca380bddc9a322e828fcd7aa9ffc564e19e190942cbbe2",
+      "bytes": 3445,
+      "extractedRawSha256": "680ecc296d5287be1ff29956c8688cbe1a00ca9bf4175682bf1d91c195e83be9",
+      "extractedRawBytes": 3542
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/cloud/repository.cjs",
+      "sha256": "6f569be88aab1694a69fe9bff34e66eac25669f31bb6caef1d7ad3de63df0952",
+      "bytes": 10580,
+      "extractedRawSha256": "44f7d7f82db5712b7f292d323c7130440007f92e84f59c88e68495385fa7bb84",
+      "extractedRawBytes": 10863
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/cloud/service.cjs",
+      "sha256": "d036ca2643d37dcaf0c3a2a5922ff2363f82d124fc45af504beb564569051682",
+      "bytes": 13707,
+      "extractedRawSha256": "e5940f225d726755928492ca6bc5deb6b74fa55b12b49d41051f8b47cf442a47",
+      "extractedRawBytes": 14050
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/cloud/windows-http.cjs",
+      "sha256": "97a386ca7a6d710e4d66804c88592e332124410520aea72de3f018848a1d343a",
+      "bytes": 3364,
+      "extractedRawSha256": "1c84c527510cefae7671a74f3429d30d072005de279bfbd10263af5781a83a65",
+      "extractedRawBytes": 3450
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/desktop/main.cjs",
+      "sha256": "2bc965c2f99de18c705ba8cc715f95c8c68204cb181b871eea83ad916bbd0cde",
+      "bytes": 13193,
+      "extractedRawSha256": "0a67d4126714660f3d83f6178030c57e0dbb30b76b7c2d880e777872baaa1f19",
+      "extractedRawBytes": 13531
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/desktop/preload.cjs",
+      "sha256": "16724c7afaf23d6c4809266ef1cea96e09aff70f7b1f11a59c456ca3a0985487",
+      "bytes": 981,
+      "extractedRawSha256": "b4937f9e498f4775217f80876a2fe89d13e29f49ec222f4b6f1a8c571ea6ead6",
+      "extractedRawBytes": 1001
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/desktop/project-files.cjs",
+      "sha256": "49f05537f032952925ee42764b4323c9d57aeff05c414a789a0c0c5ae905d4cd",
+      "bytes": 3269,
+      "extractedRawSha256": "df17b2ed41a0247fca1be41f3331685815ad0796680f10983a6d6c76f6fa183c",
+      "extractedRawBytes": 3354
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/app.cjs",
+      "sha256": "8e7cc1b0b9ff54030486b331bb1b88f16b81ca4f7f12b08bb26c9f5cfac22686",
+      "bytes": 20555,
+      "extractedRawSha256": "53d1ec422882f8b3fd037e75f393758ff223d3b2cccd5d266f50e15462a0123f",
+      "extractedRawBytes": 21123
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/cloud-controller.cjs",
+      "sha256": "f2f9fb47b6d470b5760ea1707aba857ac8145efe970cd960994583440340aefc",
+      "bytes": 15215,
+      "extractedRawSha256": "3d7b08e6f6ac79b22c5880dd526a6189dff300e23c5355f459a8944ec069528c",
+      "extractedRawBytes": 15593
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/cloud-graph-panel.cjs",
+      "sha256": "6a0eb8adc8b6558e5f21b7a316cd6a566944c6c2610623108fc00f86f54d7f50",
+      "bytes": 8195,
+      "extractedRawSha256": "392f66dc64908375730c03b65031c85554ee9db958146477913d795ec00d6b43",
+      "extractedRawBytes": 8376
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/dom.cjs",
+      "sha256": "e89a4977b8f2c105bc503bf94b1ef08787f4bfaadb7b8dd468d2353f76581ffe",
+      "bytes": 2119,
+      "extractedRawSha256": "44de885e008891a28e3a359371c2f1d7433a5e6f3a64185d8de2018f8044bbb3",
+      "extractedRawBytes": 2169
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/draw.cjs",
+      "sha256": "6edcf52887d2a1cc3a1dc5f27ed86d7878307a3ab089f684bd95cdf234b9ff1d",
+      "bytes": 19652,
+      "extractedRawSha256": "95e4acd5617d054d5ee17a31de9d3859be8b9cec027b948317f70c47399b3f0c",
+      "extractedRawBytes": 20205
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/graph-layout.cjs",
+      "sha256": "c227976b93bfe842510cd8af7804811944ee93fbb49c21dddd56ceba7dc82e3f",
+      "bytes": 560,
+      "extractedRawSha256": "f5d69c0bd9b475b021c81d028cbc6064e216d9bd9021144cf3476c0c4688b1bb",
+      "extractedRawBytes": 581
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/history.cjs",
+      "sha256": "6790b6df094cce8a6b50aed2188ff5dfc2012e86eb9e92dc8e06f885f2e9d5c0",
+      "bytes": 760,
+      "extractedRawSha256": "2bd3d32fdf3441c9fd62bdd2d1e1454701e37b70969850272fdb0438ecd7d824",
+      "extractedRawBytes": 791
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/pages/assets.cjs",
+      "sha256": "62977cf485bfee64c77338b09b38e9f3e3ddd52d8498b2217fd08a2b7762eb79",
+      "bytes": 7940,
+      "extractedRawSha256": "65bc6a390ff6f5aa95ed173c57ff7f1ce674da18388749c3e62bcae1bf431865",
+      "extractedRawBytes": 8127
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/pages/bindings.cjs",
+      "sha256": "98c00ace01fa63467fcff34a90c99b596887b53f1d2aa0c5b0e6ab9bc59c74f3",
+      "bytes": 2852,
+      "extractedRawSha256": "a8b13f60667c75e2ae2baeb0b3e9f62126f018052fd2b8cc3ee931f714fe0aa4",
+      "extractedRawBytes": 2915
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/pages/course.cjs",
+      "sha256": "166f897b826e6548d16ddaddaffde784945f674786a5c1f90cf10043b9adc3c2",
+      "bytes": 14314,
+      "extractedRawSha256": "5e793c91d5ee371f7d0bcc0caa927d0387c3348113fe7e400093959a4f69ed5e",
+      "extractedRawBytes": 14689
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/pages/definitions.cjs",
+      "sha256": "2f2c659cfe7e97dc14a801d42483632c641457bf21ddadbde0d60af7320542cb",
+      "bytes": 2521,
+      "extractedRawSha256": "1b29f057931e09f86afc5053ff7f3067b840632959c18b80b7003cdb3964a706",
+      "extractedRawBytes": 2569
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/pages/home.cjs",
+      "sha256": "e8ac7130b6676da1d9863f69c0b7f2f03fa957e1dfad49b8b73892f1d242fb5a",
+      "bytes": 1608,
+      "extractedRawSha256": "92696000956c1755998c080a08f929c7e80821ebec1adf3aad063e0fbcbd1764",
+      "extractedRawBytes": 1638
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/pages/play.cjs",
+      "sha256": "d13a6d46de4e0d257860137e8284a7dc2b6a25a1938f101ed9412f07f59bae7c",
+      "bytes": 6503,
+      "extractedRawSha256": "fa1a5c977bf0991b5094adf6a377a29e403f749bfddf551a23b6b9d5e77b9f9d",
+      "extractedRawBytes": 6613
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/pages/room.cjs",
+      "sha256": "c7c32afba4c637d515d44bc8262080455b9104dca4055f18a69c1a6baaade4b2",
+      "bytes": 36417,
+      "extractedRawSha256": "dfd53c7bcb5a1cb166b63824de456e956692594d23da36d220369676e5f9cfed",
+      "extractedRawBytes": 37305
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/palette.cjs",
+      "sha256": "c4a7dc3f6a0b3b5c87709dfc93983ce704a7848849727ae0b7a8608b8df8b631",
+      "bytes": 2825,
+      "extractedRawSha256": "5547e36fcbdc4e9796941348b9654636b0155e28d6783c224790fcf26693191b",
+      "extractedRawBytes": 2906
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/rail-node-panel.cjs",
+      "sha256": "fe8f083ef1e527fc6f1acb66e47339c1e14e35ea7838785a1680fd0b27e85565",
+      "bytes": 7618,
+      "extractedRawSha256": "78063dd0cc0fde8e8918fc8164986e3efbf6b547f1582bd6683d85f917f9e9c2",
+      "extractedRawBytes": 7783
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/region-handles.cjs",
+      "sha256": "f09237a2a15ecf2f9b7c8bb4b0043c9d09476626632e599abb5b040866887e2d",
+      "bytes": 844,
+      "extractedRawSha256": "205092b09ab5cc9a7d7884f89fb27f1071e0d6dc84feadae6d2ded8b42941848",
+      "extractedRawBytes": 866
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/room-camera-panel.cjs",
+      "sha256": "3e83acd85e081c92db1a9b845c67872b2a2d31b22026a24c126ec0927eadd897",
+      "bytes": 1423,
+      "extractedRawSha256": "28c94da219ed15f8aa5b8e74df5831738a66c1a00f129349b79ea540f6ba5ae4",
+      "extractedRawBytes": 1457
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/room-transfer.cjs",
+      "sha256": "cdeaf18917809b7d9924bb6a82bf631c62f924fdbbe21762e651d92426aa80ae",
+      "bytes": 4058,
+      "extractedRawSha256": "98103482351393368826ae7af5463985dc25d31c5451a48f81a0f24509c5eb2d",
+      "extractedRawBytes": 4137
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/store.cjs",
+      "sha256": "de8d0d5c0f6935f0005ac4ea4c5bfeb705c354d3af4a24376b671e6e7e89c893",
+      "bytes": 2439,
+      "extractedRawSha256": "f1dc885678a310f84ebe06b001162f96f4c2e06da7316720d7b975b868938bc8",
+      "extractedRawBytes": 2532
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/trace-manager.cjs",
+      "sha256": "3c9724a91c201271e83de13ec9906259b75ef3a795c22e9710a2c6c7a9a63119",
+      "bytes": 5126,
+      "extractedRawSha256": "e579f038c7bb68ff3ddd4bf5fb5dde2fc535bc5821a0c1fb5ebf22c0c0380400",
+      "extractedRawBytes": 5233
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/editor/worktree-panel.cjs",
+      "sha256": "77926946c749841e68395640ab24a82454caa89f89c0d254c11830fb76560cf4",
+      "bytes": 8981,
+      "extractedRawSha256": "2d3ecffa7e932bf4dfebd1c5c216c416d6e7aa9c20733b8ce63a01ae2b8885cd",
+      "extractedRawBytes": 9129
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/plugins/common.cjs",
+      "sha256": "1b11dc57f48a292b9f85333f9702e000ac70617bbaec17ff5d99cc0b830cad68",
+      "bytes": 2152,
+      "extractedRawSha256": "d5cc4508a36278ca51df06cf1e892094f933bc14fd328ac83ebbd56df6284a50",
+      "extractedRawBytes": 2227
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/plugins/legacy.cjs",
+      "sha256": "e70d70a364f8f7673a94d9cf9fe0e595895acf7d731cf145df903f082ef35d89",
+      "bytes": 680,
+      "extractedRawSha256": "ca04971682835b8edd621746b25a53bcdfbde8f6f17c64581c32c38b27bf0524",
+      "extractedRawBytes": 698
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/plugins/physics/ice.cjs",
+      "sha256": "0e5297bb077ee45eecf40a55176b63818e825fa23629e8537d6a54de2266b72f",
+      "bytes": 2200,
+      "extractedRawSha256": "7730b986b126efa93b7867097bc89b69da79870da38e50b926ba1fb26fc1361b",
+      "extractedRawBytes": 2269
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/plugins/physics/jet.cjs",
+      "sha256": "6a8223d84fc14e722d88bd10869d123caab8491e46a75415f9fbaec434825b80",
+      "bytes": 1636,
+      "extractedRawSha256": "0fed3adb33e46072053db9b804c30191b6f872a145718b3ddb82cc757b1ba3af",
+      "extractedRawBytes": 1691
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/plugins/physics/rail.cjs",
+      "sha256": "a50f6b6ecf9186fead70fb766ddc7bf009905b2e768fc44115735cbca8f9e5c1",
+      "bytes": 1120,
+      "extractedRawSha256": "3e2fb2f94d0c914e40e4d8a2755963fd0d0d39fca84022dfc8aaca44016dd0e1",
+      "extractedRawBytes": 1156
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/plugins/physics/thermal.cjs",
+      "sha256": "830d829b02b55aeb35cd1c83f0ef0224af48bba92236b7743fdb093ef9204d66",
+      "bytes": 1528,
+      "extractedRawSha256": "d2a8f234dc49b3dfdc202f8de1aaf2f9f7aef94817a63b87f88cf88e4909f1a2",
+      "extractedRawBytes": 1573
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/plugins/registry.cjs",
+      "sha256": "b2ce72557240b6c6221c0a289ba0f6c2ddee97c1de07317f7bb6402baa3186d2",
+      "bytes": 3687,
+      "extractedRawSha256": "36333099043b3c811e34ab3d787ae4a8545beb9235fa2df370b6f246ebe1440a",
+      "extractedRawBytes": 3810
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/project/archive.cjs",
+      "sha256": "983cb5f8801a88451a62e162c99f0615e9e87f2e187a7218c9bcb7f25c4218ce",
+      "bytes": 1576,
+      "extractedRawSha256": "478d54eb0aa3cb3b16e154f67ae0d1e2755bc297ffe741413f92d9b4b34f3577",
+      "extractedRawBytes": 1618
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/project/collision.cjs",
+      "sha256": "5bbf7308fb2dfb4ddfc95bb42e3215192004c2c673d2a83fabb38230de6435d7",
+      "bytes": 1555,
+      "extractedRawSha256": "1c9c70236257a7a6b95ed970477850be16fb3738ec77e5c414c80c4000dd1c4e",
+      "extractedRawBytes": 1595
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/project/courses.cjs",
+      "sha256": "af4def9306aab0570acd9114ef8360edf9d4e75d99e4f2c844882364c0c39c41",
+      "bytes": 652,
+      "extractedRawSha256": "3e8da4ca5746b02b86bbc611fd627ba30e3d8ce4b2b960cb23dcfa0f64f18bff",
+      "extractedRawBytes": 675
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/project/jet-params.cjs",
+      "sha256": "bf95b51d699a56784badd7860d9aaa27eb4ced11df46b301c0cacc3a60915202",
+      "bytes": 1082,
+      "extractedRawSha256": "026531ebd11c33093414ffbc849817afa317b4e333deabc508493c3605609faa",
+      "extractedRawBytes": 1109
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/project/merge.cjs",
+      "sha256": "efe9887ad807104981d154b42b1af8169b104fa29790cfe5fa78fa6f15041d6d",
+      "bytes": 2330,
+      "extractedRawSha256": "8169f071ae79ca8e48007eae77707ea98d68490a327177add20bfb770c3a7dbd",
+      "extractedRawBytes": 2391
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/project/model.cjs",
+      "sha256": "b02e319f0f7f00d3e4d35268a462fa18908b5c7f9bca3e985879299f6765e970",
+      "bytes": 16685,
+      "extractedRawSha256": "7850ccc405897cd4974f5c6f7f93f25188bc1f4b086d7f9f8edbccb90898de46",
+      "extractedRawBytes": 17135
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/project/performance.cjs",
+      "sha256": "57e1bc542e6c053577fc27858a1136d23ac332c5d3fa958366b3b2d269a6bbf6",
+      "bytes": 728,
+      "extractedRawSha256": "8f50a2b97b394ed69b6ccefdeb0e0b7fb47a85191c6223c914ed2daafd9ad8a2",
+      "extractedRawBytes": 754
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/project/play-camera.cjs",
+      "sha256": "b790d4bd413c5f3578d189cbac76e153da1a00a70f0aa4a20e31ebf236712242",
+      "bytes": 1852,
+      "extractedRawSha256": "bc15a4ae26e4456d7b8736dbe6570fe3df9a025be9a8fedc608595565dd90d1e",
+      "extractedRawBytes": 1907
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/project/play-traces.cjs",
+      "sha256": "3fba50563826ce1fb1de4a696d21a7f90a23e52d4fc54dae9b0b4b3109406411",
+      "bytes": 5404,
+      "extractedRawSha256": "80e58a855ca449e2be005886f5be3d8746655c5e414e7dfdbf60067a4b441298",
+      "extractedRawBytes": 5570
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/project/rail-nodes.cjs",
+      "sha256": "8f6778bd7f125bc185c4d9d729c8417ada986b3493f156a4d9d99a27cd047785",
+      "bytes": 2357,
+      "extractedRawSha256": "aa15af1a68d1f76d1e3a287a1ebcf3d3f4d8b779846498d124653fd356ed266f",
+      "extractedRawBytes": 2435
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/project/room-export.cjs",
+      "sha256": "ce5be10bce333c571754956782fb5c485d122aa2b243db29355d2a081ea26cc0",
+      "bytes": 1646,
+      "extractedRawSha256": "01776baebb3adab13feba531510fb13afd78ce543563df7ebe16127fd4f100b4",
+      "extractedRawBytes": 1689
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/project/room-import.cjs",
+      "sha256": "ac3a8500990ac4adaad0194681d50de1113d935e49129d51077e692d36545628",
+      "bytes": 4695,
+      "extractedRawSha256": "c197de4b0ebd665595d2470258e57b65642256ddd172531e90f6e24438fc0b32",
+      "extractedRawBytes": 4832
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/project/room-limits.cjs",
+      "sha256": "bcc9d610528fd9901d6556897fe5d367598ea8ae7e51ed5bd67cab2c3671ffc4",
+      "bytes": 391,
+      "extractedRawSha256": "f901381de7eca261605f80ac49fdfcc82b0df879b7d2799741b8269729aaaf12",
+      "extractedRawBytes": 411
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/project/selection.cjs",
+      "sha256": "67153527d9efb78110e4d5334f6f8f6efd57cfce423ea4d64a262eac017a4b27",
+      "bytes": 2741,
+      "extractedRawSha256": "8a56bc47715806a0fa22b61a3f42199a2b3fc554367abf4e4d7076a27860b067",
+      "extractedRawBytes": 2810
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/project/spikes.cjs",
+      "sha256": "6e58324281753e8ddcd650819ebf7cbfdb09afd6ac2ba412ed8ae5ded67c0ef4",
+      "bytes": 1399,
+      "extractedRawSha256": "ec031313e5fb5eca10fdd6bcd48ee69cd83803e0571fbefaf7c0668647b4c093",
+      "extractedRawBytes": 1427
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/project/temperature.cjs",
+      "sha256": "29a58515e36a3e8e25ac69137817a0e599e7c87108b208b7cd98fe52f9526645",
+      "bytes": 1533,
+      "extractedRawSha256": "15345fe50eb88dc7aaa7379a45c6225571536fc7291af2c49eec868f5d3b7c7c",
+      "extractedRawBytes": 1575
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/runtime/developer-map.cjs",
+      "sha256": "fc3f072af2684a02910d0d567f61fdfbc184358b83342c876cddbff4fa55abad",
+      "bytes": 5172,
+      "extractedRawSha256": "2f0411a96f125a51ed58963754508bf761c24ba612310fce9780fc778c87fea6",
+      "extractedRawBytes": 5258
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/runtime/engine.cjs",
+      "sha256": "9bd9c6bad7c8d5b75dc351bb13033759513722a49ca8ee4c2d4c5dfb89bd3b31",
+      "bytes": 37048,
+      "extractedRawSha256": "cb36ec056a025e9cb71bcce9e40fd4181a3155c79e1df74498e591cbce1ef52b",
+      "extractedRawBytes": 38076
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/runtime/input-steps.cjs",
+      "sha256": "b309cd59459f785ca8a6c5ae5d8c9703a2272a1b7a07bcc43a2003f13dbe9aea",
+      "bytes": 1161,
+      "extractedRawSha256": "f2290a3e597d25b1c6201bbbaa969a846f53f02d342a4b4185b547ee00016dc0",
+      "extractedRawBytes": 1187
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/src/shared/utils.cjs",
+      "sha256": "dbd216d20cbfbe63494c6bd8979e7fb2d0957bb66e4f859973780830bae6a81b",
+      "bytes": 826,
+      "extractedRawSha256": "dca4923735bbc9a71b956e6564411f58cb3a3e3750ae31c15693335801b4ee69",
+      "extractedRawBytes": 844
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/assets/seed-ice-cracked.svg",
+      "sha256": "23e6ac912d5eea83cd55d401f8d26a63e17a41384249ac54faab0d8461c83d9d",
+      "bytes": 306,
+      "extractedRawSha256": "23e6ac912d5eea83cd55d401f8d26a63e17a41384249ac54faab0d8461c83d9d",
+      "extractedRawBytes": 306
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/assets/seed-ice-solid.svg",
+      "sha256": "7ced1ed4c5d649cd4f07c0155057df07b83366882c4408a488fff7d6d0fae04d",
+      "bytes": 318,
+      "extractedRawSha256": "7ced1ed4c5d649cd4f07c0155057df07b83366882c4408a488fff7d6d0fae04d",
+      "extractedRawBytes": 318
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/assets/seed-jet-active.svg",
+      "sha256": "03ce6332f16b0c788d4bdedf6456477120994d74fce51466142a04f612ebfabb",
+      "bytes": 285,
+      "extractedRawSha256": "03ce6332f16b0c788d4bdedf6456477120994d74fce51466142a04f612ebfabb",
+      "extractedRawBytes": 285
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/assets/seed-jet-idle.svg",
+      "sha256": "f32967c0f98516ce8390c26bd95604fe670c16d079ccbaf5cef090776ce21992",
+      "bytes": 317,
+      "extractedRawSha256": "f32967c0f98516ce8390c26bd95604fe670c16d079ccbaf5cef090776ce21992",
+      "extractedRawBytes": 317
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/assets/seed-metal.svg",
+      "sha256": "7654dd8c088c1994cb6323b680523ade7007f9489094e7476daa02512fe2333c",
+      "bytes": 349,
+      "extractedRawSha256": "7654dd8c088c1994cb6323b680523ade7007f9489094e7476daa02512fe2333c",
+      "extractedRawBytes": 349
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/assets/seed-rail-active.svg",
+      "sha256": "4494e03047ab7698589c0baf3b327f3e49efda905bde5eb04c20e224d3a3cf4e",
+      "bytes": 330,
+      "extractedRawSha256": "4494e03047ab7698589c0baf3b327f3e49efda905bde5eb04c20e224d3a3cf4e",
+      "extractedRawBytes": 330
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/assets/seed-rail-idle.svg",
+      "sha256": "68f5595b1b90b8769a82ff5163399b6d256b1d3310edb6579084ed75ba099cad",
+      "bytes": 336,
+      "extractedRawSha256": "68f5595b1b90b8769a82ff5163399b6d256b1d3310edb6579084ed75ba099cad",
+      "extractedRawBytes": 336
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/assets/seed-thermal-cold.svg",
+      "sha256": "cc606a5d1fdfe79c2f39752f92aafb6f53846b5b856884f13e368145a0e82068",
+      "bytes": 265,
+      "extractedRawSha256": "cc606a5d1fdfe79c2f39752f92aafb6f53846b5b856884f13e368145a0e82068",
+      "extractedRawBytes": 265
+    },
+    {
+      "path": "Tools/RoomLabRuntimeApp/assets/seed-thermal-hot.svg",
+      "sha256": "a9acbaee624d85ae5ddb360d7713cc20263d47f14601a68bf923f9e8129d537c",
+      "bytes": 285,
+      "extractedRawSha256": "a9acbaee624d85ae5ddb360d7713cc20263d47f14601a68bf923f9e8129d537c",
+      "extractedRawBytes": 285
+    }
+  ]
+}

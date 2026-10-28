@@ -1,0 +1,265 @@
+{
+  "format": 1,
+  "files": [
+    {
+      "file": "baseline-manifest.json",
+      "sha256": "49be1539beca9458c5f9a40c551a07ecb2ec752849370e0d58bd82259fc7f41b",
+      "bytes": 30291
+    },
+    {
+      "file": "Fixtures/assets/seed-ice-cracked.svg",
+      "sha256": "23e6ac912d5eea83cd55d401f8d26a63e17a41384249ac54faab0d8461c83d9d",
+      "bytes": 306
+    },
+    {
+      "file": "Fixtures/assets/seed-ice-solid.svg",
+      "sha256": "7ced1ed4c5d649cd4f07c0155057df07b83366882c4408a488fff7d6d0fae04d",
+      "bytes": 318
+    },
+    {
+      "file": "Fixtures/assets/seed-jet-active.svg",
+      "sha256": "03ce6332f16b0c788d4bdedf6456477120994d74fce51466142a04f612ebfabb",
+      "bytes": 285
+    },
+    {
+      "file": "Fixtures/assets/seed-jet-idle.svg",
+      "sha256": "f32967c0f98516ce8390c26bd95604fe670c16d079ccbaf5cef090776ce21992",
+      "bytes": 317
+    },
+    {
+      "file": "Fixtures/assets/seed-metal.svg",
+      "sha256": "7654dd8c088c1994cb6323b680523ade7007f9489094e7476daa02512fe2333c",
+      "bytes": 349
+    },
+    {
+      "file": "Fixtures/assets/seed-rail-active.svg",
+      "sha256": "4494e03047ab7698589c0baf3b327f3e49efda905bde5eb04c20e224d3a3cf4e",
+      "bytes": 330
+    },
+    {
+      "file": "Fixtures/assets/seed-rail-idle.svg",
+      "sha256": "68f5595b1b90b8769a82ff5163399b6d256b1d3310edb6579084ed75ba099cad",
+      "bytes": 336
+    },
+    {
+      "file": "Fixtures/assets/seed-thermal-cold.svg",
+      "sha256": "cc606a5d1fdfe79c2f39752f92aafb6f53846b5b856884f13e368145a0e82068",
+      "bytes": 265
+    },
+    {
+      "file": "Fixtures/assets/seed-thermal-hot.svg",
+      "sha256": "a9acbaee624d85ae5ddb360d7713cc20263d47f14601a68bf923f9e8129d537c",
+      "bytes": 285
+    },
+    {
+      "file": "Fixtures/corrupt.zip",
+      "sha256": "a4f410b89bec0c7c3497ec52000ffdf15a712f23cad5c237e777e4c6ff8e84ae",
+      "bytes": 3505
+    },
+    {
+      "file": "Fixtures/ddl13-custom-original.json",
+      "sha256": "404098abcf1e3ccf2f856482d95b558f2d62d2e008b08d32bf8d10ba4fbc6c8f",
+      "bytes": 1849516
+    },
+    {
+      "file": "Fixtures/editor255-export.json",
+      "sha256": "07113cc68d4005512f7806f73303765afcc9d718618c0b451caf40bd53a03703",
+      "bytes": 44831
+    },
+    {
+      "file": "Fixtures/editor255-export.zip",
+      "sha256": "c1b53b21cae70bc06aac963db62d201edf29635e8a0dbc338576c1a3fc304713",
+      "bytes": 3505
+    },
+    {
+      "file": "Fixtures/friend252-project.json",
+      "sha256": "7f7a1c6988f2bb7721363e2f67c2687b672b75bf9918287bc32af8e1181769a3",
+      "bytes": 42194
+    },
+    {
+      "file": "Fixtures/legacy252-project.json",
+      "sha256": "b690aacc50d779efc710f7676fc91a341df27434c10257403a0e8cd76ee358f3",
+      "bytes": 41931
+    },
+    {
+      "file": "Fixtures/oversized-declared.zip",
+      "sha256": "078c0f37d46840653ae301e0ac4a4cb6c76af03adaa80188d9ed15658523507a",
+      "bytes": 13264
+    },
+    {
+      "file": "Fixtures/truncated.zip",
+      "sha256": "d4a433ddd99efb0c163b9e0d4e5d9b6778fedb3c3ad5e60da50758ec4b37a093",
+      "bytes": 1752
+    },
+    {
+      "file": "Fixtures/unknown-major.json",
+      "sha256": "6585c990aed20eb7205069d7450ced9e6b8cfde61fe2771d5f7b87e5df6c584c",
+      "bytes": 44831
+    },
+    {
+      "file": "Scenarios/actual-jet-trigger.project.json",
+      "sha256": "a6b71b9cbeafe67234e612981d3d0a473cb71b44bda18f45218dc6c85b749884",
+      "bytes": 1837324
+    },
+    {
+      "file": "Scenarios/actual-rail-pickups.project.json",
+      "sha256": "a6b71b9cbeafe67234e612981d3d0a473cb71b44bda18f45218dc6c85b749884",
+      "bytes": 1837324
+    },
+    {
+      "file": "Scenarios/actual-room-enter.project.json",
+      "sha256": "a6b71b9cbeafe67234e612981d3d0a473cb71b44bda18f45218dc6c85b749884",
+      "bytes": 1837324
+    },
+    {
+      "file": "Scenarios/checkpoint-block-mvp938ye-4qb5bx.project.json",
+      "sha256": "a6b71b9cbeafe67234e612981d3d0a473cb71b44bda18f45218dc6c85b749884",
+      "bytes": 1837324
+    },
+    {
+      "file": "Scenarios/checkpoint-block-mvp93ifi-mp5kpb.project.json",
+      "sha256": "a6b71b9cbeafe67234e612981d3d0a473cb71b44bda18f45218dc6c85b749884",
+      "bytes": 1837324
+    },
+    {
+      "file": "Scenarios/checkpoint-block-mvp93jse-3j7nyl.project.json",
+      "sha256": "a6b71b9cbeafe67234e612981d3d0a473cb71b44bda18f45218dc6c85b749884",
+      "bytes": 1837324
+    },
+    {
+      "file": "Scenarios/checkpoint-block-mvp93pe2-qua2si.project.json",
+      "sha256": "a6b71b9cbeafe67234e612981d3d0a473cb71b44bda18f45218dc6c85b749884",
+      "bytes": 1837324
+    },
+    {
+      "file": "Scenarios/checkpoint-block-mvp93rgd-lr7g1e.project.json",
+      "sha256": "a6b71b9cbeafe67234e612981d3d0a473cb71b44bda18f45218dc6c85b749884",
+      "bytes": 1837324
+    },
+    {
+      "file": "Scenarios/checkpoint-block-mvp949d5-33wuki.project.json",
+      "sha256": "a6b71b9cbeafe67234e612981d3d0a473cb71b44bda18f45218dc6c85b749884",
+      "bytes": 1837324
+    },
+    {
+      "file": "Scenarios/checkpoint-block-mvp95tu7-khaqp4.project.json",
+      "sha256": "a6b71b9cbeafe67234e612981d3d0a473cb71b44bda18f45218dc6c85b749884",
+      "bytes": 1837324
+    },
+    {
+      "file": "Scenarios/dash-and-land.project.json",
+      "sha256": "86917a2e8b0d30ce7e88b1e0db32d58902c9d37e8c488cb84f2ea371cde49f86",
+      "bytes": 3806
+    },
+    {
+      "file": "Scenarios/jet-launch.project.json",
+      "sha256": "b2dc344772b9e0515a6e883b7abe692dd1dda2868791f4f3299183f206a7d22c",
+      "bytes": 1577
+    },
+    {
+      "file": "Scenarios/jump-buffer.project.json",
+      "sha256": "d8dc1b59bb6e59b1081be61357a584ca761c864c8a78387fdabe57dbf6450c45",
+      "bytes": 3800
+    },
+    {
+      "file": "Scenarios/jump-coyote.project.json",
+      "sha256": "ebb0ae1e70da8df9dcaf07a5481f0d1db3e761328a55eeca082992aa208dbc5a",
+      "bytes": 1580
+    },
+    {
+      "file": "Scenarios/movement.project.json",
+      "sha256": "59ac61e12d8ebee2ffcf132a0e48ae0505b8fd3fd84d8392836c8a3051148889",
+      "bytes": 3791
+    },
+    {
+      "file": "Scenarios/respawn-buffer.project.json",
+      "sha256": "dc8a60b796d765bb4c30861b068aa288e4c4ecf614509c59ae27511592abbe50",
+      "bytes": 3809
+    },
+    {
+      "file": "trace-index.json",
+      "sha256": "b77735373061728d1212ac4cec8192b7a0b99e9aa1d6e5ac0c87e0e9b97cf5a3",
+      "bytes": 4546
+    },
+    {
+      "file": "Traces/actual-jet-trigger.json",
+      "sha256": "2e469e789db7a685853acf07edd2a4fe30511aa3d75297b898e929e2e32a67b9",
+      "bytes": 70794
+    },
+    {
+      "file": "Traces/actual-rail-pickups.json",
+      "sha256": "4c31be2f805cb8320b6f192da047a5a8fb628160c036984f0a2c1df5d4b20967",
+      "bytes": 325741
+    },
+    {
+      "file": "Traces/actual-room-enter.json",
+      "sha256": "c553fe7cf3109ffece1f48993f91e3df622c87a02570a8af52c5caed08ae40cd",
+      "bytes": 117852
+    },
+    {
+      "file": "Traces/checkpoint-block-mvp938ye-4qb5bx.json",
+      "sha256": "c3aecbfb70d97fc39f720b9fae48979c39f0f657e4fded71a9637507b9c6f913",
+      "bytes": 362097
+    },
+    {
+      "file": "Traces/checkpoint-block-mvp93ifi-mp5kpb.json",
+      "sha256": "67465f21b484017101d1ff1635db22881669fa43e036b524013e69739d171baf",
+      "bytes": 362097
+    },
+    {
+      "file": "Traces/checkpoint-block-mvp93jse-3j7nyl.json",
+      "sha256": "4f6375e3db2d9188c33e082d73711a46ffddf2321477e817c896d78bf18198d8",
+      "bytes": 361970
+    },
+    {
+      "file": "Traces/checkpoint-block-mvp93pe2-qua2si.json",
+      "sha256": "7f93682175b7ff21790ff8aa1241a0d2ce666d4d3827d947c5f6c273989eca41",
+      "bytes": 362092
+    },
+    {
+      "file": "Traces/checkpoint-block-mvp93rgd-lr7g1e.json",
+      "sha256": "a72cbf8efe3c2e58217017c60d3ed4ee24a0a4d60f2b29604d93eddce3ef8346",
+      "bytes": 362097
+    },
+    {
+      "file": "Traces/checkpoint-block-mvp949d5-33wuki.json",
+      "sha256": "72475f8841a75b50a1b9449067ca7ac9f004bc6278a08f16604d969e09bbaf2f",
+      "bytes": 163386
+    },
+    {
+      "file": "Traces/checkpoint-block-mvp95tu7-khaqp4.json",
+      "sha256": "f89f8d02d5c62a0285596ec8637e40dc714ae3055a6e7351c1e1d93d829ceb4b",
+      "bytes": 163259
+    },
+    {
+      "file": "Traces/dash-and-land.json",
+      "sha256": "a5d794407559825bfe229e26e1f0c4eb2121a258ec2bbbdaa7342735794e32a5",
+      "bytes": 14405
+    },
+    {
+      "file": "Traces/jet-launch.json",
+      "sha256": "076e2cf3b699411a6858a3884bd1037dcf9c2838f2a9a880e330af45e7769a86",
+      "bytes": 51094
+    },
+    {
+      "file": "Traces/jump-buffer.json",
+      "sha256": "c5532007164fe1ba7c3262f3c21fd19892c8aa37da015080651a3713b9a69e48",
+      "bytes": 39497
+    },
+    {
+      "file": "Traces/jump-coyote.json",
+      "sha256": "fd199dbe4df1d2f05eb2ba3349d5c018c13df540cce3d5bdfdd7a9d10a715d26",
+      "bytes": 51163
+    },
+    {
+      "file": "Traces/movement.json",
+      "sha256": "813a0ad94a1fee432d27124eb9835f76113a1e6221e09457227ab32795e2d4fc",
+      "bytes": 65284
+    },
+    {
+      "file": "Traces/respawn-buffer.json",
+      "sha256": "8e95ffa445275b4a1b98429ecf79dcba9f35e3d277ad4369aba35b370b16ad5d",
+      "bytes": 136171
+    }
+  ]
+}

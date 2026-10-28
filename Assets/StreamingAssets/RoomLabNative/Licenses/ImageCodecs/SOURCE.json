@@ -1,0 +1,56 @@
+{
+  "source_url": "https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.6.0.tar.gz",
+  "sha256": "e4ab7009bf0629fd11982d4c2aa83964cf244cffba7347ecd39019a9e38c4564",
+  "bytes": 4296070,
+  "tag_url": "https://chromium.googlesource.com/webm/libwebp/+/refs/tags/v1.6.0?format=JSON",
+  "tag_commit": "4fa21912338357f89e4fd51cf2368325b59e9bd9",
+  "checked_utc": "2026-10-26T17:21:55.834002+00:00",
+  "tag_file_checks": [
+    {
+      "file": "COPYING",
+      "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+      "tag_equal": true
+    },
+    {
+      "file": "PATENTS",
+      "sha256": "cc3273e0694ea5896145e0677699b53471b03ea43021ddc50e7923fbb9f5023c",
+      "tag_equal": true
+    },
+    {
+      "file": "AUTHORS",
+      "sha256": "f251be89fd442bd9d701360730aea163cc8e2076ff03528f59267dc2c4f8b60a",
+      "tag_equal": true
+    },
+    {
+      "file": "src/webp/demux.h",
+      "sha256": "9b0d10c0fa1ac2dc750c4d687b038e40a685bb9240cb045759f5b9546017361d",
+      "tag_equal": true
+    },
+    {
+      "file": "src/webp/decode.h",
+      "sha256": "e554551d085f234e930f36b5879a77ef58bfea34c48ebfd620426e63b224025c",
+      "tag_equal": true
+    },
+    {
+      "file": "src/demux/anim_decode.c",
+      "sha256": "4bbeb1790b33c33fd65cc414cd7c471249b0fa2fa1a11a7d37a89e06e8d7bd28",
+      "tag_equal": true
+    },
+    {
+      "file": "src/demux/demux.c",
+      "sha256": "981ea5940c609ecf708f0879bab96bdff4350e3cdc52da6471a3258989173183",
+      "tag_equal": true
+    },
+    {
+      "file": "Makefile.vc",
+      "sha256": "73a36727465d64c06e5212778da61e85cc2f6613bd6a3b603c56945817c492f7",
+      "tag_equal": true
+    }
+  ],
+  "gif_reference": {
+    "url": "https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/Win7Samples/multimedia/wic/wicanimatedgif/WicAnimatedGif.cpp",
+    "license_url": "https://raw.githubusercontent.com/microsoft/Windows-classic-samples/main/LICENSE",
+    "license_sha256": "3645a237b872306e4955bc2ce75783537bd7123bcb57332f8819e4cfbcf50b45",
+    "usage": "Algorithm/state sequence reference; no sample C++ source copied"
+  }
+}

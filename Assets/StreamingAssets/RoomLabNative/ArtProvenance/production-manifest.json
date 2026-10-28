@@ -1,0 +1,1811 @@
+{
+  "sourceManifestSha256": "e53f3262757f3ba0e8d9a6e96b0b3feeaca3e571dabab18aa9085abad67452c8",
+  "playerUniquePoses": 22,
+  "dashSlots": [
+    "dash00",
+    "dash01",
+    "dash01"
+  ],
+  "records": [
+    {
+      "name": "player-idle00",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        42,
+        111,
+        77,
+        194
+      ],
+      "sourceAnchor": [
+        78,
+        305
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "6459f4cfdc70b059cbbcbd534782c70838cf5de0d74d3dd2bfec3bd3e5efd70f",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-idle01",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        197,
+        111,
+        77,
+        194
+      ],
+      "sourceAnchor": [
+        235,
+        305
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "5d91f9a2b2870822ae42a0beb220c37aa3191cd1549aafa83cc49f8b373b6b4d",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-idle02",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        354,
+        111,
+        77,
+        194
+      ],
+      "sourceAnchor": [
+        392,
+        305
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "782039246f9b3284de90fc16651187b907efa8d4143f8f5d8c224dc5d63032a6",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-idle03",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        510,
+        111,
+        78,
+        194
+      ],
+      "sourceAnchor": [
+        549,
+        305
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "713e9ff0fad4019fb3870afe4cb83b2fb29df5263195acf1c6b6526b2408c531",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-run00",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        648,
+        117,
+        124,
+        188
+      ],
+      "sourceAnchor": [
+        705,
+        305
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "faabe33b1a1d519325ac87ac5c6e767b78c4e181f5bfd4fe54e2faaf7a2311c1",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-run01",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        809,
+        117,
+        116,
+        188
+      ],
+      "sourceAnchor": [
+        862,
+        305
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "05da8566a690b7d8671579ec1f0505cf9480491d0671870a50fc27ec28db2cfd",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-run02",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        961,
+        114,
+        118,
+        182
+      ],
+      "sourceAnchor": [
+        1019,
+        305
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "794911108295146492a8d71d6e23c6f54f29e706537286af3cb3194d501682fd",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-run03",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        1115,
+        117,
+        122,
+        188
+      ],
+      "sourceAnchor": [
+        1176,
+        305
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "7c5e220b772f515f7e7c64915599b8d3b7e4ad4012b98a27648a83aa00d57ae1",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-run04",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        27,
+        432,
+        121,
+        185
+      ],
+      "sourceAnchor": [
+        78,
+        617
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "9cab507a8fcd2087e843f44e391606cd8c2a26aaba6986a6630e3578c0c7bee2",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-run05",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        184,
+        430,
+        113,
+        187
+      ],
+      "sourceAnchor": [
+        235,
+        617
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "d0fd01debebc916eef07e44c3370c449f57a50a4acf5e0660b94b2d47844ef02",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-jump00",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        350,
+        386,
+        91,
+        185
+      ],
+      "sourceAnchor": [
+        392,
+        617
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "429f202bcf8fd2c3331e6e3aaf4c4e38e333dd302b5b79e2f6637b62698927aa",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-jump01",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        501,
+        394,
+        97,
+        171
+      ],
+      "sourceAnchor": [
+        549,
+        617
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "135ae7b4fb9046eff685a3ab5268a7bd53de15e01e08f0c32e369ed573d514a3",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-fall00",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        643,
+        426,
+        104,
+        175
+      ],
+      "sourceAnchor": [
+        705,
+        617
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "3c8fb0b23d063e5d42da38012d05b5808da326dea4e84fc0d9761d781670fb11",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-fall01",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        753,
+        433,
+        152,
+        180
+      ],
+      "sourceAnchor": [
+        862,
+        617
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "03dcd7c4dba7836e1f4339f1fc2b26d6eb81c279af3f554660a38ccdbc61c1a6",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-dash00",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        904,
+        454,
+        163,
+        159
+      ],
+      "sourceAnchor": [
+        1019,
+        617
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "b0761b9d9bd5f9e3294de1e098446ec78995d814a2534134f45e889af8796e58",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-dash01",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        1048,
+        454,
+        184,
+        140
+      ],
+      "sourceAnchor": [
+        1176,
+        617
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "c0363da45436ae73abd538956ef2af53e6bbaf1afa7a4917f07f354b5d94f983",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-crouch00",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        27,
+        789,
+        104,
+        141
+      ],
+      "sourceAnchor": [
+        78,
+        930
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "c2a3fe5786f465c4b70fcee016a319150e5feb823cefaa23a5340fce39272fd4",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-crouch01",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        184,
+        797,
+        106,
+        133
+      ],
+      "sourceAnchor": [
+        235,
+        930
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "9ad1dca396afbb5532ce7b64bab008aee75b3795688174098f2bae8576bb7fe1",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "largest connected body plus 2px fringe"
+    },
+    {
+      "name": "player-death00",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        333,
+        736,
+        127,
+        194
+      ],
+      "sourceAnchor": [
+        392,
+        930
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "c27d33910569981b8ad6f355e236157780c54e4096881995709037a7e832a416",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "player-death01",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        498,
+        738,
+        112,
+        192
+      ],
+      "sourceAnchor": [
+        549,
+        930
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "ebfd2590393b8cae72852e2dfba916ce327285a183a98a17c2deecb522a3bbb0",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "player-death02",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        627,
+        627,
+        157,
+        313
+      ],
+      "sourceAnchor": [
+        705,
+        930
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "973495c76ca9b4be110d70b1995b39e98a93826fb21b65093834c51c99ae0d35",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "player-death03",
+      "source": "source/player_master.png",
+      "sourceSha256": "67a1ebf55139d7a75e6b74bf867cc37f4f1d1f4e42e3655a3c6e4f25813304c4",
+      "sourceRect": [
+        784,
+        627,
+        156,
+        313
+      ],
+      "sourceAnchor": [
+        862,
+        930
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "548ded4d1798b7403d1098f419b2a2e24af3d3aab8023b984aa2552b5bfc0d06",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "ai-idle00",
+      "source": "source/ai_master.png",
+      "sourceSha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "sourceRect": [
+        62,
+        35,
+        230,
+        240
+      ],
+      "sourceAnchor": [
+        177.0,
+        270
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "e9f1471d68e2360df21f95ed19a5beb350a658b6dc99f0e5c7428353283f66c8",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "ai-idle01",
+      "source": "source/ai_master.png",
+      "sourceSha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "sourceRect": [
+        374,
+        35,
+        230,
+        240
+      ],
+      "sourceAnchor": [
+        489.0,
+        270
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "7a66da5d3e0024facef2ba045b7ba5b7da75a79fc4443dfde16db48a3478872d",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "ai-idle02",
+      "source": "source/ai_master.png",
+      "sourceSha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "sourceRect": [
+        681,
+        35,
+        230,
+        240
+      ],
+      "sourceAnchor": [
+        796.0,
+        270
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "4f76bf2a4df9ff6e3f3ae666d339be3b5c30c265c69e4b66f06a3d786519b369",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "ai-idle03",
+      "source": "source/ai_master.png",
+      "sourceSha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "sourceRect": [
+        993,
+        35,
+        230,
+        240
+      ],
+      "sourceAnchor": [
+        1108.0,
+        270
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "ef04f8eb6180d48c05756e85491e7baf68aca63868057a9a49b0df3d29c4836d",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "ai-chase00",
+      "source": "source/ai_master.png",
+      "sourceSha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "sourceRect": [
+        50,
+        320,
+        250,
+        235
+      ],
+      "sourceAnchor": [
+        175.0,
+        550
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "839fac9e521a96167863711a23ec6c04678b792085fdfdd90ac8be51306012bf",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "ai-chase01",
+      "source": "source/ai_master.png",
+      "sourceSha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "sourceRect": [
+        360,
+        320,
+        260,
+        235
+      ],
+      "sourceAnchor": [
+        490.0,
+        550
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "025b4c6bdaa958d58f9220fc9d0e54c6830a54e155537078e72b3a8db81835c2",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "ai-chase02",
+      "source": "source/ai_master.png",
+      "sourceSha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "sourceRect": [
+        678,
+        320,
+        260,
+        235
+      ],
+      "sourceAnchor": [
+        808.0,
+        550
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "f3a30b45a91c0af15ec52c33a28f1f5ad74cbf962fc87ca76ee72e52f673de69",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "ai-chase03",
+      "source": "source/ai_master.png",
+      "sourceSha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "sourceRect": [
+        990,
+        320,
+        260,
+        235
+      ],
+      "sourceAnchor": [
+        1120.0,
+        550
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "058d7a16fd27849642c885d430d9f36ce2949bc978d5cbdb56004874b529cc4d",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "ai-chase04",
+      "source": "source/ai_master.png",
+      "sourceSha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "sourceRect": [
+        45,
+        600,
+        265,
+        225
+      ],
+      "sourceAnchor": [
+        177.5,
+        820
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "1119e214f66b65e8565f90382b1833c3a0f2e48510e76d1ae4eb75d5f5187273",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "ai-chase05",
+      "source": "source/ai_master.png",
+      "sourceSha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "sourceRect": [
+        365,
+        600,
+        265,
+        225
+      ],
+      "sourceAnchor": [
+        497.5,
+        820
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "4c5cd10661fa8861ab45a2153afdd9c0ca1bfaeb30cc07d2abf91b7665dcf9c9",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "ai-skill00",
+      "source": "source/ai_master.png",
+      "sourceSha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "sourceRect": [
+        680,
+        600,
+        265,
+        225
+      ],
+      "sourceAnchor": [
+        812.5,
+        820
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "76f353a6740957eae54eb0acff6dca895454342ffe63d5733f7a39fd55007562",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "ai-skill01",
+      "source": "source/ai_master.png",
+      "sourceSha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "sourceRect": [
+        40,
+        830,
+        260,
+        255
+      ],
+      "sourceAnchor": [
+        170.0,
+        1080
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "8cd4bff3359abb035f907efd756ef41acdf99980b433a08573b4bcf843a52525",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "ai-skill02",
+      "source": "source/ai_master.png",
+      "sourceSha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "sourceRect": [
+        350,
+        830,
+        280,
+        255
+      ],
+      "sourceAnchor": [
+        490.0,
+        1080
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "9b3a7d1f9d17c3e664de8d8b2169d2e7a88c9a4cf45c6b8b4e0d1eea9f4b6a0c",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "ai-skill03",
+      "source": "source/ai_master.png",
+      "sourceSha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "sourceRect": [
+        650,
+        830,
+        300,
+        255
+      ],
+      "sourceAnchor": [
+        800.0,
+        1080
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "9eef503ff74aded38de8c5054dcd92ba491f31748441a5db425ac6f832d3cf26",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "ai-knockback00",
+      "source": "source/ai_master.png",
+      "sourceSha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "sourceRect": [
+        60,
+        1080,
+        245,
+        174
+      ],
+      "sourceAnchor": [
+        182.5,
+        1249
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "d76231414da4c045b9324dc803761f5f6e3d89360e2f8d3437df96e9f57dd6c2",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "ai-knockback01",
+      "source": "source/ai_master.png",
+      "sourceSha256": "ccd81446314e14c8bd17e98ca1252eefb8ae8ce266d637f3b8875e486863dc97",
+      "sourceRect": [
+        370,
+        1080,
+        260,
+        174
+      ],
+      "sourceAnchor": [
+        500.0,
+        1249
+      ],
+      "outputSize": [
+        32,
+        64
+      ],
+      "outputSha256": "e604f6e90b2922c4f2974db74ddfa1ffc74b8c626dc162a621bcf1cf766800ee",
+      "registration": "fixed source baseline",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "terrain_pickups-groundTopLeft",
+      "source": "source/terrain_pickups_master.png",
+      "sourceSha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "sourceRect": [
+        28,
+        48,
+        117,
+        132
+      ],
+      "sourceAnchor": null,
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "e1bf6d8d84a8712d2a2694d4944eddfec041f68f8d41c6da91e5c36030cc73d7",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "terrain_pickups-groundTopMiddle",
+      "source": "source/terrain_pickups_master.png",
+      "sourceSha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "sourceRect": [
+        168,
+        48,
+        135,
+        111
+      ],
+      "sourceAnchor": null,
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "761b3e8187bcb2002744172509955a76a3ba1c4081bef8416af5cae269fc36ac",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "terrain_pickups-groundTopRight",
+      "source": "source/terrain_pickups_master.png",
+      "sourceSha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "sourceRect": [
+        324,
+        48,
+        141,
+        132
+      ],
+      "sourceAnchor": null,
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "4b010467bab8977326e3df7ff310962338209e85dde8c5481b9bbd2d3d210e5d",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "terrain_pickups-groundFill",
+      "source": "source/terrain_pickups_master.png",
+      "sourceSha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "sourceRect": [
+        483,
+        48,
+        131,
+        131
+      ],
+      "sourceAnchor": null,
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "a9ce574be95dcb1df2f38e19301a8227fb4be92bb6f110751b5c16fcc1d10654",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "terrain_pickups-wallLeft",
+      "source": "source/terrain_pickups_master.png",
+      "sourceSha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "sourceRect": [
+        659,
+        48,
+        80,
+        131
+      ],
+      "sourceAnchor": null,
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "ba427ca252240d60d19b7bcd5fabd61fae5990a9ab41f2ae40e176a1e34fb8cb",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "terrain_pickups-wallRight",
+      "source": "source/terrain_pickups_master.png",
+      "sourceSha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "sourceRect": [
+        852,
+        48,
+        78,
+        131
+      ],
+      "sourceAnchor": null,
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "e47ae91fd63657f3f4d0888b22e7013dd5108632f821366b9495f62ed6cc5dfd",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "terrain_pickups-spikeUp",
+      "source": "source/terrain_pickups_master.png",
+      "sourceSha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "sourceRect": [
+        22,
+        259,
+        136,
+        96
+      ],
+      "sourceAnchor": null,
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "2d1e6740bfd43157dd1de63326a7fc5bb67072d53686fe885b94037bd79b6cae",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "terrain_pickups-spikeDown",
+      "source": "source/terrain_pickups_master.png",
+      "sourceSha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "sourceRect": [
+        177,
+        216,
+        137,
+        101
+      ],
+      "sourceAnchor": null,
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "4457773951fc623f156bfff2a3f4a40eb32dc187a4acc6c74d4b04c5c1e70593",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "terrain_pickups-spikeLeft",
+      "source": "source/terrain_pickups_master.png",
+      "sourceSha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "sourceRect": [
+        338,
+        217,
+        98,
+        139
+      ],
+      "sourceAnchor": null,
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "a84440aebd41ac97a3ac4ae56e4616c83556febc81ede089b5bf833112e91757",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "terrain_pickups-spikeRight",
+      "source": "source/terrain_pickups_master.png",
+      "sourceSha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "sourceRect": [
+        498,
+        217,
+        98,
+        139
+      ],
+      "sourceAnchor": null,
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "f6fcf327633cd7d4143225c3264f3ca00d5a465c3c08ae239c6e3ff1869cb473",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "terrain_pickups-platformLeft",
+      "source": "source/terrain_pickups_master.png",
+      "sourceSha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "sourceRect": [
+        951,
+        257,
+        117,
+        71
+      ],
+      "sourceAnchor": null,
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "611f62d20ef6967e9464a8e5ef130b33da41ec31ae94c155c123dd130351062b",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "terrain_pickups-platformMiddle",
+      "source": "source/terrain_pickups_master.png",
+      "sourceSha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "sourceRect": [
+        1089,
+        257,
+        139,
+        54
+      ],
+      "sourceAnchor": null,
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "51a1dc66e605b877c9a65df038f70eefb52a1d05acb1730266cee204c17e33a1",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "terrain_pickups-platformRight",
+      "source": "source/terrain_pickups_master.png",
+      "sourceSha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "sourceRect": [
+        26,
+        434,
+        118,
+        71
+      ],
+      "sourceAnchor": null,
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "d1ef6c878dbe9fd16e592e368b57ada8d13837c76e612ad73cd8e6954f3246d5",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "terrain_pickups-iceSolid",
+      "source": "source/terrain_pickups_master.png",
+      "sourceSha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "sourceRect": [
+        170,
+        401,
+        131,
+        133
+      ],
+      "sourceAnchor": null,
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "6d9a4574e7b1d4060ab20da5c3efced5569481d6f8c66daff5a80ddb85aa5dcf",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "terrain_pickups-iceCracked",
+      "source": "source/terrain_pickups_master.png",
+      "sourceSha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "sourceRect": [
+        325,
+        401,
+        133,
+        133
+      ],
+      "sourceAnchor": null,
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "fbbf9b3e48747a130350dda66b4f4def216288c634746c5bbc29a58065e4265f",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "terrain_pickups-iceMelted",
+      "source": "source/terrain_pickups_master.png",
+      "sourceSha256": "4d60f69d500d3041edd1af17ae19c6a51855a5e4d8c92afa973bf34eb71fb085",
+      "sourceRect": [
+        482,
+        439,
+        133,
+        95
+      ],
+      "sourceAnchor": null,
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "c44c2c44658dbd97c1ac60dc7581fd396536281cd41e8c4a9470e6806978e70d",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_mechanisms-coldConsole",
+      "source": "source/physics_mechanisms_master.png",
+      "sourceSha256": "89b9a479d1c3c110713ae93b1401622b4dc06fd7cb418917c2defbb3ac526ee7",
+      "sourceRect": [
+        26,
+        170,
+        262,
+        132
+      ],
+      "sourceAnchor": [
+        157.0,
+        302
+      ],
+      "outputSize": [
+        48,
+        16
+      ],
+      "outputSha256": "bc5907be93959278ddd0a50d92dbcc57ffe0e89745dda3054412beb6fb4bff07",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_mechanisms-hotConsole",
+      "source": "source/physics_mechanisms_master.png",
+      "sourceSha256": "89b9a479d1c3c110713ae93b1401622b4dc06fd7cb418917c2defbb3ac526ee7",
+      "sourceRect": [
+        340,
+        170,
+        263,
+        133
+      ],
+      "sourceAnchor": [
+        471.5,
+        303
+      ],
+      "outputSize": [
+        48,
+        16
+      ],
+      "outputSha256": "bd9de7bec9386dcd38dba681daa01c37a3a911d4ad65089db8e468f06f801740",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_mechanisms-jetIdle",
+      "source": "source/physics_mechanisms_master.png",
+      "sourceSha256": "89b9a479d1c3c110713ae93b1401622b4dc06fd7cb418917c2defbb3ac526ee7",
+      "sourceRect": [
+        655,
+        211,
+        259,
+        92
+      ],
+      "sourceAnchor": [
+        784.5,
+        303
+      ],
+      "outputSize": [
+        32,
+        16
+      ],
+      "outputSha256": "81dbc6c90b01de9ddbddc07401c0c4628b4ed8510bb400ce29858e7f10ad13d1",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_mechanisms-jetActive",
+      "source": "source/physics_mechanisms_master.png",
+      "sourceSha256": "89b9a479d1c3c110713ae93b1401622b4dc06fd7cb418917c2defbb3ac526ee7",
+      "sourceRect": [
+        969,
+        49,
+        259,
+        254
+      ],
+      "sourceAnchor": [
+        1098.5,
+        303
+      ],
+      "outputSize": [
+        32,
+        80
+      ],
+      "outputSha256": "3f648d19382efb9abd54ed94dbd10b2939bd40e9117cc58e85895dbd5d5bcadc",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_mechanisms-railIdle",
+      "source": "source/physics_mechanisms_master.png",
+      "sourceSha256": "89b9a479d1c3c110713ae93b1401622b4dc06fd7cb418917c2defbb3ac526ee7",
+      "sourceRect": [
+        21,
+        477,
+        271,
+        131
+      ],
+      "sourceAnchor": [
+        156.5,
+        608
+      ],
+      "outputSize": [
+        32,
+        16
+      ],
+      "outputSha256": "e98e85ab2a466ffb00e9767b9c5913734245dca01b0713f489a12a12db9aefd1",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_mechanisms-railCharged",
+      "source": "source/physics_mechanisms_master.png",
+      "sourceSha256": "89b9a479d1c3c110713ae93b1401622b4dc06fd7cb418917c2defbb3ac526ee7",
+      "sourceRect": [
+        336,
+        477,
+        271,
+        131
+      ],
+      "sourceAnchor": [
+        471.5,
+        608
+      ],
+      "outputSize": [
+        32,
+        16
+      ],
+      "outputSha256": "483ad8efbf6bb4c063666725850031a8e1a93b021e1f0ae8017479c6908470eb",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_mechanisms-railExtension",
+      "source": "source/physics_mechanisms_master.png",
+      "sourceSha256": "89b9a479d1c3c110713ae93b1401622b4dc06fd7cb418917c2defbb3ac526ee7",
+      "sourceRect": [
+        648,
+        534,
+        271,
+        73
+      ],
+      "sourceAnchor": [
+        783.5,
+        607
+      ],
+      "outputSize": [
+        32,
+        16
+      ],
+      "outputSha256": "ca2ef06993e14252f2cab8dd9907b985c97f8eba543f16a32a7b008cae294ec0",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_mechanisms-notice",
+      "source": "source/physics_mechanisms_master.png",
+      "sourceSha256": "89b9a479d1c3c110713ae93b1401622b4dc06fd7cb418917c2defbb3ac526ee7",
+      "sourceRect": [
+        995,
+        419,
+        206,
+        188
+      ],
+      "sourceAnchor": [
+        1098.0,
+        607
+      ],
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "e08108bdfc3e099b290691721be4e7deda343daadeb194a6a222c9a91eb145fa",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_mechanisms-checkpointIdle",
+      "source": "source/physics_mechanisms_master.png",
+      "sourceSha256": "89b9a479d1c3c110713ae93b1401622b4dc06fd7cb418917c2defbb3ac526ee7",
+      "sourceRect": [
+        67,
+        646,
+        146,
+        286
+      ],
+      "sourceAnchor": [
+        140.0,
+        932
+      ],
+      "outputSize": [
+        32,
+        80
+      ],
+      "outputSha256": "020a9d6d447cdd2654f06bd3c57e0a48ed01176ea9111c025f97d9e1ec60b0ed",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_mechanisms-checkpointActive",
+      "source": "source/physics_mechanisms_master.png",
+      "sourceSha256": "89b9a479d1c3c110713ae93b1401622b4dc06fd7cb418917c2defbb3ac526ee7",
+      "sourceRect": [
+        382,
+        646,
+        197,
+        286
+      ],
+      "sourceAnchor": [
+        480.5,
+        932
+      ],
+      "outputSize": [
+        32,
+        80
+      ],
+      "outputSha256": "026e28c458b2f9c889032e1b55608908bcd4b79893b002512631b4d1f5b49ec3",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_mechanisms-aiActivatorOff",
+      "source": "source/physics_mechanisms_master.png",
+      "sourceSha256": "89b9a479d1c3c110713ae93b1401622b4dc06fd7cb418917c2defbb3ac526ee7",
+      "sourceRect": [
+        687,
+        714,
+        195,
+        218
+      ],
+      "sourceAnchor": [
+        784.5,
+        932
+      ],
+      "outputSize": [
+        64,
+        96
+      ],
+      "outputSha256": "cd7379b4b15d883637a68070d4116fb4bbac4f3f9caf034ad8ebeef956a0cdcd",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_mechanisms-aiActivatorOn",
+      "source": "source/physics_mechanisms_master.png",
+      "sourceSha256": "89b9a479d1c3c110713ae93b1401622b4dc06fd7cb418917c2defbb3ac526ee7",
+      "sourceRect": [
+        1001,
+        714,
+        194,
+        218
+      ],
+      "sourceAnchor": [
+        1098.0,
+        932
+      ],
+      "outputSize": [
+        64,
+        96
+      ],
+      "outputSha256": "d935f5010ce078676727266cd1d7f651273c4693c15e7417528d98644f5dd2dd",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_mechanisms-icePlatformSolid",
+      "source": "source/physics_mechanisms_master.png",
+      "sourceSha256": "89b9a479d1c3c110713ae93b1401622b4dc06fd7cb418917c2defbb3ac526ee7",
+      "sourceRect": [
+        644,
+        1129,
+        282,
+        82
+      ],
+      "sourceAnchor": [
+        785.0,
+        1211
+      ],
+      "outputSize": [
+        32,
+        16
+      ],
+      "outputSha256": "d47fd80b8314cb105238ef108fe7ebf1f518ae8274fac273cee729d7512606e6",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_mechanisms-icePlatformCracked",
+      "source": "source/physics_mechanisms_master.png",
+      "sourceSha256": "89b9a479d1c3c110713ae93b1401622b4dc06fd7cb418917c2defbb3ac526ee7",
+      "sourceRect": [
+        958,
+        1129,
+        282,
+        82
+      ],
+      "sourceAnchor": [
+        1099.0,
+        1211
+      ],
+      "outputSize": [
+        32,
+        16
+      ],
+      "outputSha256": "da3b84f3a4b21d3184593d1a18e23d4cfacdc98f0128940ccb99d3da742f5d03",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "campus_interactables-tokenSmall",
+      "source": "source/campus_interactables_master.png",
+      "sourceSha256": "574500538812710453c02d33fc44eb43e362565abfb5678b23b5c78c138c6fea",
+      "sourceRect": [
+        110,
+        142,
+        123,
+        126
+      ],
+      "sourceAnchor": [
+        171.5,
+        268
+      ],
+      "outputSize": [
+        15,
+        15
+      ],
+      "outputSha256": "f9cebed18a698e1c715688f6e2057c92261666b71769d7b119377b3f9bb0d295",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "campus_interactables-tokenBig",
+      "source": "source/campus_interactables_master.png",
+      "sourceSha256": "574500538812710453c02d33fc44eb43e362565abfb5678b23b5c78c138c6fea",
+      "sourceRect": [
+        348,
+        82,
+        244,
+        233
+      ],
+      "sourceAnchor": [
+        470.0,
+        315
+      ],
+      "outputSize": [
+        26,
+        26
+      ],
+      "outputSha256": "87f31862e513b43ca26d36f9112303ed3a38630eea3f9e4cdfc471881a33e679",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "campus_interactables-collectibleLocked",
+      "source": "source/campus_interactables_master.png",
+      "sourceSha256": "574500538812710453c02d33fc44eb43e362565abfb5678b23b5c78c138c6fea",
+      "sourceRect": [
+        691,
+        98,
+        187,
+        209
+      ],
+      "sourceAnchor": [
+        784.5,
+        307
+      ],
+      "outputSize": [
+        26,
+        28
+      ],
+      "outputSha256": "ddad8d58858317dbb1161903038f0d49e6436852b0d187efcab4b5a3bb1e7e9b",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "campus_interactables-collectibleOpen",
+      "source": "source/campus_interactables_master.png",
+      "sourceSha256": "574500538812710453c02d33fc44eb43e362565abfb5678b23b5c78c138c6fea",
+      "sourceRect": [
+        980,
+        98,
+        223,
+        208
+      ],
+      "sourceAnchor": [
+        1091.5,
+        306
+      ],
+      "outputSize": [
+        26,
+        28
+      ],
+      "outputSha256": "98c54e282d753ae75af1d0a875b0626b59163e3903f63f2c5fb472cabca2a953",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "campus_interactables-exitClosed",
+      "source": "source/campus_interactables_master.png",
+      "sourceSha256": "574500538812710453c02d33fc44eb43e362565abfb5678b23b5c78c138c6fea",
+      "sourceRect": [
+        40,
+        375,
+        260,
+        310
+      ],
+      "sourceAnchor": [
+        170.0,
+        685
+      ],
+      "outputSize": [
+        64,
+        96
+      ],
+      "outputSha256": "8e6dce5ff50db98ff91375cabe3a948167685a7ea5560cba128e03247535f408",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "campus_interactables-exitOpen",
+      "source": "source/campus_interactables_master.png",
+      "sourceSha256": "574500538812710453c02d33fc44eb43e362565abfb5678b23b5c78c138c6fea",
+      "sourceRect": [
+        353,
+        375,
+        261,
+        310
+      ],
+      "sourceAnchor": [
+        483.5,
+        685
+      ],
+      "outputSize": [
+        64,
+        96
+      ],
+      "outputSha256": "296bf92dbbb7bb766f2977b95fbef89e8fca54f628fd6a2b79594c031ecf24e2",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "campus_interactables-noticeScreen",
+      "source": "source/campus_interactables_master.png",
+      "sourceSha256": "574500538812710453c02d33fc44eb43e362565abfb5678b23b5c78c138c6fea",
+      "sourceRect": [
+        694,
+        408,
+        206,
+        273
+      ],
+      "sourceAnchor": [
+        797.0,
+        681
+      ],
+      "outputSize": [
+        32,
+        48
+      ],
+      "outputSha256": "059a426908a42fe5b67df9febe6e73451fca3dd09fd5676428f2861d6dcd40a0",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "campus_interactables-checkpointScanner",
+      "source": "source/campus_interactables_master.png",
+      "sourceSha256": "574500538812710453c02d33fc44eb43e362565abfb5678b23b5c78c138c6fea",
+      "sourceRect": [
+        1029,
+        423,
+        120,
+        258
+      ],
+      "sourceAnchor": [
+        1089.0,
+        681
+      ],
+      "outputSize": [
+        32,
+        80
+      ],
+      "outputSha256": "1cccc225583a3e0b2f89b34a4a3cc8a07d4ddf212d585058e8e9c6662a2a5a57",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_cannon-cannonRightIdle",
+      "source": "source/physics_cannon_master.png",
+      "sourceSha256": "bf51cefdbb52f7560e93167dbe66c7ce0cf8518105a06f9a9452a4ddfe6a6f63",
+      "sourceRect": [
+        17,
+        342,
+        373,
+        202
+      ],
+      "sourceAnchor": [
+        203.5,
+        544
+      ],
+      "outputSize": [
+        64,
+        32
+      ],
+      "outputSha256": "7b2e9d0ddcb87c55101a65a44ceedabed8f91d5dcac5e9f9ac9fb5307180fdbc",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_cannon-cannonRightCharged",
+      "source": "source/physics_cannon_master.png",
+      "sourceSha256": "bf51cefdbb52f7560e93167dbe66c7ce0cf8518105a06f9a9452a4ddfe6a6f63",
+      "sourceRect": [
+        417,
+        341,
+        373,
+        203
+      ],
+      "sourceAnchor": [
+        603.5,
+        544
+      ],
+      "outputSize": [
+        64,
+        32
+      ],
+      "outputSha256": "98fdc4534e7c71c6a4a715284baa00a6d6f515fd774664695cd260dd019a0f32",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_cannon-thermalBlockCold",
+      "source": "source/physics_cannon_master.png",
+      "sourceSha256": "bf51cefdbb52f7560e93167dbe66c7ce0cf8518105a06f9a9452a4ddfe6a6f63",
+      "sourceRect": [
+        803,
+        284,
+        206,
+        260
+      ],
+      "sourceAnchor": [
+        906.0,
+        544
+      ],
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "121556b9acfafee35b37899070142e5882d2f3fa947fe19424d37696ab6234d6",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_cannon-thermalBlockHot",
+      "source": "source/physics_cannon_master.png",
+      "sourceSha256": "bf51cefdbb52f7560e93167dbe66c7ce0cf8518105a06f9a9452a4ddfe6a6f63",
+      "sourceRect": [
+        1036,
+        284,
+        206,
+        260
+      ],
+      "sourceAnchor": [
+        1139.0,
+        544
+      ],
+      "outputSize": [
+        32,
+        32
+      ],
+      "outputSha256": "5102a0a412a9e708051b81c740d44148843f161f487822ecb86553acb94961ba",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_cannon-railStart",
+      "source": "source/physics_cannon_master.png",
+      "sourceSha256": "bf51cefdbb52f7560e93167dbe66c7ce0cf8518105a06f9a9452a4ddfe6a6f63",
+      "sourceRect": [
+        16,
+        844,
+        379,
+        202
+      ],
+      "sourceAnchor": [
+        205.5,
+        1047
+      ],
+      "outputSize": [
+        64,
+        32
+      ],
+      "outputSha256": "2a413a406f5a16a569bef7e8e9c7766edb9035ee08b1a00b9c93d351e058ac0d",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_cannon-railMiddle",
+      "source": "source/physics_cannon_master.png",
+      "sourceSha256": "bf51cefdbb52f7560e93167dbe66c7ce0cf8518105a06f9a9452a4ddfe6a6f63",
+      "sourceRect": [
+        437,
+        907,
+        275,
+        139
+      ],
+      "sourceAnchor": [
+        574.5,
+        1047
+      ],
+      "outputSize": [
+        32,
+        16
+      ],
+      "outputSha256": "1173aad1e88f59a50e0b75f2fc93e653bcc450d451730cb107ad6c4f619ebd8b",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_cannon-railEnd",
+      "source": "source/physics_cannon_master.png",
+      "sourceSha256": "bf51cefdbb52f7560e93167dbe66c7ce0cf8518105a06f9a9452a4ddfe6a6f63",
+      "sourceRect": [
+        751,
+        872,
+        263,
+        174
+      ],
+      "sourceAnchor": [
+        882.5,
+        1047
+      ],
+      "outputSize": [
+        32,
+        24
+      ],
+      "outputSha256": "0d228df6057883b43f07fab8a12494df8aed1848c19f1ebebb05b4cb81c2a3f0",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    },
+    {
+      "name": "physics_cannon-jetActive",
+      "source": "source/physics_cannon_master.png",
+      "sourceSha256": "bf51cefdbb52f7560e93167dbe66c7ce0cf8518105a06f9a9452a4ddfe6a6f63",
+      "sourceRect": [
+        1031,
+        666,
+        199,
+        381
+      ],
+      "sourceAnchor": [
+        1130.5,
+        1047
+      ],
+      "outputSize": [
+        32,
+        80
+      ],
+      "outputSha256": "c783b618449a3b5875033f6d201bb16443e3ea14471207d718330bc6b51889fe",
+      "registration": "canvas",
+      "alphaCleanup": "preserve alpha"
+    }
+  ]
+}

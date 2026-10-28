@@ -1,0 +1,12 @@
+Use case: stylized-concept. Production PIXEL ART university-science-lab interactive props atlas, true transparent RGBA PNG, square1024x1024, 4x4 equal cells256x256, no text, numbers, labels, watermark or grid. Hard16-bit pixel clusters with ink-blue, slate-teal, warm brass, cyan and amber accents. Original academic platformer about paper deadlines and computing tokens, similar to a precise side-view science platform game.
+FIRST ROW, left-to-right:
+a small square computing-token MICROCHIP with visible copper contact pins and tiny cyan core, definitely not coin or gem;
+a larger computing-token microchip with four outward copper contacts and bright cyan processor center, definitely not jewelry;
+a locked research-data module, compact blue memory cartridge with amber lock indicator;
+same research-data module unlocked with cyan check-light and open latch.
+SECOND ROW:
+closed CAMPUS LAB EXIT, a rectangular industrial metal sliding glass door with teal frame, little wall reader and amber lock lamp, flat side-view, mundane university lab technology, no stone arch;
+same LAB EXIT open with sliding panels moved aside and bright clean cyan/cream interior;
+a small blank campus notice display on a slim tech stand, screen no writing;
+a checkpoint represented by a compact student ID scanner on a slim brass pole, cyan saved indicator, mundane technology.
+All remaining cells transparent empty. Door sprites tall and rectangular but contained with16px clear margins; token sprites centered with logical15px/26px subject size in32px target canvas. No magical runes, circles, crystals, altar, dungeon stone, fantasy treasure, fantasy portal, stairs or cast floor shadows. Coherent with dark campus laboratory pixel-art background and mustard-jacket student. A usable sprite atlas, not a concept board.

@@ -22,7 +22,7 @@ public class RoomLabExactPlayer : MonoBehaviour
     [Serializable] public class Frame { public int id; public State state; public Room[] rooms; public string png,roomName,message,mapView,previewRoomName; public MapRoom[] mapRooms; }
     [Serializable] public class InputData { public bool left,right,up,down,jumpPressed,dashPressed; }
     [Serializable] public class InputSample { public float dt; public InputData input; }
-    [Serializable] public class Command { public int id,width,height; public float dt; public InputData input; public InputSample[] samples; public bool retry,pause; public string room,course,mapView,previewRoom; public float mapZoom,mapPanX,mapPanY; public DeveloperOptions developer; }
+    [Serializable] public class Command { public int id,width,height; public float dt; public InputData input; public InputSample[] samples; public bool retry,pause; public string room,course,mapView,previewRoom,importProject; public float mapZoom,mapPanX,mapPanY; public DeveloperOptions developer; }
     private Process process;
     private TcpListener listener;
     private TcpClient client;
@@ -183,7 +183,7 @@ public class RoomLabExactPlayer : MonoBehaviour
         GUI.color=previous;
         if(keyBindingsMenu){DrawKeyBindings();return;}
         float width=Mathf.Min(480,Screen.width-32);
-        var panel=new Rect((Screen.width-width)/2,(Screen.height-454)/2,width,454);
+        var panel=new Rect((Screen.width-width)/2,(Screen.height-500)/2,width,500);
         GUI.Box(panel,GUIContent.none);
         var title=new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter,fontSize=24};
         var hint=new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter,fontSize=14};
@@ -204,7 +204,15 @@ public class RoomLabExactPlayer : MonoBehaviour
         {mapPreview=true;mapScope="room";previewRoom=frame.state.roomId;mapZoom=1;mapPan=Vector2.zero;}
         GUI.enabled=previousEnabled;
         GUI.Label(new Rect(panel.x+16,panel.y+356,width-32,26),"锁血时掉落返回入口，"+bindings.KeysLabel(Control.Retry)+" 仍可重试",hint);
-        if(GUI.Button(new Rect(panel.x+32,panel.y+390,width-64,48),"退出游戏",button))
+        if(GUI.Button(new Rect(panel.x+32,panel.y+388,width-64,38),"导入项目（JSON / ZIP）…",button))
+        {
+            // The runtime answers this exact command id at once, opens the Windows file dialog,
+            // validates the project fully and only then swaps the running game. The pause menu
+            // stays open (the runtime stays paused) until the player leaves it with Esc; a cancel
+            // or a failed import only shows a message and never blocks the input stream.
+            Send(new Command{importProject="dialog"});
+        }
+        if(GUI.Button(new Rect(panel.x+32,panel.y+434,width-64,48),"退出游戏",button))
         {
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying=false;

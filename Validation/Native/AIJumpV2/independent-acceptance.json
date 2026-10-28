@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-29",
+  "scope": "AI flight landing route continuation and developer lock-health walk-off reset. No authored level changes.",
+  "independent": {
+    "ai_regression_cases": 26,
+    "ai_assertions": 373,
+    "legacy_trace_cases": 24,
+    "legacy_operations": 1151,
+    "legacy_assertions": 4110794,
+    "progress_checks": 572,
+    "legacy_import_node_cases": 14,
+    "production_verify_exit": 0,
+    "production_core_checks_actual_log": 388,
+    "production_authored_ice_checks": 30,
+    "production_import_cases": 12,
+    "production_exception_count": 0,
+    "unity_build_exit": 0
+  },
+  "evidence_limits": [
+    "Production exit-chain uses explicit position setup and is NOT a normal playthrough.",
+    "Production result.json retains legacy hardcoded coreChecks=390; actual current log reports388.",
+    "Manual playtesting explicitly deferred by user before upload; no normal 11-room playthrough claimed.",
+    "AI self flight out-of-bounds legacy recovery remains unchanged; opt-in diagnostics retain known failures.",
+    "No new P5 performance/latency/low-end acceptance."
+  ],
+  "files": [
+    {
+      "path": "Assets/RoomLabNative/Core/NativeGameplayAI.cs",
+      "sha256": "46e2d2600a0e8afcd824d1228ffb9e6d2258bf3f0b639e7e000de63c5e5e5702"
+    },
+    {
+      "path": "Assets/RoomLabNative/Core/NativeMotion.cs",
+      "sha256": "1d4daaf2b4270b55ba8e04d2f75964470d4808465e505dc6484257c543fccb9e"
+    },
+    {
+      "path": "Assets/RoomLabNative/Core/NativeGameplayState.cs",
+      "sha256": "a927133bdc146934f4b56d20edef3b7c67d9c3a5f145f9b65f66421c0309c257"
+    },
+    {
+      "path": "Assets/RoomLabNative/Presentation/NativePixelWorld.cs",
+      "sha256": "aba18e595ab289bd377712e1738ec454105fe35cafda51f0c18d6d6dfd4504fb"
+    },
+    {
+      "path": "Assets/StreamingAssets/RoomLabNative/AuthoredPhysics/authored-physics.json",
+      "sha256": "03b948a705210aafd718306a70947e90b41f7d1fa013a53a4087091d51809836"
+    },
+    {
+      "path": "Builds/NativePhysicsDemo-Final/RoomLabPhysics_Data/Managed/Assembly-CSharp.dll",
+      "sha256": "a85b8ea634393839d2387dec923177ac7ea11cf955d48d22895c9ae2f091659c"
+    }
+  ],
+  "manual_playtest_status": "deferred_by_user_upload_then_stop"
+}

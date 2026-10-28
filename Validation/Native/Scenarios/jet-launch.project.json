@@ -1,0 +1,71 @@
+{
+  "version": 2,
+  "id": "physics-project",
+  "name": "第一大关 · 物理 DDL",
+  "notes": "第一版内容只制作物理关。",
+  "settings": {
+    "freeDashOnLand": true,
+    "maxDashes": 3,
+    "paidStockCap": 3,
+    "performance": {
+      "buffer": 0.12,
+      "coyote": 0.1,
+      "dashDeceleration": 2100,
+      "dashSpeed": 850,
+      "dashTime": 0.22,
+      "gravity": 1500,
+      "jump": 400,
+      "maxFall": 900,
+      "speed": 220
+    },
+    "tileSize": 32
+  },
+  "courses": [
+    {
+      "id": "physics",
+      "name": "物理",
+      "kind": "physics",
+      "notes": "速度、材料与温控",
+      "aiId": "physics-demo-ai",
+      "defaultSize": {
+        "cols": 30,
+        "rows": 17
+      },
+      "artBindings": {},
+      "rooms": [
+        {
+          "id": "p0-jet-launch",
+          "name": "jet-launch",
+          "notes": "安全教学。踩喷气板向上飞，再向右移动到上层出口。",
+          "cols": 30,
+          "rows": 17,
+          "phase": "slow",
+          "aiId": null,
+          "aiPolicy": "off",
+          "environment": "cold",
+          "graph": {
+            "x": 30,
+            "y": 90
+          },
+          "tiles": [],
+          "entries": [
+            {
+              "id": "p0-jet-launch-entry",
+              "x": 5,
+              "y": 9,
+              "face": 1
+            }
+          ],
+          "exits": [],
+          "objects": [],
+          "movables": [],
+          "zones": []
+        }
+      ],
+      "connections": []
+    }
+  ],
+  "assets": [],
+  "blockDefaults": {},
+  "pluginManifest": {}
+}

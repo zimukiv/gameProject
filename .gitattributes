@@ -1,0 +1,10 @@
+# Preserve author bytes and frozen reference hashes across Windows/Linux checkouts.
+/Assets/StreamingAssets/RoomLabNative/** -text
+/Validation/Native/Fixtures/** -text
+/Validation/Native/Scenarios/** -text
+/Validation/Native/Traces/** -text
+/Validation/Native/P2/rail-oracle.json -text
+/Validation/Native/P3/immutable-oracle.json -text
+/Validation/Native/baseline-manifest.json -text
+/Validation/Native/AIJumpV2/before/** -text
+/Handoff/Inputs/** -text

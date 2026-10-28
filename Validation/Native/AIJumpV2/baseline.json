@@ -1,0 +1,36 @@
+{
+  "checked_at": "2026-10-29T00:04:10.702131+08:00",
+  "repo": "https://github.com/zimukiv/gameProject",
+  "reference_branch": "refs/remotes/origin/codex/roomlab-ddl13-v3-handoff-2026-10-26",
+  "local_head": "a0ecb6aa4517f14afaa2e32c825fdc71b0d246b6",
+  "remote_head": "a0ecb6aa4517f14afaa2e32c825fdc71b0d246b6",
+  "cloud_baseline_matches": true,
+  "initial_fetch_note": "Old configured phase3 remote branch deleted. Explicit all-heads fetch used; local dirty work preserved.",
+  "files": [
+    {
+      "path": "Assets/RoomLabNative/Core/NativeGameplayAI.cs",
+      "sha256": "d380fbcae8202f527311edb62fb3a0aa7b820238e2d0b3ec375d435107400910"
+    },
+    {
+      "path": "Assets/RoomLabNative/Core/NativeGameplayState.cs",
+      "sha256": "a927133bdc146934f4b56d20edef3b7c67d9c3a5f145f9b65f66421c0309c257"
+    },
+    {
+      "path": "Assets/RoomLabNative/Core/NativeMotion.cs",
+      "sha256": "f4e49687f543765f8a897de19e30f5b5479632f75bd4addd45b2099a399a9d27"
+    },
+    {
+      "path": "Assets/RoomLabNative/Presentation/NativePixelWorld.cs",
+      "sha256": "aba18e595ab289bd377712e1738ec454105fe35cafda51f0c18d6d6dfd4504fb"
+    },
+    {
+      "path": "Assets/StreamingAssets/RoomLabNative/AuthoredPhysics/authored-physics.json",
+      "sha256": "03b948a705210aafd718306a70947e90b41f7d1fa013a53a4087091d51809836"
+    }
+  ],
+  "repository_local_fetch_config": "Changed narrow deleted phase3 refspec to +refs/heads/*:refs/remotes/origin/*; global Git settings untouched.",
+  "working_branch": "codex/roomlab-ddl13-v3-handoff-2026-10-26",
+  "fetch_verification": "git fetch origin succeeded; HEAD...origin branch ahead=0 behind=0",
+  "publish_recheck_origin_main": "27cf59be83d9f91feec28d74aaae105860d228e8",
+  "publish_recheck_note": "New editor2.5.5 source update on main detected before publish; integrate while retaining Native v2 and upstream component rules."
+}

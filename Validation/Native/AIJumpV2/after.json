@@ -1,0 +1,37 @@
+{
+  "status": "awaiting_independent_acceptance",
+  "latest_cases": 26,
+  "latest_assertions": 373,
+  "files": [
+    {
+      "path": "Assets/RoomLabNative/Core/NativeGameplayAI.cs",
+      "sha256_before": "d380fbcae8202f527311edb62fb3a0aa7b820238e2d0b3ec375d435107400910",
+      "sha256_after": "46e2d2600a0e8afcd824d1228ffb9e6d2258bf3f0b639e7e000de63c5e5e5702",
+      "unchanged": false
+    },
+    {
+      "path": "Assets/RoomLabNative/Core/NativeGameplayState.cs",
+      "sha256_before": "a927133bdc146934f4b56d20edef3b7c67d9c3a5f145f9b65f66421c0309c257",
+      "sha256_after": "a927133bdc146934f4b56d20edef3b7c67d9c3a5f145f9b65f66421c0309c257",
+      "unchanged": true
+    },
+    {
+      "path": "Assets/RoomLabNative/Core/NativeMotion.cs",
+      "sha256_before": "f4e49687f543765f8a897de19e30f5b5479632f75bd4addd45b2099a399a9d27",
+      "sha256_after": "1d4daaf2b4270b55ba8e04d2f75964470d4808465e505dc6484257c543fccb9e",
+      "unchanged": false
+    },
+    {
+      "path": "Assets/RoomLabNative/Presentation/NativePixelWorld.cs",
+      "sha256_before": "aba18e595ab289bd377712e1738ec454105fe35cafda51f0c18d6d6dfd4504fb",
+      "sha256_after": "aba18e595ab289bd377712e1738ec454105fe35cafda51f0c18d6d6dfd4504fb",
+      "unchanged": true
+    },
+    {
+      "path": "Assets/StreamingAssets/RoomLabNative/AuthoredPhysics/authored-physics.json",
+      "sha256_before": "03b948a705210aafd718306a70947e90b41f7d1fa013a53a4087091d51809836",
+      "sha256_after": "03b948a705210aafd718306a70947e90b41f7d1fa013a53a4087091d51809836",
+      "unchanged": true
+    }
+  ]
+}

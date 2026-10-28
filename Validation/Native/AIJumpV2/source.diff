@@ -1,0 +1,56 @@
+--- before/Assets/RoomLabNative/Core/NativeGameplayAI.cs
++++ Assets/RoomLabNative/Core/NativeGameplayAI.cs
+@@ -10,7 +10,32 @@
+             if(!resumed){Tokens=0;CourseAIActive=true;CourseAITier=tier;CourseAIId=IdOr(o.AiId,IdOr(Room.AiId,Course.AiId));Phase="fast";}
+             var pc=PlayerCenter;AI.id=CourseAIId;AI.active=true;AI.tier=tier;AI.speed=265+tier*30;AI.steal=1+tier*2;AI.x=pc.x-165;AI.y=pc.y;AiProcessing=.8;AI.trail.Clear();AI.trail.Add(pc);Emit("ai-start",new JObject{{"investment",investment},{"tier",tier},{"resumed",resumed}});
+         }
+-        void LaunchAI(NativeObject o,double range,double x,double y){if(AI.active&&Hypot(AI.x-(o.X+.5)*32,AI.y-o.Y*32)<=range*32){AI.flight=true;AI.vx=x;AI.vy=y;AI.warning=null;AI.trail.Clear();AiProcessing=.3;ObjectStates[o.Id].hitAI=true;ObjectStates[o.Id].hasHitAI=true;}}
++        void LaunchAI(NativeObject o,double range,double x,double y){if(AI.active&&Hypot(AI.x-(o.X+.5)*32,AI.y-o.Y*32)<=range*32){AI.flight=true;AI.vx=x;AI.vy=y;AI.warning=null;if(Rules==NativeGameplayRules.DemoPhysics)RememberAIPlayerTrail(PlayerCenter);else AI.trail.Clear();AiProcessing=.3;ObjectStates[o.Id].hitAI=true;ObjectStates[o.Id].hasHitAI=true;}}
++        void RememberAIPlayerTrail(NativePoint point)
++        {
++            var trail=AI.trail;if(trail.Count==0||Hypot(trail[trail.Count-1].x-point.x,trail[trail.Count-1].y-point.y)>4)trail.Add(point);
++            if(trail.Count>1400)trail.RemoveRange(0,trail.Count-1400);
++        }
++        void ResumeAIPlayerTrail(NativePoint point)
++        {
++            RememberAIPlayerTrail(point);var trail=AI.trail;int nearest=0;double best=double.MaxValue;
++            for(int i=0;i<trail.Count;i++){double distance=Hypot(trail[i].x-AI.x,trail[i].y-AI.y);if(distance<=best){best=distance;nearest=i;}}
++            // Keep the chronological suffix, including its corners, rather than taking a
++            // straight shortcut to the player's latest position after ballistic flight.
++            if(nearest>0)trail.RemoveRange(0,nearest);
++        }
++        void ResetAITrackingAtPlayer()
++        {
++            var pc=PlayerCenter;double x=pc.x-165;
++            // Processing delays catches, not collection. Avoid placing the AI directly
++            // on an unclaimed collectible while resetting a developer safety return.
++            for(int pass=0;pass<=Room.Objects.Count;pass++){bool overlap=false;foreach(var o in Room.Objects){if(o.Type!="common.collectible"||Credited.Contains(creditKeys[o.Id]))continue;var r=ObjectRect(o);if(MotionRect.Overlap(new MotionRect(null,x-12,pc.y-14,24,28),r)){x=Math.Min(x,r.x-13);overlap=true;}}if(!overlap)break;}
++            // Portal warning eagerly reserves its route before arrival. Cancelling that
++            // unfinished warning must release only its reservation, not completed routes.
++            if(AI.warning!=null)AI.teleported.Remove(AI.warning.id);
++            AI.x=x;AI.y=pc.y;AI.flight=false;AI.vx=AI.vy=0;AI.warning=null;AI.trail.Clear();AI.trail.Add(pc);AiProcessing=.8;AiCooldown=0;
++            // Identity, tier, active/course state and genuinely completed routes stay intact.
++        }
+         public void CatchPlayer(){if(LockHealth||DeveloperFlight||AiProcessing>0||AiCooldown>0||Player.invulnerable>0)return;
+             if(Rules==NativeGameplayRules.DemoPhysics){AiHits++;int taken=Tokens/2;Tokens-=taken;Steals++;Emit("steal",new JObject{{"amount",taken},{"hits",AiHits}});if(AiHits>=2){AiHits=0;Retry("第二次被 AI 抓到");return;}AiProcessing=.8;AiCooldown=1.4;Player.invulnerable=1.3;return;}
+             if(Tokens==0){Retry("没有 token，被 AI 抓到");return;}int amount=Math.Min(Tokens,AI.steal);Tokens-=amount;Steals++;AiProcessing=.8;AiCooldown=1.4;Player.invulnerable=1.3;Emit("steal",new JObject{{"amount",amount}});}
+@@ -19,7 +44,7 @@
+         void UpdateAI(double dt)
+         {
+             AiProcessing=Math.Max(0,AiProcessing-dt);AiCooldown=Math.Max(0,AiCooldown-dt);var a=AI;if(!a.active)return;var pc=PlayerCenter;
+-            if(a.flight){double old=a.y+14;a.vy=Math.Min(config["maxFall"],a.vy+config["gravity"]*dt);a.x+=a.vx*dt;a.y+=a.vy*dt;foreach(var b in colliders)if(a.vy>=0&&old<=b.y+.1&&MotionRect.Overlap(new MotionRect(null,a.x-12,a.y-14,24,28),b)){a.y=b.y-14;a.flight=false;a.trail.Clear();a.trail.Add(pc);break;}if(a.y>Room.Rows*32+80){a.flight=false;a.x=pc.x-140;a.y=pc.y;a.trail.Clear();a.trail.Add(pc);AiProcessing=.5;}}
++            if(a.flight){if(Rules==NativeGameplayRules.DemoPhysics)RememberAIPlayerTrail(pc);double old=a.y+14;a.vy=Math.Min(config["maxFall"],a.vy+config["gravity"]*dt);a.x+=a.vx*dt;a.y+=a.vy*dt;foreach(var b in colliders)if(a.vy>=0&&old<=b.y+.1&&MotionRect.Overlap(new MotionRect(null,a.x-12,a.y-14,24,28),b)){a.y=b.y-14;a.flight=false;if(Rules==NativeGameplayRules.DemoPhysics)ResumeAIPlayerTrail(pc);else{a.trail.Clear();a.trail.Add(pc);}break;}if(a.y>Room.Rows*32+80){a.flight=false;a.x=pc.x-140;a.y=pc.y;a.trail.Clear();a.trail.Add(pc);AiProcessing=.5;}}
+             else{if(a.trail.Count==0||Hypot(a.trail[a.trail.Count-1].x-pc.x,a.trail[a.trail.Count-1].y-pc.y)>4)a.trail.Add(pc);
+                 foreach(var entry in Room.Objects)if(entry.Type=="common.portalIn"){NativeObject exit=null;foreach(var o in Room.Objects)if(o.Type=="common.portalOut"&&o.Text("routeId")==entry.Text("routeId")){exit=o;break;}if(exit!=null&&!a.teleported.Contains(entry.Text("routeId"))&&a.warning==null&&AiProcessing<=0&&Hypot(a.x-(entry.X+.5)*32,a.y-(entry.Y+.5)*32)<48){a.warning=new NativeAIWarning{remaining=.65,to=new NativePoint((exit.X+.5)*32,(exit.Y+.5)*32),id=entry.Text("routeId")};a.teleported.Add(entry.Text("routeId"));}}
+                 if(a.warning!=null){a.warning.remaining=Math.Max(0,a.warning.remaining-dt);if(a.warning.remaining==0){a.x=a.warning.to.x;a.y=a.warning.to.y;a.warning=null;AiProcessing=.25;a.trail.Clear();a.trail.Add(pc);Emit("ai-teleport");}}
+--- before/Assets/RoomLabNative/Core/NativeMotion.cs
++++ Assets/RoomLabNative/Core/NativeMotion.cs
+@@ -170,7 +170,7 @@
+             else if(p.vy<0)foreach(var b in colliders)if(oldTop>=b.y+b.h-.1&&MotionRect.Overlap(p.Rect,b)){p.y=b.y+b.h;p.vy=0;if(dashing)p.dashY=0;break;}
+             if(p.grounded&&!wasGrounded){p.freeDash=true;p.dashCount=0;p.paidDashUsed=false;Emit("land");}
+             if(p.y<0){p.y=0;p.vy=0;if(dashing)p.dashY=0;}
+-            if(p.y>Room.Rows*32+80){if(LockHealth){p.x=Checkpoint?.x??Entry.X*32+4;p.y=Checkpoint?.y??Entry.Y*32+4;ClearFlightMotion();}else Retry("掉出房间");return;}
++            if(p.y>Room.Rows*32+80){if(LockHealth){p.x=Checkpoint?.x??Entry.X*32+4;p.y=Checkpoint?.y??Entry.Y*32+4;ClearFlightMotion();if(DeveloperEnabled)ResetAITrackingAtPlayer();}else Retry("掉出房间");return;}
+             foreach(var o in Room.Objects){if(!LockHealth&&o.Type=="common.spike"&&SpikeTouches(p.Rect,ObjectRect(o),o.Text("direction","up"))){Retry("碰到尖刺");return;}TryCollect(o);}
+             TriggerObjects(oldBottom,input);UpdateInactiveAI(dt);if(Player!=p)return;CheckExits();
+         }

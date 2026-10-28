@@ -1,0 +1,1959 @@
+{
+  "sourceCommit": "a0ecb6aa4517f14afaa2e32c825fdc71b0d246b6",
+  "dt": 0.008333333333333333,
+  "description": "Actual native prototype rail top contact, all segment movement, token pickup and angle exit against frozen JS rules",
+  "frames": [
+    {
+      "x": 516,
+      "y": 612,
+      "vx": 0,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 0,
+        "distance": 0,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": [
+        {
+          "type": "rail-start",
+          "room": "native-motion-room",
+          "id": "prototype-rail"
+        },
+        {
+          "type": "physics.rail",
+          "room": "native-motion-room",
+          "id": "prototype-rail"
+        }
+      ]
+    },
+    {
+      "x": 516.1666666666666,
+      "y": 612,
+      "vx": 20,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 20,
+        "distance": 0.16666666666666666,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 516.5,
+      "y": 612,
+      "vx": 40,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 40,
+        "distance": 0.5,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 517,
+      "y": 612,
+      "vx": 60,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 60,
+        "distance": 1,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 517.6666666666666,
+      "y": 612,
+      "vx": 80,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 80,
+        "distance": 1.6666666666666665,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 518.5,
+      "y": 612,
+      "vx": 100,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 100,
+        "distance": 2.5,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 519.5,
+      "y": 612,
+      "vx": 120,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 120,
+        "distance": 3.5,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 520.6666666666666,
+      "y": 612,
+      "vx": 140,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 140,
+        "distance": 4.666666666666667,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 522,
+      "y": 612,
+      "vx": 160,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 160,
+        "distance": 6,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 523.5,
+      "y": 612,
+      "vx": 180,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 180,
+        "distance": 7.5,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 525.1666666666666,
+      "y": 612,
+      "vx": 200,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 200,
+        "distance": 9.166666666666666,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 527,
+      "y": 612,
+      "vx": 220,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 220,
+        "distance": 11,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 529,
+      "y": 612,
+      "vx": 240,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 240,
+        "distance": 13,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 531.1666666666666,
+      "y": 612,
+      "vx": 260,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 260,
+        "distance": 15.166666666666666,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 533.5,
+      "y": 612,
+      "vx": 280,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 280,
+        "distance": 17.5,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 536,
+      "y": 612,
+      "vx": 300,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 300,
+        "distance": 20,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 538.6666666666666,
+      "y": 612,
+      "vx": 320,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 320,
+        "distance": 22.666666666666668,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 541.5,
+      "y": 612,
+      "vx": 340,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 340,
+        "distance": 25.5,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 544.5,
+      "y": 612,
+      "vx": 360,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 360,
+        "distance": 28.5,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 547.6666666666666,
+      "y": 612,
+      "vx": 380,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 380,
+        "distance": 31.666666666666668,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 551,
+      "y": 612,
+      "vx": 400,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 400,
+        "distance": 35,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 554.5,
+      "y": 612,
+      "vx": 420,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 420,
+        "distance": 38.5,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 558.1666666666666,
+      "y": 612,
+      "vx": 440,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 440,
+        "distance": 42.166666666666664,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 562,
+      "y": 612,
+      "vx": 460,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 460,
+        "distance": 46,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 566,
+      "y": 612,
+      "vx": 480,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 480,
+        "distance": 50,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 570.1666666666666,
+      "y": 612,
+      "vx": 500,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 500,
+        "distance": 54.166666666666664,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 574.5,
+      "y": 612,
+      "vx": 520,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 520,
+        "distance": 58.5,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 579,
+      "y": 612,
+      "vx": 540,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 540,
+        "distance": 63,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 583.6666666666666,
+      "y": 612,
+      "vx": 560,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 560,
+        "distance": 67.66666666666667,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 588.5,
+      "y": 612,
+      "vx": 580,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 580,
+        "distance": 72.5,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 593.5,
+      "y": 612,
+      "vx": 600,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 600,
+        "distance": 77.5,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 598.6666666666666,
+      "y": 612,
+      "vx": 620,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 620,
+        "distance": 82.66666666666667,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 604,
+      "y": 612,
+      "vx": 640,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 640,
+        "distance": 88,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 609.5,
+      "y": 612,
+      "vx": 660,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 660,
+        "distance": 93.5,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 615.1666666666666,
+      "y": 612,
+      "vx": 680,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 680,
+        "distance": 99.16666666666667,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 621,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 105,
+        "total": 519.0254226333724
+      },
+      "tokens": 0,
+      "charges": 3,
+      "recharge": 0,
+      "score": 0,
+      "events": []
+    },
+    {
+      "x": 626.8333333333334,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 110.83333333333333,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": [
+        {
+          "type": "collect",
+          "room": "native-motion-room",
+          "id": "prototype-token1"
+        }
+      ]
+    },
+    {
+      "x": 632.6666666666666,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 116.66666666666666,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 638.5,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 122.49999999999999,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 644.3333333333333,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 128.33333333333331,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 650.1666666666666,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 134.16666666666666,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 656,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 140,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 661.8333333333334,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 145.83333333333334,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 667.6666666666667,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 151.66666666666669,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 673.5,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 157.50000000000003,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 679.3333333333334,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 163.33333333333337,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 685.1666666666667,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 169.1666666666667,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 691,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 175.00000000000006,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 696.8333333333334,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 180.8333333333334,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 702.6666666666667,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 186.66666666666674,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 708.5000000000001,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 192.50000000000009,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 714.3333333333335,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 198.33333333333343,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 720.1666666666667,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 204.16666666666677,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 726.0000000000001,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 210.0000000000001,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 731.8333333333335,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 215.83333333333346,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 737.6666666666667,
+      "y": 612,
+      "vx": 700,
+      "vy": 0,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 221.6666666666668,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 742.6573981082787,
+      "y": 609.722230192904,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 227.50000000000014,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 747.0863949554096,
+      "y": 605.9259471810775,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 233.33333333333348,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 751.5153918025404,
+      "y": 602.129664169251,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 239.16666666666683,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 755.9443886496714,
+      "y": 598.3333811574246,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 245.00000000000017,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 760.3733854968023,
+      "y": 594.5370981455981,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 250.8333333333335,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 764.8023823439331,
+      "y": 590.7408151337715,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 256.66666666666686,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 769.2313791910641,
+      "y": 586.9445321219451,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 262.50000000000017,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 773.660376038195,
+      "y": 583.1482491101186,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 268.3333333333335,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 778.0893728853258,
+      "y": 579.3519660982921,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 274.1666666666668,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 782.5183697324567,
+      "y": 575.5556830864657,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 280.0000000000001,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 786.9473665795875,
+      "y": 571.7594000746392,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 285.8333333333334,
+        "total": 519.0254226333724
+      },
+      "tokens": 1,
+      "charges": 3,
+      "recharge": 1,
+      "score": 100,
+      "events": []
+    },
+    {
+      "x": 791.3763634267184,
+      "y": 567.9631170628128,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 291.66666666666674,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": [
+        {
+          "type": "collect",
+          "room": "native-motion-room",
+          "id": "prototype-token2"
+        }
+      ]
+    },
+    {
+      "x": 795.8053602738494,
+      "y": 564.1668340509863,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 297.50000000000006,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 800.2343571209802,
+      "y": 560.3705510391599,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 303.33333333333337,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 804.6633539681111,
+      "y": 556.5742680273333,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 309.1666666666667,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 809.092350815242,
+      "y": 552.7779850155068,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 315,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 813.5213476623728,
+      "y": 548.9817020036804,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 320.8333333333333,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 817.9503445095038,
+      "y": 545.1854189918539,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 326.66666666666663,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 822.3793413566347,
+      "y": 541.3891359800275,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 332.49999999999994,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 826.8083382037655,
+      "y": 537.592852968201,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 338.33333333333326,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 831.2373350508964,
+      "y": 533.7965699563745,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 344.1666666666666,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 835.6663318980272,
+      "y": 530.0002869445481,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 349.9999999999999,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 840.0953287451582,
+      "y": 526.2040039327215,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 355.8333333333332,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 844.5243255922891,
+      "y": 522.4077209208951,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 361.6666666666665,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 848.9533224394199,
+      "y": 518.6114379090686,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 367.49999999999983,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 853.3823192865508,
+      "y": 514.8151548972421,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 373.33333333333314,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 857.8113161336817,
+      "y": 511.0188718854157,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 379.16666666666646,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 862.2403129808126,
+      "y": 507.2225888735892,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 384.9999999999998,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 866.6693098279435,
+      "y": 503.4263058617628,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 390.8333333333331,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 871.0983066750744,
+      "y": 499.63002284993627,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 396.6666666666664,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 875.5273035222052,
+      "y": 495.83373983810975,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 402.4999999999997,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 879.9563003693361,
+      "y": 492.03745682628335,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 408.33333333333303,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 884.385297216467,
+      "y": 488.24117381445683,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 414.16666666666634,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 888.8142940635978,
+      "y": 484.4448908026304,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 419.99999999999966,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 893.2432909107288,
+      "y": 480.6486077908039,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 425.833333333333,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 897.6722877578596,
+      "y": 476.85232477897745,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 431.6666666666663,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 902.1012846049905,
+      "y": 473.056041767151,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 437.4999999999996,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 906.5302814521215,
+      "y": 469.25975875532447,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 443.3333333333329,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 910.9592782992522,
+      "y": 465.46347574349807,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 449.16666666666623,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 915.3882751463832,
+      "y": 461.66719273167155,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 454.99999999999955,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 919.817271993514,
+      "y": 457.8709097198451,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 460.83333333333286,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 924.2462688406449,
+      "y": 454.0746267080186,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 466.6666666666662,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 928.6752656877759,
+      "y": 450.2783436961921,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 472.4999999999995,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 933.1042625349066,
+      "y": 446.4820606843657,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 478.3333333333328,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 937.5332593820376,
+      "y": 442.6857776725392,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 484.1666666666661,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 941.9622562291685,
+      "y": 438.8894946607127,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 489.99999999999943,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 946.3912530762993,
+      "y": 435.09321164888627,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 495.83333333333275,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 950.8202499234302,
+      "y": 431.2969286370598,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 501.66666666666606,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 955.2492467705611,
+      "y": 427.50064562523335,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 507.4999999999994,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 959.678243617692,
+      "y": 423.70436261340683,
+      "vx": 531.4796216557075,
+      "vy": -455.55396141917794,
+      "grounded": false,
+      "launched": false,
+      "rail": {
+        "speed": 700,
+        "distance": 513.3333333333327,
+        "total": 519.0254226333724
+      },
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": []
+    },
+    {
+      "x": 964,
+      "y": 420,
+      "vx": 573.4064310022943,
+      "vy": -401.50350544573223,
+      "grounded": false,
+      "launched": true,
+      "rail": null,
+      "tokens": 11,
+      "charges": 3,
+      "recharge": 1,
+      "score": 1100,
+      "events": [
+        {
+          "type": "rail-end",
+          "room": "native-motion-room",
+          "id": "prototype-rail",
+          "speed": 700
+        }
+      ]
+    }
+  ]
+}

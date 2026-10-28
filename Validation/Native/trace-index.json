@@ -1,0 +1,121 @@
+{
+  "format": 1,
+  "referenceCommit": "a0ecb6aa4517f14afaa2e32c825fdc71b0d246b6",
+  "fixedStep": 0.008333333333333333,
+  "totalCases": 16,
+  "totalOperations": 817,
+  "cases": [
+    {
+      "name": "actual-room-enter",
+      "project": "Scenarios/actual-room-enter.project.json",
+      "trace": "Traces/actual-room-enter.json",
+      "operations": 60,
+      "description": "Untouched default entry and initial gravity/landing"
+    },
+    {
+      "name": "movement",
+      "project": "Scenarios/movement.project.json",
+      "trace": "Traces/movement.json",
+      "operations": 32,
+      "description": "movement"
+    },
+    {
+      "name": "jump-coyote",
+      "project": "Scenarios/jump-coyote.project.json",
+      "trace": "Traces/jump-coyote.json",
+      "operations": 25,
+      "description": "jump-coyote"
+    },
+    {
+      "name": "jump-buffer",
+      "project": "Scenarios/jump-buffer.project.json",
+      "trace": "Traces/jump-buffer.json",
+      "operations": 19,
+      "description": "jump-buffer"
+    },
+    {
+      "name": "dash-and-land",
+      "project": "Scenarios/dash-and-land.project.json",
+      "trace": "Traces/dash-and-land.json",
+      "operations": 6,
+      "description": "dash-and-land"
+    },
+    {
+      "name": "jet-launch",
+      "project": "Scenarios/jet-launch.project.json",
+      "trace": "Traces/jet-launch.json",
+      "operations": 25,
+      "description": "jet-launch"
+    },
+    {
+      "name": "actual-jet-trigger",
+      "project": "Scenarios/actual-jet-trigger.project.json",
+      "trace": "Traces/actual-jet-trigger.json",
+      "operations": 24,
+      "description": "Top contact with the real authored jet; onTrigger dispatch, not direct launch only"
+    },
+    {
+      "name": "respawn-buffer",
+      "project": "Scenarios/respawn-buffer.project.json",
+      "trace": "Traces/respawn-buffer.json",
+      "operations": 69,
+      "description": "respawn-buffer"
+    },
+    {
+      "name": "actual-rail-pickups",
+      "project": "Scenarios/actual-rail-pickups.project.json",
+      "trace": "Traces/actual-rail-pickups.json",
+      "operations": 116,
+      "description": "Actual AI追逐1 multi-segment rail and two authored token IDs"
+    },
+    {
+      "name": "checkpoint-block-mvp949d5-33wuki",
+      "project": "Scenarios/checkpoint-block-mvp949d5-33wuki.project.json",
+      "trace": "Traces/checkpoint-block-mvp949d5-33wuki.json",
+      "operations": 63,
+      "description": "Actual contact with AI追逐1/block-mvp949d5-33wuki followed by resource mutation and retry"
+    },
+    {
+      "name": "checkpoint-block-mvp95tu7-khaqp4",
+      "project": "Scenarios/checkpoint-block-mvp95tu7-khaqp4.project.json",
+      "trace": "Traces/checkpoint-block-mvp95tu7-khaqp4.json",
+      "operations": 63,
+      "description": "Actual contact with AI追逐1/block-mvp95tu7-khaqp4 followed by resource mutation and retry"
+    },
+    {
+      "name": "checkpoint-block-mvp938ye-4qb5bx",
+      "project": "Scenarios/checkpoint-block-mvp938ye-4qb5bx.project.json",
+      "trace": "Traces/checkpoint-block-mvp938ye-4qb5bx.json",
+      "operations": 63,
+      "description": "Actual contact with XX/block-mvp938ye-4qb5bx followed by resource mutation and retry"
+    },
+    {
+      "name": "checkpoint-block-mvp93ifi-mp5kpb",
+      "project": "Scenarios/checkpoint-block-mvp93ifi-mp5kpb.project.json",
+      "trace": "Traces/checkpoint-block-mvp93ifi-mp5kpb.json",
+      "operations": 63,
+      "description": "Actual contact with XX/block-mvp93ifi-mp5kpb followed by resource mutation and retry"
+    },
+    {
+      "name": "checkpoint-block-mvp93jse-3j7nyl",
+      "project": "Scenarios/checkpoint-block-mvp93jse-3j7nyl.project.json",
+      "trace": "Traces/checkpoint-block-mvp93jse-3j7nyl.json",
+      "operations": 63,
+      "description": "Actual contact with XX/block-mvp93jse-3j7nyl followed by resource mutation and retry"
+    },
+    {
+      "name": "checkpoint-block-mvp93pe2-qua2si",
+      "project": "Scenarios/checkpoint-block-mvp93pe2-qua2si.project.json",
+      "trace": "Traces/checkpoint-block-mvp93pe2-qua2si.json",
+      "operations": 63,
+      "description": "Actual contact with XX/block-mvp93pe2-qua2si followed by resource mutation and retry"
+    },
+    {
+      "name": "checkpoint-block-mvp93rgd-lr7g1e",
+      "project": "Scenarios/checkpoint-block-mvp93rgd-lr7g1e.project.json",
+      "trace": "Traces/checkpoint-block-mvp93rgd-lr7g1e.json",
+      "operations": 63,
+      "description": "Actual contact with XX/block-mvp93rgd-lr7g1e followed by resource mutation and retry"
+    }
+  ]
+}

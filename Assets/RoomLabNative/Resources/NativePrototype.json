@@ -1,0 +1,452 @@
+{
+  "version": 2,
+  "compatibility": {
+    "runtime": "2.5.5"
+  },
+  "id": "native-prototype",
+  "name": "原生运动样板",
+  "notes": "第一版内容只制作物理关。",
+  "settings": {
+    "tileSize": 32,
+    "maxDashes": 3,
+    "paidStockCap": 3,
+    "freeDashOnLand": true,
+    "performance": {
+      "speed": 220,
+      "jump": 400,
+      "gravity": 1500,
+      "moveAccelerationTime": 0.1
+    }
+  },
+  "courses": [
+    {
+      "id": "prototype",
+      "name": "原生运动",
+      "kind": "physics",
+      "notes": "速度、材料与温控",
+      "aiId": "physics-demo-ai",
+      "defaultSize": {
+        "cols": 30,
+        "rows": 17
+      },
+      "artBindings": {},
+      "rooms": [
+        {
+          "id": "native-motion-room",
+          "name": "喷气与轨道运动样板",
+          "notes": "P2专用运动样板",
+          "cols": 40,
+          "rows": 22,
+          "environment": "cold",
+          "phase": "slow",
+          "aiPolicy": "off",
+          "entries": [
+            {
+              "id": "prototype-entry",
+              "x": 2,
+              "y": 19,
+              "face": 1
+            }
+          ],
+          "exits": [],
+          "zones": [],
+          "movables": [],
+          "tiles": [
+            {
+              "x": 0,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 1,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 2,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 3,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 4,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 5,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 6,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 7,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 8,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 9,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 10,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 11,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 12,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 13,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 14,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 15,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 16,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 17,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 18,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 19,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 20,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 21,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 22,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 23,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 24,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 25,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 26,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 27,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 28,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 29,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 30,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 31,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 32,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 33,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 34,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 35,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 36,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 37,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 38,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 39,
+              "y": 20,
+              "collision": true
+            },
+            {
+              "x": 10,
+              "y": 14,
+              "collision": true
+            },
+            {
+              "x": 11,
+              "y": 14,
+              "collision": true
+            },
+            {
+              "x": 12,
+              "y": 14,
+              "collision": true
+            },
+            {
+              "x": 13,
+              "y": 14,
+              "collision": true
+            },
+            {
+              "x": 36,
+              "y": 17,
+              "collision": true
+            },
+            {
+              "x": 36,
+              "y": 18,
+              "collision": true
+            },
+            {
+              "x": 36,
+              "y": 19,
+              "collision": true
+            }
+          ],
+          "objects": [
+            {
+              "id": "prototype-jet",
+              "type": "physics.jet",
+              "x": 7,
+              "y": 20,
+              "w": 1,
+              "h": 1,
+              "collision": true,
+              "params": {
+                "direction": "up",
+                "force": 900,
+                "cooldown": 1
+              },
+              "trigger": {
+                "mode": "foot",
+                "requiresAI": false,
+                "distance": 5,
+                "once": false,
+                "cooldown": 1
+              },
+              "assetOverrides": {}
+            },
+            {
+              "id": "prototype-rail",
+              "type": "physics.rail",
+              "x": 16,
+              "y": 20,
+              "w": 1,
+              "h": 1,
+              "collision": true,
+              "params": {
+                "path": [
+                  {
+                    "id": "p-node0",
+                    "parentId": "prototype-rail",
+                    "x": 16.5,
+                    "y": 20
+                  },
+                  {
+                    "id": "p-node1",
+                    "parentId": "prototype-rail",
+                    "x": 23.5,
+                    "y": 20
+                  },
+                  {
+                    "id": "p-node2",
+                    "parentId": "prototype-rail",
+                    "x": 30.5,
+                    "y": 14
+                  }
+                ],
+                "acceleration": 2400,
+                "maxSpeed": 700,
+                "launchAngle": -35,
+                "cooldown": 2,
+                "allowExit": true,
+                "sideTrigger": false
+              },
+              "trigger": {
+                "mode": "foot",
+                "requiresAI": false,
+                "distance": 5,
+                "once": false,
+                "cooldown": 1
+              },
+              "assetOverrides": {}
+            },
+            {
+              "id": "prototype-token1",
+              "type": "common.small",
+              "x": 20,
+              "y": 19,
+              "w": 1,
+              "h": 1,
+              "collision": false,
+              "params": {},
+              "trigger": {
+                "mode": "none",
+                "requiresAI": false,
+                "distance": 5,
+                "once": false,
+                "cooldown": 1
+              },
+              "assetOverrides": {}
+            },
+            {
+              "id": "prototype-token2",
+              "type": "common.coin",
+              "x": 25,
+              "y": 17,
+              "w": 1,
+              "h": 1,
+              "collision": false,
+              "params": {},
+              "trigger": {
+                "mode": "none",
+                "requiresAI": false,
+                "distance": 5,
+                "once": false,
+                "cooldown": 1
+              },
+              "assetOverrides": {}
+            },
+            {
+              "id": "prototype-spike",
+              "type": "common.spike",
+              "x": 33,
+              "y": 19,
+              "w": 1,
+              "h": 1,
+              "collision": false,
+              "params": {
+                "direction": "up"
+              },
+              "trigger": {
+                "mode": "none",
+                "requiresAI": false,
+                "distance": 5,
+                "once": false,
+                "cooldown": 1
+              },
+              "assetOverrides": {}
+            },
+            {
+              "id": "prototype-low-ceiling",
+              "type": "physics.jet",
+              "x": 4,
+              "y": 19,
+              "w": 1,
+              "h": 1,
+              "collision": true,
+              "params": {
+                "direction": "up",
+                "force": 0,
+                "cooldown": 1
+              },
+              "trigger": {
+                "mode": "none",
+                "requiresAI": false,
+                "distance": 5,
+                "once": false,
+                "cooldown": 1
+              },
+              "assetOverrides": {}
+            }
+          ]
+        }
+      ],
+      "connections": []
+    }
+  ],
+  "assets": [],
+  "blockDefaults": {},
+  "pluginManifest": {
+    "physics.jet": "2.0.0",
+    "physics.rail": "2.0.0",
+    "common.small": "1.0.0",
+    "common.coin": "1.0.0",
+    "common.spike": "1.0.0"
+  }
+}
