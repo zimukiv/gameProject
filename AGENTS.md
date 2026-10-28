@@ -2,7 +2,7 @@
 
 ## 修改前先核对 GitHub（用户于2026-10-29明确要求）
 
-权威远端为 https://github.com/zimukiv/gameProject 。本Unity原生Demo从 `codex/roomlab-ddl13-v3-handoff-2026-10-26` 交接分支演进；先读取当前分支、上游及发布记录确认应比对的分支，不能只看默认main或文件时间。
+权威远端为 https://github.com/zimukiv/gameProject 。本Unity原生Demo从 `codex/roomlab-ddl13-v3-handoff-2026-10-26` 交接分支演进；每次同时核对origin/main、当前分支及上游和发布记录，不能只看文件时间。
 
 1. 每次收到更改需求，写入代码/资源/关卡之前，先查看本地HEAD与dirty状态，再fetch远端并核对相应分支的提交SHA及差异。当前仓库曾有指向已删除phase3分支的窄fetch配置；必要时显式fetch `+refs/heads/*:refs/remotes/origin/*`，不要把fetch失败当成远端没有更新。
 2. 若远端有新提交，先审查并整合相关更新，再实施需求。保留本地已有改动；不得以reset/clean、强制覆盖或改写oracle的方式制造一致。若无法联网/没有权限，应明确未完成版本核对，不声称本地最新。
@@ -19,3 +19,9 @@
 当前用户要求仍以v2源码和成品包交付，不自行升为v3。同名包替换前保留旧包备份；源码、构建DLL、内置关卡SHA和压缩包清单应可相互核对。源码归档排除Unity缓存、临时文件、个人存档、凭据和其他项目文件。
 
 用户要求上传此仓库的是本游戏源码与交付包；外部参考书全文/试读及个人研究资料不随游戏仓库上传。代码修改、验证结果和未验证范围应写入当前周changelog及对应Handoff记录。
+
+## 同仓库的编辑器与云服务（保留云端main最新规则）
+
+- Unity游戏位于仓库根目录；Room Lab 2.5.5编辑器及独立云服务位于Tools/RoomLab。进一步维护该编辑器前，先读Tools/RoomLab/room-editor/AGENTS.md，可运行其中scripts/check-upstream.cjs核对源码清单。
+- 每次更改先fetch并核对main及相关组件，保留队友更新，不从旧副本覆盖，不reset/clean或强推。
+- 不同组件使用独立发布标签；源码进入Git，程序ZIP放GitHub Releases。不提交缓存、下载运行库、密钥、个人存档。Unity构建所需已授权原生插件与其许可证属于项目依赖，不与本地运行器缓存混淆。

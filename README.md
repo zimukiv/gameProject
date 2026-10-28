@@ -21,6 +21,10 @@ Unity菜单 `RoomLab Native/Open pixel physics demo` 可生成当前场景；`Ro
 
 本包默认 `DemoPhysics`。编辑器2.5.5导出的JSON/ZIP可替换导入；设置里保留 `按2.5.5原规则`，不强改作者触发方式、温区初态、冰块实例数值、自绘素材优先级或原关卡文件。旧规则冻结参考与Demo派生行为分开验证。
 
+## 同仓库的 Room Lab 编辑器与云服务
+
+云端main的2026-10-29更新（27cf59b）已原样合入：编辑器2.5.5与独立云服务源码在 [Tools/RoomLab](Tools/RoomLab/README.md)，组件来源清单在 [SOURCE_MANIFEST.json](Tools/RoomLab/SOURCE_MANIFEST.json)。后续编辑器维护先读其AGENTS并核对上游；它与原生Unity游戏使用独立发布标签。
+
 ## 回归与证据边界
 
 安装完整 .NET 8 SDK 后，可在仓库根运行：

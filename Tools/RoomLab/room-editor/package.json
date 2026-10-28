@@ -1,0 +1,40 @@
+{
+  "name": "ddl-room-editor",
+  "version": "2.5.5",
+  "private": true,
+  "description": "Room-based course level editor and physics-course prototype",
+  "main": "src/desktop/main.cjs",
+  "engines": {
+    "node": ">=22.12.0",
+    "pnpm": ">=11"
+  },
+  "scripts": {
+    "build": "node scripts/build.cjs",
+    "setup": "node scripts/setup.cjs",
+    "examples": "node scripts/examples.cjs",
+    "docs": "node scripts/catalog.cjs",
+    "start": "node scripts/start.cjs",
+    "format": "prettier --write src scripts tests package.json pnpm-workspace.yaml",
+    "format:check": "prettier --check src scripts tests package.json pnpm-workspace.yaml",
+    "test": "node --test tests/*.test.cjs",
+    "test:ui": "node tests/ui-smoke.cjs",
+    "test:assets": "node tests/assets-ui-smoke.cjs",
+    "test:play": "node tests/play-ui-smoke.cjs",
+    "test:layout": "node tests/layout-ui-smoke.cjs",
+    "test:fixes": "node --test tests/editor-fixes-ui-smoke.cjs",
+    "test:nodes": "node --test tests/rail-edit-ui-smoke.cjs",
+    "test:traces": "node tests/traces-ui-smoke.cjs",
+    "test:desktop": "node tests/desktop-smoke.cjs",
+    "package": "node scripts/package.cjs",
+    "test:cloud": "node --test tests/cloud.test.cjs",
+    "test:cloud-desktop": "node tests/cloud-desktop-smoke.cjs"
+  },
+  "dependencies": {
+    "fflate": "0.8.2"
+  },
+  "devDependencies": {
+    "electron": "44.5.1",
+    "esbuild": "0.25.12",
+    "prettier": "3.6.2"
+  }
+}
