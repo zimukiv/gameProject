@@ -1,0 +1,1729 @@
+{
+  "repository": "zimukiv/gameProject",
+  "version": "2.5.5",
+  "releaseTag": "roomlab-editor-v2.5.5",
+  "createdAt": "2026-10-29",
+  "programSHA256": "ced6230002318b51ba697ef71b767bdeee557a9aed162c0efb2029f8481f7184",
+  "files": [
+    {
+      "path": "room-cloud/.gitignore",
+      "sha256": "5ca3c39bdc1288c108a1931b3f6bc5795464b6253e9457390617774259deed0c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/.npmrc",
+      "sha256": "a3909ac0447c469fda12c57374993be70f47ce73e49fd3124678c7c047f2214d",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/.openai/hosting.json",
+      "sha256": "1ec5c547bc9a56201243e3a72a45aee5c0015225f98b3afd5768008b258e7d17",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/app/api/room-sync/[[...route]]/route.ts",
+      "sha256": "d91ad6eb82f5b262072e8c3d2b358bf92898d421bda69f65cbefe166556ec5f7",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/app/chatgpt-auth.ts",
+      "sha256": "4265a2e7c2dcb3a6f4b7026f762bf5b6e4caec76cc13c0a45987ee9a9f2e42cc",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/app/globals.css",
+      "sha256": "e6785030bbf8d9f7d664a5c39a188f894c03b01aa3b11166883226e81120e6b2",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/app/layout.tsx",
+      "sha256": "7c0ca54e6750d2d07a889f3ac6d990c5e120d3958f6ea4a5f6899950ffcee54b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/app/library.css",
+      "sha256": "2663c075fcb09c835bbc238624202bc0b46e7292bc2f00efcb32b2fb79209601",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/app/library.tsx",
+      "sha256": "602784e62255da57323fd309b58d451f4904dfd1c18c8cefe2d518602515c9e7",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/app/page.tsx",
+      "sha256": "be9792d97b31312be9b19547ca22fc50c4d41df2c2f29d15f1512da9c96dd3c6",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/cloudflare-env.d.ts",
+      "sha256": "8b0eca84aa3364cc7ccc43cc3af6beb88dd34ebd410de08690bf094ce39fbcb0",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components.json",
+      "sha256": "31f4ca67a4a62572571003d3d5aac85ee6fbfca67a192924bac6b168d95e98fd",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/connector-error.tsx",
+      "sha256": "2d0d04559952ce9c9a327cca499f4b99f35d885cccfce375230e116695d3f155",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/accordion.tsx",
+      "sha256": "a4f153089ba886dfcf73fac26b5c01ca933fa12fbe88df6fb723912bfffdfbb0",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/alert-dialog.tsx",
+      "sha256": "9a8d950f2b9b4352d5ebb762fb44d5c28c2d353aa29712071973656a8736e311",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/alert.tsx",
+      "sha256": "2cc59b5f7bda91c1670884b1bf46bfc8a2a6f226cef184f5762acc037188885b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/aspect-ratio.tsx",
+      "sha256": "b1c157886236782cb92d8fbcd4749532aaf6d8aabefd6e157ca40358f902f407",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/attachment.tsx",
+      "sha256": "ae8a25dd1a896d3964e3ef54d97e51221b418cde287dfd794428b89951c5c790",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/avatar.tsx",
+      "sha256": "58a846bf1617b94b9681921db9b8461d0145f311424663d11678a06b6153cb34",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/badge.tsx",
+      "sha256": "46a0de5224f6a5d5d63d45246534288518dce888f031064bff925bbc7fe6ad97",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/breadcrumb.tsx",
+      "sha256": "d4c0831bba2212e778248f54a6ace6ef378df8bba4616d1abf27787a31eabae5",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/bubble.tsx",
+      "sha256": "870cc0c5cfc8a515053f7e41e706a6bd017a909b45f1305fd3b164a52cc4483b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/button-group.tsx",
+      "sha256": "784c89d8ee683e1bc972ae69e6ea8225a7f63abe22aa1b5fc3423ae8a2a399c0",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/button.tsx",
+      "sha256": "cc36af0f8b5019c33cc039fbf03bb952a513072b15b55b53c592b78af3e5f4c4",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/calendar.tsx",
+      "sha256": "3855fbe0d3f8ad3a4b93071f98b76a9f6782d46ec8b05f5d2ddbee1e4e39bc84",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/card.tsx",
+      "sha256": "c48dd3b96be90a7066f1aebf294f0af9d00ebcdc367d5d4aca55429ade570c1c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/carousel.tsx",
+      "sha256": "b7ea0dda3903d972c186f739e23da61f547bc83b5a0bf13b16856577846d5fc3",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/chart.tsx",
+      "sha256": "45aa5ea4a386f4fb5b8869ff4bab3a08cf89255190ee322043baf84c3e950b6a",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/checkbox.tsx",
+      "sha256": "b23ab9d4deeedf2ac8f512c368361ede681aa383437ef48563a6f9b7dbe95f27",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/collapsible.tsx",
+      "sha256": "c6598e5584f4258b5d9fefadbc5ad6a66888ad58729f4b634a0bb2d9c513188b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/combobox.tsx",
+      "sha256": "2d68e78b2dc7e38a085f222dede60a80b4f8229a6e91732c484605e204d46735",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/command.tsx",
+      "sha256": "361193df1e3d64a9e9b5048f045264782fcb387aab3f00f2b805fdcbf538b16a",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/context-menu.tsx",
+      "sha256": "2cf1fcf59df0649a3e2a126d1df2f639145f6b6bf5689ee54af1f40ab1245017",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/dialog.tsx",
+      "sha256": "dce39c6adc47d997bd2567f8b7a72f466b0134715105cd42f9194007b8ecdb14",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/direction.tsx",
+      "sha256": "84ae2ad658207f0e0f367978e5508cd8027cd00c29c41d3d13db21a708c3d1e6",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/drawer.tsx",
+      "sha256": "cb6eaf58eb0757ca91af284e5d925b89a42ad7eb19cb3f44c575a3487aa9350f",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/dropdown-menu.tsx",
+      "sha256": "98f0dcdae38225b73734aceeb9213dd751fea2c72ea520df31003cd133deac8a",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/empty.tsx",
+      "sha256": "ae95bdcf367a076ae02e7925f14522a148798f72d9651749c6d55497dba584c0",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/field.tsx",
+      "sha256": "ba67d76f017ac059fc86cf8c344e0b2991c4322d3619e125498c19b87f6eefbd",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/form.tsx",
+      "sha256": "315b46bb75ab7d1c6061b5d750aa4bedf6e7a455e15e2d7f9182f053d5972b1e",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/hover-card.tsx",
+      "sha256": "f5d8df42c59370ec14d61bcc54f7d68e9bb7dfa0d6a872b2f7cffc2aafbf23b8",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/input-group.tsx",
+      "sha256": "6afbd58fea4c438e6252dc4568bddc122e84ababead4ad5cee50ace01100c9a0",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/input-otp.tsx",
+      "sha256": "161946daa89f0eda2575b9271c0494e35807c4ffb55598a49f67160c17fec299",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/input.tsx",
+      "sha256": "8c4612a7c41319ac5049daa3b34b080f9784b6245c17780eb87c127e58e473db",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/item.tsx",
+      "sha256": "6e2144d6d87142dbbe56d568810bf546318c8aa661447ebb0d76ebbf382cb45f",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/kbd.tsx",
+      "sha256": "6088c3a5432338b1719c17e9b5d0e1fa74fd1f66060f248fc88909d33a82cd13",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/label.tsx",
+      "sha256": "a476e41f08b9de5bd447de66a33d8bc2ad18f2fa6b96c064778bab4b6f439f4c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/marker.tsx",
+      "sha256": "3d798763f094b2bb5e7ade2d5cd1b9bab498bc8ca7fd4cfaf4e5835bdedc34a0",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/menubar.tsx",
+      "sha256": "9243af8afcea03703398ccd1c2a8c0a87ad6cbaf2bd272fb609f5b79fe46aebb",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/message-scroller.tsx",
+      "sha256": "bb7660a248e4e9589c3816c7c1c199ea1381a70d2c8476ae895b567a7a4d86cf",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/message.tsx",
+      "sha256": "9d2952bf3b641081f09aa2739535e6bbd1be0a4946789752a2c20d8aaef43185",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/native-select.tsx",
+      "sha256": "007516b111fca8c98a6c40c94ab91bb68cc5b52afce1ed1f5e510c3d86e7347c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/navigation-menu.tsx",
+      "sha256": "889d358a77de88e9cb6f39ea4895ea4c76eaf01d731b74e44f1c41e97a78a044",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/pagination.tsx",
+      "sha256": "374ad135c3d4ff3ec080a0009cd9745cdd0e12faa89d2b0e86074f11e5127fd1",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/popover.tsx",
+      "sha256": "31c350309ff5d3034e6ecf1b0eda75ba8855bdbf987fc7ad6d71f0ef07c5a447",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/progress.tsx",
+      "sha256": "c8c26e8f5f041c3cdf4915347dc1d9c022f9448f149990fadcaf303e952fa57d",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/radio-group.tsx",
+      "sha256": "fe5ce39636d0818c2bf9c4eebddff893d1225fa2c81b5fa4bb8cbb39a8c913ce",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/resizable.tsx",
+      "sha256": "bc63958467aa00557c551bb0d96a5ae4c965c1e1ba2380e595949d933b132f7c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/scroll-area.tsx",
+      "sha256": "8bd9d986b2844c9a87de825c6de4787b6739b36c3dc9a05ccf3eb107160e4043",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/select.tsx",
+      "sha256": "0b796a108a4eb5ba52d9ad938b7aea36dc56ae66c703a6d0a23dbc24f96daff3",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/separator.tsx",
+      "sha256": "6da346505c8629a4668420d2a5ca48891383bbe0b0ceb14163537c671879427e",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/sheet.tsx",
+      "sha256": "63863cf2df8f8973e52b3459ac9bdbf81be1262dbc70eb53d5271ffb03488e16",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/sidebar.tsx",
+      "sha256": "4a8d73e7730a2b1fcecfca31299ed26db65c2307b84197a59c6ec7c01c7ad28e",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/skeleton.tsx",
+      "sha256": "ba48dd5be5a6a1378bd4e011028654b5bf419f1e7d20ee4b9f8330c1264e7239",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/slider.tsx",
+      "sha256": "0e37484f4b416e79ac18c655cac961aefacf6e67085cfc2b320ea8af545635a3",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/sonner.tsx",
+      "sha256": "13ccc9b0fe4248e622f83a1d3b2f0566b72b5e04162d7d0c8db8945ecc71b55f",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/spinner.tsx",
+      "sha256": "3e6e6e8d37fb4069f8e43e55318f8db06fbc36e6c8be0096da3c9337c1c798b9",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/switch.tsx",
+      "sha256": "386d4d4deb39f34126f9700fe9bf5393d238485dd94018bba9d154dda84c62ae",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/table.tsx",
+      "sha256": "20e5a7f224959c6b75802995706a97e9da171f693d4b6b1b436388fcd9df96f3",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/tabs.tsx",
+      "sha256": "865d0194331b9b2be36723fa79d3575dc83078b4cb941cafee87cb72fc2cff46",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/textarea.tsx",
+      "sha256": "253cdeb487c73beaaccdf47fc163e36e7d5b7ae6ddf09a4f64998a109a112979",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/toggle-group.tsx",
+      "sha256": "69f643e889e933f05c1439084480d8646f66a161c7d1cf0730ee926382ade35e",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/toggle.tsx",
+      "sha256": "ba4d0b0a2b2fee75dc36dfc19e32082e721024b919050c97fd5dc70faa924e16",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/components/ui/tooltip.tsx",
+      "sha256": "a0784eb77831a799fad7991df4f1b666f876201565a80175e1aa68733574a2e4",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/db/index.ts",
+      "sha256": "dc7610b00b918e0ffff1360a63626f16655ced3064b2eaf96095a4101fb14bcd",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/db/schema.ts",
+      "sha256": "dc10bb6954401b3a9ccba94f33a5caebcad6e39ac97be50b38dfccdeea6edfc7",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/drizzle.config.ts",
+      "sha256": "af081f7384aaeb0082cf422e29f139d137ca2f6a57c69b2c37b9fb1f8479867b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/drizzle/0000_volatile_thunderball.sql",
+      "sha256": "6420279edb8c8ff3b94466ee67051aaf23692277389a5d51a25dec13eb5530b4",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/drizzle/0001_unknown_lady_deathstrike.sql",
+      "sha256": "b923fd0449a27f66f18af67db11fac489fe3fe00170489052523e0a8d3af8b7d",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/drizzle/0002_wide_demogoblin.sql",
+      "sha256": "3d8ab8c8d39d2d44718268d6e7953537fc3a65f96a5347cf8794c6b4fab8e6ce",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/drizzle/0003_adorable_wraith.sql",
+      "sha256": "f68e3f23b8bff972611a36d9d5a83b9339bd1297e6048c965530aa05afb07faf",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/drizzle/meta/_journal.json",
+      "sha256": "21050e419f97b8fb074d0e72fda6339a47b5b53f03a51332eb50c3bfdc03da6f",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/drizzle/meta/0000_snapshot.json",
+      "sha256": "0168cf75c51f9318d1e7a5cc0250331511a3c43b5d1b1396071f2db7f88933da",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/drizzle/meta/0001_snapshot.json",
+      "sha256": "abb090552edcbe77da96b4ad771999a156d8197e1a579f73098cc31bba1f1886",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/drizzle/meta/0002_snapshot.json",
+      "sha256": "93a9e6700cf3aedc8ebc52a2595c7ce7931ee28ef101e6b0635120ba9614e9c1",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/drizzle/meta/0003_snapshot.json",
+      "sha256": "afeaaf48f84421e4f9b336a14f5df9c42c9770cedd2eb482a3da1dbce2dc7724",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/eslint.config.mjs",
+      "sha256": "eeda7faabe9560fa9fdb26675b0011fa78461ca7061989732f5da9245b87e315",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/examples/d1/app/api/notes/route.ts",
+      "sha256": "a3d4a74fd53b7bf53e2df41f169d9d9d44a8b22aeb6d92f4e754956079af8909",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/examples/d1/db/schema.ts",
+      "sha256": "d89eabd95716ce404f5f7ca2a254220435be8ddce7c899d7ef461ff22ec80454",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/hooks/use-mobile.ts",
+      "sha256": "ad0936f84f1df79d3697bfbff9c18f8ad58431c1cbaf2359c6a853b0fcc9f28b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/lib/connector-context.ts",
+      "sha256": "bbddff68689cb0f6926fecd4b8b96f12f2054277c296e97b0df07d4ad5ece24e",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/lib/connector-contract.mts",
+      "sha256": "e1a7b24a8793af34b595690d9b1300c897c7321c14f215cedf58ad95799d7c3e",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/lib/connector-errors.mts",
+      "sha256": "a22edf13d6873ae832c4a2a0d579fc666c73ec996ef0722d39172649d38f0871",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/lib/connector-preview.d.ts",
+      "sha256": "abd69a94f7f61f1359063bb557574faae35e8ff5a028cc4c04b9ee248ef52642",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/lib/connectors.ts",
+      "sha256": "1c93d747e384c8e17e3e3dd5361b24412babf5eba2a11d2ae7a75f4e0924112c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/lib/graph-management.mjs",
+      "sha256": "1d4a4de908f1f44663b317c942e60f5a7b0a81cf71f8abcbe2781eb00a4fb93c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/lib/library.mjs",
+      "sha256": "3f710b4f7581ee5cbffcc395f01d0cad373d46613419256700d0d1ee3d0b1a30",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/lib/sync-handler.mjs",
+      "sha256": "48c744bf082ca69cee26f3ee74edf492e5c040ece78f790a63fba481e80426a2",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/lib/utils.ts",
+      "sha256": "53f3d3d070f0a9082934da25b875f9499855c2b0693868dd28be8c23d8730f68",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/next.config.ts",
+      "sha256": "614bce25b089c3f19b1e17a6346c74b858034040154c6621e7d35303004767cc",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/package-lock.json",
+      "sha256": "eedaeab6870c0f70f9db869fcaa24abae9b0f945cbc9acb8a43b6e7ed6bcbfca",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/package.json",
+      "sha256": "eb7b53ec5bdce1db5a8576b2ffc3b63ddd8c5fdee0f97dcb341674abbf69843a",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/postcss.config.mjs",
+      "sha256": "dfac7ac2d86d326a0e5adb024e7943c181393ed17a5fcb8f0315b24c7da6ddde",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/public/favicon.svg",
+      "sha256": "e6d2e59b7b5bbb0342e0fb496dfc262decbfe4426bbb7b047aec8d467d1dc6f7",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/README.md",
+      "sha256": "be7e990b351e4155db171b86689868ada50604a05c3a429748dede8c7955db17",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/build-verified.sh",
+      "sha256": "2ae5329ac860076070c9217a43106a15cb5ecf907a0f7baeb9ef903f76b53c68",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/connector-preview/connector-preview-session.mjs",
+      "sha256": "57224ad185a25115a14fccc68d3217e55b199260c3dd98a2c807beffec1a0a9b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/connector-preview/host-binding.mjs",
+      "sha256": "9e44ab6864133a5c82f834a5904ebb7d6104cb783c24efba3c0fe1a161182cea",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/connector-preview/protocol.mjs",
+      "sha256": "111e062ebf08d3f180130f5bc3dcb3c1414c1d7be3c032c9d675a61c0c7513a8",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/connector-preview/worker.mjs",
+      "sha256": "bd9c98fc68f29d975fe10508dfc9029bb681dc5789a62861d5c938bdea2064bb",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/execution-profile.mjs",
+      "sha256": "2e71116f4d2b70cff8bb70436f8dd5c709ec7ff62893424530f404e0193d3630",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/install-ci.mjs",
+      "sha256": "4a5a92d60a08d0ba54effd8373da2da06284312c55b767287c68a0bec7200da7",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/install-ci.sh",
+      "sha256": "10d8764a61be50351dc3496e13588270de7956f0aa5f1189c49cabb2d89fe5c0",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/install-pnpm.sh",
+      "sha256": "a684c02c2b493dfbf262a66252a5cd36f81ca995a4024761728662ae63aa40c0",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/npm-install.mjs",
+      "sha256": "9715c6a32d1d4a0289ef6376a0e819c3b6a6416b8a9877733d9fb4339ce626b6",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/pnpm-install.mjs",
+      "sha256": "a83164e344c1947053def83b546be8115deaa827314bbaead7afe6b6451c5cdf",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/run-framework.mjs",
+      "sha256": "9bf9f41a29314cabe0238b8e9c540ec3f7b5a6adafc7c8fb6c3940722d061dca",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/sites-env.mjs",
+      "sha256": "21d7bde6acb9f716287e652c1b0e43ae4803d79be367ca2192fcba14740b5338",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/sites-env.sh",
+      "sha256": "d18af7b222db748c9de257d5955b9d7f77ec350dab6321f114f0bc44c20388ac",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/tool-environment.mjs",
+      "sha256": "6da99286e0eb7905595ca851e68983bedf94a0f93814819d61f2b1f3a0342ba2",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/vite/connector-preview-plugin.mjs",
+      "sha256": "a6a9fe2086e302f94a3f91e3c1a68a45bb3aa07d4a79faf01b14732191eb4e80",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/vite/sites-vite-plugin.LICENSE",
+      "sha256": "7de1e115d165f176e68f962acdb809b5ab8d8ae78d3981e0701392b2ac50c713",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/scripts/vite/sites-vite-plugin.ts",
+      "sha256": "07af20e7097d9ed1d76f7c446d02997550b8fc5ca89668b249e25eabd62c6834",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/tests/graph-management.test.mjs",
+      "sha256": "8b9a78f6f51895c3d19e33d6eca4ce05d5d57136abb042f0daa400c4548340d1",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/tests/library.test.mjs",
+      "sha256": "33bdbc0472a1ec7bb0cc2de589e384ecef934e72657f045e9cc2b2d4cbcbf77f",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/tsconfig.json",
+      "sha256": "a4c1cc83b63ef9d39641d3babaefffa063dccbbc93338e18017b5013d713163e",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/vendor/shadcn-tailwind-4.13.0.css",
+      "sha256": "bc7d83425702955b4cb67cb14ede9d603f9d912376d57a2d81d661094d2a782a",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/vendor/shadcn-tailwind-4.13.0.LICENSE.md",
+      "sha256": "1564074e13439397221ffd522e2e504d56561994a23d371aa5e3ad43e4f5423f",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/vite.config.ts",
+      "sha256": "22ff558b1636d251e076f74c1697c7166079861667af10922d6bc505cb8f8290",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-cloud/worker/index.ts",
+      "sha256": "a0a10229cdda6f5fdb32234e3539007412233bb4938a671866c9295a44a3bdb6",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/.editorconfig",
+      "sha256": "cb3e62b77c33265f3d0d8aebc6883e065d05e9ee2a890026a93e94c07e92ceb6",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/.gitignore",
+      "sha256": "785f6098460e554af9aa98839e5ea80eb77b381ea501fa8cc116449d248ecf0c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/.prettierrc.json",
+      "sha256": "eccdbe903044fd65fa505e5bcff0e18ead6cb65c8a3eda375a264f91426b65f4",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/AGENTS.md",
+      "sha256": "0a5659d2dbeb5a944cfb10d5832112255c3eb86472505d306605948f4372aa92",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/ARCHITECTURE.md",
+      "sha256": "b02fd30019e548da11afd0179797e40b1dad617f14ef9e741caaecba11ad72ff",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/BLOCK_CATALOG.md",
+      "sha256": "ad19c24181ee0790689d4d3aadd041c8842fc2378c7a2997e4333c43edadcd17",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/BLOCK_PLUGIN_API.md",
+      "sha256": "1425ab65fe4b98b4d61c48fa44fff29ccbd8e6956fe5aad8db3b6ab75f6e1f98",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/CHANGELOG.md",
+      "sha256": "776f5e4d430b1633a4369a187e338f7b5c1173038b4bc8b9dda4dcf247e42de4",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/CLOUD_SYNC.md",
+      "sha256": "e9a7d254a1a7d1d44aca9a90cb2ef4ba1b372b5fe6dc83cc59aec5b0430c0b40",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/EDITOR_GUIDE.md",
+      "sha256": "5823df43344f7601299d888e887c579799104f3f6201c8c28c8b662897e082ba",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/GITHUB_WORKFLOW.md",
+      "sha256": "b2c1c34165bda95a1c9d27f1c37b688ce6e111a70c9b3f23ae9a204f784dfd1d",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/IMPLEMENTATION_PLAN.md",
+      "sha256": "698e5d8bf1a627b660d87fad3321aa2f62067ffae48713f64cd2d325da732b7b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/PROJECT_FORMAT.md",
+      "sha256": "3c34a09f65289912418a21f53a255ef8beb440f9afaaf3dd08600cb06a469abf",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/RELEASE_NOTES_2.1.md",
+      "sha256": "a3bcb568d85edf3a3453f5881bdd1bc60fd86e3969f985b1221a14024457194b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/RELEASE_NOTES_2.2.md",
+      "sha256": "a5ea20fbfcc4b7d19c98a52ec6b81f208dca95aebd416f3acec40fd0e1ea1d87",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/RELEASE_NOTES_2.3.1.md",
+      "sha256": "eb96c599d4d276c648fb7ad98dcf83156ddb020471a0b6c80b801b6364932809",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/RELEASE_NOTES_2.4.0.md",
+      "sha256": "90192408f69e88f438816851b88c5932443d8f4ec6a245c6faee535b9718bdae",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/RELEASE_NOTES_2.4.1.md",
+      "sha256": "f5e91bc2c1974ee13f74d64f940c11dc23ade883a5e90b580ffdb517efe43884",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/RELEASE_NOTES_2.4.2.md",
+      "sha256": "f74fec474be1e06d4eadf05f093c7e6a236a0dda35401863bfaa355a33ea7f27",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/RELEASE_NOTES_2.5.0.md",
+      "sha256": "64dd74604da63aff8f007b0f374cb56baaca3c1042b3e5eb36f7262895988c56",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/RELEASE_NOTES_2.5.1.md",
+      "sha256": "132a895ad242f112323bec15df0caff0dcf6f933c91d0c4974f1988202623fff",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/RELEASE_NOTES_2.5.2.md",
+      "sha256": "b7af7aadcddc64afbfedaaea3055a1aa723805f84b3fa54edf547c8308c56620",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/RELEASE_NOTES_2.5.3.md",
+      "sha256": "75a7905a8b0252eff0cecc5904f79436fc746cfd827f100d56a281d04f5668d0",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/RELEASE_NOTES_2.5.4.md",
+      "sha256": "6ef0191fc1ea601441fdd5f06fed7b1763f839a3f0ad52e2349c146b9f539839",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/RELEASE_NOTES_2.5.5.md",
+      "sha256": "d2d98189f61ac1dcc277ac6795f3332ad96c4d72a1c23b0bee6703a2b6e542d8",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/TESTING.md",
+      "sha256": "bb9cf6a6dccadc009e11b8f3984f825aabdaf5ae609eea2defb128c2b966ff32",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/examples/physics-project.zip",
+      "sha256": "676cb8f3ae13caf93b5d1868be5fc8429c8a9686ecdb41563baf93a188b29bca",
+      "encoding": "binary"
+    },
+    {
+      "path": "room-editor/examples/physics/assets/seed-ice-cracked.svg",
+      "sha256": "23e6ac912d5eea83cd55d401f8d26a63e17a41384249ac54faab0d8461c83d9d",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/examples/physics/assets/seed-ice-solid.svg",
+      "sha256": "7ced1ed4c5d649cd4f07c0155057df07b83366882c4408a488fff7d6d0fae04d",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/examples/physics/assets/seed-jet-active.svg",
+      "sha256": "03ce6332f16b0c788d4bdedf6456477120994d74fce51466142a04f612ebfabb",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/examples/physics/assets/seed-jet-idle.svg",
+      "sha256": "f32967c0f98516ce8390c26bd95604fe670c16d079ccbaf5cef090776ce21992",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/examples/physics/assets/seed-metal.svg",
+      "sha256": "7654dd8c088c1994cb6323b680523ade7007f9489094e7476daa02512fe2333c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/examples/physics/assets/seed-rail-active.svg",
+      "sha256": "4494e03047ab7698589c0baf3b327f3e49efda905bde5eb04c20e224d3a3cf4e",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/examples/physics/assets/seed-rail-idle.svg",
+      "sha256": "68f5595b1b90b8769a82ff5163399b6d256b1d3310edb6579084ed75ba099cad",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/examples/physics/assets/seed-thermal-cold.svg",
+      "sha256": "cc606a5d1fdfe79c2f39752f92aafb6f53846b5b856884f13e368145a0e82068",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/examples/physics/assets/seed-thermal-hot.svg",
+      "sha256": "a9acbaee624d85ae5ddb360d7713cc20263d47f14601a68bf923f9e8129d537c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/examples/physics/project.json",
+      "sha256": "2524d4295f03178be286fc58144afe5a53eb487cac714c9c97bde618d0f4e841",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/package.json",
+      "sha256": "ecc22d7e534b9e575b1ee990a35481eca01e53d566df188c7201867b10762b9b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/pnpm-lock.yaml",
+      "sha256": "bfb1258b7ab367dca063b9421aec136b9133fccce45cebb44fcd18eb24eee5c0",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/pnpm-workspace.yaml",
+      "sha256": "787f8bb2ca5b1d5e6281785b6548e0a02432adb9fe7e7edfa53081f4a73a64d4",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/README.md",
+      "sha256": "2e0442b28d308a7e99b60a7251919012e5a7c7634821c3baf1d979e9dd848e38",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/scripts/build.cjs",
+      "sha256": "9c6599116f9001e96579c7284e7cbc6ba43c37155b8c8e96c2d7b9371787658d",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/scripts/catalog.cjs",
+      "sha256": "a9be609a5c41302e4dc73cc08feeb76c75068e27bbc9cf1061ce12ff962d4a42",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/scripts/check-upstream.cjs",
+      "sha256": "62dae94706fa91425718895ef11b5dd036ec01103e36100d5e73d6293dda239c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/scripts/cloud-bootstrap-main.cjs",
+      "sha256": "31e3fb3ec97e62c5478cd633a4209ddbdb8c34c17f7cee461beaedf8d292db16",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/scripts/cloud-profile.cjs",
+      "sha256": "5f0024da3d40912f395607a5552a235a8f39afeb9155e7d07f3dd6131cc9e8a4",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/scripts/configure-cloud.cjs",
+      "sha256": "7907525b4a84072a2a75d717b8ef386d68ed58943f7e471ce74181b9801a7da6",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/scripts/examples.cjs",
+      "sha256": "cde53634c0c431c3ceb81b87cd4f2a7b5b993719a61150b6e69b2857684872f8",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/scripts/package.cjs",
+      "sha256": "39d69898346b3540567ef8d9423723c51f53a3b8afa688337e4c8d8fa87ddb78",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/scripts/setup.cjs",
+      "sha256": "7e7bb6c935636f44f0dc392686879307b7884e20ef71ff0c4e91897dfaf404f3",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/scripts/start.cjs",
+      "sha256": "c37d42eb504cda5773ee893a8ea67e74b5ab5f135d60150f532d9f386a640b59",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/scripts/upgrade-friend-project.cjs",
+      "sha256": "78dbc23e6e36380ac32fe4fd5cd9d6e703f6c47ae9ebea8f312116f2c32dd0bc",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/scripts/verify-release.cjs",
+      "sha256": "3c4547621c9d5447022ceec4c8bc77041034b1a78c5080510c86db50bcadffd6",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/assets/catalog.cjs",
+      "sha256": "b2bd5400c6bb92ff5289c8925109b92c7e95f3ea0e1455a239184e381d581520",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/assets/manager.cjs",
+      "sha256": "334c31c0c4cd072dcff74b5ef27f04902e95fd5de5fc6a5587b562c10ee4c760",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/assets/seeds.cjs",
+      "sha256": "f87c7e0ae123a067ad186399ca27a18b595d986d383ac9acc5f14b0fe967193f",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/cloud/chromium-http.cjs",
+      "sha256": "bd224eda21256706a97239d1ef9380f59597ce4bfe14d80cc7349f55d311c70c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/cloud/codec.cjs",
+      "sha256": "439cb274c308e8aab4460f17fec9c6a5f8933153674edc3f615596ed135b414a",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/cloud/connection.cjs",
+      "sha256": "72b7528bef5a0a3548aa9f7c053147d41cfe286d58c53f166edae89cc7260a88",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/cloud/live.cjs",
+      "sha256": "a9b268e7d155345635ca380bddc9a322e828fcd7aa9ffc564e19e190942cbbe2",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/cloud/repository.cjs",
+      "sha256": "6f569be88aab1694a69fe9bff34e66eac25669f31bb6caef1d7ad3de63df0952",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/cloud/service.cjs",
+      "sha256": "a8e30960852dc84a08f59a20d65ceb8a5039f6bb9a3c55db52c864f1d6313fb4",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/cloud/windows-http.cjs",
+      "sha256": "97a386ca7a6d710e4d66804c88592e332124410520aea72de3f018848a1d343a",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/desktop/main.cjs",
+      "sha256": "e62a0ef6a830607741dd1f5190bdd857cc93f1290303ec935e9494759f7b71e3",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/desktop/preload.cjs",
+      "sha256": "16724c7afaf23d6c4809266ef1cea96e09aff70f7b1f11a59c456ca3a0985487",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/desktop/project-files.cjs",
+      "sha256": "49f05537f032952925ee42764b4323c9d57aeff05c414a789a0c0c5ae905d4cd",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/app.cjs",
+      "sha256": "58928c6556033d9cca5a4ade349bb7e62301239608715eb83eb438182d9c47fe",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/cloud-controller.cjs",
+      "sha256": "632c987c418d6f03b1908792bae45c80094923e211c37697115ef9fd64e4cb14",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/cloud-graph-panel.cjs",
+      "sha256": "5f9b72184e2bc57dfb96d65bbb3059c260ac71407a9787c0244f3549c3cd6b66",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/cloud-room-details.cjs",
+      "sha256": "0aecf911ed3897cc1e3d919439cfd97a23ad209b9d50000c54d6bfa5740de119",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/dom.cjs",
+      "sha256": "e89a4977b8f2c105bc503bf94b1ef08787f4bfaadb7b8dd468d2353f76581ffe",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/draw.cjs",
+      "sha256": "12126bc601da3d8fd20943bfc9e78b6dced1ce216e9252ed40350fe5759cf23c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/graph-layout.cjs",
+      "sha256": "c227976b93bfe842510cd8af7804811944ee93fbb49c21dddd56ceba7dc82e3f",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/history.cjs",
+      "sha256": "6790b6df094cce8a6b50aed2188ff5dfc2012e86eb9e92dc8e06f885f2e9d5c0",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/index.html",
+      "sha256": "1a039c8a70120f8bb2480fc474b8d73b517858b2cd73a8e4e92e8810b3b57d8b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/pages/assets.cjs",
+      "sha256": "62977cf485bfee64c77338b09b38e9f3e3ddd52d8498b2217fd08a2b7762eb79",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/pages/bindings.cjs",
+      "sha256": "98c00ace01fa63467fcff34a90c99b596887b53f1d2aa0c5b0e6ab9bc59c74f3",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/pages/course.cjs",
+      "sha256": "166f897b826e6548d16ddaddaffde784945f674786a5c1f90cf10043b9adc3c2",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/pages/definitions.cjs",
+      "sha256": "2f2c659cfe7e97dc14a801d42483632c641457bf21ddadbde0d60af7320542cb",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/pages/home.cjs",
+      "sha256": "e8ac7130b6676da1d9863f69c0b7f2f03fa957e1dfad49b8b73892f1d242fb5a",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/pages/play.cjs",
+      "sha256": "204cfb4ca34607a80218a6235d07372308df97e249c92f3c1c1f8da3f8d5dc3f",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/pages/room.cjs",
+      "sha256": "1eb08fa0db76314723c8e72be858870ec976faaead10f2521939c3a7e38d5cf3",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/palette.cjs",
+      "sha256": "5b509e23baba303eed8829467611eaa7af095e4d42b2c36a74cff6e3445c973a",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/rail-node-panel.cjs",
+      "sha256": "fe8f083ef1e527fc6f1acb66e47339c1e14e35ea7838785a1680fd0b27e85565",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/region-handles.cjs",
+      "sha256": "f09237a2a15ecf2f9b7c8bb4b0043c9d09476626632e599abb5b040866887e2d",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/room-camera-panel.cjs",
+      "sha256": "3e83acd85e081c92db1a9b845c67872b2a2d31b22026a24c126ec0927eadd897",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/room-import-dialog.cjs",
+      "sha256": "8c899658a17f82a665d81ebcbf92ea009376cc7c9b59de20b54508f2b54ca9a0",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/room-tab-order.cjs",
+      "sha256": "3e28f776dd22035a62e0459152ea5a807e170519c2bae7522a3a1e840484f866",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/room-transfer.cjs",
+      "sha256": "fd6d60a6d1d1e922f0d95285977743b197b8d53d715c156a58e118d808b62c5b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/store.cjs",
+      "sha256": "de8d0d5c0f6935f0005ac4ea4c5bfeb705c354d3af4a24376b671e6e7e89c893",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/style.css",
+      "sha256": "0f445bbaee76074b19b57e534e8598cc93fc742bfc0e12153bb73549cf5c725b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/trace-manager.cjs",
+      "sha256": "49eeb447cd449a6651839c01e6938c856d00938b20471ccffd20fa05905b4952",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/trace-names.cjs",
+      "sha256": "8d99c2a70fb38f676d392f951b867dd3541a7387d08bfbdf409399cdca032413",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/trace-replay-panel.cjs",
+      "sha256": "d453520417bbbb2da55486100b73afea66a78d2396d3e02073e728e7526afa75",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/trace-selection-buttons.cjs",
+      "sha256": "3326a94b7e3a854228fd8e19574d57b7743ba4fbcabb907213878665d1768567",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/worktree-panel.cjs",
+      "sha256": "77926946c749841e68395640ab24a82454caa89f89c0d254c11830fb76560cf4",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/plugins/common.cjs",
+      "sha256": "227554fee30ee481a4c4586f2a0e8bd7d1247b1fad29ea82ad448ec227b6b170",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/plugins/legacy.cjs",
+      "sha256": "e70d70a364f8f7673a94d9cf9fe0e595895acf7d731cf145df903f082ef35d89",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/plugins/physics/ice.cjs",
+      "sha256": "a28284126a656c1f9ce2aa8a001d7131a6ff35712f856decc1660a8ebd7c2e76",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/plugins/physics/jet.cjs",
+      "sha256": "6a8223d84fc14e722d88bd10869d123caab8491e46a75415f9fbaec434825b80",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/plugins/physics/rail.cjs",
+      "sha256": "a909885b65c3ef7901e0e53b04f5812d6ef2c0a6cd3fd449886a533fcb0d6004",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/plugins/physics/thermal.cjs",
+      "sha256": "830d829b02b55aeb35cd1c83f0ef0224af48bba92236b7743fdb093ef9204d66",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/plugins/registry.cjs",
+      "sha256": "b2ce72557240b6c6221c0a289ba0f6c2ddee97c1de07317f7bb6402baa3186d2",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/archive.cjs",
+      "sha256": "983cb5f8801a88451a62e162c99f0615e9e87f2e187a7218c9bcb7f25c4218ce",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/collision.cjs",
+      "sha256": "cd011c4c9a0ebed4c72b59bb8fe526e755fea2b0def2532b7436644ca5162e15",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/compatibility.cjs",
+      "sha256": "b0aad61fdf4e95ef0597621d3618c3b6d3660fa928975999e6913698666915ed",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/courses.cjs",
+      "sha256": "af4def9306aab0570acd9114ef8360edf9d4e75d99e4f2c844882364c0c39c41",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/jet-params.cjs",
+      "sha256": "bf95b51d699a56784badd7860d9aaa27eb4ced11df46b301c0cacc3a60915202",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/merge.cjs",
+      "sha256": "68fe4225f8727ad5bfdf4f21a3e82ec8e0baa73343777f2088a078d88b4e7c1a",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/model.cjs",
+      "sha256": "16e35403b639485f0ad23b4e9ec1392ecf3443f44be77a1170c4c2b0d3549a96",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/performance.cjs",
+      "sha256": "c54576cf6dc3eb459cbe1c1ad72daf7e27a17f4601c794ffb399c32fad52a687",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/play-camera.cjs",
+      "sha256": "b790d4bd413c5f3578d189cbac76e153da1a00a70f0aa4a20e31ebf236712242",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/play-traces.cjs",
+      "sha256": "d697f57d8003af1f9e7befcd946c0c2c15d0e69cf5392fbf66827badad537d31",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/rail-nodes.cjs",
+      "sha256": "8f6778bd7f125bc185c4d9d729c8417ada986b3493f156a4d9d99a27cd047785",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/repair-zone-bounds.cjs",
+      "sha256": "0234a893c7fa1e070a6feaf7acd25700633534cbfbbe1d4d9ee642f29156c824",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/room-export.cjs",
+      "sha256": "ce5be10bce333c571754956782fb5c485d122aa2b243db29355d2a081ea26cc0",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/room-import-batch.cjs",
+      "sha256": "6221f3937577f8f0b2bc5d386c10a7bf81ec029cd4740a434360b5ca1be11c76",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/room-import.cjs",
+      "sha256": "a1a371494317458dbf23bea1ec89a5bcac268caeb667640ee8823c2f108fd5e8",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/room-limits.cjs",
+      "sha256": "bcc9d610528fd9901d6556897fe5d367598ea8ae7e51ed5bd67cab2c3671ffc4",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/room-order.cjs",
+      "sha256": "c9a815008141cfbf3d8a8e04afb2053bfe50a52cc0f772a3d1e35a947257ae3f",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/selection.cjs",
+      "sha256": "67153527d9efb78110e4d5334f6f8f6efd57cfce423ea4d64a262eac017a4b27",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/temperature.cjs",
+      "sha256": "29a58515e36a3e8e25ac69137817a0e599e7c87108b208b7cd98fe52f9526645",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/trace-replay.cjs",
+      "sha256": "3fd9aa1b65d0400706b10e31ec557c48b8a9d85d969583e5b6ea08ba1c9d3379",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/runtime/engine.cjs",
+      "sha256": "f4a872a5e073738a875ecfa70926416cff9b4fcafe2c007187e56655d4344bd9",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/shared/utils.cjs",
+      "sha256": "dbd216d20cbfbe63494c6bd8979e7fb2d0957bb66e4f859973780830bae6a81b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/ai-blocks.test.cjs",
+      "sha256": "bdd2d67caf57f9adb30dc4be0f0ab054105a0804749c91a7ce0bfefeb4ebc17e",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/ai-retry-ui-smoke.cjs",
+      "sha256": "fdf0de255cd68760bc68b6ac30a7735ccb5b633a07bf9da41feae2fce66d40d2",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/ai-retry.test.cjs",
+      "sha256": "a4ea1d8b38d2f913470bd06025c8fe11914fd85e7d8731f326817c676a9eb187",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/assets-ui-smoke.cjs",
+      "sha256": "2fbcb1e4d8f3588ef59dc502defb61b803a8b11636cbc5b042d8d609285461cd",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/assets.test.cjs",
+      "sha256": "b712a390b34323b7d8538e7216b190bf5618bfef8177417a75555172a7a318e4",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/browser-cloud-transport.cjs",
+      "sha256": "c75e105e6a1686519119620cad4d96e9d217500ffd2692afb84096619bad5982",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/cloud-bootstrap-smoke.cjs",
+      "sha256": "8741586d83060f233b24aa35ff7f8d1f27183039f9e6f48bcd642eba89704d65",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/cloud-browser-auth.test.cjs",
+      "sha256": "6f3119e420a370487ae9f23b2a7a49cb43136c9496726d54c2d8bbda236f775d",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/cloud-chromium-ui-smoke.cjs",
+      "sha256": "be8889dbd8ed112c26c1d576853416cd7a48a694ec8c39b64895e15ad1d1d37a",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/cloud-desktop-smoke.cjs",
+      "sha256": "c70dc5fa7773550e77cde6c1d93defe41c2fcb69d406bfffaca3740e7cd081f3",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/cloud-graph-api-smoke.cjs",
+      "sha256": "0e2281166088e53a6997247995a80ed3b893078ba519eec683f701e65d95e104",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/cloud-graph-desktop-smoke.cjs",
+      "sha256": "9658747a09d26bffa36acbcf38e59422b46459d5809879cdc63961d54136b293",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/cloud-graph-layout.test.cjs",
+      "sha256": "c512100547f3ad25e7616bf3a478c42d8dcc55faf3c1099de28570b991376529",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/cloud-key-errors-ui-smoke.cjs",
+      "sha256": "942cf8e88b0a2c0aec77cab93c28029e2de80c2b1b50c7ceeabbeae3cbc445e0",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/cloud-key-errors.test.cjs",
+      "sha256": "8319547271560442023c85dee0772c0cd39dafb90e3109d0f3ad4a705ecdd174",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/cloud-legacy-snapshot.test.cjs",
+      "sha256": "0406cdcdc6e98570ab1b4985771e736005c7d1599c616ea4b62e8b2329e864aa",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/cloud-library-ui-smoke.cjs",
+      "sha256": "e3450927347abdc06da3e3ec232de7efdbe6cf1f49ac1b4f97fc3a23dbb86bbf",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/cloud-modes-smoke.cjs",
+      "sha256": "4eafcb970b17ce376a0a5d4114d3b57eb2fcf88fbf7b6cdc4d308272c439834d",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/cloud-project-details.test.cjs",
+      "sha256": "30fcb1afbad9d68f2c43f383efbc453516755a91807d542c1acdc6ea855bf84d",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/cloud-relay-smoke.cjs",
+      "sha256": "2a55d659f226000ef1658621f2d410409c28566dfa07378e4011b69a4d3fb44c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/cloud.test.cjs",
+      "sha256": "d6373891587dd75e1c0b98aeb92b68f0ec5f560be1ba17066546786019be648b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/collaboration.test.cjs",
+      "sha256": "dde3a3907108b0dd3aa055eaca4cb94c63c7ef260878dfc985e327eb340240e8",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/collision-ui-smoke.cjs",
+      "sha256": "384c773fc1e082589c7b5af0490963d4ff3a2931878092e98336091141787fdb",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/collision.test.cjs",
+      "sha256": "5a659400094563bd5026257bcd2bd806170f30f6cdd7d0d5b02d8d067453df28",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/compatibility-desktop-smoke.cjs",
+      "sha256": "55dfd100edd3c2ec2aa2f27f61863e285703895f54990397e6d81dc2ebcc3695",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/compatibility.test.cjs",
+      "sha256": "cf92445fd442e20a6313acad56156279e00eb1b4ef254840fe8ed4cd5e8f7904",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/default-collision.test.cjs",
+      "sha256": "e9b874b8d989ec2b9a48caf02d786037100c055c90fe0cd318b036a42d905d9c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/desktop-smoke.cjs",
+      "sha256": "3068060e0fa4f448ded857810cc4803c471181640f7cc9e4e72ab9594a4877ba",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/editor-fixes-ui-smoke.cjs",
+      "sha256": "759ad0e3c63e2221d705200bbd4142e9b377d380d1439753155094f2b5b6364b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/engine.test.cjs",
+      "sha256": "2e92dd3c3da96ae9c6b31bc3ddb9cd965a46e01b0d069d43bf6ad246565c1ced",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/features-2.5.4-ui-smoke.cjs",
+      "sha256": "5ec3d70d935eb01ede545fa7ad7aab81c955f9382d112fbcd1bfd8b68b0a8750",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/files.test.cjs",
+      "sha256": "43e6050534be3d641f0f0e650fbe1bcc44617116d93b974d4af87200c1011cca",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/fixtures/compat-2.3.1/physics/assets/seed-ice-cracked.svg",
+      "sha256": "23e6ac912d5eea83cd55d401f8d26a63e17a41384249ac54faab0d8461c83d9d",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/fixtures/compat-2.3.1/physics/assets/seed-ice-solid.svg",
+      "sha256": "7ced1ed4c5d649cd4f07c0155057df07b83366882c4408a488fff7d6d0fae04d",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/fixtures/compat-2.3.1/physics/assets/seed-jet-active.svg",
+      "sha256": "03ce6332f16b0c788d4bdedf6456477120994d74fce51466142a04f612ebfabb",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/fixtures/compat-2.3.1/physics/assets/seed-jet-idle.svg",
+      "sha256": "f32967c0f98516ce8390c26bd95604fe670c16d079ccbaf5cef090776ce21992",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/fixtures/compat-2.3.1/physics/assets/seed-metal.svg",
+      "sha256": "7654dd8c088c1994cb6323b680523ade7007f9489094e7476daa02512fe2333c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/fixtures/compat-2.3.1/physics/assets/seed-rail-active.svg",
+      "sha256": "4494e03047ab7698589c0baf3b327f3e49efda905bde5eb04c20e224d3a3cf4e",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/fixtures/compat-2.3.1/physics/assets/seed-rail-idle.svg",
+      "sha256": "68f5595b1b90b8769a82ff5163399b6d256b1d3310edb6579084ed75ba099cad",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/fixtures/compat-2.3.1/physics/assets/seed-thermal-cold.svg",
+      "sha256": "cc606a5d1fdfe79c2f39752f92aafb6f53846b5b856884f13e368145a0e82068",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/fixtures/compat-2.3.1/physics/assets/seed-thermal-hot.svg",
+      "sha256": "a9acbaee624d85ae5ddb360d7713cc20263d47f14601a68bf923f9e8129d537c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/fixtures/compat-2.3.1/physics/project.json",
+      "sha256": "a5d3fa5f1b97450adc97374468a1d1f4d595249a78323b362a173f77969dea80",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/fixtures/compat-2.3.1/src/project/archive.cjs",
+      "sha256": "a4e6b06d4abab7308a0709de035e6b40befa129324f7fcb0098c07bb9e998f98",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/fixtures/compat-2.3.1/src/project/model.cjs",
+      "sha256": "0e56f4ac62a7c55ae9d88b74eb275703b24cf3a3c67ac84dc316d577300945ad",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/fixtures/compat-2.3.1/src/project/play-traces.cjs",
+      "sha256": "1ed176cb24c69cc4de193801b0821f75900181e5b65d467e4d6f68bf52dbcec4",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/fixtures/compat-2.3.1/src/project/rail-nodes.cjs",
+      "sha256": "677d4bd8257588e69a2170799d16ba1da29dbe07bf6b7c96c1fbda74a536b115",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/fixtures/compat-2.3.1/src/shared/utils.cjs",
+      "sha256": "dbd216d20cbfbe63494c6bd8979e7fb2d0957bb66e4f859973780830bae6a81b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/fixtures/v1-example.json",
+      "sha256": "8e296a771c54d141ab100a05834294ef1d9171675758b8b8829442e1c60403e7",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/friend-255-ui-smoke.cjs",
+      "sha256": "60e95803754fa16581f71563122af83b375fd22e793da4ad427867bbf6347242",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/friend-compatibility.test.cjs",
+      "sha256": "81bbacdfc34c19c24094d3f88c8a43352bdbffada8c0ebc5f6ac03dbc4c5afd0",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/friend-gameplay.test.cjs",
+      "sha256": "45fc650ec65f7bb739cd24907c9137e260f8b1243511021a53d69f82372fe7d1",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/ghost-thermal-ui-smoke.cjs",
+      "sha256": "fe4834717b5d66b9ba82fd87ac856858ad05279542e02ec610450ce4ccad6423",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/import-compat-ui-smoke.cjs",
+      "sha256": "943d399163d7111da24da32ab41a0eb0d5b070122d6e69af9f92953783c04451",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/jet-compat.test.cjs",
+      "sha256": "d79a55b9765381b3a41ad93dbc08051acf93a2e4c8ab397eb3e5c4ad1adea98b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/layout-assets.test.cjs",
+      "sha256": "dc9093b78c11f657c0154ed251cdd20aeccd92f7eb9e967ab4b460b9c2087df0",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/layout-ui-smoke.cjs",
+      "sha256": "f00c8b073c6e91b0f494ab296c4195e3f7993e5f879eb3a4ac4e554634353401",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/lock-overlap-ui-smoke.cjs",
+      "sha256": "5f2ad33b424d0bb109b9c8e61a7761a68cc3fb4bb1dc628efc8a9cc34804e188",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/marquee-ui-smoke.cjs",
+      "sha256": "d5c98553a24e84217f29fe7b1524c64bffcb808302351009c55c9e48eb488019",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/marquee.test.cjs",
+      "sha256": "e15e12f78e774193d44de943b85afcec5c980d58bec07c4d21f319fc8ad655f9",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/model.test.cjs",
+      "sha256": "1a957b866f53be8bd781cdf95b4680f2ca9fc7481295c744ba8687856d52351f",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/palette-zone.test.cjs",
+      "sha256": "9a02b3fa0bda557a1ee1d6df9b48be217c8a901778b8001f436dc8c8d682d3ee",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/play-camera-ui-smoke.cjs",
+      "sha256": "e0e1223f9b50701ccf4d592415aabe66d79a6c7c3edd4bd4e17f2ee4e25af848",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/play-camera.test.cjs",
+      "sha256": "f3baaf436cf5e2c5fbb26c918ce0755f54172b0c035de0bfb43fd74b1566b5de",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/play-traces.test.cjs",
+      "sha256": "7338cdf59d7120d58ae0e3d1a06d8d871463da7f8d8d30f1640d92a4276c7134",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/play-ui-smoke.cjs",
+      "sha256": "f0e99c47694bd5b4fee8319f887c48a65151ea2494a6ca115345b73b0b61a7d7",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/position-lock.test.cjs",
+      "sha256": "4e1366df4b8c7b26db1021c3d8cd772f1997e9060002a8ad6be1b7b7ec0a7bc7",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/rail-children.test.cjs",
+      "sha256": "b54b21ec6173906da39312c51e7a5d48b943c6bbe7d83d73989423a69cdfdf86",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/rail-edit-ui-smoke.cjs",
+      "sha256": "2eb1d63cf58676aa68ea0873679bc0bf466c218de9236e6f8e53a612d5a7bdab",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/room-export.test.cjs",
+      "sha256": "b1053e703494e61ee15742c16dc5f0653f8cac05a3a3aaaff3aa9aba49c6b29e",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/room-import-batch.test.cjs",
+      "sha256": "c36be8f8e065714f8acc20ba57b59ff1a2680d8b38fda3a9bfd0bba3d883642f",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/room-import.test.cjs",
+      "sha256": "6f3fd9428963b7460a513ac17bd8e5ec5ecc8d33eea18b7d33ab500521904e42",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/room-limits.test.cjs",
+      "sha256": "5eb01067bb03f01b803c6f864d5c00022d9056f4d37b99e2c702049912986170",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/room-order.test.cjs",
+      "sha256": "ece6dbf5295a632706ce6a5e3e8fd687c09a506032bb12914c67fe283bcb52ef",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/room-transfer-ui-smoke.cjs",
+      "sha256": "373da2881eecf02368bb7accb2d52fdf6059744989a111487b342d8ea10970a2",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/room-view-ui-smoke.cjs",
+      "sha256": "28b3ae77d32301d41676e6634292b521d66bfb6abaca451afcdc862d2c2884c9",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/save-guard-ui-smoke.cjs",
+      "sha256": "bc26f3e5d0dc8c5fbb2e9121ff72efcdd00fbb175bcc220576f4232ce17c78c8",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/thermal-initial.test.cjs",
+      "sha256": "367984a7de029a869fb9e78372bd58f082116ca95018a5eb2812501331cf312c",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/thermal-zone-switch.test.cjs",
+      "sha256": "88c245ad1ac88f9b9a89e991071e349a5820c785a907100fe5619437477b41df",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/thermal-zone-ui-smoke.cjs",
+      "sha256": "4dc4c6fbf7a5bdb43075bae6ef50298a7034cdcf983d39a3690ec8ba31bcc0c2",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/trace-exit-ui-smoke.cjs",
+      "sha256": "476717dc4f45a72354a06ce5f0a562e16fdabfccc3d2de717100e002e4897bac",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/trace-names.test.cjs",
+      "sha256": "6dc6c550053ea3a9947c0fef5f34d4fbdbb70e160ba47154e69cc99d466070d4",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/trace-replay.test.cjs",
+      "sha256": "b25f2570a2ab0080f69ac5a534edead8241c8d9bc937ecc60c930aa37bf3d06b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/trace-sessions.test.cjs",
+      "sha256": "9fd69c635a6d519372550b01436a463e62f01cbce14fe6cdd477f4b1b54ef583",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/traces-ui-smoke.cjs",
+      "sha256": "db6d369a1b704b565180bca50bfe35880b94bab1b63e81295b465b6621cfd353",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/trigger-volume.test.cjs",
+      "sha256": "745e8c282f1da7305c92be806809ca7d76ce5164703e3bdd3fc5cd705afa3fdb",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/ui-smoke.cjs",
+      "sha256": "bc1fc450dc8babe49b5db0876ee64152f6cd803a0067399bf673a270c909b4da",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/worktree-management.test.cjs",
+      "sha256": "ceb9b4a8cb49fd6f58277bbe005fa8da939329d547329a497a1171be02d7c3ab",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/worktree-ui-smoke.cjs",
+      "sha256": "e37dd634b7b5a386edff7c4ce634d31aacd3acb7005f3984fe5e25264bedaad4",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/zone-bounds-repair.test.cjs",
+      "sha256": "cb7042037cccf68c45660e3634d5f4d873e28e6f78fb55bc31118af47efe4d28",
+      "encoding": "utf8-lf"
+    }
+  ]
+}

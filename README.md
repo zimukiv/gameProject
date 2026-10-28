@@ -29,3 +29,10 @@
 - `python Validation/playability_audit.py`：关卡流程顺序、检查点地面位置和跳跃缺口检查通过。
 
 **尚未完成 Unity Play 模式跑关及 Windows 可执行文件验证。** 2026-10-18 的批处理尝试已连接 Licensing Client，但因缺少 `com.unity.editor.headless` 许可而退出（编辑器日志返回码 198）；场景校验没有执行，场景仍未生成。请从 Unity Hub 正常打开项目并确认 Editor 许可：导入后运行场景校验，再按 `Validation/PLAYTEST.md` 从主菜单跑通三关、检查机关回滚和通关结算，最后构建并测试 Windows 版本。达到商用发行标准还需团队美术、音频、难度调校、长时间试玩和正式版本测试。
+
+
+## Room Lab 关卡编辑器（独立工具）
+
+[源码与维护入口](Tools/RoomLab/README.md) · [Room Lab 2.5.5 程序与源码下载](https://github.com/zimukiv/gameProject/releases/tag/roomlab-editor-v2.5.5)
+
+此工具与上面的 Unity 游戏及 PhysicsLevelEditor r5 分别维护。开始任何修改前先核对 GitHub 最新版本，详见 AGENTS.md。

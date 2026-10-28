@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self';"
+    />
+    <title>Room Lab · 第一大关编辑器</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <button id="home" class="brand">ROOM LAB <small>物理大关 / v2.5.5</small></button>
+      <nav id="breadcrumbs"></nav>
+      <div class="header-actions">
+        <button id="new-project">新建大关</button><button id="open-project">打开项目</button
+        ><button id="save-project">保存项目</button><button id="save-as">另存为</button
+        ><button id="export-project">导出项目包</button
+        ><button id="export-room" disabled>导出房间</button
+        ><button id="import-room">导入房间</button><button id="import-project">导入项目包</button
+        ><input id="project-file" type="file" accept=".json,.zip" hidden /><button id="open-assets">
+          素材库</button
+        ><button id="open-definitions">功能块</button><button id="open-cloud">☁ 工作树</button>
+      </div>
+    </header>
+    <div id="status" role="status">正在加载…</div>
+    <main id="app"></main>
+    <dialog id="dialog">
+      <h2 id="dialog-title"></h2>
+      <div id="dialog-content"></div>
+      <div id="dialog-actions"></div>
+    </dialog>
+    <input id="asset-files" type="file" accept="image/*" multiple hidden />
+    <input id="room-package-file" type="file" accept=".zip" hidden />
+    <script src="ui.js"></script>
+  </body>
+</html>
