@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><EnableDefaultCompileItems>false</EnableDefaultCompileItems><Nullable>disable</Nullable></PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../../Assets/RoomLabNative/Data/*.cs" />
+    <Compile Include="../../../Assets/RoomLabNative/Core/*.cs" Exclude="../../../Assets/RoomLabNative/Core/NativeGameplayAI.cs" />
+    <Compile Include="../../../Assets/RoomLabNative/Core/NativeGameplayAI.cs" Condition="'$(UseBeforeJetFix)' != 'true'" />
+    <Compile Include="../../../Validation/Native/JetTrail20261030/before/NativeGameplayAI.cs" Condition="'$(UseBeforeJetFix)' == 'true'" />
+    <Compile Include="Program.cs" />
+    <Reference Include="Newtonsoft.Json"><HintPath>$(MSBuildSDKsPath)/../Newtonsoft.Json.dll</HintPath></Reference>
+  </ItemGroup>
+</Project>

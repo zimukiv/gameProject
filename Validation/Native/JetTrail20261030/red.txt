@@ -1,0 +1,17 @@
+FAIL authored room10 right jet follows recorded ascent and left platform route: AI was launched remotely before reaching right jet
+PASS range and influence Editor255Compat affectAI=False distance=95
+PASS range and influence Editor255Compat affectAI=False distance=97
+PASS range and influence Editor255Compat affectAI=True distance=95
+PASS range and influence Editor255Compat affectAI=True distance=97
+PASS range and influence LatestPhysics affectAI=False distance=95
+PASS range and influence LatestPhysics affectAI=False distance=97
+PASS range and influence LatestPhysics affectAI=True distance=95
+PASS range and influence LatestPhysics affectAI=True distance=97
+PASS range and influence DemoPhysics affectAI=False distance=95
+PASS range and influence DemoPhysics affectAI=False distance=97
+FAIL range and influence DemoPhysics affectAI=True distance=95: profile-specific jet chase/ballistic contract changed
+PASS range and influence DemoPhysics affectAI=True distance=97
+FAIL Demo repeat jet leaves route warning and motion untouched: repeat jet changed independent AI motion
+PASS Demo jet influence retains unlockPadId gate affectAI=False
+PASS Demo jet influence retains unlockPadId gate affectAI=True
+JET_TRAIL_CHECKS cases=16 assertions=59 failures=3 sourceUnchanged=true

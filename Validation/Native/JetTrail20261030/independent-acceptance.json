@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-30",
+  "base_commit": "75613df8b1addcda61b09663f69e222c16a26b26",
+  "status": "local_hotfix_built_verified_deployed",
+  "checks": {
+    "jet_trail_cases": 16,
+    "jet_trail_assertions": 964,
+    "ai_jump_cases": 26,
+    "ai_jump_assertions": 378,
+    "motion": 9679,
+    "progress": 572,
+    "demo_rules": 30,
+    "production_exit": 0,
+    "production_core": 388,
+    "production_ice": 30,
+    "production_codec": 71,
+    "production_import": 12
+  },
+  "gameplay_legacy": {
+    "exit": 1,
+    "passed_traces": 16,
+    "missing_baseline_scenarios": [
+      "P3/Scenarios/ai-tier-0.json",
+      "P3/Scenarios/ai-tier-10.json",
+      "P3/Scenarios/ai-tier-20.json",
+      "P3/Scenarios/ice-geometry-instant-cold-regeneration.json",
+      "P3/Scenarios/all-ten-connections-final-exit-once.json",
+      "P3/Scenarios/developer-flight-no-pickup-safe-return.json",
+      "P3/Scenarios/ai-portal-warning-and-teleport.json",
+      "P3/Scenarios/ai-jet-flight-landing.json"
+    ]
+  },
+  "source_code_sha256": "597bd712b070bbd9f6f79c96893b13536822483d80da7812c0deba5e27d2526d",
+  "assembly_csharp_sha256": "d4c86dcc0ba42d6bc6094db328eed97741084a42c27282d37d06eeb85c22cbe2",
+  "authored_level_sha256": "03b948a705210aafd718306a70947e90b41f7d1fa013a53a4087091d51809836",
+  "deployed_exe": "D:\\minigame\\试玩版-v2-20261030-喷气追逐修复\\RoomLabPhysics.exe",
+  "shortcut": "D:\\minigame\\开始试玩-v2.lnk",
+  "evidence_directory": "D:\\minigame\\资料\\修复验证\\20261030-喷气追逐",
+  "old_build_preserved": true,
+  "personal_progress_overwritten": false,
+  "manual_full_course_complete": false,
+  "pushed_during_local_acceptance": false,
+  "user_confirmed_reported_bug_fixed": true,
+  "github_sync_requested": true,
+  "github_target_branch": "main"
+}

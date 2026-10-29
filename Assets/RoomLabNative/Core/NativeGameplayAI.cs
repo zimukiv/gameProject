@@ -10,7 +10,16 @@ namespace RoomLab.Native
             if(!resumed){Tokens=0;CourseAIActive=true;CourseAITier=tier;CourseAIId=IdOr(o.AiId,IdOr(Room.AiId,Course.AiId));Phase="fast";}
             var pc=PlayerCenter;AI.id=CourseAIId;AI.active=true;AI.tier=tier;AI.speed=265+tier*30;AI.steal=1+tier*2;AI.x=pc.x-165;AI.y=pc.y;AiProcessing=.8;AI.trail.Clear();AI.trail.Add(pc);Emit("ai-start",new JObject{{"investment",investment},{"tier",tier},{"resumed",resumed}});
         }
-        void LaunchAI(NativeObject o,double range,double x,double y){if(AI.active&&Hypot(AI.x-(o.X+.5)*32,AI.y-o.Y*32)<=range*32){AI.flight=true;AI.vx=x;AI.vy=y;AI.warning=null;if(Rules==NativeGameplayRules.DemoPhysics)RememberAIPlayerTrail(PlayerCenter);else AI.trail.Clear();AiProcessing=.3;ObjectStates[o.Id].hitAI=true;ObjectStates[o.Id].hasHitAI=true;}}
+        void LaunchAI(NativeObject o,double range,double x,double y)
+        {
+            if(!AI.active||Hypot(AI.x-(o.X+.5)*32,AI.y-o.Y*32)>range*32)return;
+            ObjectStates[o.Id].hitAI=true;ObjectStates[o.Id].hasHitAI=true;
+            // Demo jets affect linked mechanisms, while the AI follows the player's
+            // recorded launch path. Applying a second ballistic launch here would
+            // lift a trailing AI before it reaches the nozzle and break that route.
+            if(Rules==NativeGameplayRules.DemoPhysics&&o.Type=="physics.jet")return;
+            AI.flight=true;AI.vx=x;AI.vy=y;AI.warning=null;if(Rules==NativeGameplayRules.DemoPhysics)RememberAIPlayerTrail(PlayerCenter);else AI.trail.Clear();AiProcessing=.3;
+        }
         void RememberAIPlayerTrail(NativePoint point)
         {
             var trail=AI.trail;if(trail.Count==0||Hypot(trail[trail.Count-1].x-point.x,trail[trail.Count-1].y-point.y)>4)trail.Add(point);

@@ -1,0 +1,18 @@
+ROOM10_EVIDENCE reachedJet=True followedLeft=True landedPlatform=True player=429.5833333333323,196 ai=449.13892783860024,194.9115276395424
+PASS authored room10 right jet follows recorded ascent and left platform route
+PASS range and influence Editor255Compat affectAI=False distance=95
+PASS range and influence Editor255Compat affectAI=False distance=97
+PASS range and influence Editor255Compat affectAI=True distance=95
+PASS range and influence Editor255Compat affectAI=True distance=97
+PASS range and influence LatestPhysics affectAI=False distance=95
+PASS range and influence LatestPhysics affectAI=False distance=97
+PASS range and influence LatestPhysics affectAI=True distance=95
+PASS range and influence LatestPhysics affectAI=True distance=97
+PASS range and influence DemoPhysics affectAI=False distance=95
+PASS range and influence DemoPhysics affectAI=False distance=97
+PASS range and influence DemoPhysics affectAI=True distance=95
+PASS range and influence DemoPhysics affectAI=True distance=97
+PASS Demo repeat jet leaves route warning and motion untouched
+PASS Demo jet influence retains unlockPadId gate affectAI=False
+PASS Demo jet influence retains unlockPadId gate affectAI=True
+JET_TRAIL_CHECKS cases=16 assertions=964 failures=0 sourceUnchanged=true

@@ -1,0 +1,1 @@
+NATIVE_DEMO_RULES_PASS checks=30 rooms=11 small=3 checkpoints=8 profile=DemoPhysics

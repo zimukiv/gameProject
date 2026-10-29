@@ -11,6 +11,12 @@ small in-memory fixtures, validates their tile/object counts, and never rewrites
 the authored JSON. The default suite covers the approved video-related Demo
 flight-route fix and the developer-only LockHealth safety-return fix.
 
+2026-10-30: Demo jets now leave the AI on its recorded chase path, rather than
+launching a trailing AI remotely. The two non-frozen Demo range/repeated-jet
+expectations were updated to that approved behavior; legacy-profile launch and
+developer-reset assertions remain. The dedicated actual-room regression and
+same-suite pre-fix comparison are in `Tools/RoomLabNative/JetTrailChecks`.
+
 To reproduce against the independently saved pre-fix source, using the same final
 tests and no production-source overwrite:
 
@@ -22,7 +28,9 @@ The pre-fix sources are expected to fail. The initial final-suite comparison is
 preserved in `before-final-red.log` (25 cases, 14 failures). The later pending
 portal cancellation test has its own `pending-portal-red.log`, which failed
 against the first fix before the narrow reservation-release repair.
-Current fixed default suite: exit 0, 26 cases, 373 assertions, 0 failures.
+The 2026-10-29 fixed default suite had 26 cases / 373 assertions. With the
+2026-10-30 Demo jet influence expectations, the current default is exit 0,
+26 cases / 378 assertions / 0 failures.
 `--developer-only` selects the nine three-profile developer walk-off tests plus
 the real pending-portal cancellation/retrigger test.
 

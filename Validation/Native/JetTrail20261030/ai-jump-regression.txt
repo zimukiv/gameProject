@@ -1,0 +1,36 @@
+PASS flat no jet has no unexplained vertical motion
+PASS range jet Editor255Compat affectAI=False
+PASS range jet Editor255Compat affectAI=True
+PASS range jet LatestPhysics affectAI=False
+PASS range jet LatestPhysics affectAI=True
+PASS range jet DemoPhysics affectAI=False
+PASS range jet DemoPhysics affectAI=True
+PASS Demo records player trail during ballistic flight
+PASS Demo landing resumes nearest historical trail suffix
+PASS legacy landing and recovery schema preserved Editor255Compat
+PASS legacy landing and recovery schema preserved LatestPhysics
+PASS L-shaped route keeps vertical leg then turns at recorded corner
+PASS Demo repeated legal jet preserves pending chase route
+PASS legitimate airborne collectible during processing still counts
+PASS Demo flight route remains bounded at 1400 samples
+PASS developer safety return avoids immediate collectible spawn award
+DEV_RETURN_EVIDENCE {"scenario":"recorded-trail","beforePlayerY":622.25,"afterPlayerY":324.0,"trailBefore":59,"trailAfter":1,"flightAfter":false,"warningAfter":false,"deaths":0,"tokens":17,"score":123}
+PASS developer lock-health walk-off Editor255Compat clears recorded-trail
+DEV_RETURN_EVIDENCE {"scenario":"flight","beforePlayerY":622.25,"afterPlayerY":324.0,"trailBefore":56,"trailAfter":1,"flightAfter":false,"warningAfter":false,"deaths":0,"tokens":17,"score":123}
+PASS developer lock-health walk-off Editor255Compat clears flight
+DEV_RETURN_EVIDENCE {"scenario":"warning","beforePlayerY":622.25,"afterPlayerY":324.0,"trailBefore":61,"trailAfter":1,"flightAfter":false,"warningAfter":false,"deaths":0,"tokens":17,"score":123}
+PASS developer lock-health walk-off Editor255Compat clears warning
+DEV_RETURN_EVIDENCE {"scenario":"recorded-trail","beforePlayerY":622.25,"afterPlayerY":324.0,"trailBefore":59,"trailAfter":1,"flightAfter":false,"warningAfter":false,"deaths":0,"tokens":17,"score":123}
+PASS developer lock-health walk-off LatestPhysics clears recorded-trail
+DEV_RETURN_EVIDENCE {"scenario":"flight","beforePlayerY":622.25,"afterPlayerY":324.0,"trailBefore":56,"trailAfter":1,"flightAfter":false,"warningAfter":false,"deaths":0,"tokens":17,"score":123}
+PASS developer lock-health walk-off LatestPhysics clears flight
+DEV_RETURN_EVIDENCE {"scenario":"warning","beforePlayerY":622.25,"afterPlayerY":324.0,"trailBefore":61,"trailAfter":1,"flightAfter":false,"warningAfter":false,"deaths":0,"tokens":17,"score":123}
+PASS developer lock-health walk-off LatestPhysics clears warning
+DEV_RETURN_EVIDENCE {"scenario":"recorded-trail","beforePlayerY":622.25,"afterPlayerY":324.0,"trailBefore":59,"trailAfter":1,"flightAfter":false,"warningAfter":false,"deaths":0,"tokens":17,"score":123}
+PASS developer lock-health walk-off DemoPhysics clears recorded-trail
+DEV_RETURN_EVIDENCE {"scenario":"flight","beforePlayerY":622.25,"afterPlayerY":324.0,"trailBefore":61,"trailAfter":1,"flightAfter":false,"warningAfter":false,"deaths":0,"tokens":17,"score":123}
+PASS developer lock-health walk-off DemoPhysics clears flight
+DEV_RETURN_EVIDENCE {"scenario":"warning","beforePlayerY":622.25,"afterPlayerY":324.0,"trailBefore":61,"trailAfter":1,"flightAfter":false,"warningAfter":false,"deaths":0,"tokens":17,"score":123}
+PASS developer lock-health walk-off DemoPhysics clears warning
+PASS developer return cancels only pending portal route and permits retrigger
+AI_JUMP_CHECKS cases=26 assertions=378 failures=0 sourceUnchanged=true

@@ -1,0 +1,9 @@
+{
+  "baselineCommit": "75613df8b1addcda61b09663f69e222c16a26b26",
+  "beforeAI": "abdd97db08c7fc9176361c2cf50aacba2216f0e7dbc0a2662d2579734367f4ac",
+  "afterAI": "3043b3ce647874b66c0e28e4fe43b7b287d971d5d52970b30ad41d9b04a15dda",
+  "authoredJSON": "03b948a705210aafd718306a70947e90b41f7d1fa013a53a4087091d51809836",
+  "rules": "DemoPhysics + physics.jet only",
+  "red": "16 cases / 3 failures",
+  "green": "16 cases / 964 assertions / 0 failures"
+}
