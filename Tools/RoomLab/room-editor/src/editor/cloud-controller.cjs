@@ -48,6 +48,7 @@ class CloudController {
     });
     this.interval = setInterval(() => {
       if (
+        app.store.hasProject &&
         this.status?.mode === 'live' &&
         this.status.configured &&
         !this.paused &&
@@ -86,7 +87,7 @@ class CloudController {
     };
   }
   changed() {
-    if (this.paused) return;
+    if (this.paused || !this.app.store.hasProject) return;
     this.generation++;
     clearTimeout(this.timer);
     this.timer = setTimeout(
@@ -116,6 +117,7 @@ class CloudController {
           : '等待另一端打开同一来源版本';
   }
   async backup() {
+    if (!this.app.store.hasProject) return this.status;
     this.status = await this.api.cloud('draft', this.capture());
     this.updateBadge();
     return this.status;

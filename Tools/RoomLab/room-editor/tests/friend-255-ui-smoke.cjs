@@ -24,7 +24,7 @@ const A = require('../src/project/archive.cjs');
   }
   async function enter(file) {
     await page.locator('#project-file').setInputFiles(file);
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).click();
+    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
     await page.getByRole('button', { name: '房间列表', exact: true }).click();
     await page.getByRole('button', { name: '编辑房间', exact: true }).first().click();
   }

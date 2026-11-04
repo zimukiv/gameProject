@@ -1544,3 +1544,92 @@ body.room-editing main {
     overflow: auto;
   }
 }
+
+/* v3.0.0: collapsible global menus keep every action but shorten the top bar. */
+.menu {
+  position: relative;
+}
+.menu-trigger[aria-expanded='true'] {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.menu-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 190px;
+  max-width: calc(100vw - 24px);
+  padding: 6px;
+  gap: 2px;
+  background: #0f1a27;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45);
+}
+.menu-panel button {
+  width: 100%;
+  text-align: left;
+  justify-content: flex-start;
+  background: transparent;
+  border: 1px solid transparent;
+}
+.menu-panel button:hover:not([disabled]) {
+  background: #17283a;
+  border-color: var(--line);
+}
+.course-card {
+  border-top: 3px solid var(--theme-color, var(--line));
+}
+.header-actions[hidden] {
+  display: none;
+}
+.course-context-menu:popover-open {
+  display: grid;
+  gap: 5px;
+}
+.course-context-menu {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  padding: 5px;
+  background: #0f1a27;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px #0008;
+}
+.card .theme-badge {
+  background: var(--theme-color, #35506b);
+  color: #09121c;
+  padding: 3px 7px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+.theme-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.theme-choice {
+  flex: 1 1 210px;
+  text-align: left;
+  border-top: 3px solid var(--theme-color, var(--line));
+  cursor: pointer;
+}
+.theme-choice p {
+  color: var(--muted);
+  font-size: 12px;
+}
+@media (max-width: 850px) {
+  /* Anchor panels to the viewport so narrow screens never scroll sideways. */
+  .menu-panel {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    top: auto;
+    max-width: none;
+  }
+}

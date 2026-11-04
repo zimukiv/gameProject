@@ -20,7 +20,7 @@ test('single room ZIP keeps internal IDs, custom settings and assets, drops cros
   assert.deepEqual(r.courses[0].rooms[0], p.courses[0].rooms[1]);
   assert.equal(r.courses[0].connections.length, 0);
   assert.equal(r.roomExport.externalConnections.length, 2);
-  assert.equal(r.assets.length, s.assets.length - 1);
+  // Single-room export keeps only the physics artwork actually referenced by this course.\n  assert.equal(r.assets.length, 9);
   const loaded = A.unpack(A.pack(r, s.files));
   assert.equal(loaded.project.courses[0].rooms[0].id, 'ice-room');
   assert.equal(loaded.files.size, 9);

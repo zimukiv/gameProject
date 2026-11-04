@@ -68,6 +68,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright'),
     await page.locator('[data-nav-room="jet-room"]').click();
     assert.equal((await snap()).state.roomId, 'jet-room');
     await page.locator('#toggle-inspector').click();
+    await page.locator('[data-menu-trigger]', { hasText: '工具' }).click();
     await page.getByRole('button', { name: '素材库', exact: true }).click();
     assert.equal(await page.locator('[data-asset-group]').count(), 6);
     assert.equal(await page.locator('.asset-card').count(), 0);

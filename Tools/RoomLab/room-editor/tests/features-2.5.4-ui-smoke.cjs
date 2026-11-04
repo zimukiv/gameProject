@@ -54,7 +54,7 @@ const assert = require('node:assert/strict'),
     const before = await page.evaluate(() => window.__ROOM_LAB__.snapshot().project);
     const [chooser] = await Promise.all([
       page.waitForEvent('filechooser'),
-      page.locator('#import-room').click(),
+      (async () => { await page.locator('[data-menu-trigger]', { hasText: '项目' }).click(); return page.locator('#import-room').click(); })(),
     ]);
     await chooser.setFiles(file);
     await page.locator('[data-room-import-index]').first().waitFor();

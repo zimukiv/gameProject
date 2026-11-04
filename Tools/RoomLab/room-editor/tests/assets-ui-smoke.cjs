@@ -13,8 +13,10 @@ const assert = require('node:assert/strict'),
     await page.goto(
       'file:///' + path.resolve(__dirname, '../build/index.html').replace(/\\/g, '/'),
     );
+    await page.locator('#start-new').click();
+    await page.locator('[data-menu-trigger]', { hasText: '工具' }).click();
     await page.getByRole('button', { name: '素材库', exact: true }).click();
-    assert.equal((await snap()).project.assets.length, 9);
+    assert.equal((await snap()).project.assets.length, 13);
     await page.locator('[data-asset-group="mechanism"]').click();
     await page.locator('[data-asset-sub="physics.jet"]').click();
     const bytes = Buffer.from(
@@ -23,11 +25,11 @@ const assert = require('node:assert/strict'),
     await page
       .locator('#asset-files')
       .setInputFiles({ name: '测试素材.svg', mimeType: 'image/svg+xml', buffer: bytes });
-    await page.waitForFunction(() => window.__ROOM_LAB__.snapshot().project.assets.length === 10);
+    await page.waitForFunction(() => window.__ROOM_LAB__.snapshot().project.assets.length === 14);
     const imported = (await snap()).project.assets.at(-1);
     assert.equal(imported.width, 64);
     await page.getByRole('button', { name: '项目', exact: true }).click();
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).click();
+    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
     await page.getByRole('button', { name: '本关美术绑定', exact: true }).click();
     await page
       .locator('select[data-bind-type="physics.jet"][data-slot="idle"]')
@@ -52,7 +54,10 @@ const assert = require('node:assert/strict'),
       (o) => o.id === 'jet-a',
     );
     assert.equal(current.assetOverrides.idle, 'seed-jet-idle');
+    await page.locator('[data-menu-trigger]', { hasText: '工具' }).click();
     await page.getByRole('button', { name: '素材库', exact: true }).click();
+    await page.locator('[data-asset-group="mechanism"]').click();
+    await page.locator('[data-asset-sub="physics.jet"]').click();
     await page.locator('button[data-replace="' + imported.id + '"]').click();
     await page.locator('#asset-files').setInputFiles({
       name: '替换.svg',
@@ -67,29 +72,34 @@ const assert = require('node:assert/strict'),
     assert.equal(latest.project.assets.at(-1).id, imported.id);
     assert.equal(latest.project.courses[0].artBindings['physics.jet'].idle, imported.id);
     const downloadEvent = page.waitForEvent('download');
+    await page.locator('[data-menu-trigger]', { hasText: '项目' }).click();
     await page.getByRole('button', { name: '导出项目包', exact: true }).click();
     const download = await downloadEvent,
       zipPath = path.resolve(__dirname, '../test-output/asset-project.zip');
     await download.saveAs(zipPath);
-    await page.getByRole('button', { name: '新建大关', exact: true }).click();
-    await page.getByRole('button', { name: '不保存并继续', exact: true }).click();
-    await page.waitForFunction(() => window.__ROOM_LAB__.snapshot().project.courses.length === 2);
+    await page.locator('[data-menu-trigger]', { hasText: '项目' }).click();
+    await page.locator('#new-project').click();
+    await page.locator('[data-new-course-kind="physics"]').click();
+    await page.waitForFunction(() => window.__ROOM_LAB__.snapshot().project.courses.length === 4);
     await page.locator('#project-file').setInputFiles(zipPath);
     await page.waitForFunction(
       () =>
-        window.__ROOM_LAB__.snapshot().project.assets.length === 10 &&
-        window.__ROOM_LAB__.snapshot().project.courses.length === 1,
+        window.__ROOM_LAB__.snapshot().project.assets.length === 14 &&
+        window.__ROOM_LAB__.snapshot().project.courses.length === 3,
     );
     assert.equal((await snap()).project.courses[0].artBindings['physics.jet'].idle, imported.id);
+    await page.locator('[data-menu-trigger]', { hasText: '工具' }).click();
     await page.getByRole('button', { name: '功能块', exact: true }).click();
-    await page.locator('#param-launchY').fill('-1200');
-    await page.getByRole('button', { name: '保存默认定义', exact: true }).click();
-    assert.equal((await snap()).project.blockDefaults['physics.jet'].params.launchY, -1200);
+    await page.locator('[data-definition="physics.jet"]').click();
+    await page.locator('#param-force').fill('1200');
+    await page.getByRole('button', { name: '保存本大关默认定义', exact: true }).click();
+    assert.equal((await snap()).project.courses[0].blockDefaults['physics.jet'].params.force, 1200);
     assert.equal(
       (await snap()).project.courses[0].rooms[0].objects.find((o) => o.id === 'jet-a').params
         .launchY,
       -900,
     );
+    await page.locator('[data-menu-trigger]', { hasText: '工具' }).click();
     await page.getByRole('button', { name: '素材库', exact: true }).click();
     await page.screenshot({
       path: path.resolve(__dirname, '../test-output/phase3.png'),

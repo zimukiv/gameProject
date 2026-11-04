@@ -1,8 +1,8 @@
 {
   "name": "ddl-room-editor",
-  "version": "2.5.5",
+  "version": "3.0.0",
   "private": true,
-  "description": "Room-based course level editor and physics-course prototype",
+  "description": "Three-theme (physics / calculus / slacker) room-based course level editor",
   "main": "src/desktop/main.cjs",
   "engines": {
     "node": ">=22.12.0",

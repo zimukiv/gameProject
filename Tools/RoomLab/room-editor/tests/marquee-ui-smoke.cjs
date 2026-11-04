@@ -15,7 +15,7 @@ const assert = require('node:assert/strict'),
     const errors = [];
     p.on('pageerror', (e) => errors.push(e.message));
     await p.waitForFunction(() => window.__ROOM_LAB__);
-    await p.getByRole('button', { name: '进入大关 →', exact: true }).click();
+    await p.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
     await p.getByRole('button', { name: '房间列表', exact: true }).click();
     await p.getByRole('button', { name: '编辑房间', exact: true }).first().click();
     const snap = () => p.evaluate(() => window.__ROOM_LAB__.snapshot());

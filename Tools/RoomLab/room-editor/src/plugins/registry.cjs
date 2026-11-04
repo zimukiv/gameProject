@@ -6,6 +6,8 @@ const modules = [
   require('./physics/ice.cjs'),
   require('./physics/thermal.cjs'),
   require('./physics/rail.cjs'),
+  require('./calculus.cjs'),
+  require('./slacker.cjs'),
   require('./common.cjs'),
   require('./legacy.cjs'),
 ].flat();
@@ -44,9 +46,24 @@ function params(project, object) {
     ? require('../project/jet-params.cjs').resolve(values, explicit)
     : values;
 }
-function instantiate(project, type, id, x, y) {
+function courseDefaults(project, course, type) {
+  const legacy = project.blockDefaults?.[type],
+    local = course?.blockDefaults?.[type];
+  return {
+    ...legacy,
+    ...local,
+    params: { ...legacy?.params, ...local?.params },
+    assets: { ...legacy?.assets, ...local?.assets },
+  };
+}
+function instantiate(project, type, id, x, y, course) {
   const d = get(type);
-  const values = clone({ ...d.defaults, ...project.blockDefaults?.[type]?.params });
+  const config = courseDefaults(project, course, type);
+  const values = clone(
+    course?.blockDefaults?.[type]
+      ? params(project, { type, params: config.params })
+      : { ...d.defaults, ...config.params },
+  );
   if (type === 'physics.rail') {
     if (!values.path?.length) values.path = clone(d.defaults.path);
     const first = values.path[0],
@@ -62,7 +79,7 @@ function instantiate(project, type, id, x, y) {
   return RailNodes.ensure({
     id,
     type,
-    name: project.blockDefaults?.[type]?.name || d.name,
+    name: config.name || d.name,
     notes: '',
     x,
     y,
@@ -78,7 +95,9 @@ function instantiate(project, type, id, x, y) {
       cooldown: 1,
     },
     aiId: null,
-    assetOverrides: {},
+    assetOverrides: Object.fromEntries(
+      Object.entries(course?.blockDefaults?.[type]?.assets || {}).filter(([, id]) => id),
+    ),
     resetPolicy: 'checkpoint',
   });
 }
@@ -120,4 +139,12 @@ function validateObject(project, o) {
     );
   return errors;
 }
-module.exports = { get, list, params, instantiate, validateObject, all: () => modules.slice() };
+module.exports = {
+  get,
+  list,
+  params,
+  courseDefaults,
+  instantiate,
+  validateObject,
+  all: () => modules.slice(),
+};

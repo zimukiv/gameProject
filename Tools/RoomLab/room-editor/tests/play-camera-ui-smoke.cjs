@@ -35,7 +35,7 @@ const assert = require('node:assert/strict'),
     await page.waitForFunction(
       () => window.__ROOM_LAB__.snapshot().project.courses[0].rooms.length === 1,
     );
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).click();
+    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
     await page.getByRole('button', { name: '房间列表', exact: true }).click();
     await page.getByRole('button', { name: '编辑房间', exact: true }).click();
     await page.locator('#room-settings').click();

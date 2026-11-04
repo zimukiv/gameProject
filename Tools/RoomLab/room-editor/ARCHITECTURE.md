@@ -1,5 +1,8 @@
 # Room Lab 架构
 
+3.0.0 build3：`Store.hasProject` 区分未开始和有效本地草稿，`load` 建立可恢复草稿；未开始时不备份占位示例。大关的 `blockDefaults` 按大关 ID 隔离，`Registry.instantiate` 将参数和选定素材写入新对象。现有对象沿用自己的参数与 v2 项目级默认值。素材按具体大关、通用或内置主题模板解析。
+
+3.0.0：`project/themes.cjs` 是主题元数据与三主题起始 factory 的唯一来源（稳定 kind：`physics` / `calculus` / `slacker`，各带序号、主题色、独立 AI ID 与起始房）。`M.example()` 继续输出旧物理基线，`M.themedExample()` 只供初次打开的 UI；`migrate` 不追加或重写旧工程课程，项目格式仍为 v2。`plugins/calculus.cjs` 与 `plugins/slacker.cjs` 只通过 Engine context（`transformGroup` / `launchPlayer` / `emit` / `say`）操作，碰撞与重试快照仍由共享引擎拥有。`plugins/registry.cjs` 按 `course.kind` 过滤工具栏定义，`assets/seeds.cjs` 通过 `themeBindings` 为三主题提供素材绑定，`assets/catalog.cjs` 以主题 kind 作为素材归属，不把新主题归为物理。`editor/menus.cjs` 负责顶部「项目」「工具」折叠菜单的键盘、外部点击与 Esc 收起。
 2.5.5：`project/compatibility.cjs` 在 v2 clone 和基础参数迁移后识别未标记的朋友版存档点签名，一次性将左右喷气碰撞/触发、电磁侧面触发物化到各对象。`compatibility.runtime` 防止后续改动被重新覆盖；普通旧项目仅写入标记。导出共用 portable 路径声明 checkpoint / rail 模块依赖。`repair-zone-bounds.cjs` 是显式新副本修复，正常导入仍保留越界编辑数据。`common.checkpoint` 只通过 context 调用 Engine.setCheckpoint，复活快照和资源仍由引擎拥有；实心复活位置位于方块顶面，空心保持朋友版位置。
 
 2.5.4：`room-import-batch.cjs` 准备完整批量结果，`room-import.cjs` 负责单房间重映射、覆盖端口保留与素材复用，`room-import-dialog.cjs` 负责多选与覆盖确认，提交只执行一次 History 操作。云端 `inspectRevision` 只读验证项目 JSON，`readRevision` 获取素材供导入，不执行 checkout；`cloud-room-details.cjs` 渲染名称和房间清单。`room-order.cjs` 只调整数组，`room-tab-order.cjs` 处理标签拖动。`trace-replay.cjs` 负责纯时间采样，`trace-replay-panel.cjs` 在原路径管理弹窗内绘制，保留暂停/恢复所有权；`trace-names.cjs` 和选择按钮模块共用于退出保存与中途保存。

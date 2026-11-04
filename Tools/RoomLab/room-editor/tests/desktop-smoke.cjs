@@ -19,12 +19,13 @@ const { _electron } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     assert.equal(await page.evaluate(() => window.desktopAPI.platform), 'windows');
     const version = require('../package.json').version.split('.').slice(0, 2).join('.');
     assert.ok((await page.locator('.brand small').textContent()).includes('v' + version));
+    await page.locator('#start-new').click();
     const root = path.resolve(__dirname, '../test-output/桌面 中文项目'),
       file = path.join(root, 'project.json');
     await fs.mkdir(root, { recursive: true });
     // Native read/write IPC is exercised on disk using a project with an imported image.
     const snap = await page.evaluate(() => window.__ROOM_LAB__.snapshot().project),
-      seed = require('../src/assets/seeds.cjs').seeds();
+      seed = require('../src/assets/seeds.cjs').seeds({ allThemes: true });
     const saved = await page.evaluate(
       async ({ project, files, file }) =>
         window.desktopAPI.saveProject({ project, files, testPath: file }),
@@ -40,7 +41,7 @@ const { _electron } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       file,
     );
     assert.deepEqual(opened.project, snap);
-    assert.equal(opened.files.length, 9);
+    assert.equal(opened.files.length, 13);
     const art = path.join(root, '新美术.svg');
     await fs.writeFile(
       art,
@@ -72,7 +73,7 @@ const { _electron } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       traceFile,
     );
     assert.equal(loadedTraces.text, traceText);
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).click();
+    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
     await page.getByRole('button', { name: '房间列表', exact: true }).click();
     await page.getByRole('button', { name: '编辑房间', exact: true }).first().click();
     assert.equal(await page.locator('.room-tabs [data-nav-room]').count(), 3);

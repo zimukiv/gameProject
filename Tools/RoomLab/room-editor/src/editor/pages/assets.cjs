@@ -1,19 +1,44 @@
 'use strict';
 const A = require('../../assets/manager.cjs'),
-  C = require('../../assets/catalog.cjs');
+  C = require('../../assets/catalog.cjs'),
+  Themes = require('../../project/themes.cjs');
 const { esc, $, field, select, modal } = require('../dom.cjs');
+function folders(project, group, course, assets) {
+  const list = C.children(group, course?.kind);
+  // Keep legacy or manually recategorised assets reachable in their stored folder.
+  for (const a of assets) {
+    const f = C.classification(project, a);
+    if (f.category === group && !list.some((v) => v.id === f.subcategory))
+      list.push(
+        C.children(group).find((v) => v.id === f.subcategory) || {
+          id: f.subcategory,
+          name: f.subcategory,
+        },
+      );
+  }
+  return list;
+}
+const courseLabel = (c) => c.name + '（' + Themes.theme(c.kind).label + '）';
 function render(app) {
   const p = app.store.project,
-    courseId = app.state.assetCourse || 'all',
+    scope = app.state.assetCourse,
+    course = p.courses.find((c) => c.id === scope),
+    courseId = scope === 'all' || scope === 'common' ? scope : (course || app.course()).id,
+    active = p.courses.find((c) => c.id === courseId),
     group = app.state.assetGroup || null,
     sub = app.state.assetSub || null;
-  const scoped = p.assets.filter((a) => courseId === 'all' || a.courseId === courseId);
+  const scoped = p.assets.filter((a) => {
+    if (courseId === 'all' || a.courseId === courseId) return true;
+    if (!active || !C.inCourse(a, active)) return false;
+    const f = C.classification(p, a);
+    return C.children(f.category, active.kind).some((v) => v.id === f.subcategory);
+  });
   const matches = (a, g, s) => {
     const f = C.classification(p, a);
     return f.category === g && (!s || f.subcategory === s);
   };
   const groupName = C.GROUPS.find((g) => g.id === group)?.name,
-    subName = C.children(group).find((s) => s.id === sub)?.name;
+    subName = folders(p, group, active, scoped).find((s) => s.id === sub)?.name || sub;
   app.state.assetImportFolder =
     group && sub
       ? {
@@ -41,7 +66,7 @@ function render(app) {
       ),
     ).join('')}</div>`;
   else if (!sub)
-    content = `<div class="asset-folder-grid">${C.children(group)
+    content = `<div class="asset-folder-grid">${folders(p, group, active, scoped)
       .map((s) =>
         folderCard(
           s.id,
@@ -57,10 +82,12 @@ function render(app) {
     content = `<div class="asset-grid">${items.map((a) => `<article class="card asset-card"><img src="${esc(app.assetURL(a.id) || '')}" alt="${esc(a.name)}"><h3>${esc(a.name)}</h3><p>${a.width} × ${a.height} · ${A.usage(p, a.id).length} 处引用</p><p>${esc(p.courses.find((c) => c.id === a.courseId)?.name || '通用素材')}</p><div class="actions"><button data-meta="${esc(a.id)}">资料 / 归类</button><button data-replace="${esc(a.id)}">替换</button><button data-remove="${esc(a.id)}" class="danger">移除</button></div></article>`).join('')}</div>${!items.length ? '<div class="asset-empty"><h2>这个分类还没有素材</h2><p>点击「导入图片 / 图集」，新素材会直接放到当前分类。</p></div>' : ''}`;
   }
   $('app').innerHTML =
-    `<div class="page-title"><div><h1>项目素材库</h1><p class="muted">先选大类，再选子类，最后管理图片。应用到方块时自动筛选对应类别。</p></div><button id="add-assets" class="primary">导入图片 / 图集</button></div><div class="asset-library-toolbar">${crumbs}<select id="asset-filter" aria-label="素材所属大关"><option value="all">全部大关</option><option value="common">通用素材</option>${p.courses.map((c) => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select></div>${group && sub ? `<p class="asset-folder-hint">当前目录：${esc(groupName)} / ${esc(subName)} · 在这里导入将自动归入此类</p>` : ''}${content}`;
+    `<div class="page-title"><div><h1>项目素材库</h1><p class="muted">大关 → 大类 → 子类 → 图片。大关视图也显示适用的通用素材；新导入的图片归当前大关。</p></div><button id="add-assets" class="primary">导入图片 / 图集</button></div><div class="asset-library-toolbar">${crumbs}<select id="asset-filter" aria-label="素材所属大关"><option value="all">全部大关</option><option value="common">通用素材</option>${p.courses.map((c) => `<option value="${esc(c.id)}">${esc(courseLabel(c))}</option>`).join('')}</select></div>${group && sub ? `<p class="asset-folder-hint">当前目录：${esc(groupName)} / ${esc(subName)} · 在这里导入将自动归入此类</p>` : ''}${content}`;
   $('asset-filter').value = courseId;
   $('asset-filter').onchange = (e) => {
     app.state.assetCourse = e.target.value;
+    app.state.assetGroup = null;
+    app.state.assetSub = null;
     app.render();
   };
   $('app')
@@ -142,10 +169,14 @@ function render(app) {
 }
 function editMeta(app, a) {
   const p = app.store.project,
-    f = C.classification(p, a);
+    f = C.classification(p, a),
+    owner = p.courses.find((c) => c.id === a.courseId),
+    scopes = [['common', '通用'], ...p.courses.map((c) => [c.id, courseLabel(c)])];
+  if (!owner && a.courseId && a.courseId !== 'common')
+    scopes.push([a.courseId, '原归属：' + a.courseId]);
   modal(
     '素材资料与分类',
-    `<div class="form">${field('名称', 'asset-name', a.name)}${select('所属大关', 'asset-course', a.courseId, [['common', '通用'], ...p.courses.map((c) => [c.id, c.name])])}<div class="row">${select(
+    `<div class="form">${field('名称', 'asset-name', a.name)}${select('所属大关', 'asset-course', a.courseId, scopes)}<div class="row">${select(
       '大类',
       'asset-category',
       f.category,
@@ -154,7 +185,7 @@ function editMeta(app, a) {
       '子类',
       'asset-subcategory',
       f.subcategory,
-      C.children(f.category).map((s) => [s.id, s.name]),
+      folders(p, f.category, owner, [a]).map((s) => [s.id, s.name]),
     )}</div><div class="row">${field('图集单帧宽（0 为整图）', 'frame-w', a.frameWidth, { type: 'number', min: 0 })}${field('图集单帧高', 'frame-h', a.frameHeight, { type: 'number', min: 0 })}</div>${field('动画 FPS', 'frame-fps', a.fps, { type: 'number', min: 1, max: 60 })}<p class="hint">${esc(A.usage(p, a.id).join('；') || '未使用')}。分类决定应用时的候选图片，已有绑定和素材 ID 保留。</p></div>`,
     [
       { label: '取消' },
@@ -173,15 +204,24 @@ function editMeta(app, a) {
           };
           app.state.assetGroup = values.category;
           app.state.assetSub = values.subcategory;
+          app.state.assetCourse =
+            values.courseId === 'common' || p.courses.some((c) => c.id === values.courseId)
+              ? values.courseId
+              : 'all';
           app.store.change(() => Object.assign(a, values));
         },
       },
     ],
   );
-  $('asset-category').onchange = () => {
-    $('asset-subcategory').innerHTML = C.children($('asset-category').value)
+  const refresh = () => {
+    const next = p.courses.find((c) => c.id === $('asset-course').value),
+      current = $('asset-subcategory').value;
+    $('asset-subcategory').innerHTML = folders(p, $('asset-category').value, next, [])
       .map((s) => `<option value="${esc(s.id)}">${esc(s.name)}</option>`)
       .join('');
+    if ([...$('asset-subcategory').options].some((option) => option.value === current))
+      $('asset-subcategory').value = current;
   };
+  $('asset-category').onchange = $('asset-course').onchange = refresh;
 }
 module.exports = { render };

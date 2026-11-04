@@ -40,7 +40,7 @@ const F = require('../src/desktop/project-files.cjs'),
     await p.waitForFunction(
       () => window.__ROOM_LAB__.snapshot().project.courses[0].rooms.length === 15,
     );
-    await p.getByRole('button', { name: '进入大关 →', exact: true }).click();
+    await p.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
     await p.getByRole('button', { name: '房间列表', exact: true }).click();
     await p.getByRole('button', { name: '编辑房间', exact: true }).nth(8).click();
     await p.locator('#play-room').click();

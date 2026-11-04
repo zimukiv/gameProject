@@ -113,7 +113,7 @@ function example() {
     compatibility: { runtime: require('./compatibility.cjs').RUNTIME },
     id: 'physics-project',
     name: '第一大关 · 物理 DDL',
-    notes: '第一版内容只制作物理关。',
+    notes: '物理主题示例：速度、材料与温控。',
     settings: { tileSize: TILE, maxDashes: 3, paidStockCap: 3, freeDashOnLand: true },
     courses: [
       {
@@ -150,6 +150,11 @@ function example() {
       'physics.rail': '1.0.0',
     },
   };
+}
+// Separate from example(): the first-run UI shows all three themes while
+// existing tests/APIs keep the physics-only M.example() baseline.
+function themedExample() {
+  return require('./themes.cjs').starter();
 }
 function migrate(data) {
   if (data?.version === 2)
@@ -444,6 +449,7 @@ module.exports = {
   floor,
   object,
   example,
+  themedExample,
   migrate,
   validate,
   resizeRoom,

@@ -13,14 +13,10 @@ function addRoom(app, c) {
       c.defaultSize.cols,
       c.defaultSize.rows,
     );
-    M.floor(r, 0, r.cols - 1, r.rows - 3);
     r.graph = {
       x: 40 + (c.rooms.length % 3) * (GraphLayout.card(r).width + 30),
       y: 90 + Math.floor(c.rooms.length / 3) * (GraphLayout.card(r).height + 35),
     };
-    r.exits = [
-      { id: M.uid('exit'), name: '出口', notes: '', x: r.cols - 2, y: r.rows - 5, w: 1, h: 2 },
-    ];
     c.rooms.push(r);
   });
 }

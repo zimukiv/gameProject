@@ -28,7 +28,7 @@ async function mode(page, value) {
   await page.getByRole('button', { name: '关闭', exact: true }).click();
 }
 async function room(page) {
-  await page.getByRole('button', { name: '进入大关 →', exact: true }).click();
+  await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
   await page.getByRole('button', { name: '房间列表', exact: true }).click();
   await page.getByRole('button', { name: '编辑房间', exact: true }).first().click();
 }

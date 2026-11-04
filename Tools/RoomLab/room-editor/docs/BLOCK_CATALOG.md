@@ -51,6 +51,44 @@
 | allowExit | 允许跳跃/冲刺脱离 | boolean | `true` |  |
 | sideTrigger | 允许左右侧面接触启动（朋友版兼容） | boolean | `false` |  |
 
+## 积分聚合板 · calculus.integral
+
+版本：1.0.0；大关：calculus；触发：foot；素材状态：idle / active
+
+| 参数 | 说明 | 类型 | 默认值 | 范围/选项 |
+| --- | --- | --- | --- | --- |
+| range | 聚合范围（格） | number | `12` | 1–40 |
+| once | 只聚合一次 | boolean | `true` |  |
+| cooldown | 冷却（秒） | number | `1` | 0.1–10 |
+
+## 求导展开板 · calculus.derivative
+
+版本：1.0.0；大关：calculus；触发：foot；素材状态：idle / active
+
+| 参数 | 说明 | 类型 | 默认值 | 范围/选项 |
+| --- | --- | --- | --- | --- |
+| range | 展开范围（格） | number | `12` | 1–40 |
+| once | 只展开一次 | boolean | `true` |  |
+| cooldown | 冷却（秒） | number | `1` | 0.1–10 |
+
+## 签到板 · slacker.checkin
+
+版本：1.0.0；大关：slacker；触发：foot；素材状态：idle / active
+
+| 参数 | 说明 | 类型 | 默认值 | 范围/选项 |
+| --- | --- | --- | --- | --- |
+| cooldown | 重复签到冷却（秒） | number | `1` | 0.1–30 |
+
+## 清醒板 · slacker.awake
+
+版本：1.0.0；大关：slacker；触发：foot；素材状态：idle / active
+
+| 参数 | 说明 | 类型 | 默认值 | 范围/选项 |
+| --- | --- | --- | --- | --- |
+| speed | 清醒加速速度 | number | `520` | 100–1200 |
+| lift | 附加上抛速度 | number | `140` | 0–600 |
+| cooldown | 冷却（秒） | number | `3` | 0.1–30 |
+
 ## 大 token · common.coin
 
 版本：1.0.0；大关：*；触发：none；素材状态：idle

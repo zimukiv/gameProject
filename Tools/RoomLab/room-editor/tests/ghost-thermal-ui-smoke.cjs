@@ -35,7 +35,7 @@ const assert = require('node:assert/strict'),
     page.on('pageerror', (e) => errors.push(e.message));
     await page.waitForFunction(() => window.__ROOM_LAB__);
     await page.locator('#project-file').setInputFiles(input);
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).click();
+    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
     await page.getByRole('button', { name: '从首房试玩', exact: true }).click();
     await page.waitForFunction(
       () => window.__ROOM_LAB__.snapshot().game?.objects['ghost-thermal']?.used === true,

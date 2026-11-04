@@ -55,6 +55,10 @@ function accept(secrets = []) {
   for (const rel of [
     'src/runtime/engine.cjs',
     'src/project/temperature.cjs',
+    'src/project/themes.cjs',
+    'src/plugins/calculus.cjs',
+    'src/plugins/slacker.cjs',
+    'src/editor/menus.cjs',
     'src/project/collision.cjs',
     'src/project/compatibility.cjs',
     'src/project/repair-zone-bounds.cjs',

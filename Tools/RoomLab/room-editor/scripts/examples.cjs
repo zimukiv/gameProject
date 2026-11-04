@@ -18,6 +18,14 @@ function generate() {
   );
   for (const [name, bytes] of seed.files) fs.writeFileSync(path.join(dir, name), bytes);
   fs.writeFileSync(path.join(root, 'physics-project.zip'), Archive.pack(project, seed.files));
+  const themed = M.themedExample(),
+    themedSeed = seeds({ allThemes: true });
+  themed.assets = themedSeed.assets;
+  for (const course of themed.courses) course.artBindings = themedSeed.themeBindings[course.kind];
+  fs.writeFileSync(
+    path.join(root, 'three-themes-project.zip'),
+    Archive.pack(themed, themedSeed.files),
+  );
   return dir;
 }
 if (require.main === module) console.log('示例工程：' + generate());

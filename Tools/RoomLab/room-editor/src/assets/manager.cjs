@@ -65,6 +65,9 @@ async function importAsset(
 function usage(project, id) {
   const result = [];
   for (const c of project.courses) {
+    for (const [type, config] of Object.entries(c.blockDefaults || {}))
+      if (Object.values(config.assets || {}).includes(id))
+        result.push(c.name + ' / 默认定义 / ' + type);
     for (const [type, slots] of Object.entries(c.artBindings || {})) {
       if (slots === id || Object.values(slots || {}).includes(id))
         result.push(c.name + ' / ' + type);

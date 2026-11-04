@@ -5,7 +5,7 @@
   },
   "id": "physics-project",
   "name": "第一大关 · 物理 DDL",
-  "notes": "第一版内容只制作物理关。",
+  "notes": "物理主题示例：速度、材料与温控。",
   "settings": {
     "tileSize": 32,
     "maxDashes": 3,
@@ -2013,13 +2013,13 @@
                   {
                     "x": 6.5,
                     "y": 15,
-                    "id": "rail-node-mvpc91up-3wu22s",
+                    "id": "rail-node-mw2ba1t8-yalzkr",
                     "parentId": "rail-c"
                   },
                   {
                     "x": 17.5,
                     "y": 15,
-                    "id": "rail-node-mvpc91up-6h0ap4",
+                    "id": "rail-node-mw2ba1t8-so2nn3",
                     "parentId": "rail-c"
                   }
                 ],
@@ -2109,7 +2109,7 @@
       "mime": "image/svg+xml",
       "width": 64,
       "height": 64,
-      "courseId": "physics",
+      "courseId": "common",
       "category": "terrain",
       "subcategory": "common.solid",
       "frameWidth": 0,

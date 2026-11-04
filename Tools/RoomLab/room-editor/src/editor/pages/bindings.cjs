@@ -60,4 +60,4 @@ function renderObject(app, o, d, host) {
         })),
   );
 }
-module.exports = { renderCourse, renderObject };
+module.exports = { renderCourse, renderObject, options };

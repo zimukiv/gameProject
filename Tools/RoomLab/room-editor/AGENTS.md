@@ -1,13 +1,13 @@
 # Room Lab 项目上下文
 
-第一大关物理编辑器，源代码与旧 demo 隔离。先读 README.md、ARCHITECTURE.md、docs/CHANGELOG.md，再改相关模块。工程分工遵守用户当前指令及上层规则，本文件不改变 DSH/Codex 分工偏好。
+Room Lab 三主题大关编辑器，源代码与旧 demo 隔离。先读 README.md、ARCHITECTURE.md、docs/CHANGELOG.md，再改相关模块。工程分工遵守用户当前指令及上层规则。
 
 ## 维护约束
 
 - 云端源码仓库为 https://github.com/zimukiv/gameProject ，本组件对应 Tools/RoomLab/room-editor，云同步服务对应相邻 room-cloud。每次收到更改需求，先运行 `node scripts/check-upstream.cjs` 核对 GitHub main 最新源码与本地基线，再开始实现；此处“云端版本”指 GitHub 源码，不是关卡云同步节点。
 - 如果检查提示远端源码已变化或无法联网核验，先报告并对比/同步远端改动，保留本地未提交内容；不得在过期副本上直接覆盖远端，也不得 reset/clean 或强推。同步确认后可使用 `--record` 记录本机基线。
 
-- 只提供物理关示例，AI 技能保持 ID 接口；新增内容先确认需求范围。
+- 3.0.0 起提供物理、高数、水课三个主题起始模板（kind：physics / calculus / slacker），高数与水课是可编辑、可试玩的起始模板，不是完整玩法移植；AI 技能保持 ID 接口；新增内容先确认需求范围。
 - 源码在 src，build 为生成文件，不能只改 build。插件定义是参数及素材状态唯一源。
 - ID 和素材相对路径必须稳定。改名不能重建 ID；复制房间要重映射内部引用。
 - 缩小房间保留越界数据，试玩拒绝越界。删除端口必须清理相应接线；温控区失联需修复。

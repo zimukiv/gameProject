@@ -1,6 +1,6 @@
 'use strict';
 const { strToU8 } = require('fflate');
-function seeds() {
+function seeds({ allThemes = false } = {}) {
   const svg = (bg, inside) =>
     `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect x="1" y="1" width="62" height="62" rx="5" fill="${bg}" stroke="#9dbacb" stroke-width="2"/>${inside}</svg>`;
   const items = [
@@ -76,36 +76,95 @@ function seeds() {
         '<path d="M18 15v24a14 14 0 0028 0V15" fill="none" stroke="#cec0fa" stroke-width="10"/><path d="M33 9L25 31h10l-8 25 17-31H33z" fill="#7cfff0"/>',
       ),
     ],
+    [
+      'calculus-integral',
+      '积分 · 聚合',
+      svg(
+        '#3c3a63',
+        '<path d="M22 8h20v48H22" fill="none" stroke="#c9b6ff" stroke-width="5"/><path d="M42 32H14" stroke="#8ff0e6" stroke-width="4"/><path d="M20 24l-8 8 8 8M36 24l8 8-8 8" fill="none" stroke="#8ff0e6" stroke-width="4"/>',
+      ),
+    ],
+    [
+      'calculus-derivative',
+      '求导 · 展开',
+      svg(
+        '#3a4663',
+        '<path d="M18 10h28M18 54h28" stroke="#b7c8ff" stroke-width="5"/><path d="M32 48V16" stroke="#8ff0e6" stroke-width="5"/><path d="M18 24l14-12 14 12" fill="none" stroke="#8ff0e6" stroke-width="4"/>',
+      ),
+    ],
+    [
+      'slacker-checkin',
+      '签到 · 记录',
+      svg(
+        '#2c5346',
+        '<path d="M10 14h44v36H10z" fill="none" stroke="#9fe8bf" stroke-width="4"/><path d="M20 32l9 9 17-18" fill="none" stroke="#9fe8bf" stroke-width="6"/>',
+      ),
+    ],
+    [
+      'slacker-awake',
+      '清醒 · 加速',
+      svg(
+        '#4c5238',
+        '<path d="M24 14h22v26a11 11 0 01-22 0z" fill="none" stroke="#ffe08a" stroke-width="4"/><path d="M24 22h-6M46 22h6M34 10l4-6 4 6" stroke="#ffe08a" stroke-width="4" fill="none"/><path d="M34 30v12M28 36h12" stroke="#ffb571" stroke-width="4"/>',
+      ),
+    ],
   ];
   const files = new Map(),
-    assets = items.map(([id, name, data]) => {
-      const path = 'assets/seed-' + id + '.svg';
-      files.set(path, strToU8(data));
-      return {
-        id: 'seed-' + id,
-        name,
-        path,
-        mime: 'image/svg+xml',
-        width: 64,
-        height: 64,
-        courseId: 'physics',
-        category: id === 'metal' ? 'terrain' : 'mechanism',
-        subcategory: id === 'metal' ? 'common.solid' : 'physics.' + id.split('-')[0],
-        frameWidth: 0,
-        frameHeight: 0,
-        fps: 6,
-        hash: 'seed-' + id,
-      };
-    });
+    assets = items
+      .filter(([id]) => allThemes || !/^(calculus|slacker)-/.test(id))
+      .map(([id, name, data]) => {
+        const path = 'assets/seed-' + id + '.svg';
+        files.set(path, strToU8(data));
+        const theme = id.startsWith('calculus-')
+            ? 'calculus'
+            : id.startsWith('slacker-')
+              ? 'slacker'
+              : 'physics',
+          head = id.split('-')[0],
+          tail = id.slice(id.indexOf('-') + 1);
+        return {
+          id: 'seed-' + id,
+          name,
+          path,
+          mime: 'image/svg+xml',
+          width: 64,
+          height: 64,
+          courseId: id === 'metal' ? 'common' : theme,
+          category: id === 'metal' ? 'terrain' : 'mechanism',
+          subcategory:
+            id === 'metal' ? 'common.solid' : theme + '.' + (theme === 'physics' ? head : tail),
+          frameWidth: 0,
+          frameHeight: 0,
+          fps: 6,
+          hash: 'seed-' + id,
+        };
+      });
+  const bindings = {
+    'common.solid': { idle: 'seed-metal' },
+    'physics.ice': { solid: 'seed-ice-solid', cracked: 'seed-ice-cracked' },
+    'physics.jet': { idle: 'seed-jet-idle', active: 'seed-jet-active' },
+    'physics.thermal': { cold: 'seed-thermal-cold', hot: 'seed-thermal-hot' },
+    'physics.rail': { idle: 'seed-rail-idle', active: 'seed-rail-active' },
+  };
   return {
     assets,
     files,
-    bindings: {
-      'common.solid': { idle: 'seed-metal' },
-      'physics.ice': { solid: 'seed-ice-solid', cracked: 'seed-ice-cracked' },
-      'physics.jet': { idle: 'seed-jet-idle', active: 'seed-jet-active' },
-      'physics.thermal': { cold: 'seed-thermal-cold', hot: 'seed-thermal-hot' },
-      'physics.rail': { idle: 'seed-rail-idle', active: 'seed-rail-active' },
+    bindings,
+    themeBindings: {
+      physics: bindings,
+      calculus: {
+        'common.solid': { idle: 'seed-metal' },
+        'calculus.integral': { idle: 'seed-calculus-integral', active: 'seed-calculus-integral' },
+        'calculus.derivative': {
+          idle: 'seed-calculus-derivative',
+          active: 'seed-calculus-derivative',
+        },
+      },
+      slacker: {
+        'common.solid': { idle: 'seed-metal' },
+        'slacker.checkin': { idle: 'seed-slacker-checkin', active: 'seed-slacker-checkin' },
+        'slacker.awake': { idle: 'seed-slacker-awake', active: 'seed-slacker-awake' },
+      },
     },
   };
 }

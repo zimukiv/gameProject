@@ -1,7 +1,7 @@
 'use strict';
 const { Store } = require('./store.cjs'),
   M = require('../project/model.cjs'),
-  { esc, $, download, modal } = require('./dom.cjs');
+  { esc, $, download, modal, check } = require('./dom.cjs');
 const Home = require('./pages/home.cjs'),
   Course = require('./pages/course.cjs'),
   Room = require('./pages/room.cjs');
@@ -29,6 +29,7 @@ class App {
     };
     const preview = new URL(window.location.href).searchParams;
     if (['room', 'course', 'assets'].includes(preview.get('preview'))) {
+      this.store.hasProject = true;
       this.state.route = preview.get('preview');
       const roomId = preview.get('room');
       if (this.course().rooms.some((r) => r.id === roomId)) this.state.roomId = roomId;
@@ -54,6 +55,7 @@ class App {
     return this.store.room(this.state.courseId, this.state.roomId);
   }
   go(route, values = {}) {
+    if (!this.store.hasProject) return;
     if (route !== 'play' && this.game) {
       this.stopPlay(() => this.go(route, values));
       return;
@@ -83,16 +85,13 @@ class App {
   }
   bind() {
     require('./room-transfer.cjs').bind(this);
+    require('./menus.cjs').install();
     $('home').onclick = () => this.go('home');
     $('new-project').onclick = () => this.newCourse();
     $('open-project').onclick = () =>
       this.confirmUnsaved('打开项目', () => {
         if (window.desktopAPI) this.openNative();
         else $('project-file').click();
-      });
-    $('import-project').onclick = () =>
-      this.confirmUnsaved('导入项目包', () => {
-        $('project-file').click();
       });
     $('project-file').onchange = async (e) => {
       const file = e.target.files[0];
@@ -143,15 +142,18 @@ class App {
         this.message(e.message, true);
       }
     };
-    $('open-assets').onclick = () => this.go('assets');
-    $('open-definitions').onclick = () => this.go('definitions');
+    $('open-assets').onclick = () =>
+      this.go('assets', { assetCourse: this.course().id, assetGroup: null, assetSub: null });
+    $('open-definitions').onclick = () =>
+      this.go('definitions', { definitionCourse: this.course().id });
     $('asset-files').onchange = async (e) => {
       const files = [...e.target.files];
       e.target.value = '';
       await this.addAssetInputs(files.map((file) => ({ name: file.name, file })));
     };
     document.addEventListener('keydown', (e) => {
-      if (e.target.closest('input,textarea,select') || $('dialog').open) return;
+      if (!this.store.hasProject || e.target.closest('input,textarea,select') || $('dialog').open)
+        return;
       if (this.game) {
         if (
           [
@@ -218,6 +220,16 @@ class App {
     this.currentDraw = null;
     this.setRoomTool = null;
     this.nodePanelRefresh = null;
+    $('editor-actions').hidden = !this.store.hasProject;
+    if (!this.store.hasProject) {
+      $('breadcrumbs').replaceChildren();
+      $('app').innerHTML =
+        '<div class="page-title"><div><h1>开始编辑关卡</h1><p class="muted">没有找到可恢复的本地项目。可以打开现有项目，或从物理、高数、水课的示例开始。</p></div></div><div class="actions"><button id="start-import">导入项目（JSON / ZIP）</button><button id="start-new" class="primary">新建三主题项目</button></div>';
+      $('start-import').onclick = () => $('open-project').click();
+      $('start-new').onclick = () => this.newThemedProject();
+      this.message('等待打开项目');
+      return;
+    }
     const p = this.store.project,
       c = this.course();
     if (!p.courses.some((c) => c.id === this.state.courseId)) this.state.courseId = p.courses[0].id;
@@ -395,14 +407,57 @@ class App {
     );
   }
   newCourse() {
-    this.confirmUnsaved('新建大关', () => {
-      let course;
-      this.store.change((p) => {
-        course = require('../project/courses.cjs').add(p);
-      });
-      this.go('course', { courseId: course.id, roomId: course.rooms[0].id });
-      this.message('已在当前项目中新建大关，其他大关与房间保留。');
+    this.chooseCourse();
+  }
+  newThemedProject() {
+    if (this.store.hasProject) return;
+    this.store.newThemedProject();
+    this.go('home', {
+      courseId: this.store.project.courses[0].id,
+      roomId: null,
+      graphSelection: null,
     });
+    this.message('已新建项目：物理、高数、水课各三间示例房。');
+  }
+  chooseCourse() {
+    const themes = require('../project/themes.cjs').THEMES;
+    modal(
+      '新建大关 · 选择主题',
+      `<p class="muted">选择一个主题加入当前项目。</p>${check('带三间连通的示例房（取消则只建一间空白房）', 'course-with-examples', true)}<div class="theme-cards">${themes
+        .map(
+          (t) =>
+            `<button class="card theme-choice" data-new-course-kind="${esc(t.kind)}" style="--theme-color:${esc(t.color)}"><span class="badge theme-badge">${t.order}</span><b>${esc(t.label)}</b><p>${esc(t.notes)}</p></button>`,
+        )
+        .join('')}</div>`,
+      [{ label: '取消' }],
+    );
+    for (const button of document.querySelectorAll('[data-new-course-kind]'))
+      button.onclick = () => {
+        const kind = button.dataset.newCourseKind,
+          blank = !$('course-with-examples').checked;
+        $('dialog').close();
+        this.addCourse(kind, { blank });
+      };
+  }
+  addCourse(kind, options) {
+    if (this.game) {
+      this.stopPlay(() => this.addCourse(kind, options));
+      return;
+    }
+    let course;
+    try {
+      this.store.change((p) => {
+        course = require('../project/courses.cjs').add(p, kind, options);
+        this.store.seedCourseArt(course);
+      });
+    } catch (e) {
+      this.message(e.message, true);
+      return;
+    }
+    this.go('course', { courseId: course.id, roomId: course.rooms[0].id });
+    this.message(
+      '已新建' + require('../project/themes.cjs').theme(kind).label + '大关，其他大关与房间保留。',
+    );
   }
   async saveNative(saveAs = false, complete = false) {
     this.store.persist();

@@ -1,5 +1,7 @@
 # 测试与验收
 
+3.0.0 build3：`course-management-desktop-smoke.cjs` 验证无草稿时的启动选项、已有草稿恢复、旧单大关项目导入、右键改名、添加示例 / 空白大关，以及按大关配置素材与默认值后实际放置对象。设置 EDITOR_EXE 可验证发行包中的程序。
+
 2.5.4：`features-2.5.4-ui-smoke.cjs` 覆盖混合导入/覆盖确认、素材冲突、连线、整体撤销、标签拖动/缩放保留、回放/实际游戏暂停、退出保存全选反选和自命名；`cloud-graph-desktop-smoke.cjs` 增加名称/详情、云端多选导入及不隐式 checkout。核心测试覆盖批量原子性、端口保留、排序冲突、元数据校验与只下载项目说明、回放分段、名字与轨迹 ID 稳定性。
 
 2.5.3：`cloud-browser-auth.test.cjs` 覆盖公开握手、私有拒绝/未知页面、不重放写请求及加密配置修复；`cloud-chromium-ui-smoke.cjs` 使用隔离 HTTP 服务模拟 curl 被拒及过期服务凭据，验证实际桌面 Chromium 请求、无效密钥拒绝、错误展示和诊断脱敏。

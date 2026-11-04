@@ -101,7 +101,7 @@ const call = (p, name, data) =>
       path: path.resolve(__dirname, '../test-output/cloud-graph-editor.png'),
     });
     await page.getByRole('button', { name: '关闭', exact: true }).click();
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).click();
+    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
     await page.getByRole('button', { name: '房间列表', exact: true }).click();
     await page.getByRole('button', { name: '编辑房间', exact: true }).first().click();
     assert.equal(await page.locator('#export-room').isEnabled(), true);
@@ -109,6 +109,7 @@ const call = (p, name, data) =>
     await app.evaluate(({ dialog }, file) => {
       dialog.showSaveDialog = async () => ({ canceled: false, filePath: file });
     }, file);
+    await page.locator('[data-menu-trigger]', { hasText: '项目' }).click();
     await page.locator('#export-room').click();
     await page.waitForFunction(() =>
       document.querySelector('#status')?.textContent.includes('单房间项目包已导出'),

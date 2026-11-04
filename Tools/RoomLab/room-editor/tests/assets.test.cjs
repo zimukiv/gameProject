@@ -61,3 +61,38 @@ test('bad paths and missing asset bytes prevent unsafe/corrupt project packs', (
   q.assets = seed.assets;
   assert.throws(() => Archive.pack(q, new Map()), /缺少素材/);
 });
+test('same-theme courses isolate custom assets and defaults while retaining theme artwork', () => {
+  const p = M.themedExample(),
+    original = p.courses[1],
+    second = require('../src/project/courses.cjs').add(p, 'calculus'),
+    seed = seeds({ allThemes: true }),
+    type = 'calculus.integral';
+  const base = seed.assets.find((a) => a.id === 'seed-calculus-integral'),
+    custom = { ...base, id: 'custom-integral', courseId: original.id, path: 'assets/custom.svg' };
+  p.assets = [...seed.assets, custom];
+  seed.files.set(custom.path, seed.files.get(base.path));
+  p.blockDefaults[type] = { params: { cooldown: 2 } };
+  original.blockDefaults = {
+    [type]: { name: '本关积分板', params: { range: 20 }, assets: { idle: custom.id } },
+  };
+  const catalog = require('../src/assets/catalog.cjs');
+  assert.deepEqual(
+    catalog.available(p, second.id, type).map((a) => a.id),
+    [base.id],
+  );
+  assert.deepEqual(
+    catalog.available(p, original.id, type).map((a) => a.id),
+    [base.id, custom.id],
+  );
+  assert.equal(A.usage(p, custom.id).length, 1);
+  const loaded = Archive.unpack(Archive.pack(p, seed.files)).project;
+  const placed = Registry.instantiate(loaded, type, 'a', 4, 4, loaded.courses[1]),
+    other = Registry.instantiate(loaded, type, 'b', 4, 4, loaded.courses.at(-1));
+  assert.equal(placed.name, '本关积分板');
+  assert.equal(placed.params.range, 20);
+  assert.equal(placed.params.cooldown, 2);
+  assert.deepEqual(placed.assetOverrides, { idle: custom.id });
+  assert.notEqual(other.params.range, 20);
+  assert.deepEqual(other.assetOverrides, {});
+  assert.equal(Registry.params(loaded, loaded.courses[1].rooms[0].objects[0]).range, 12);
+});

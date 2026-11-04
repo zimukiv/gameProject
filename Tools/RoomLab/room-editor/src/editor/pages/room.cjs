@@ -145,6 +145,7 @@ function render(app) {
               select: '选择并移动对象 · Shift 左键追加 / 右键反选',
               marquee: '拖框选择 · Shift 左键追加 / 右键反选 · 拖动选中对象整体移动',
               tile: '放置地形 · 拖动画砖',
+              movable: '放置机关砖 · 在关联中设置目标和机关',
               erase: '擦除地形 / 方块',
               entry: '放置房间入口',
               exit: '放置房间出口',
@@ -280,6 +281,26 @@ function render(app) {
       s.selection = { kind: 'entries', id: entry.id };
       return;
     }
+    if (s.tool === 'movable') {
+      let brick = r.movables.find((b) => b.x === pos.x && b.y === pos.y);
+      if (!brick) {
+        brick = {
+          id: M.uid('movable'),
+          name: '机关砖',
+          ...pos,
+          targetX: pos.x,
+          targetY: pos.y,
+          padId: '',
+          collision: true,
+          notes: '',
+          assetOverrides: {},
+        };
+        r.movables.push(brick);
+      }
+      s.selection = { kind: 'movables', id: brick.id };
+      s.inspectorTab = 'links';
+      return;
+    }
     if (s.tool === 'exit') {
       const exit = {
         id: M.uid('exit'),
@@ -303,7 +324,7 @@ function render(app) {
         return;
       }
       if (!o) {
-        o = Registry.instantiate(app.store.project, s.objectType, M.uid('block'), pos.x, pos.y);
+        o = Registry.instantiate(app.store.project, s.objectType, M.uid('block'), pos.x, pos.y, c);
         r.objects.push(o);
       }
       s.selection = { kind: 'objects', id: o.id };
@@ -705,6 +726,9 @@ function inspector(app, r, setTool) {
         app.store.change(() => {
           if (ref.kind === 'tiles') r.tiles = r.tiles.filter((t) => t !== o);
           else r[ref.kind] = r[ref.kind].filter((v) => v.id !== o.id);
+          if (ref.kind === 'objects') {
+            for (const brick of r.movables) if (brick.padId === o.id) brick.padId = '';
+          }
           app.course().connections = app.course().connections.filter((v) => !linked.includes(v));
           s.selection = null;
         });
@@ -797,7 +821,51 @@ function inspector(app, r, setTool) {
         });
     } else body.innerHTML = '<p class="hint">此对象没有独立运行行为。</p>';
   } else if (tab === 'links') {
-    if (ref.kind === 'objects') {
+    if (ref.kind === 'movables') {
+      const pads = r.objects.filter(
+        (pad) =>
+          ['calculus.integral', 'calculus.derivative'].includes(pad.type) || pad.id === o.padId,
+      );
+      body.innerHTML =
+        select('联动机关', 'movable-pad', o.padId || '', [
+          ['', '无绑定'],
+          ...pads.map((pad) => [
+            pad.id,
+            (pad.name || Registry.get(pad.type).name) + ' · ' + pad.x + ', ' + pad.y,
+          ]),
+        ]) +
+        '<div class="row">' +
+        field('目标列 X', 'movable-target-x', o.targetX, {
+          type: 'number',
+          min: 0,
+          max: r.cols - 1,
+        }) +
+        field('目标行 Y', 'movable-target-y', o.targetY, {
+          type: 'number',
+          min: 0,
+          max: r.rows - 1,
+        }) +
+        '</div>' +
+        '<button id="apply-movable" class="apply primary">应用联动与目标</button>';
+      $('apply-movable').onclick = () => {
+        const x = $('movable-target-x').valueAsNumber,
+          y = $('movable-target-y').valueAsNumber;
+        const padId = $('movable-pad').value;
+        if (
+          !Number.isInteger(x) ||
+          !Number.isInteger(y) ||
+          x < 0 ||
+          y < 0 ||
+          x >= r.cols ||
+          y >= r.rows
+        ) {
+          app.message('机关砖目标必须是房间内的整数格坐标。', true);
+          return;
+        }
+        if (padId && !pads.some((pad) => pad.id === padId)) return;
+        app.store.change(() => Object.assign(o, { targetX: x, targetY: y, padId }));
+      };
+    } else if (ref.kind === 'objects') {
       body.innerHTML =
         field('对应 AI ID（空白继承大关）', 'object-ai', o.aiId || '') +
         '<p class="hint">仅登记 ID，不在编辑器配置 AI 技能。距离量到机关。</p><button id="save-ai-id" class="apply">应用关联</button>';

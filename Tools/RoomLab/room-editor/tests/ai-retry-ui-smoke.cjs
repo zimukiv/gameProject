@@ -43,7 +43,7 @@ const assert = require('node:assert/strict'),
           (name) => window.__ROOM_LAB__.snapshot().project.name === name,
           p.name,
         );
-        await page.getByRole('button', { name: '进入大关 →', exact: true }).click();
+        await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
         await page.getByRole('button', { name: '从首房试玩', exact: true }).click();
         for (let life = 0; life < 3; life++) {
           assert.equal(

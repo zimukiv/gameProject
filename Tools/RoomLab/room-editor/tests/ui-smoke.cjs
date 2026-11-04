@@ -38,7 +38,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       'file:///' + path.resolve(__dirname, '../build/index.html').replace(/\\/g, '/'),
     );
     assert.equal((await snap()).project.courses.length, 1);
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).click();
+    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
     const rect = await page.locator('#graph').boundingBox();
     const point = (x, y) => ({
       x: rect.x + (x / 1120) * rect.width,
@@ -104,7 +104,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     const reopened = await snap();
     assert.equal(reopened.project.courses[0].rooms[0].name, '喷气测试房');
     assert.equal(reopened.project.courses[0].rooms[0].cols, 34);
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).click();
+    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
     await page.screenshot({
       path: path.resolve(__dirname, '../test-output/phase2.png'),
       fullPage: true,
