@@ -1,5 +1,16 @@
 'use strict';
 const { strToU8 } = require('fflate');
+let builtIns;
+function restoreBuiltIns(assets, files) {
+  builtIns ||= seeds({ allThemes: true });
+  for (const asset of assets) {
+    if (files.has(asset.path)) continue;
+    const original = builtIns.assets.find((item) => item.id === asset.id);
+    if (original && asset.path === original.path && asset.hash === original.hash)
+      files.set(asset.path, builtIns.files.get(asset.path).slice());
+  }
+  return files;
+}
 function seeds({ allThemes = false } = {}) {
   const svg = (bg, inside) =>
     `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect x="1" y="1" width="62" height="62" rx="5" fill="${bg}" stroke="#9dbacb" stroke-width="2"/>${inside}</svg>`;
@@ -168,4 +179,4 @@ function seeds({ allThemes = false } = {}) {
     },
   };
 }
-module.exports = { seeds };
+module.exports = { seeds, restoreBuiltIns };

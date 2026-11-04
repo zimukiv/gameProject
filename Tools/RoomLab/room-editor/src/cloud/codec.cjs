@@ -30,7 +30,7 @@ function encode(project, files) {
   const entries = {
     'project.json': Buffer.from(canonical(require('../project/collision.cjs').portable(project))),
   };
-  const map = files instanceof Map ? files : new Map(files);
+  const map = require('../assets/seeds.cjs').restoreBuiltIns(project.assets, new Map(files));
   for (const a of project.assets) {
     if (!safePath(a.path) || a.path === 'project.json') throw new Error('素材路径无效');
     const b = map.get(a.path);

@@ -6,6 +6,6 @@
 
 直接在 Git 克隆中工作时，还须先 `git fetch origin main`，检查分支及未提交改动，确认其他组件的更新。严禁用旧工作副本覆盖队友新提交，不使用强推或清理命令丢弃现有工作。
 
-Room Lab 发布使用独立标签 roomlab-editor-v版本号。Windows 程序包和含云端服务的源码包放在对应 GitHub Release，附 SHA256SUMS.txt；完整解压程序包后运行 RoomLab.exe。运行库、缓存、连接密钥和个人关卡草稿不提交。
+Room Lab 发布使用独立标签 roomlab-editor-v版本号。同版本的后续构建可使用带 -buildN 的新标签，保留旧标签对应的源码。Windows 程序包和含云端服务的源码包放在对应 GitHub Release，附 SHA256SUMS.txt；完整解压程序包后运行 RoomLab.exe。运行库、缓存、连接密钥和个人关卡草稿不提交。
 
 本机原始维护目录保持 G:/project null/room-editor（云服务为相邻 room-cloud）。test-output/github-publication 只是本次发布的隔离暂存克隆，不是第二个长期源码目录。后续可在原维护目录继续开发，先使用核对脚本；发布时基于最新远端提交同步这两个组件。

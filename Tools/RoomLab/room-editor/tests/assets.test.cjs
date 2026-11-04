@@ -58,8 +58,28 @@ test('bad paths and missing asset bytes prevent unsafe/corrupt project packs', (
   assert.throws(() => Archive.pack(p, new Map()));
   const seed = seeds(),
     q = M.example();
-  q.assets = seed.assets;
+  q.assets = [{ ...seed.assets[0], hash: 'user-supplied-content' }];
   assert.throws(() => Archive.pack(q, new Map()), /缺少素材/);
+});
+test('a draft with missing bundled SVGs recovers for backup and export without replacing custom assets', () => {
+  const p = M.example(),
+    seed = seeds({ allThemes: true }),
+    source = seed.assets.find((a) => a.id === 'seed-calculus-integral'),
+    codec = require('../src/cloud/codec.cjs');
+  // A deleted high-math course may leave its asset metadata in a physics-only draft.
+  p.assets = [source];
+  assert.deepEqual(
+    Archive.unpack(Archive.pack(p, new Map())).files.get(source.path),
+    seed.files.get(source.path),
+  );
+  assert.ok(codec.encode(p, []).files.some((f) => f.path === source.path));
+  const supplied = new Uint8Array([1, 2, 3]);
+  assert.deepEqual(
+    Archive.unpack(Archive.pack(p, new Map([[source.path, supplied]]))).files.get(source.path),
+    supplied,
+  );
+  p.assets = [{ ...source, hash: 'custom' }];
+  assert.throws(() => codec.encode(p, []), /备份缺少素材/);
 });
 test('same-theme courses isolate custom assets and defaults while retaining theme artwork', () => {
   const p = M.themedExample(),

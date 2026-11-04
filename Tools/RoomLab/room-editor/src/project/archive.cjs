@@ -7,8 +7,9 @@ function pack(project, files) {
   const entries = {
     'project.json': strToU8(JSON.stringify(require('./collision.cjs').portable(project), null, 2)),
   };
+  const complete = require('../assets/seeds.cjs').restoreBuiltIns(project.assets, new Map(files));
   for (const asset of project.assets) {
-    const bytes = files.get(asset.path);
+    const bytes = complete.get(asset.path);
     if (!bytes) throw new Error('缺少素材文件：' + asset.name);
     entries[asset.path] = bytes;
   }

@@ -160,6 +160,7 @@ class CloudController {
       }
       for (const [p, b] of data.files) this.app.store.assetFiles.set(p, new Uint8Array(b));
       this.app.store.project = data.project;
+      this.app.store.restoreBuiltIns();
       this.app.store.history.clear();
       this.app.store.nativeSession = null;
       this.app.store.dirty = true;
@@ -236,7 +237,6 @@ class CloudController {
       return;
     }
     try {
-      await this.enqueue(() => this.backup());
       this.graphSelected = null;
       this.graphView = null;
       this.remoteState = null;
@@ -254,13 +254,18 @@ class CloudController {
           }
         } catch (e) {
           if (this.dialogEpoch === epoch && $('dialog').open && $('cloud-feedback')) {
-            $('cloud-feedback').textContent = e.message;
+            $('cloud-feedback').textContent = '读取云端节点失败：' + errorText(e);
             this.graphPanel.draw();
           }
         }
       }
     } catch (e) {
-      this.app.message(e.message, true);
+      if ($('dialog').open) $('dialog').close();
+      modal(
+        '云同步与工作树',
+        '<p role="status">暂时无法读取本机云同步配置：' + esc(errorText(e)) + '</p>',
+        [{ label: '关闭' }, { label: '重试', primary: true, action: () => this.show() }],
+      );
     }
   }
   async render(notice = '') {

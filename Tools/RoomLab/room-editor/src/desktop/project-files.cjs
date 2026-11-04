@@ -35,11 +35,13 @@ function readProject(file) {
   if (errors.length) throw new Error(errors[0]);
   const root = path.dirname(path.resolve(file)),
     files = [],
-    missing = [];
+    missing = [],
+    builtIns = require('../assets/seeds.cjs').restoreBuiltIns(project.assets, new Map());
   for (const a of project.assets) {
     const assetPath = inside(root, a.path);
     if (fs.existsSync(assetPath))
       files.push({ path: a.path, bytes: new Uint8Array(fs.readFileSync(assetPath)) });
+    else if (builtIns.has(a.path)) files.push({ path: a.path, bytes: builtIns.get(a.path) });
     else missing.push(a.name);
   }
   return { project, files, missing };
@@ -49,17 +51,19 @@ function writeProject(file, project, files) {
   if (errors.length) throw new Error(errors[0]);
   const root = path.dirname(path.resolve(file));
   fs.mkdirSync(root, { recursive: true });
-  const map = new Map(files.map((item) => [item.path, new Uint8Array(item.bytes)]));
+  const map = new Map(files.map((item) => [item.path, new Uint8Array(item.bytes)])),
+    builtIns = require('../assets/seeds.cjs').restoreBuiltIns(project.assets, new Map());
   // Preflight all collisions before writing project.json or any bytes.
   const writes = [];
   for (const a of project.assets) {
     const target = inside(root, a.path),
-      bytes = map.get(a.path);
+      exists = fs.existsSync(target),
+      bytes = map.get(a.path) || (!exists && builtIns.get(a.path));
     if (!bytes) {
-      if (!fs.existsSync(target)) throw new Error('缺少素材：' + a.name);
+      if (!exists) throw new Error('缺少素材：' + a.name);
       continue;
     }
-    if (fs.existsSync(target)) {
+    if (exists) {
       if (sha(fs.readFileSync(target)) !== sha(bytes))
         throw new Error('已有素材内容不同：' + a.path + '。请另存新目录或在素材库替换。');
     } else writes.push({ target, bytes });

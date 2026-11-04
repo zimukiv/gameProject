@@ -71,10 +71,15 @@ async function main() {
   require('./examples.cjs').generate();
   const release = path.join(root, 'release');
   fs.mkdirSync(release, { recursive: true });
-  let name = 'RoomLab-' + version + '-win-x64',
-    n = 1;
-  while (fs.existsSync(path.join(release, name)))
-    name = 'RoomLab-' + version + '-win-x64-build' + ++n;
+  const stem = 'RoomLab-' + version + '-win-x64';
+  const existing = fs.readdirSync(release).flatMap((entry) => {
+    if (entry === stem || entry === stem + '.zip') return [1];
+    if (!entry.startsWith(stem + '-build')) return [];
+    const number = entry.slice((stem + '-build').length).match(/^(\d+)(?:\.zip)?$/);
+    return number ? [Number(number[1])] : [];
+  });
+  const n = 1 + Math.max(0, ...existing),
+    name = stem + (n > 1 ? '-build' + n : '');
   const output = inside(release, path.join(release, name)),
     runtime = path.dirname(require('electron'));
   fs.cpSync(runtime, output, { recursive: true, dereference: true });

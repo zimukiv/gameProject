@@ -1,7 +1,7 @@
 'use strict';
 const M = require('../project/model.cjs'),
   { History } = require('./history.cjs');
-const { seeds } = require('../assets/seeds.cjs'),
+const { seeds, restoreBuiltIns } = require('../assets/seeds.cjs'),
   Assets = require('../assets/manager.cjs');
 class Store {
   constructor() {
@@ -34,7 +34,11 @@ class Store {
           ...course.artBindings,
         };
     }
+    this.restoreBuiltIns();
     Assets.hydrate(this).then(() => this.notify());
+  }
+  restoreBuiltIns() {
+    restoreBuiltIns(this.project.assets, this.assetFiles);
   }
   seedCourseArt(course) {
     const seed = seeds({ allThemes: true });
@@ -46,6 +50,7 @@ class Store {
       this.project.assets.push(asset);
       this.assetFiles.set(asset.path, seed.files.get(asset.path));
     }
+    this.restoreBuiltIns();
     const available = new Set(this.project.assets.map((a) => a.id));
     for (const [type, slots] of Object.entries(bindings)) {
       if (Object.values(slots).every((id) => available.has(id))) course.artBindings[type] = slots;
@@ -88,6 +93,7 @@ class Store {
     if (errors.length) throw new Error(errors.join('\n'));
     const before = this.snapshot();
     this.project = next;
+    this.restoreBuiltIns();
     this.hasProject = true;
     this.nativeSession = null;
     this.commit(before);

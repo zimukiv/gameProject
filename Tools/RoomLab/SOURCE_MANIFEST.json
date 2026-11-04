@@ -1,9 +1,9 @@
 {
   "repository": "zimukiv/gameProject",
   "version": "3.0.0",
-  "releaseTag": "roomlab-editor-v3.0.0",
+  "releaseTag": "roomlab-editor-v3.0.0-build6",
   "createdAt": "2026-11-05",
-  "programSHA256": "3069a8791b4f0fa75d3de378e01a052b37fede4b543424b7b13921e35261343e",
+  "programSHA256": "0aa1dc65932f9a2d92079baff3edb058265f74d141ed543fd504bea7fb9db719",
   "files": [
     {
       "path": "room-cloud/.gitignore",
@@ -692,7 +692,7 @@
     },
     {
       "path": "room-editor/docs/CHANGELOG.md",
-      "sha256": "ac6764867748e11dbb0caacad40fadfa5d47a07d8dd666da831e1c46a7631823",
+      "sha256": "432df5498c7ad7f1ace146087c04cfbc918ea940d5fda3b2d45529083f99610e",
       "encoding": "utf8-lf"
     },
     {
@@ -707,7 +707,7 @@
     },
     {
       "path": "room-editor/docs/GITHUB_WORKFLOW.md",
-      "sha256": "b2c1c34165bda95a1c9d27f1c37b688ce6e111a70c9b3f23ae9a204f784dfd1d",
+      "sha256": "de9040db8985f021c36a3bca43f7166e186f35686efcda0f2e0d5fb523aa71b5",
       "encoding": "utf8-lf"
     },
     {
@@ -792,7 +792,7 @@
     },
     {
       "path": "room-editor/examples/physics-project.zip",
-      "sha256": "0d68eb74dc065126b007895d011ac938d182fab47b8d5f3a745dfaf0652d81e0",
+      "sha256": "6f1a8c9355c016112f773d3b1983189428c6b585f72092d5611f080d6c8684a6",
       "encoding": "binary"
     },
     {
@@ -842,12 +842,12 @@
     },
     {
       "path": "room-editor/examples/physics/project.json",
-      "sha256": "33d0272753ec2537a6cfb7716851d72fb529056201811491f9960e2fdcefed73",
+      "sha256": "4f69aebad98b3cf1638cb74b8ade2fb966d0b7bafe5c3245041f9ede4a373713",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/examples/three-themes-project.zip",
-      "sha256": "41497d67e004fb8a8fc5275bc9a9b9f9206b5a8a18b33c24184e6d562873290a",
+      "sha256": "9b6dc3190bfc82cce83254a4d96f51f04db97f5644ba77d23452c25e09dda506",
       "encoding": "binary"
     },
     {
@@ -907,7 +907,7 @@
     },
     {
       "path": "room-editor/scripts/package.cjs",
-      "sha256": "39d69898346b3540567ef8d9423723c51f53a3b8afa688337e4c8d8fa87ddb78",
+      "sha256": "f40772f30bb96c297e8e11a5b7e645247313f0f73686560d58012867778b48c7",
       "encoding": "utf8-lf"
     },
     {
@@ -942,7 +942,7 @@
     },
     {
       "path": "room-editor/src/assets/seeds.cjs",
-      "sha256": "e23fea237e19fd47f57f9b9432cc94d3744300aa3a20af44ad15c097331d2034",
+      "sha256": "9bfa034f60372090ad5e9a26ba132705555e8932499d6c27437e682ab5bf3a7c",
       "encoding": "utf8-lf"
     },
     {
@@ -952,7 +952,7 @@
     },
     {
       "path": "room-editor/src/cloud/codec.cjs",
-      "sha256": "439cb274c308e8aab4460f17fec9c6a5f8933153674edc3f615596ed135b414a",
+      "sha256": "a2af405d87b78f247b8e76de74095db0aa29911097af130288fd0f9f78e7fb35",
       "encoding": "utf8-lf"
     },
     {
@@ -992,7 +992,7 @@
     },
     {
       "path": "room-editor/src/desktop/project-files.cjs",
-      "sha256": "49f05537f032952925ee42764b4323c9d57aeff05c414a789a0c0c5ae905d4cd",
+      "sha256": "0d888f4c272ed776f2b42747628aebbe1fe96aae30118b78533b0df945d752c4",
       "encoding": "utf8-lf"
     },
     {
@@ -1002,7 +1002,7 @@
     },
     {
       "path": "room-editor/src/editor/cloud-controller.cjs",
-      "sha256": "9ae36f24ce0f37fa97edf013fc3afd2df183656370c464c0748c78ec971358b5",
+      "sha256": "d45b5ef3228f4fefd8674497e959ed46a6d24fb678b91d2c228ac48a8854ab2b",
       "encoding": "utf8-lf"
     },
     {
@@ -1117,7 +1117,7 @@
     },
     {
       "path": "room-editor/src/editor/store.cjs",
-      "sha256": "e9ce0b5c6b71ca9592d36f012c48c1f15ccac12bb8da418d259e665fba0c2b3b",
+      "sha256": "e0b3dc02a328c3bcf985051808c745cae6261eaedd7908730d7d19ed3b360902",
       "encoding": "utf8-lf"
     },
     {
@@ -1197,7 +1197,7 @@
     },
     {
       "path": "room-editor/src/project/archive.cjs",
-      "sha256": "983cb5f8801a88451a62e162c99f0615e9e87f2e187a7218c9bcb7f25c4218ce",
+      "sha256": "2fc0a7e7837d19693817120a1fcba97d8998a784f21136888d7d0c88c6a69145",
       "encoding": "utf8-lf"
     },
     {
@@ -1332,7 +1332,7 @@
     },
     {
       "path": "room-editor/tests/assets.test.cjs",
-      "sha256": "0de945b55e030563115c7bcb2e2d052f77d03320ac8fbfe292e6053e4c30980d",
+      "sha256": "28fc137b9ae67713e20f4980b9a8f0cd7e64c7d7fea1422418ba29e8330ea0e8",
       "encoding": "utf8-lf"
     },
     {
@@ -1401,6 +1401,11 @@
       "encoding": "utf8-lf"
     },
     {
+      "path": "room-editor/tests/cloud-panel-desktop-smoke.cjs",
+      "sha256": "e0122133d1cd0d25fd919ded14d6f03a14603d1df239fcd098f3bf70dfa41150",
+      "encoding": "utf8-lf"
+    },
+    {
       "path": "room-editor/tests/cloud-project-details.test.cjs",
       "sha256": "30fcb1afbad9d68f2c43f383efbc453516755a91807d542c1acdc6ea855bf84d",
       "encoding": "utf8-lf"
@@ -1442,7 +1447,7 @@
     },
     {
       "path": "room-editor/tests/course-management-desktop-smoke.cjs",
-      "sha256": "bda4c3101f61189119638dc020ee56e2d5c312e5c15ab7357fe31cb788da3a26",
+      "sha256": "0f323b6befd961e8ecdb160e119b892c18c9a12ac0685a3fa6d7a5e82805a640",
       "encoding": "utf8-lf"
     },
     {

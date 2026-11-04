@@ -19,10 +19,10 @@ async function launch(run) {
     page.on('pageerror', (error) => errors.push(error.message));
     await page.locator('#start-import').waitFor();
     assert.equal(await page.locator('#save-project').isVisible(), false);
-    await run(page, () => page.evaluate(() => window.__ROOM_LAB__.snapshot()));
+    await run(page, () => page.evaluate(() => window.__ROOM_LAB__.snapshot()), app);
     assert.deepEqual(errors, []);
   } finally {
-    await app.close();
+    await app.close().catch(() => {});
   }
 }
 
@@ -102,6 +102,27 @@ async function launch(run) {
     const blank = (await snap()).project.courses.at(-1).rooms;
     assert.equal(blank.length, 1);
     assert.deepEqual(blank[0].objects, []);
+  });
+  await launch(async (p, snap, app) => {
+    const project = M.example();
+    const source = require('../src/assets/seeds.cjs')
+      .seeds({ allThemes: true })
+      .assets.find((a) => a.id === 'seed-calculus-integral');
+    project.assets = [source];
+    await p.evaluate(
+      (data) => localStorage.setItem('ddl-room-lab-v2', JSON.stringify(data)),
+      project,
+    );
+    await p.reload();
+    await p.locator('#add-course').click();
+    await p.locator('[data-new-course-kind="calculus"]').click();
+    assert.deepEqual(
+      (await snap()).project.courses.map((c) => c.kind),
+      ['physics', 'calculus'],
+    );
+    const closed = app.waitForEvent('close', { timeout: 10000 });
+    await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].close());
+    await closed;
   });
   await launch(async (p, snap) => {
     await p.locator('#project-file').setInputFiles({
