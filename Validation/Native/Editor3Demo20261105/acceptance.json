@@ -1,0 +1,68 @@
+{
+  "date": "2026-11-05",
+  "editorBaseline": "3.0.0 build6",
+  "preservedRemote": "6cd56e1",
+  "authoredSha256": "03b948a705210aafd718306a70947e90b41f7d1fa013a53a4087091d51809836",
+  "themeFixtureSha256": "c647eec84473756bf4c0919453a07d017f0caf4a9807a69ee917b32872f8d8d7",
+  "dllSha256": "10962e5437cbde93dc60a7ad1085756926c50b42a51d157c57e379e656b7ec38",
+  "buildLog": "build6-release.log",
+  "runtimeLog": "release-build6.log",
+  "core": [
+    {
+      "name": "DataChecks",
+      "summary": "NATIVE_DATA_PASS checks=117 framework=8.0.21",
+      "exitCode": 0
+    },
+    {
+      "name": "GameplayChecks",
+      "summary": "NATIVE_GAMEPLAY_PASS assertions=4110794 traces=24 operations=1151",
+      "exitCode": 0
+    },
+    {
+      "name": "AIJumpChecks",
+      "summary": "AI_JUMP_CHECKS cases=26 assertions=378 failures=0 sourceUnchanged=true",
+      "exitCode": 0
+    },
+    {
+      "name": "JetTrailChecks",
+      "summary": "JET_TRAIL_CHECKS cases=16 assertions=964 failures=0 sourceUnchanged=true",
+      "exitCode": 0
+    },
+    {
+      "name": "ProgressChecks",
+      "summary": "NATIVE_PROGRESS_PASS checks=572 rooms=11 rules=2",
+      "exitCode": 0
+    },
+    {
+      "name": "Editor3Checks",
+      "summary": "EDITOR3_CHECKS_PASS checks=18",
+      "exitCode": 0
+    },
+    {
+      "name": "ThemeChecks",
+      "summary": "THEME_PASS mechanisms=10",
+      "exitCode": 0
+    }
+  ],
+  "runtimeChecks": [
+    "NATIVE_EDITOR3_UI_PASS",
+    "NATIVE_EDITOR3_CUSTOM_ART_PASS",
+    "NATIVE_DREAM_STATE_PASS",
+    "NATIVE_IMPORT_CACHE_PASS",
+    "EDITOR3_EXIT_PASS kind=calculus",
+    "EDITOR3_EXIT_PASS kind=slacker",
+    "EDITOR3_ACTION_CAPTURE kind=calculus",
+    "EDITOR3_ACTION_CAPTURE kind=slacker",
+    "NATIVE_EDITOR3_BUILD6_ASSETS_PASS customRendered=true externalDefaultNewArt=true"
+  ],
+  "manualPlaytest": false,
+  "positionedExitChecks": true,
+  "themes": {
+    "physics": 11,
+    "calculus": 3,
+    "slacker": 3
+  },
+  "visualReview": "actual uGUI frames: calculus motion and slacker sleepy/awake/recovery reviewed",
+  "fullCampaign": false,
+  "deliveredExecutableExitCode": 0
+}

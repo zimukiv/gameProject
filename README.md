@@ -1,11 +1,13 @@
-# RoomLab：物理 DDL 原生 Unity Demo v2
+# RoomLab：三主题原生 Unity Demo v2 · 编辑器 3.0 build6 适配
 
-当前维护入口为 **Unity原生物理Demo v2**，只包含第一大关。旧套壳连接版、旧三关场景及其历史v3包保留，见下方历史说明，勿与当前原生v2混用。
+当前维护入口为 **Unity原生三主题Demo v2**：原作者物理11房，以及build6高数、水课各3房机制示例。主菜单「选择大关」切换；各课程进度独立。旧套壳连接版、旧三关场景及其历史v3包保留，见下方历史说明，勿与当前原生v2混用。
+
+2026-11-05接入、验收及限制见 [本轮交付记录](Handoff/EDITOR3_DEMO_20261105.md)。高数/水课覆盖编辑器的积分、求导、签到和清醒机制，并非25–50分钟正式战役；策划中的教师巡逻、五站签到开门等尚未进入build6模块，不能视为本轮已完成内容。
 
 - Unity：**6000.6.4f1**；用Unity Hub添加本仓库根目录。
 - 当前场景：`Assets/RoomLabNative/Scenes/PhysicsDemo/NativePhysicsDemo.unity`；打开后点击Play。
-- Windows成品：完整解压 `物理DDL_Demo_群测版_v2_20261029.zip`，运行其中 `RoomLabPhysics.exe`，保留同目录全部数据/DLL。
-- v2源码与成品发布页：[RoomLab Native v2](https://github.com/zimukiv/gameProject/releases/tag/roomlab-native-v2-20261029)。下载包内有文件清单与SHA256；具体构建/试玩状态以该次发布记录为准。
+- Windows成品：完整解压 `RoomLab-Demo-v2-Editor3-20261105-win-x64.zip`，运行其中 `RoomLabPhysics.exe`，保留同目录全部数据/DLL。
+- 本轮v2源码与成品发布页：[三主题 Demo v2](https://github.com/zimukiv/gameProject/releases/tag/roomlab-native-v2-editor3-20261105)。下载包内有文件清单与SHA256；具体构建/试玩状态以该次发布记录为准。[20261029旧版](https://github.com/zimukiv/gameProject/releases/tag/roomlab-native-v2-20261029)继续保留。
 - 当前作者关卡：`Assets/StreamingAssets/RoomLabNative/AuthoredPhysics/authored-physics.json`，来源《第一大关 · 物理 DDL (3).json》，SHA256 `03b948a705210aafd718306a70947e90b41f7d1fa013a53a4087091d51809836`，11房/10连接。
 - 改动前请先读 [AGENTS.md](AGENTS.md)，先核对远端分支最新提交，再保留并整合本地改动。
 
@@ -19,7 +21,9 @@ Unity菜单 `RoomLab Native/Open pixel physics demo` 可生成当前场景；`Ro
 
 构建输出 `Builds/NativePhysicsDemo-Final/RoomLabPhysics.exe`，需要有效的Unity编辑器授权。项目已有运行所需的Windows x64图像解码插件和字体；来源/许可证见 `Assets/StreamingAssets/RoomLabNative/Licenses` 及各资源provenance文件。上游原生图像解码依赖的全部重建工具链未随本项目提供，不能将此源码包等同于所有第三方库源码。
 
-本包默认 `DemoPhysics`。编辑器2.5.5导出的JSON/ZIP可替换导入；设置里保留 `按2.5.5原规则`，不强改作者触发方式、温区初态、冰块实例数值、自绘素材优先级或原关卡文件。旧规则冻结参考与Demo派生行为分开验证。
+本包默认 `DemoPhysics`。编辑器2.5.5与3.0.0 build6导出的JSON/ZIP可替换导入，多大关包显示选择窗口；设置里保留 `按2.5.5原规则`，不强改作者触发方式、温区初态、冰块实例数值、自绘素材优先级或原关卡文件。旧规则冻结参考与Demo派生行为分开验证。导入需保留JSON同目录assets或使用完整ZIP，资源仍按整包验证。
+
+可设置环境变量 `ROOMLAB_NATIVE_BUILD_DIR` 输出到独立目录。本轮目录为 `Builds/NativeDemo-v2-Editor3-20261105`；旧成品不覆盖。
 
 ## 同仓库的 Room Lab 编辑器与云服务
 

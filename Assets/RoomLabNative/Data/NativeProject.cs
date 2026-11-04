@@ -10,8 +10,11 @@ namespace RoomLab.Native
         public ImportProfile Profile = ImportProfile.EditorAuto;
         public string AssetRoot;
         public bool RequireAssets;
+        public bool PlayableCoursesOnly;
+        public string CourseId;
     }
     public sealed class NativeDataException : Exception { public NativeDataException(string message) : base(message) { } }
+    public sealed class NativeCourseSelectionException : Exception { public readonly JObject[] Courses; public NativeCourseSelectionException(JObject[] courses):base("请选择大关") { Courses=courses; } }
     public sealed class NativeProject
     {
         internal byte[] sourceBytes;

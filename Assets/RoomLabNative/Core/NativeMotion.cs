@@ -29,7 +29,7 @@ namespace RoomLab.Native
     }
     public sealed class MotionObjectState
     {
-        public bool used,firedDuringContact,waitingAI,hasWaitingAI,hitAI,hasHitAI,solid;public double cooldown,standing,respawnRemaining;public int generation;public string lastTemperature;
+        public bool used,firedDuringContact,waitingAI,hasWaitingAI,hitAI,hasHitAI,solid;public double cooldown,standing,respawnRemaining;public int generation,signIns,boosts;public bool fired;public string lastTemperature;
         public MotionObjectState Copy(){return (MotionObjectState)MemberwiseClone();}
     }
     // Pixels and double arithmetic deliberately match the editor oracle. Rendering is separate.
@@ -57,7 +57,7 @@ namespace RoomLab.Native
         }
         public static bool SupportsRoom(NativeRoom r,out string reason)
         {
-            foreach(var o in r.Objects)switch(o.Type){case "common.coin":case "common.small":case "common.collectible":case "common.spike":case "common.aiStart":case "common.aiStartHollow":case "common.checkpoint":case "common.portalIn":case "common.portalOut":case "physics.ice":case "physics.thermal":case "physics.jet":case "physics.rail":case "legacy.rotor":case "legacy.integral":case "legacy.derivative":break;default:reason="原生运行时缺少模块："+o.Type;return false;}reason=null;return true;
+            foreach(var o in r.Objects)switch(o.Type){case "common.coin":case "common.small":case "common.collectible":case "common.spike":case "common.aiStart":case "common.aiStartHollow":case "common.checkpoint":case "common.portalIn":case "common.portalOut":case "physics.ice":case "physics.thermal":case "physics.jet":case "physics.rail":case "legacy.rotor":case "legacy.integral":case "legacy.derivative":case "calculus.integral":case "calculus.derivative":case "slacker.checkin":case "slacker.awake":break;default:reason="原生运行时缺少模块："+o.Type;return false;}reason=null;return true;
         }
         public void LoadRoom(string roomId)
         {

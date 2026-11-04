@@ -15,14 +15,14 @@ namespace RoomLab.Native
     {
         public NativeMotion Game{get;private set;}NativeProject builtin;NativeDemoAssets assets;NativePixelWorld world;bool isBuiltin,tainted,map,verify;string identity,page="menu",notice="",loadedRoom,lastCheckpoint;int high,roomReached;float saveAt;
         NativeInputTimeline timeline=new NativeInputTimeline();NativeKeyboardEvents keys;RoomLabKeyBindings legacy;KeyCode[] bindings={KeyCode.A,KeyCode.D,KeyCode.Space,KeyCode.S,KeyCode.LeftShift,KeyCode.E};readonly MotionBinding[] actions={MotionBinding.Left,MotionBinding.Right,MotionBinding.Jump|MotionBinding.Up,MotionBinding.Down,MotionBinding.Dash,MotionBinding.Interact};int rebind=-1;
-        Camera view;RenderTexture target;Canvas canvas;CanvasScaler scaler;RectTransform ui;Transform panels;RawImage worldImage;Text hud,hint,status;Font font;AudioSource speaker;readonly Dictionary<string,AudioClip> sounds=new Dictionary<string,AudioClip>();JObject lastEvent;float volume=.55f;string saveDirectory;bool settingsFromGame;int desiredWidth=1280,desiredHeight=720;bool desiredFull;bool matrix;bool tutorialSeen;bool adaptiveWindow=true;bool importLegacyRules;string importedLevel="";bool displayExpanded;float windowScale=.9f;float viewMax=1.3f;float designWidth=640f,designHeight=360f,playfieldWidth=640f,playfieldHeight=327f;int pixelScale=1,appliedWidth,appliedHeight;
+        Camera view;RenderTexture target;Canvas canvas;CanvasScaler scaler;RectTransform ui;Transform panels;RawImage worldImage;Text hud,hint,status;Font font;AudioSource speaker;readonly Dictionary<string,AudioClip> sounds=new Dictionary<string,AudioClip>();JObject lastEvent;float volume=.55f;string saveDirectory;bool settingsFromGame;int desiredWidth=1280,desiredHeight=720;bool desiredFull;bool matrix;bool tutorialSeen;bool adaptiveWindow=true;bool importLegacyRules;string importedLevel="";int verifiedCoreChecks;string importedCourseId="";string builtinCourseId="";string pendingImportPath,pendingReturnPage;JObject[] pendingCourses;bool displayExpanded;float windowScale=.9f;float viewMax=1.3f;float designWidth=640f,designHeight=360f,playfieldWidth=640f,playfieldHeight=327f;int pixelScale=1,appliedWidth,appliedHeight;
         // The HUD bar lives above the level instead of on top of it: 26px bar + 7px margin.
         const float HudBand=33f;
         static readonly Color Ink=new Color(.055f,.085f,.14f),Paper=new Color(.88f,.87f,.77f),Teal=new Color(.2f,.72f,.72f),Orange=new Color(.95f,.58f,.29f);
         string SaveFile{get{return Path.Combine(saveDirectory,identity+".json");}}
         void Start(){verify=Array.IndexOf(Environment.GetCommandLineArgs(),"-nativePhysicsVerify")>=0;matrix=Array.IndexOf(Environment.GetCommandLineArgs(),"-nativeUiMatrix")>=0;try{Application.runInBackground=true;Application.targetFrameRate=120;QualitySettings.vSyncCount=1;saveDirectory=Path.Combine(Application.persistentDataPath,"physics-progress-v1");if(verify){Screen.SetResolution(1280,720,FullScreenMode.Windowed);}if(verify||matrix)saveDirectory=Path.Combine(Evidence(),"isolated-progress");Directory.CreateDirectory(saveDirectory);font=Resources.Load<Font>("PhysicsPixelFont/FusionPixel");if(font==null)throw new Exception("中文字体未打包");LoadSettings();BindKeys();speaker=gameObject.AddComponent<AudioSource>();speaker.playOnAwake=false;CreateSounds();
             view=Camera.main;if(view==null){var c=new GameObject("Native Physics World Camera");c.tag="MainCamera";view=c.AddComponent<Camera>();}view.orthographic=true;view.clearFlags=CameraClearFlags.SolidColor;
-            SetupCanvas();string dir=Path.Combine(Application.streamingAssetsPath,"RoomLabNative");builtin=NativeProjectLoader.LoadFile(Path.Combine(dir,"AuthoredPhysics","authored-physics.json"),new ImportOptions{Profile=ImportProfile.EditorAuto,RequireAssets=true});CommitCandidate(builtin,NativeGameplayRules.DemoPhysics,true);if(!verify&&!matrix&&!string.IsNullOrEmpty(importedLevel))TryRestoreImport();Show(tutorialSeen?"menu":"tutorial");if(matrix)StartCoroutine(UiMatrix());else if(verify)StartCoroutine(Verify());
+            SetupCanvas();string dir=Path.Combine(Application.streamingAssetsPath,"RoomLabNative");builtin=NativeProjectLoader.LoadFile(Path.Combine(dir,"AuthoredPhysics","authored-physics.json"),new ImportOptions{Profile=ImportProfile.EditorAuto,RequireAssets=true});CommitCandidate(builtin,NativeGameplayRules.DemoPhysics,true);if(!verify&&!matrix&&!string.IsNullOrEmpty(builtinCourseId)){try{LoadBuiltinCourse(builtinCourseId);}catch(Exception e){builtinCourseId="";notice="上次大关无法恢复，已返回物理关："+e.Message;SaveSettings();}}if(!verify&&!matrix&&!string.IsNullOrEmpty(importedLevel))TryRestoreImport();Show(tutorialSeen?"menu":"tutorial");if(matrix)StartCoroutine(UiMatrix());else if(verify)StartCoroutine(Verify());
         }catch(Exception e){Debug.LogException(e);notice=e.Message;if(verify||matrix)Finish(2);}}
         void SetupCanvas(){var go=new GameObject("Native Physics UI",typeof(Canvas),typeof(CanvasScaler),typeof(GraphicRaycaster));go.layer=5;canvas=go.GetComponent<Canvas>();canvas.renderMode=RenderMode.ScreenSpaceOverlay;canvas.sortingOrder=10;
             scaler=go.GetComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;scaler.referenceResolution=new Vector2(640,360);scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;scaler.referencePixelsPerUnit=100;scaler.matchWidthOrHeight=0;
@@ -61,8 +61,13 @@ namespace RoomLab.Native
             var root=NativeUiKit.New(panels,"Page "+state);
             if(state=="play"){BuildHud(root);NativeUiKit.Relayout(root);return;}
             NativeUiKit.MarkBackdrop(NativeUiKit.Box(root,"Backdrop",new Color(.025f,.045f,.08f,.9f)).gameObject);
-            if(state=="menu")BuildMenu(root);else if(state=="settings")BuildSettings(root);else if(state=="developer")BuildDeveloper(root);else if(state=="settings-expanded"){displayExpanded=true;BuildSettings(root);}else if(state=="tutorial"){tutorialSeen=true;SaveSettings();BuildTutorial(root);}else BuildPause(root,state);
-            NativeUiKit.Relayout(root);}
+            if(state=="builtin-select")BuildBuiltinSelection(root);else if(state=="course-select")BuildCourseSelection(root);else if(state=="menu")BuildMenu(root);else if(state=="settings")BuildSettings(root);else if(state=="developer")BuildDeveloper(root);else if(state=="settings-expanded"){displayExpanded=true;BuildSettings(root);}else if(state=="tutorial"){tutorialSeen=true;SaveSettings();BuildTutorial(root);}else BuildPause(root,state);
+            NativeUiKit.Relayout(root);if(verify&&(state=="builtin-select"||state=="course-select"))VerifySelectionBounds(root);}
+        void VerifySelectionBounds(RectTransform root){
+            Canvas.ForceUpdateCanvases();NativeUiKit.Relayout(root);var screen=NativeUiKit.WorldRect((RectTransform)canvas.transform);
+            foreach(var text in root.GetComponentsInChildren<Text>()){var bounds=NativeUiKit.WorldRect(text.rectTransform);if(bounds.xMin<screen.xMin-1||bounds.xMax>screen.xMax+1||bounds.yMin<screen.yMin-1||bounds.yMax>screen.yMax+1)throw new Exception("Selection UI outside canvas: "+text.text);}
+            Debug.Log("NATIVE_SELECTION_BOUNDS_PASS page="+page);
+        }
         // HUD and hint are anchored, not layout-driven: the status text keeps the left side and the
         // pause button keeps its exact 32x20 box at every resolution.
         void BuildHud(Transform root){
@@ -71,32 +76,32 @@ namespace RoomLab.Native
             hud=NativeUiKit.Label(bar,"",12,Paper,TextAnchor.MiddleLeft);var status=hud.rectTransform;status.anchorMin=new Vector2(0,0);status.anchorMax=new Vector2(1,1);status.offsetMin=new Vector2(8,0);status.offsetMax=new Vector2(-46,0);
             var pause=NativeUiKit.Button(bar,"Ⅱ",()=>Show("pause"),12,20,NativeUiKit.Slot,32,0).GetComponent<RectTransform>();
             pause.anchorMin=pause.anchorMax=new Vector2(1,.5f);pause.pivot=new Vector2(1,.5f);pause.anchoredPosition=new Vector2(-6,0);pause.sizeDelta=new Vector2(32,20);
-            var hintBar=NativeUiKit.New(root,"Hint");hintBar.anchorMin=new Vector2(0,0);hintBar.anchorMax=new Vector2(1,0);hintBar.pivot=new Vector2(.5f,0);hintBar.anchoredPosition=new Vector2(0,6);hintBar.sizeDelta=new Vector2(-16,44);
+            var hintBar=NativeUiKit.New(root,"Hint");hintBar.anchorMin=new Vector2(0,0);hintBar.anchorMax=new Vector2(1,0);hintBar.pivot=new Vector2(.5f,0);hintBar.anchoredPosition=new Vector2(0,6);hintBar.sizeDelta=new Vector2(-16,44);hintBar.gameObject.AddComponent<Image>().color=new Color(Ink.r,Ink.g,Ink.b,.78f);
             hint=NativeUiKit.Label(hintBar,"",12,Paper,TextAnchor.MiddleLeft);var hr=hint.rectTransform;hr.anchorMin=Vector2.zero;hr.anchorMax=Vector2.one;hr.offsetMin=new Vector2(8,0);hr.offsetMax=new Vector2(-8,0);}
         // Fixed 224x312 art panel: absolute offsets inside it never depend on the window.
         void BuildPhone(RectTransform phone){NativeUiKit.AbsImage(phone,"Phone header",10,10,204,24,Ink);
             NativeUiKit.AbsLabel(phone,20,16,180,18,"09:41     论文助手     ●",12,Paper);
             NativeUiKit.AbsLabel(phone,17,51,180,25,"论文截止倒计时",16,Ink);
-            NativeUiKit.AbsLabel(phone,17,85,185,45,"AI：论文交给我。\n你去物理实验室收集算力。",12,Ink);
+            NativeUiKit.AbsLabel(phone,17,85,185,45,"AI：论文交给我。\n三主题课程 Demo。",12,Ink);
             NativeUiKit.AbsImage(phone,"Divider",16,144,192,1,new Color(.55f,.62f,.6f));
-            NativeUiKit.AbsLabel(phone,17,160,183,96,"今日待办\n□ 按 E 启动 AI\n□ 引 AI 去吃收藏品\n□ 收 token 充能冲刺",12,Ink);
+            NativeUiKit.AbsLabel(phone,17,160,183,96,ThemeHint(),12,Ink);
             NativeUiKit.AbsLabel(phone,17,271,180,25,"ROOMLAB  /  PHYSICS",12,new Color(.25f,.4f,.45f));}
         void BuildMenu(Transform root){float width=Mathf.Min(600f,designWidth-32f);
             var menu=NativeUiKit.Column(root,"Menu",10,0,0);NativeUiKit.Center(menu,width);
             var head=NativeUiKit.Row(menu,"Menu head",312,18,0);
             var phone=NativeUiKit.Box(head,"Paper todo panel",Paper).rectTransform;NativeUiKit.Size(phone,224,312,0);BuildPhone(phone);
             var actions=NativeUiKit.Column(head,"Menu actions",8,0,0,false);NativeUiKit.Size(actions,flexWidth:1);
-            NativeUiKit.Label(actions,"物理 DDL",24,Paper);
-            NativeUiKit.Label(actions,isBuiltin?"校园科幻实验室 · 第一大关":"编辑器 2.5.5 · "+Game.Project.Name,12,Teal);
+            NativeUiKit.Label(actions,Game.Course.Kind=="calculus"?"高数 DDL":Game.Course.Kind=="slacker"?"水课 DDL":"物理 DDL",24,Paper);
+            NativeUiKit.Label(actions,(isBuiltin?"内置 Demo · ":"编辑器 2.5.5 / 3.0 · ")+Game.Course.Name,12,Teal);
             NativeUiKit.Label(actions,"进度 "+roomReached+" / "+Game.Course.Rooms.Count+"    最高分 "+high,12,Paper);
-            NativeUiKit.Button(actions,"新游戏",NewGame,13,30,Teal);
+            NativeUiKit.Button(actions,"新游戏",NewGame,13,30,Teal);NativeUiKit.Button(actions,"选择大关 · 三主题 Demo",()=>Show("builtin-select"),12,28);
             var cont=NativeUiKit.Button(actions,"继续 · 从最近检查点 / 房间入口",Continue,13,30);cont.interactable=CanContinue();
             var first=NativeUiKit.Row(actions,"Menu row 1",28,8);NativeUiKit.Button(first,"替换导入",PickImport,12,28);NativeUiKit.Button(first,"设置",()=>{settingsFromGame=false;Show("settings");},12,28);
-            var second=NativeUiKit.Row(actions,"Menu row 2",28,8);NativeUiKit.Button(second,"恢复内置物理关",()=>{ForgetImport();CommitCandidate(builtin,NativeGameplayRules.DemoPhysics,true);Show("menu");},12,28);NativeUiKit.Button(second,"退出",Quit,12,28);
+            var second=NativeUiKit.Row(actions,"Menu row 2",28,8);NativeUiKit.Button(second,"恢复内置大关",()=>{LoadBuiltinCourse(builtinCourseId);ForgetImport();Show("menu");},12,28);NativeUiKit.Button(second,"退出",Quit,12,28);
             status=NativeUiKit.Label(actions,notice,12,Orange);}
         void BuildPause(Transform root,string state){float width=Mathf.Min(560f,designWidth-32f);
             var panel=NativeUiKit.Column(root,"Panel",7,14,12);NativeUiKit.Center(panel,width);var bg=panel.gameObject.AddComponent<Image>();bg.color=Ink;bg.raycastTarget=false;
-            NativeUiKit.Label(panel,state=="won"?"第一大关完成":"实验暂停",20,Paper);
+            NativeUiKit.Label(panel,state=="won"?Game.Course.Name+" · 完成":"课程暂停",20,Paper);
             NativeUiKit.Label(panel,state=="won"?(tainted?"检查完成 · 不记录正常成绩":"分数 "+Game.Score+"   +50,000 论文提交奖励"):(timeline.ProtectionPaused?timeline.ProtectionReason:notice),12,Orange);
             if(state!="won")NativeUiKit.Button(panel,"继续游戏",()=>Show("play"),13,30,Teal);
             var first=NativeUiKit.Row(panel,"Pause row 1",28,8);NativeUiKit.Button(first,"重试当前房间",Retry,12,28);NativeUiKit.Button(first,"设置",()=>{settingsFromGame=true;Show("settings");},12,28);
@@ -268,54 +273,67 @@ namespace RoomLab.Native
         void Advance(double dt){if(keys.Overflowed){timeline.Advance(Game,1,default(MotionInput));notice=timeline.ProtectionReason;keys.Clear();Show("pause");return;}if(Game.Mode!="playing"||Game.RespawnRemaining>0)keys.DiscardEdges();while(keys.TryRead(out var edge))timeline.Advance(Game,0,edge);timeline.Advance(Game,dt,keys.Held);if(timeline.ProtectionPaused){notice=timeline.ProtectionReason;Show("pause");}}
         void OnApplicationFocus(bool focus){if(!focus&&Game!=null&&!verify&&!matrix){keys.Clear();timeline.LoseFocus(Game);if(page=="play"){SaveProgress();Show("pause");}}}
         void CommitCandidate(NativeProject candidate,NativeGameplayRules rules,bool builtIn,bool allowUnresolvedAssets=false){NativeDemoAssets decoded=null;NativePixelWorld render=null;try{foreach(var c in candidate.Courses)foreach(var r in c.Rooms)if(!NativeMotion.SupportsRoom(r,out var reason))throw new NativeDataException(reason);decoded=NativeDemoAssets.Decode(candidate,allowUnresolvedAssets);var motor=new NativeMotion(candidate,rules:rules);render=new NativePixelWorld(motor,decoded,builtIn);render.Refresh(0,view,false);
-                var oldWorld=world;var oldAssets=assets;world=render;assets=decoded;Game=motor;isBuiltin=builtIn;identity=(builtIn?"builtin-":"import-")+candidate.SourceSha256+"-"+rules;tainted=false;notice="";loadedRoom=Game.Room.Id;lastCheckpoint=Game.Checkpoint.id;lastEvent=null;timeline.Reset();keys.Clear();map=false;RootActivate();oldWorld?.Dispose();oldAssets?.Dispose();ReadRecord();
+                var oldWorld=world;var oldAssets=assets;world=render;assets=decoded;Game=motor;isBuiltin=builtIn;identity=(builtIn?"builtin-":"import-")+(((JArray)candidate.OriginalJson["courses"]).Count==1?candidate.SourceSha256+"-"+rules:NativeProjectLoader.Sha(Encoding.UTF8.GetBytes(candidate.SourceSha256+"\n"+motor.Course.Id+"\n"+rules))+"-"+rules);tainted=false;notice="";loadedRoom=Game.Room.Id;lastCheckpoint=Game.Checkpoint.id;lastEvent=null;timeline.Reset();keys.Clear();map=false;RootActivate();oldWorld?.Dispose();oldAssets?.Dispose();ReadRecord();
             }catch{render?.Dispose();decoded?.Dispose();throw;}}
         void RootActivate(){world.Root.SetActive(true);}
         void SetGame(NativeMotion g){var next=new NativePixelWorld(g,assets,isBuiltin);next.Refresh(0,view,map);var old=world;Game=g;world=next;world.Root.SetActive(true);old.Dispose();loadedRoom=g.Room.Id;lastCheckpoint=g.Checkpoint.id;timeline.Reset();keys.Clear();lastEvent=null;}
         // Loads a designer package. A bare JSON whose assets folder is missing is accepted through the
         // built-in art fallback instead of being rejected outright.
-        NativeProject LoadImport(string path,bool strict,out bool substituted)
+        NativeProject LoadImport(string path,bool strict,out bool substituted,string courseId=null)
         {
             substituted=false;
-            try{return NativeProjectLoader.LoadFile(path,new ImportOptions{Profile=ImportProfile.EditorAuto,RequireAssets=true});}
+            try{return NativeProjectLoader.LoadFile(path,new ImportOptions{Profile=ImportProfile.EditorAuto,RequireAssets=true,PlayableCoursesOnly=true,CourseId=courseId});}
             catch(NativeDataException missing) when(!strict&&(missing.Message.StartsWith("缺少素材：")||missing.Message.StartsWith("项目包缺少素材：")))
             {
                 substituted=true;
-                return NativeProjectLoader.LoadFile(path,new ImportOptions{Profile=ImportProfile.EditorAuto,RequireAssets=false});
+                return NativeProjectLoader.LoadFile(path,new ImportOptions{Profile=ImportProfile.EditorAuto,RequireAssets=false,PlayableCoursesOnly=true,CourseId=courseId});
             }
         }
         public bool ImportFile(string path){
             if(string.IsNullOrEmpty(path)){notice="已取消，当前实验保留";return false;}
             try{return CommitImport(path,true);}
+            catch(NativeCourseSelectionException choose){pendingImportPath=path;pendingReturnPage=page;pendingCourses=choose.Courses;Show("course-select");return false;}
             catch(Exception e){notice="导入失败，当前实验保留："+e.Message;Debug.Log("NATIVE_IMPORT_REJECTED "+e.Message);if(status!=null)status.text=notice;return false;}
         }
-        bool CommitImport(string path,bool remember){
+        bool CommitImport(string path,bool remember,string courseId=null){
             bool substituted;
-            var data=LoadImport(path,false,out substituted);
+            var data=LoadImport(path,false,out substituted,courseId);
             var rules=importLegacyRules?NativeGameplayRules.Editor255Compat:NativeGameplayRules.DemoPhysics;
             CommitCandidate(data,rules,false,substituted);
-            if(remember)PersistImport(path);
+            bool persisted=!remember||PersistImport(path,data.Courses[0].Id);
             notice=substituted?"导入成功（未随包提供 assets，已用内置像素美术替代）："+data.Name+" · 建议把 assets 文件夹与 JSON 放在同一目录":"导入成功："+data.Name;
+            if(!persisted)notice+="（本次可玩，但未能保存导入副本，重启后可能无法恢复）";
             Show("pause");
             return true;
         }
         // Keeps a copy of the imported package under the save folder so the level survives a restart.
-        void PersistImport(string sourcePath){
-            try
-            {
-                string directory=Path.Combine(saveDirectory,"imported");Directory.CreateDirectory(directory);
+        bool PersistImport(string sourcePath,string courseId){
+            string oldLevel=importedLevel,oldCourse=importedCourseId;
+            try {
+                string cacheId=Guid.NewGuid().ToString("N");
+                string directory=Path.Combine(saveDirectory,"imported",cacheId);Directory.CreateDirectory(directory);
                 string extension=Path.GetExtension(sourcePath).ToLowerInvariant();
-                string target=Path.Combine(directory,"level"+extension);
-                File.Copy(sourcePath,target,true);
-                string assetsTarget=Path.Combine(directory,"assets");
+                File.Copy(sourcePath,Path.Combine(directory,"level"+extension),false);
                 if(extension==".json"){
                     string assets=Path.Combine(Path.GetDirectoryName(sourcePath)??"","assets");
-                    if(Directory.Exists(assets)){if(Directory.Exists(assetsTarget))Directory.Delete(assetsTarget,true);CopyTree(assets,assetsTarget);}
-                    else if(Directory.Exists(assetsTarget))Directory.Delete(assetsTarget,true);
+                    if(Directory.Exists(assets))CopyTree(assets,Path.Combine(directory,"assets"));
                 }
-                importedLevel=Path.Combine("imported","level"+extension);SaveSettings();
-            }
-            catch(Exception e){Debug.Log("NATIVE_IMPORT_PERSIST_FAILED "+e.Message);}
+                importedLevel=Path.Combine("imported",cacheId,"level"+extension);importedCourseId=courseId;
+                SaveSettings();return true;
+            }catch(Exception e){importedLevel=oldLevel;importedCourseId=oldCourse;Debug.Log("NATIVE_IMPORT_PERSIST_FAILED "+e.Message);return false;}
+        }
+        void VerifyImportCache(){
+            string oldLevel=importedLevel,oldCourse=importedCourseId;
+            string fixture=Path.Combine(Evidence(),"cache-fixture.json");File.WriteAllText(fixture,"{\"version\":2}");
+            try {
+                if(!PersistImport(fixture,"first"))throw new Exception("cache first write failed");string first=Path.Combine(saveDirectory,importedLevel);byte[] original=File.ReadAllBytes(first);
+                if(!PersistImport(fixture,"second"))throw new Exception("cache second write failed");string second=importedLevel;
+                if(Path.Combine(saveDirectory,second)==first||NativeProjectLoader.Sha(File.ReadAllBytes(first))!=NativeProjectLoader.Sha(original))throw new Exception("old cache overwritten");
+                using(var locked=new FileStream(SettingsFile,FileMode.Open,FileAccess.Read,FileShare.None))if(PersistImport(fixture,"failed"))throw new Exception("locked settings unexpectedly replaced");
+                if(importedLevel!=second||importedCourseId!="second"||!File.Exists(first)||!File.Exists(Path.Combine(saveDirectory,second)))throw new Exception("failed settings lost cache");
+                if((string)JObject.Parse(File.ReadAllText(SettingsFile))["importedLevel"]!=second)throw new Exception("failed settings changed pointer");
+                Debug.Log("NATIVE_IMPORT_CACHE_PASS previousPreserved=true settingsFailureRetainsPointer=true");
+            }finally{importedLevel=oldLevel;importedCourseId=oldCourse;SaveSettings();}
         }
         static void CopyTree(string from,string to){
             Directory.CreateDirectory(to);
@@ -326,19 +344,38 @@ namespace RoomLab.Native
         public bool TryRestoreImport(){
             if(string.IsNullOrEmpty(importedLevel))return false;
             string file=Path.Combine(saveDirectory,importedLevel);
-            if(!File.Exists(file)){importedLevel="";SaveSettings();return false;}
-            try{bool substituted;var data=LoadImport(file,false,out substituted);var rules=importLegacyRules?NativeGameplayRules.Editor255Compat:NativeGameplayRules.DemoPhysics;CommitCandidate(data,rules,false,substituted);notice="已恢复上次导入的关卡："+data.Name;return true;}
-            catch(Exception e){Debug.Log("NATIVE_IMPORT_RESTORE_FAILED "+e.Message);importedLevel="";SaveSettings();return false;}
+            if(!File.Exists(file)){importedLevel="";importedCourseId="";SaveSettings();return false;}
+            try{bool substituted;var data=LoadImport(file,false,out substituted,importedCourseId);var rules=importLegacyRules?NativeGameplayRules.Editor255Compat:NativeGameplayRules.DemoPhysics;CommitCandidate(data,rules,false,substituted);notice="已恢复上次导入的关卡："+data.Name;return true;}
+            catch(Exception e){Debug.Log("NATIVE_IMPORT_RESTORE_FAILED "+e.Message);importedLevel="";importedCourseId="";SaveSettings();return false;}
         }
-        void ForgetImport(){if(!string.IsNullOrEmpty(importedLevel)){importedLevel="";SaveSettings();}}
+        string BuiltinThemeFile=>Path.Combine(Application.streamingAssetsPath,"RoomLabNative/Editor3/editor3-three-themes.zip");
+        void LoadBuiltinCourse(string id){
+            var data=string.IsNullOrEmpty(id)?builtin:NativeProjectLoader.LoadFile(BuiltinThemeFile,new ImportOptions{PlayableCoursesOnly=true,CourseId=id,RequireAssets=true});
+            CommitCandidate(data,NativeGameplayRules.DemoPhysics,true);builtinCourseId=id??"";SaveSettings();
+        }
+        void BuildBuiltinSelection(RectTransform root){
+            var panel=NativeUiKit.Column(root,"三主题Demo",10,14,14);NativeUiKit.Center(panel,Mathf.Min(560,designWidth-32));panel.gameObject.AddComponent<Image>().color=Ink;NativeUiKit.Label(panel,"选择大关 · Demo",18,Paper);
+            NativeUiKit.Button(panel,"第一大关 · 物理（原11房）",()=>{LoadBuiltinCourse("");ForgetImport();Show("menu");},12,28);
+            try{NativeProjectLoader.LoadFile(BuiltinThemeFile,new ImportOptions{PlayableCoursesOnly=true});}
+            catch(NativeCourseSelectionException choices){foreach(var c in choices.Courses){if((string)c["kind"]=="physics")continue;string id=(string)c["id"];NativeUiKit.Button(panel,((string)c["name"]??id)+" · 3房示例",()=>{try{LoadBuiltinCourse(id);ForgetImport();Show("menu");}catch(Exception e){notice="载入失败："+e.Message;Show("menu");}},12,28);}}
+            catch(Exception e){NativeUiKit.Label(panel,"主题包无法读取："+e.Message,12,Paper);}
+            NativeUiKit.Button(panel,"返回",()=>Show("menu"),12,28);
+        }
+        void BuildCourseSelection(RectTransform root){
+            var panel=NativeUiKit.Column(root,"选择大关",5,14,14);NativeUiKit.Center(panel,Mathf.Min(560,designWidth-32));panel.gameObject.AddComponent<Image>().color=Ink;NativeUiKit.Label(panel,"选择要导入的大关",18,Paper);
+            for(int i=0;i<pendingCourses.Length;i+=2){var row=NativeUiKit.Row(panel,"课程行 "+i,28,8);for(int j=i;j<Math.Min(i+2,pendingCourses.Length);j++){var entry=pendingCourses[j];string id=(string)entry["id"];string full=(string)entry["name"]??id;string label=(j+1)+". "+(full.Length>18?full.Substring(0,18)+"…":full);NativeUiKit.Button(row,label,()=>{try{CommitImport(pendingImportPath,true,id);}catch(Exception e){notice="导入失败，当前实验保留："+e.Message;Show(pendingReturnPage);}},11,28);}}
+            NativeUiKit.Button(panel,"取消",()=>{Show(pendingReturnPage);},12,28);
+        }
+        void ForgetImport(){if(!string.IsNullOrEmpty(importedLevel)){importedLevel="";importedCourseId="";SaveSettings();}}
         void PickImport(){SaveProgress();keys.Clear();timeline.Reset();string path=NativeDemoFileDialog.Pick();ImportFile(path);if(status!=null)status.text=notice;}
-        void NewGame(){SetGame(new NativeMotion(Game.Project,rules:Game.Rules));tainted=false;notice="按 "+KeyName()+" 启动 AI · 引 AI 去吃收藏品";SaveProgress();Show("play");}
+        string ThemeHint()=>Game.Course.Kind=="calculus"?"踩积分板聚合搭桥 · 踩求导板展开道路":Game.Course.Kind=="slacker"?"踩签到板记录 · 清醒板加速前进":"按 "+KeyName()+" 启动 AI · 引 AI 去吃收藏品";
+        void NewGame(){SetGame(new NativeMotion(Game.Project,rules:Game.Rules));tainted=false;notice=ThemeHint();SaveProgress();Show("play");}
         bool CanContinue(){try{if(new FileInfo(SaveFile).Length>4*1024*1024)return false;var data=JObject.Parse(File.ReadAllText(SaveFile));if(data["continuation"] is JObject saved){NativeMotion.FromContinuation(Game.Project,saved,Game.Rules);return true;}}catch{}return false;}
         void Continue(){try{var saved=(JObject)JObject.Parse(File.ReadAllText(SaveFile))["continuation"];SetGame(NativeMotion.FromContinuation(Game.Project,saved,Game.Rules));tainted=false;notice="已从最近检查点恢复";Show("play");}catch(Exception e){notice="存档不可用，已安全返回菜单："+e.Message;Show("menu");}}
         void Retry(){Game.Retry();notice="已恢复最近检查点";Show("play");}
         void ReadRecord(){high=roomReached=0;try{var data=JObject.Parse(File.ReadAllText(SaveFile));high=Math.Max(0,(int?)data["high"]??0);roomReached=Math.Max(0,(int?)data["roomReached"]??0);}catch{}}
         void SaveProgress(){if(Game==null||tainted||Game.DeveloperEnabled||Game.Completed)return;roomReached=Math.Max(roomReached,Game.Course.Rooms.IndexOf(Game.Room)+1);SaveRecord(true);}
-        void SaveRecord(bool continuation){try{var data=new JObject{{"version",1},{"identity",identity},{"high",high},{"roomReached",roomReached},{"continuation",continuation?(JToken)Game.ExportContinuation():null}};var temp=SaveFile+".tmp";File.WriteAllText(temp,data.ToString());if(File.Exists(SaveFile))File.Replace(temp,SaveFile,null);else File.Move(temp,SaveFile);}catch(Exception e){notice="保存失败："+e.Message;}}
+        void SaveRecord(bool continuation){try{var data=new JObject{{"version",1},{"identity",identity},{"high",high},{"roomReached",roomReached},{"continuation",continuation?(JToken)Game.ExportContinuation():null}};var temp=SaveFile+".tmp";File.WriteAllText(temp,data.ToString());if(File.Exists(SaveFile))File.Replace(temp,SaveFile,null);else File.Move(temp,SaveFile);}catch(Exception e){notice="保存失败："+e.Message;Debug.LogWarning("NATIVE_SAVE_FAILED "+e.Message);}}
         string SettingsFile{get{return Path.Combine(saveDirectory,"settings.json");}}
         void LoadSettings(){
             legacy=RoomLabKeyBindings.Load();
@@ -355,7 +392,7 @@ namespace RoomLab.Native
                     windowScale=Mathf.Clamp((float?)d["windowScale"]??.9f,.5f,1f);
                     viewMax=Mathf.Clamp((float?)d["viewMax"]??1.3f,1f,1.6f);
                     importLegacyRules=(bool?)d["importLegacyRules"]==true;
-                    importedLevel=(string)d["importedLevel"]??"";
+                    importedLevel=(string)d["importedLevel"]??"";importedCourseId=(string)d["importedCourseId"]??"";builtinCourseId=(string)d["builtinCourseId"]??"";
                     NativeCameraView.Zoom=viewMax;
                     int w=(int?)d["width"]??1280,h=(int?)d["height"]??720;
                     if(w>=640&&w<=7680&&h>=360&&h<=4320){desiredWidth=w;desiredHeight=h;}
@@ -369,7 +406,7 @@ namespace RoomLab.Native
             if(!verify&&!matrix){if(applied&&(desiredFull||!adaptiveWindow))Screen.SetResolution(desiredWidth,desiredHeight,desiredFull?FullScreenMode.FullScreenWindow:FullScreenMode.Windowed);else ApplyAdaptiveWindow();SaveSettings();}
             AudioListener.volume=volume;
         }
-        void SaveSettings(){var list=new JArray();foreach(var b in bindings)list.Add((int)b);File.WriteAllText(SettingsFile,new JObject{{"version",1},{"volume",volume},{"tutorialSeen",tutorialSeen},{"adaptiveWindow",adaptiveWindow},{"windowScale",windowScale},{"viewMax",viewMax},{"importLegacyRules",importLegacyRules},{"importedLevel",importedLevel},{"bindings",list},{"fullscreen",desiredFull},{"width",desiredWidth},{"height",desiredHeight}}.ToString());}
+        void SaveSettings(){var list=new JArray();foreach(var b in bindings)list.Add((int)b);string temporary=SettingsFile+"."+Guid.NewGuid().ToString("N")+".tmp";File.WriteAllText(temporary,new JObject{{"version",1},{"volume",volume},{"tutorialSeen",tutorialSeen},{"adaptiveWindow",adaptiveWindow},{"windowScale",windowScale},{"viewMax",viewMax},{"importLegacyRules",importLegacyRules},{"importedLevel",importedLevel},{"importedCourseId",importedCourseId},{"builtinCourseId",builtinCourseId},{"bindings",list},{"fullscreen",desiredFull},{"width",desiredWidth},{"height",desiredHeight}}.ToString());if(File.Exists(SettingsFile))File.Replace(temporary,SettingsFile,null);else File.Move(temporary,SettingsFile);}
         // Adaptive window: fill most of the desktop and keep following the saved ratio, so the game is
         // no longer stuck at a fixed 1280x720 window on any monitor.
         void ApplyAdaptiveWindow(){
@@ -395,7 +432,7 @@ namespace RoomLab.Native
         void ChangeVolume(float amount){volume=Mathf.Clamp01(volume+amount);AudioListener.volume=volume;SaveSettings();Play("ui");Show("settings");}
         void CreateSounds(){string[] names={"ui","jump","dash","coin","temperature","retry","finish"};for(int k=0;k<names.Length;k++){int count=names[k]=="finish"?11025:2205;var samples=new float[count];float hz=220+k*85;for(int i=0;i<count;i++)samples[i]=(Mathf.Sin(i*hz*2*Mathf.PI/22050)>0?1:-1)*.12f*(1-i/(float)count);var clip=AudioClip.Create(names[k],count,1,22050,false);clip.SetData(samples,0);sounds.Add(names[k],clip);}}
         void Play(string name){if(speaker!=null&&sounds.TryGetValue(name,out var clip))speaker.PlayOneShot(clip);}
-        void PumpSounds(){int start=lastEvent==null?0:Game.Events.IndexOf(lastEvent)+1;for(int i=start;i<Game.Events.Count;i++){var e=Game.Events[i];string type=(string)e["type"];Play(type=="collect"?"coin":type=="jet"||type=="rail-start"?"dash":type=="steal"?"retry":type);}if(Game.Events.Count>0)lastEvent=Game.Events[Game.Events.Count-1];}
+        void PumpSounds(){int start=lastEvent==null?0:Game.Events.IndexOf(lastEvent)+1;for(int i=start;i<Game.Events.Count;i++){var e=Game.Events[i];string type=(string)e["type"];if(type=="checkin")notice="签到成功：第 "+(int?)e["count"]+" 次记录";else if(type=="awake")notice="清醒：短暂加速";else if(type=="calculus-integral")notice="积分：机关砖向目标聚合";else if(type=="calculus-derivative")notice="求导：机关砖向目标展开";Play(type=="collect"?"coin":type=="jet"||type=="rail-start"?"dash":type=="steal"?"retry":type);}if(Game.Events.Count>0)lastEvent=Game.Events[Game.Events.Count-1];}
         // Remember a manually resized window even when the adaptive mode is off, so the next launch
         // keeps the size the player dragged to instead of falling back to an old preset.
         void Quit(){SaveProgress();if(!adaptiveWindow&&!Screen.fullScreen){desiredWidth=Mathf.Clamp(Screen.width,640,7680);desiredHeight=Mathf.Clamp(Screen.height,360,4320);}SaveSettings();Application.Quit();}
@@ -407,8 +444,8 @@ namespace RoomLab.Native
             Application.Quit(code);
 #endif
         }
-        IEnumerator Verify(){yield return null;try{if(Game.Project.RoomCount!=11||Game.Project.ConnectionCount!=10||assets.Frames.Count!=9)throw new Exception("包内容不完整");int checks=NativeGameplaySmokeChecks.Run(Game.Project);int authoredChecks=NativeAuthoredIceChecks.Run(Game.Project);Debug.Log("NATIVE_AUTHORED_ICE_PASS checks="+authoredChecks+" source="+Game.Project.SourceSha256);NativeCodecChecks.Run(Path.Combine(Application.streamingAssetsPath,"RoomLabNative/CodecTests"));Debug.Log("NATIVE_PHYSICS_CORE_PASS checks="+checks);NewGame();SaveProgress();if(!CanContinue())throw new Exception("继续存档未生成");Show("menu");Continue();if(page!="play"||Game.RespawnRemaining!=.5)throw new Exception("生产继续路径错误");var original=Game;int score=Game.Score;string oldIdentity=identity;if(ImportFile(null)||Game!=original||identity!=oldIdentity||Game.Score!=score)throw new Exception("取消导入破坏状态");string bad=Path.Combine(Evidence(),"bad.json");Directory.CreateDirectory(Evidence());File.WriteAllText(bad,"{}");if(ImportFile(bad)||Game!=original||identity!=oldIdentity)throw new Exception("坏导入破坏状态");
-                string dir=Path.Combine(Application.streamingAssetsPath,"RoomLabNative");if(!ImportFile(Path.Combine(dir,"default.json"))||isBuiltin||Game.Rules!=NativeGameplayRules.DemoPhysics)throw new Exception("真实JSON替换失败");if(identity==oldIdentity)throw new Exception("存档未隔离");int importChecks=NativeDemoAcceptance.Imports(this,builtin,Path.Combine(Evidence(),"import-cases"));Debug.Log("NATIVE_PHYSICS_IMPORT_PASS cases="+importChecks);CommitCandidate(builtin,NativeGameplayRules.DemoPhysics,true);Show("menu");Debug.Log("NATIVE_PHYSICS_UI_PASS menu=true newGame=true continue=true cancelRetains=true badRetains=true json=true sourceIsolation=true svg=9 rules="+Game.Rules);
+        IEnumerator Verify(){yield return null;try{if(Game.Project.RoomCount!=11||Game.Project.ConnectionCount!=10||assets.Frames.Count!=9)throw new Exception("包内容不完整");int checks=NativeGameplaySmokeChecks.Run(Game.Project);verifiedCoreChecks=checks;int authoredChecks=NativeAuthoredIceChecks.Run(Game.Project);Debug.Log("NATIVE_AUTHORED_ICE_PASS checks="+authoredChecks+" source="+Game.Project.SourceSha256);NativeCodecChecks.Run(Path.Combine(Application.streamingAssetsPath,"RoomLabNative/CodecTests"));Debug.Log("NATIVE_PHYSICS_CORE_PASS checks="+checks);NewGame();SaveProgress();if(!CanContinue())throw new Exception("继续存档未生成");Show("menu");Continue();if(page!="play"||Game.RespawnRemaining!=.5)throw new Exception("生产继续路径错误");var original=Game;int score=Game.Score;string oldIdentity=identity;if(ImportFile(null)||Game!=original||identity!=oldIdentity||Game.Score!=score)throw new Exception("取消导入破坏状态");string bad=Path.Combine(Evidence(),"bad.json");Directory.CreateDirectory(Evidence());File.WriteAllText(bad,"{}");if(ImportFile(bad)||Game!=original||identity!=oldIdentity)throw new Exception("坏导入破坏状态");
+                string dir=Path.Combine(Application.streamingAssetsPath,"RoomLabNative");if(!ImportFile(Path.Combine(dir,"default.json"))||isBuiltin||Game.Rules!=NativeGameplayRules.DemoPhysics)throw new Exception("真实JSON替换失败");if(identity==oldIdentity)throw new Exception("存档未隔离");int importChecks=NativeDemoAcceptance.Imports(this,builtin,Path.Combine(Evidence(),"import-cases"));Debug.Log("NATIVE_PHYSICS_IMPORT_PASS cases="+importChecks);NativeEditor3Acceptance.Run(this,builtin,Path.Combine(Evidence(),"editor3"));VerifyImportCache();CommitCandidate(builtin,NativeGameplayRules.DemoPhysics,true);Show("menu");Debug.Log("NATIVE_PHYSICS_UI_PASS menu=true newGame=true continue=true cancelRetains=true badRetains=true json=true sourceIsolation=true svg=9 rules="+Game.Rules);
             }catch(Exception e){Debug.LogException(e);Finish(2);yield break;}
             yield return Capture("01-menu");ImportFile(Path.Combine(Evidence(),"import-cases/valid.zip"));Show("play");yield return Capture("08-external-svg");ImportFile(Path.Combine(Evidence(),"import-cases/png-sheet.zip"));Show("play");yield return Capture("09-external-sheet");ImportFile(Path.Combine(Evidence(),"import-cases/gif-disposal-123.gif.zip"));Show("play");Game.RoomTime=.021;yield return Capture("16-gif-native-frame");ImportFile(Path.Combine(Evidence(),"import-cases/webp-animation.webp.zip"));Show("play");Game.RoomTime=.091;yield return Capture("17-webp-native-frame");CommitCandidate(builtin,NativeGameplayRules.DemoPhysics,true);NewGame();yield return Capture("02-gameplay");Show("pause");yield return Capture("03-pause");Show("settings");yield return Capture("04-settings");var volumeSlider=ui.GetComponentInChildren<Slider>();volumeSlider.value=.2f;Play("finish");if(Mathf.Abs(AudioListener.volume-.2f)>.001f||!speaker.isPlaying){Debug.LogError("Sound slider disconnected");Finish(2);yield break;}Debug.Log("NATIVE_SOUND_PASS generatedClipPlaying=true volumeSliderControlsListener=true");
             NewGame();for(int i=0;i<65;i++){keys.Apply((int)bindings[4],true);keys.Apply((int)bindings[4],false);}Advance(0);if(page!="pause"||!notice.Contains("保护")){Debug.LogError("Overflow protection not visible");Finish(2);yield break;}Show("play");Advance(0);if(Game.Player.dashCount!=0){Finish(2);yield break;}
@@ -417,7 +454,25 @@ namespace RoomLab.Native
             foreach(var r in Game.Course.Rooms){SetGame(new NativeMotion(builtin,Game.Course.Id,r.Id,NativeGameplayRules.DemoPhysics));Show("play");yield return Capture("room-"+Game.Course.Rooms.IndexOf(r).ToString("00"));}
             NewGame();int transitions=0;while(!Game.Completed&&transitions<11){var exit=Game.Room.Exits[0];foreach(var e in Game.Room.Exits)if(Game.Course.Connections.Exists(c=>c.FromRoomId==Game.Room.Id&&c.ExitId==e.Id)){exit=e;break;}Game.Player.x=exit.X*32+4;Game.Player.y=exit.Y*32+4;Game.Player.vx=Game.Player.vy=0;Game.Player.invulnerable=99;Game.RespawnRemaining=0;Game.ExitCooldown=0;Game.Tick(0);transitions++;}if(!Game.Completed||transitions!=11){Debug.LogError("11-room exit chain failed");Finish(2);yield break;}int finalScore=Game.Score;Show("menu");Show("settings");Show("play");Game.Tick(0);if(Game.Score!=finalScore||Game.Mode!="won"){Finish(2);yield break;}high=Game.Score;SaveRecord(false);Show("won");yield return Capture("05-result");Debug.Log("NATIVE_PHYSICS_EXIT_PASS transitions=10 finalOnce=true productionTerminalReturn=true verifyPositionSetup=true");
             CommitCandidate(builtin,NativeGameplayRules.DemoPhysics,true);Show("menu");Screen.SetResolution(1024,768,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.4f);yield return Capture("06-menu-1024x768");Screen.SetResolution(1920,1080,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.4f);yield return Capture("07-menu-1920x1080");
-            try{File.WriteAllText(Path.Combine(Evidence(),"result.json"),new JObject{{"native",true},{"rooms",11},{"connections",10},{"svgDecoded",assets.Frames.Count},{"coreChecks",390},{"captureIncludesGUI",true},{"captureMethod","actual-production-uGUI-canvas-to-camera"},{"webp","native-libwebp-static-animated"},{"gif","native-WIC-composited-animated"},{"source",builtin.SourceSha256},{"rules",Game.Rules.ToString()}}.ToString());}catch(Exception e){Debug.LogException(e);Finish(2);yield break;}Finish(0);
+            Show("builtin-select");yield return Capture("editor3-course-selection");
+            JObject[] demoCourses=null;try{NativeProjectLoader.LoadFile(BuiltinThemeFile,new ImportOptions{PlayableCoursesOnly=true});}catch(NativeCourseSelectionException choice){demoCourses=choice.Courses;}
+            if(demoCourses==null){Debug.LogError("Missing built-in theme choices");Finish(2);yield break;}
+            foreach(var theme in demoCourses){if((string)theme["kind"]=="physics")continue;LoadBuiltinCourse((string)theme["id"]);NewGame();yield return Capture("editor3-"+(string)theme["kind"]+"-first-room");
+                string actionType=Game.Course.Kind=="calculus"?"calculus.integral":"slacker.awake";NativeRoom actionRoom=null;NativeObject action=null;
+                foreach(var r in Game.Course.Rooms){foreach(var o in r.Objects)if(o.Type==actionType){actionRoom=r;action=o;break;}if(action!=null)break;}
+                if(action==null){Debug.LogError("EDITOR3_ACTION_MISSING "+actionType);Finish(2);yield break;}
+                if(Game.Room.Id!=actionRoom.Id)SetGame(new NativeMotion(Game.Project,Game.Course.Id,actionRoom.Id,Game.Rules));
+                Game.RespawnRemaining=0;Game.Mode="playing";Game.Player.invulnerable=99;
+                typeof(NativeMotion).GetMethod("Fire",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).Invoke(Game,new object[]{action});
+                double[] times=Game.Course.Kind=="calculus"?new[]{.15,.4}:new[]{.05,.35,1.0};double elapsedAction=0;
+                for(int frame=0;frame<times.Length;frame++){double remaining=times[frame];while(remaining>0){double step=Math.Min(NativeMotion.Step,remaining);Game.Tick(step);world.Refresh(step,view,map);remaining-=step;}elapsedAction+=times[frame];yield return Capture("editor3-"+Game.Course.Kind+"-action-"+frame);}
+                Debug.Log("EDITOR3_ACTION_CAPTURE kind="+Game.Course.Kind+" directTrigger=true simulatedSeconds="+elapsedAction);NewGame();
+
+                int hops=0;while(!Game.Completed&&hops<4){var exit=Game.Room.Exits[0];foreach(var e in Game.Room.Exits)if(Game.Course.Connections.Exists(c=>c.FromRoomId==Game.Room.Id&&c.ExitId==e.Id)){exit=e;break;}Game.Player.x=exit.X*32+4;Game.Player.y=exit.Y*32+4;Game.Player.vx=Game.Player.vy=0;Game.Player.invulnerable=99;Game.RespawnRemaining=0;Game.ExitCooldown=0;Game.Tick(0);hops++;}
+                if(!Game.Completed||hops!=3){Debug.LogError("EDITOR3_EXIT_FAIL "+Game.Course.Kind);Finish(2);yield break;}Debug.Log("EDITOR3_EXIT_PASS kind="+Game.Course.Kind+" transitions=2 terminal=true positionSetup=true");
+            }
+            LoadBuiltinCourse("");Show("menu");
+            try{File.WriteAllText(Path.Combine(Evidence(),"result.json"),new JObject{{"native",true},{"rooms",11},{"connections",10},{"svgDecoded",assets.Frames.Count},{"coreChecks",verifiedCoreChecks},{"captureIncludesGUI",true},{"captureMethod","actual-production-uGUI-canvas-to-camera"},{"webp","native-libwebp-static-animated"},{"gif","native-WIC-composited-animated"},{"source",builtin.SourceSha256},{"rules",Game.Rules.ToString()}}.ToString());}catch(Exception e){Debug.LogException(e);Finish(2);yield break;}Finish(0);
         }
         IEnumerator Capture(string name){
             yield return null;Canvas.ForceUpdateCanvases();world.Refresh(0,view,map);view.Render();
@@ -429,7 +484,7 @@ namespace RoomLab.Native
     }
     public static class NativeDemoFileDialog
     {
-        [StructLayout(LayoutKind.Sequential,CharSet=CharSet.Unicode)]sealed class OFN{public int size=Marshal.SizeOf(typeof(OFN));public IntPtr owner,instance;public string filter="RoomLab 2.5.5\0*.json;*.zip\0";public string customFilter;public int maxCustomFilter,filterIndex=1;public string file=new string('\0',32768);public int maxFile=32768;public string fileTitle;public int maxFileTitle;public string initialDir,title="替换导入 RoomLab 关卡";public int flags=0x00080000|0x00001000|0x00000008;public short fileOffset,fileExtension;public string defExt;public IntPtr custData,hook;public string templateName;public IntPtr reserved;public int reserved2,flagsEx;}
+        [StructLayout(LayoutKind.Sequential,CharSet=CharSet.Unicode)]sealed class OFN{public int size=Marshal.SizeOf(typeof(OFN));public IntPtr owner,instance;public string filter="RoomLab 2.5.5 / 3.0\0*.json;*.zip\0";public string customFilter;public int maxCustomFilter,filterIndex=1;public string file=new string('\0',32768);public int maxFile=32768;public string fileTitle;public int maxFileTitle;public string initialDir,title="替换导入 RoomLab 关卡";public int flags=0x00080000|0x00001000|0x00000008;public short fileOffset,fileExtension;public string defExt;public IntPtr custData,hook;public string templateName;public IntPtr reserved;public int reserved2,flagsEx;}
         [DllImport("comdlg32.dll",CharSet=CharSet.Unicode)]static extern bool GetOpenFileNameW([In,Out]OFN d);
         public static string Pick(){var d=new OFN();return GetOpenFileNameW(d)?d.file:null;}
     }

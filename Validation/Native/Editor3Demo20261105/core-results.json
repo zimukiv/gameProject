@@ -1,0 +1,37 @@
+[
+  {
+    "name": "DataChecks",
+    "summary": "NATIVE_DATA_PASS checks=117 framework=8.0.21",
+    "exitCode": 0
+  },
+  {
+    "name": "GameplayChecks",
+    "summary": "NATIVE_GAMEPLAY_PASS assertions=4110794 traces=24 operations=1151",
+    "exitCode": 0
+  },
+  {
+    "name": "AIJumpChecks",
+    "summary": "AI_JUMP_CHECKS cases=26 assertions=378 failures=0 sourceUnchanged=true",
+    "exitCode": 0
+  },
+  {
+    "name": "JetTrailChecks",
+    "summary": "JET_TRAIL_CHECKS cases=16 assertions=964 failures=0 sourceUnchanged=true",
+    "exitCode": 0
+  },
+  {
+    "name": "ProgressChecks",
+    "summary": "NATIVE_PROGRESS_PASS checks=572 rooms=11 rules=2",
+    "exitCode": 0
+  },
+  {
+    "name": "Editor3Checks",
+    "summary": "EDITOR3_CHECKS_PASS checks=15",
+    "exitCode": 0
+  },
+  {
+    "name": "ThemeChecks",
+    "summary": "THEME_PASS mechanisms=10",
+    "exitCode": 0
+  }
+]

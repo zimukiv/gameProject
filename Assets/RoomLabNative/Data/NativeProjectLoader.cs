@@ -21,7 +21,7 @@ namespace RoomLab.Native
             var info=new FileInfo(file);if(!info.Exists||info.Length>TotalLimit)throw Bad("项目不存在或容量超过限制");
             var opts=options??new ImportOptions();
             // A file's own directory is the natural root; LoadBytes deliberately has no implicit root.
-            var actual=new ImportOptions { Profile=opts.Profile,RequireAssets=opts.RequireAssets,AssetRoot=opts.AssetRoot??info.DirectoryName };
+            var actual=new ImportOptions { Profile=opts.Profile,RequireAssets=opts.RequireAssets,PlayableCoursesOnly=opts.PlayableCoursesOnly,CourseId=opts.CourseId,AssetRoot=opts.AssetRoot??info.DirectoryName };
             var project=LoadBytes(File.ReadAllBytes(file),info.Extension,actual);project.SourcePath=info.FullName;return project;
         }
         public static NativeProject LoadBytes(byte[] bytes,string kind,ImportOptions options=null)
@@ -35,6 +35,17 @@ namespace RoomLab.Native
             JObject source=Parse(jsonBytes),normalized=(JObject)source.DeepClone();
             if(Number(normalized,"version",-1)!=2)throw Bad("不支持的项目版本，仅支持RoomLab v2");
             foreach(var key in new[]{"blockDefaults","pluginManifest","compatibility"})if(normalized[key]!=null)Object(normalized[key],key);
+            if(opts.PlayableCoursesOnly) {
+                var courses=Array(normalized,"courses").Select(t=>Object(t,"course")).ToArray();
+                if(courses.Length<1||courses.Length>12)throw Bad("大关数量需为1–12");
+                var ids=new HashSet<string>();foreach(var c in courses)if(!ids.Add(Text(c,"id","",true)))throw Bad("大关ID重复");
+                var physics=courses.Where(c=>new[]{"physics","calculus","slacker"}.Contains(Text(c,"kind","physics"))).ToArray();
+                if(physics.Length==0)throw Bad("此项目没有支持的大关主题（物理、高数、水课）");
+                JObject selected;
+                if(!string.IsNullOrEmpty(opts.CourseId))selected=physics.FirstOrDefault(c=>Text(c,"id","")==opts.CourseId)??throw Bad("所选大关不存在或主题不受支持");
+                else {if(physics.Length>1)throw new NativeCourseSelectionException(physics.Select(c=>new JObject{{"id",c["id"]},{"name",c["name"]},{"kind",c["kind"]}}).ToArray());selected=physics[0];}
+                normalized["courses"]=new JArray(selected.DeepClone());
+            }
             // Check the original used module names before alias normalization can hide a declaration.
             foreach(var ct in Array(normalized,"courses"))foreach(var rt in Array(Object(ct,"course"),"rooms"))
                 foreach(var ot in Array(Object(rt,"room"),"objects"))CheckModule(normalized,Object(ot,"object"));
@@ -139,7 +150,7 @@ namespace RoomLab.Native
             foreach(var kv in DefaultPerformance)p.Performance[kv.Key]=Number(settings["performance"] as JObject??new JObject(),kv.Key,kv.Value);
             if(p.Performance["moveAccelerationTime"]<=0)throw Bad("水平起步加速时间必须大于0");
             var ids=new HashSet<string>(StringComparer.Ordinal);var sourceTypes=new Dictionary<string,string>();
-            foreach(var c in Array(p.OriginalJson,"courses"))foreach(var r in Array(Object(c,"course"),"rooms"))foreach(var o in Array(Object(r,"room"),"objects")){var raw=Object(o,"object");sourceTypes[Text(raw,"id","")]=Text(raw,"type","");}
+            foreach(var c in Array(p.OriginalJson,"courses").Where(c=>Array(root,"courses").Any(selected=>Text(Object(selected,"course"),"id","")==Text(Object(c,"course"),"id",""))))foreach(var r in Array(Object(c,"course"),"rooms"))foreach(var o in Array(Object(r,"room"),"objects")){var raw=Object(o,"object");sourceTypes[Text(raw,"id","")]=Text(raw,"type","");}
             var courses=Array(root,"courses");if(courses.Count<1||courses.Count>12)throw Bad("大关数量需为1–12");
             foreach(var ct in courses) {
                 var c=Object(ct,"course");var course=new NativeCourse { Id=Id(c,ids),Name=Text(c,"name",""),Kind=Text(c,"kind","physics"),AiId=Text(c,"aiId",null),Raw=c,ArtBindings=OptionalObject(c,"artBindings") };
