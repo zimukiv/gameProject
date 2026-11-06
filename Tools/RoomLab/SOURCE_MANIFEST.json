@@ -1,9 +1,9 @@
 {
   "repository": "zimukiv/gameProject",
   "version": "3.0.0",
-  "releaseTag": "roomlab-editor-v3.0.0-build10",
+  "releaseTag": "roomlab-editor-v3.0.0-build11",
   "createdAt": "2026-11-07",
-  "programSHA256": "73ff4263a994de1bda94397db3eabb133b7bffb78542896babfef8cc4f1cc54c",
+  "programSHA256": "747e7eb1f73f4f80c7e577a010a9dd6ea6705215a1e8714cfcf68684eb8d7da6",
   "files": [
     {
       "path": "room-cloud/.gitignore",
@@ -692,12 +692,12 @@
     },
     {
       "path": "room-editor/docs/CHANGELOG.md",
-      "sha256": "f104fd4e7000ac9efd38e6e7be08b4fc8a6aef9e3ee0e54a98a400e389d710f6",
+      "sha256": "81aaf69d099066cee0a8a55ab844a4477b146c8e11f099149bb42856fb2ffef7",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/docs/CLOUD_SYNC.md",
-      "sha256": "351ed31abd4ae1df63b6760df1c111ac2f7750a789f3484e32e2905f6d7c7477",
+      "sha256": "6912603f822b5d0946d9fd5fdeaa6904c9b433ffdb01fb95ad7a7d3a73f14099",
       "encoding": "utf8-lf"
     },
     {
@@ -792,7 +792,7 @@
     },
     {
       "path": "room-editor/examples/physics-project.zip",
-      "sha256": "f2be8817afa4a01ee7bd31da6e35c1a0c59c2cf3766a57e878ba130443ab1fc6",
+      "sha256": "cf2dd439301a4a3538d89345fcffab6135a60014072dfef2e9059ebccca619ff",
       "encoding": "binary"
     },
     {
@@ -842,12 +842,12 @@
     },
     {
       "path": "room-editor/examples/physics/project.json",
-      "sha256": "821a3aaad436aead31dbb62502b5a6adba693c3efb8abe571a8fad447ec262de",
+      "sha256": "b7fd7ccb1275fc03abeebee572210087ee3f767b627a443fbff4d0ffd3570d12",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/examples/three-themes-project.zip",
-      "sha256": "816bea3510daa396bb7b923a5e8288545fcb8c228f6e4997967708d196043deb",
+      "sha256": "49fb648051e093e0ddf2a9c2733bba898591d1532be544b0cbc604e7da8dd4b5",
       "encoding": "binary"
     },
     {
@@ -997,7 +997,7 @@
     },
     {
       "path": "room-editor/src/editor/app.cjs",
-      "sha256": "9cad86a6682620499e55a02348a7e05c1297fbd8d0b905c28aab851cb523f7a7",
+      "sha256": "3e1dab41d055962f1a2e3317a6ef22fee1f3b772412b9dce31d07f877ad09d0f",
       "encoding": "utf8-lf"
     },
     {
@@ -1422,7 +1422,7 @@
     },
     {
       "path": "room-editor/tests/cloud-panel-desktop-smoke.cjs",
-      "sha256": "8bd73aaf38660d9ca4fce10cf64dc1bde7ed25e52377d9f929a5928029df3817",
+      "sha256": "a233239ee927f02fc0a08c830ffe7e195c8b2deb5ea470b232f89eea67939cd8",
       "encoding": "utf8-lf"
     },
     {

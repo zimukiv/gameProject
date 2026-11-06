@@ -2,6 +2,8 @@
 const assert = require('node:assert/strict'),
   http = require('node:http'),
   path = require('node:path'),
+  fs = require('node:fs/promises'),
+  os = require('node:os'),
   { _electron } = require(process.env.PLAYWRIGHT_MODULE || 'playwright'),
   { format, newWorkspaceKey } = require('../src/cloud/connection.cjs'),
   M = require('../src/project/model.cjs');
@@ -122,8 +124,35 @@ const assert = require('node:assert/strict'),
     assert.equal(branches.size, 1);
     assert.notEqual(branches.get(branch), first);
     assert.equal(revisions.get(branches.get(branch)).parent, first);
+    const cloudHead = branches.get(branch),
+      localDir = await fs.mkdtemp(path.join(os.tmpdir(), 'roomlab-local-save-')),
+      localFile = path.join(localDir, 'project.json');
+    await page.evaluate(
+      (testPath) =>
+        window.desktopAPI.saveProject({
+          project: window.__ROOM_LAB__.snapshot().project,
+          files: [],
+          testPath,
+        }),
+      localFile,
+    );
+    // Refresh the editor's association exactly as it would on opening the panel after restoring a draft.
+    await page.locator('#open-cloud').click();
+    await current.waitFor();
+    await close();
+    const writes = calls.filter(([method]) => method !== 'GET').length;
+    await page.locator('#project-settings').click();
+    await page.locator('#project-notes').fill('只写回本地');
+    await page.locator('#dialog-actions .primary').click();
+    await page.locator('#save-project').click();
+    await page.locator('#status').filter({ hasText: '项目与素材已保存' }).waitFor();
+    assert.equal(JSON.parse(await fs.readFile(localFile, 'utf8')).notes, '只写回本地');
+    // Allow the normal debounced draft backup and any unintended background upload to run.
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    assert.equal(calls.filter(([method]) => method !== 'GET').length, writes);
+    assert.equal(branches.get(branch), cloudHead);
     console.log(
-      'PASS: panel retry, uploaded branch becomes current, regular Save advances the same cloud branch',
+      'PASS: cloud-only Save advances its branch; local Save writes the file without a remote write',
     );
   } finally {
     // This is the isolated test window; it may intentionally still contain a broken draft.

@@ -476,13 +476,13 @@ class App {
     }
     try {
       const current = this.cloud.currentCloudTree(this.store.project.id);
-      const capture = this.cloud.capture();
+      const project = this.store.snapshot();
       const markSaved = () => {
-        if (JSON.stringify(this.store.project) === JSON.stringify(capture.project))
+        if (JSON.stringify(this.store.project) === JSON.stringify(project))
           this.store.dirty = false;
       };
       if (!saveAs && !this.store.nativeSession && current && !current.localFile) {
-        const status = await this.cloud.saveCurrent(capture);
+        const status = await this.cloud.saveCurrent();
         markSaved();
         this.message(status.message);
         return true;
@@ -491,7 +491,7 @@ class App {
         .filter((a) => this.store.assetFiles.has(a.path))
         .map((a) => ({ path: a.path, bytes: this.store.assetFiles.get(a.path) }));
       const result = await window.desktopAPI.saveProject({
-        project: capture.project,
+        project,
         files,
         session: this.store.nativeSession,
         saveAs,
@@ -501,7 +501,6 @@ class App {
         if (result.cloudStatus) this.cloud.status = result.cloudStatus;
         markSaved();
         this.message('项目与素材已保存：' + result.file);
-        if (!saveAs && current) this.cloud.saveCurrent(capture).catch(() => {});
         return true;
       }
     } catch (e) {
