@@ -210,8 +210,6 @@ function register() {
           });
     if (chosen.canceled) return null;
     const file = chosen.filePaths[0];
-    if (file.toLowerCase().endsWith('.zip'))
-      return { archive: new Uint8Array(fs.readFileSync(file)), name: path.basename(file) };
     const loaded = Files.readProject(file),
       session = crypto.randomUUID();
     const matches = cloud.repo
@@ -247,7 +245,11 @@ function register() {
   ipcMain.handle('project:save', async (event, payload) => {
     trusted(event);
     const saved = sessions.get(payload.session);
-    let file = !payload.saveAs && saved?.projectId === payload.project.id ? saved.file : null;
+    const current = cloud.repo.data.trees.find((t) => t.id === cloud.repo.data.current);
+    const sameSession = !payload.saveAs && saved?.projectId === payload.project.id;
+    const associated =
+      !payload.saveAs && current?.projectId === payload.project.id ? current.localFile : null;
+    let file = sameSession ? saved.file : associated?.path || null;
     const forced = testPath(payload);
     if (forced) file = forced;
     if (!file) {
@@ -259,7 +261,7 @@ function register() {
       if (chosen.canceled) return null;
       file = chosen.filePath;
     }
-    if (!file.toLowerCase().endsWith('.json')) file += '.json';
+    if (!/\.(json|zip)$/i.test(file)) file += '.json';
     if (fs.existsSync(file)) {
       const linked = cloud.repo
         .status()
@@ -269,7 +271,10 @@ function register() {
           ? saved.hash
           : linked.find((t) => t.id === cloud.repo.data.current)?.localFile.hash;
       const changed = expected && expected !== fileHash(file);
+      const knownTarget =
+        !payload.saveAs && ((sameSession && saved.file === file) || associated?.path === file);
       if (
+        (!knownTarget || changed) &&
         !(await acknowledge(
           payload,
           changed ? '文件已被其他程序修改，仍要覆盖？' : '目标文件已存在，是否覆盖？',

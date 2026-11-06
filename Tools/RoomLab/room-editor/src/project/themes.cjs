@@ -74,12 +74,10 @@ function buildRoom(kind, id) {
     ];
     r.objects = [
       M.object(id + '-integral', 'calculus.integral', 5, 14, {
-        range: 12,
         once: true,
         cooldown: 1,
       }),
       M.object(id + '-derivative', 'calculus.derivative', 16, 14, {
-        range: 12,
         once: true,
         cooldown: 1,
       }),

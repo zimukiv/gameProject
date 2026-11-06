@@ -71,14 +71,14 @@ async function launch(run) {
     assert.equal(await p.locator('[data-definition="physics.jet"]').count(), 0);
     await p.locator('[data-definition="calculus.integral"]').click();
     await p.locator('#definition-name').fill('第四大关专用积分板');
-    await p.locator('#param-range').fill('22');
+    await p.locator('#param-cooldown').fill('2.2');
     await p.locator('[data-definition-slot="idle"]').selectOption('seed-calculus-integral');
     await p.locator('#save-definition').click();
     await p.locator('#definition-course').selectOption('calculus');
     assert.notEqual(await p.locator('#definition-name').inputValue(), '第四大关专用积分板');
     const after = (await snap()).project;
     assert.equal(after.courses[1].blockDefaults, undefined);
-    assert.equal(after.courses.at(-1).blockDefaults['calculus.integral'].params.range, 22);
+    assert.equal(after.courses.at(-1).blockDefaults['calculus.integral'].params.cooldown, 2.2);
     await p.locator('#home').click();
     await p.locator(`[data-enter="${fourth.id}"]`).click();
     await p.locator('[data-tab="rooms"]').click();
@@ -92,7 +92,7 @@ async function launch(run) {
     );
     const placed = (await snap()).project.courses.at(-1).rooms[0].objects.at(-1);
     assert.equal(placed.name, '第四大关专用积分板');
-    assert.equal(placed.params.range, 22);
+    assert.equal(placed.params.cooldown, 2.2);
     assert.equal(placed.assetOverrides.idle, 'seed-calculus-integral');
     await p.locator('#home').click();
     await p.locator('#add-course').click();

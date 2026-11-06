@@ -85,7 +85,7 @@ test('calculus mechanisms aggregate and expand through the group-displacement co
     integral = room.objects.find((o) => o.type === 'calculus.integral'),
     derivative = room.objects.find((o) => o.type === 'calculus.derivative');
   assert.ok(integral && derivative);
-  assert.ok(integral.params.range > 0 && typeof integral.params.once === 'boolean');
+  assert.equal(typeof integral.params.once, 'boolean');
   engine.fire(integral);
   assert.ok(engine.events.some((e) => e.type === 'calculus-integral'));
   assert.equal(engine.movableStates.get(room.id + '-bridge-1').anim.to, 1);
@@ -95,6 +95,35 @@ test('calculus mechanisms aggregate and expand through the group-displacement co
   assert.ok(engine.events.some((e) => e.type === 'calculus-derivative'));
   assert.ok(engine.movableStates.get(room.id + '-gate-1').anim);
   assert.equal(engine.snapshot().objects[derivative.id].fired, true);
+});
+
+test('explicit calculus bindings drive timed segments beyond the old range and reverse on retrigger', () => {
+  const project = M.themedExample(),
+    course = project.courses.find((c) => c.kind === 'calculus'),
+    room = course.rooms[0],
+    pad = room.objects.find((o) => o.type === 'calculus.integral'),
+    brick = room.movables.find((b) => b.padId === pad.id),
+    unbound = room.movables.find((b) => b.padId !== pad.id),
+    Motion = require('../src/project/brick-motion.cjs');
+  pad.params = { range: 1, once: false, cooldown: 0.1 };
+  Motion.save(brick, [
+    { x: brick.x + 4, y: brick.y, seconds: 0.2, mode: 'easeIn' },
+    { x: brick.x + 4, y: brick.y + 3, seconds: 0.6, mode: 'linear' },
+  ]);
+  const engine = new Engine(project, course.id, room.id),
+    livePad = engine.room.objects.find((o) => o.id === pad.id);
+  engine.fire(livePad);
+  for (let i = 0; i < 6; i++) engine.update(1 / 60);
+  assert.ok(Math.abs(engine.movableRect(brick).x / 32 - (brick.x + 1)) < 1e-8);
+  for (let i = 0; i < 24; i++) engine.update(1 / 60);
+  assert.ok(Math.abs(engine.movableRect(brick).y / 32 - (brick.y + 1.5)) < 1e-8);
+  assert.equal(engine.movableRect(unbound).x, unbound.x * 32);
+  engine.fire(livePad);
+  for (let i = 0; i < 31; i++) engine.update(1 / 60);
+  assert.equal(engine.movableRect(brick).x, brick.x * 32);
+  assert.equal(engine.movableRect(brick).y, brick.y * 32);
+  assert.deepEqual(M.migrate(project).courses[1].rooms[0].movables[0].motionPath, brick.motionPath);
+  assert.ok(M.resizeRoom(room, 13, 17).out.some((item) => item.id === brick.id));
 });
 
 test('slacker check-in records visits and wakefulness grants a measurable speed gain', () => {

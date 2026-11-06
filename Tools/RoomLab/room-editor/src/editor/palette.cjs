@@ -46,7 +46,7 @@ function render(app, course) {
                 tool: 'movable',
                 label: '机关砖',
                 glyph: '▣',
-                hint: '放置后在关联中设置目标与积分/求导板',
+                hint: '在节点图设置运动，选中积分或求导板可快捷绑定',
               },
             ]
           : []),

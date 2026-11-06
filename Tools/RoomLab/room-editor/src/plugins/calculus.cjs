@@ -16,9 +16,8 @@ module.exports = [
     type: 'calculus.integral',
     name: '积分聚合板',
     glyph: '∫',
-    defaults: { range: 12, once: true, cooldown: 1 },
+    defaults: { once: true, cooldown: 1 },
     schema: [
-      { key: 'range', label: '聚合范围（格）', kind: 'number', min: 1, max: 40 },
       { key: 'once', label: '只聚合一次', kind: 'boolean' },
       { key: 'cooldown', label: '冷却（秒）', kind: 'number', min: 0.1, max: 10 },
     ],
@@ -35,9 +34,8 @@ module.exports = [
     type: 'calculus.derivative',
     name: '求导展开板',
     glyph: 'd/dx',
-    defaults: { range: 12, once: true, cooldown: 1 },
+    defaults: { once: true, cooldown: 1 },
     schema: [
-      { key: 'range', label: '展开范围（格）', kind: 'number', min: 1, max: 40 },
       { key: 'once', label: '只展开一次', kind: 'boolean' },
       { key: 'cooldown', label: '冷却（秒）', kind: 'number', min: 0.1, max: 10 },
     ],

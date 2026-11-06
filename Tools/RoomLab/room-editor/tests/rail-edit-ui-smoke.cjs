@@ -98,8 +98,12 @@ test('node graph manages ordered children with exact coordinates, reorder, and R
   await page.waitForFunction(() => window.nodeLabels.includes('II'));
   await page.locator('#rail-node-place').click();
   await click(page, 12.5, 10);
+  assert.equal((await snap(page)).state.tool, 'select');
   assert.equal(await page.locator('[data-node-id]').count(), 4);
   await page.waitForFunction(() => window.nodeLabels.includes('III'));
+  const target = await point(page, 10, 8);
+  await page.mouse.click(target.x, target.y, { button: 'right' });
+  assert.equal(await page.locator('[data-node-id]').count(), 5);
   await fs.mkdir(path.resolve(__dirname, '../test-output'), { recursive: true });
   await page.screenshot({ path: path.resolve(__dirname, '../test-output/rail-node-manager.png') });
 });

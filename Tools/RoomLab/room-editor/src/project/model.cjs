@@ -295,7 +295,17 @@ function validate(p, { play = false } = {}) {
       }
       if (!r.entries.length) errors.push(r.name + ' 没有入口');
       for (const b of r.movables) {
-        if (!Number.isInteger(b.targetX) || !Number.isInteger(b.targetY))
+        const Motion = require('./brick-motion.cjs');
+        if (b.motionPath !== undefined) {
+          if (
+            !Array.isArray(b.motionPath) ||
+            b.motionPath.length > Motion.maxNodes ||
+            !b.motionPath.every(Motion.validNode)
+          )
+            errors.push('机关砖路径无效：' + b.id);
+          else if (b.motionPath.some((node) => !Motion.inRoom(node, r.cols, r.rows)))
+            bounds('机关砖路径越界：' + b.id);
+        } else if (!Number.isInteger(b.targetX) || !Number.isInteger(b.targetY))
           errors.push('目标坐标需整数：' + b.id);
         else if (!cell(b.targetX, r.cols) || !cell(b.targetY, r.rows))
           bounds('机关砖目标越界：' + b.id);
@@ -404,7 +414,12 @@ function resizeRoom(r, cols, rows) {
     if (!inCell(x) || (x.w && x.x + x.w > cols) || (x.h && x.y + x.h > rows))
       out.push({ kind: 'object', id: x.id });
   for (const b of next.movables)
-    if (b.targetX >= cols || b.targetY >= rows) out.push({ kind: 'target', id: b.id });
+    if (
+      (b.motionPath || [{ x: b.targetX, y: b.targetY }]).some(
+        (node) => !require('./brick-motion.cjs').inRoom(node, cols, rows),
+      )
+    )
+      out.push({ kind: 'target', id: b.id });
   for (const o of next.objects)
     for (const n of o.params?.path || [])
       if (n.x > cols || n.y > rows) out.push({ kind: 'path', id: o.id });

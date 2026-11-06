@@ -8,10 +8,14 @@ const assert = require('node:assert/strict'),
 
 (async () => {
   const workspaceKey = newWorkspaceKey(),
-    calls = [];
+    calls = [],
+    branches = new Map(),
+    chunks = new Map(),
+    revisions = new Map([['a'.repeat(64), { id: 'a'.repeat(64), message: '测试版本' }]]);
   let blocked = false;
-  const server = http.createServer((req, res) => {
-    const route = req.url.split('/').at(-1);
+  const server = http.createServer(async (req, res) => {
+    const parts = req.url.split('/'),
+      route = parts.at(-1);
     calls.push([req.method, route]);
     if (blocked) {
       res.writeHead(403, { 'Content-Type': 'text/html' });
@@ -24,9 +28,38 @@ const assert = require('node:assert/strict'),
       res.statusCode = 401;
       return res.end(JSON.stringify({ error: '工作区密钥无效' }));
     }
-    res.end(
-      JSON.stringify({ branches: [], revisions: [{ id: 'a'.repeat(64), message: '测试版本' }] }),
-    );
+    if (route === 'state')
+      return res.end(
+        JSON.stringify({
+          branches: [...branches].map(([name, head]) => ({ name, head })),
+          revisions: [...revisions.values()],
+        }),
+      );
+    if (parts.at(-2) === 'revisions') return res.end(JSON.stringify(revisions.get(route) || {}));
+    if (parts.at(-2) === 'chunks' && req.method === 'GET') {
+      res.setHeader('Content-Type', 'application/octet-stream');
+      return res.end(chunks.get(route));
+    }
+    const data = [];
+    for await (const bytes of req) data.push(bytes);
+    const body = Buffer.concat(data);
+    if (parts.at(-2) === 'chunks') {
+      chunks.set(route, body);
+      return res.end('{}');
+    }
+    const json = JSON.parse(body.toString());
+    if (route === 'missing')
+      return res.end(JSON.stringify({ missing: json.hashes.filter((hash) => !chunks.has(hash)) }));
+    if (route === 'commit') {
+      if ((branches.get(json.branch) || null) !== json.base) {
+        res.statusCode = 409;
+        return res.end('{}');
+      }
+      branches.set(json.branch, json.revision.id);
+      revisions.set(json.revision.id, json.revision);
+      return res.end('{}');
+    }
+    res.writeHead(404).end('{}');
   });
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
   const env = { ...process.env, ROOM_EDITOR_TEST: '1' };
@@ -72,8 +105,25 @@ const assert = require('node:assert/strict'),
     await page.evaluate(() => localStorage.removeItem('ddl-room-lab-v2'));
     await page.reload();
     await page.locator('#start-new').waitFor();
+    await page.locator('#start-new').click();
+    await page.locator('#open-cloud').click();
+    await page.locator('#cloud-version-name').fill('首次上传');
+    await page.locator('#cloud-sync').click();
+    const current = page.locator('[data-cloud-node].current');
+    await current.filter({ hasText: '首次上传' }).waitFor();
+    assert.equal(branches.size, 1);
+    const [branch, first] = [...branches][0];
+    await close();
+    await page.locator('#project-settings').click();
+    await page.locator('#project-notes').fill('普通保存推进当前分支');
+    await page.locator('#dialog-actions .primary').click();
+    await page.locator('#save-project').click();
+    await page.locator('#status').filter({ hasText: '已保存到当前云端分支' }).waitFor();
+    assert.equal(branches.size, 1);
+    assert.notEqual(branches.get(branch), first);
+    assert.equal(revisions.get(branches.get(branch)).parent, first);
     console.log(
-      'PASS: missing local assets do not block cloud panel; HTTP 403 shows in panel and retry restores graph',
+      'PASS: panel retry, uploaded branch becomes current, regular Save advances the same cloud branch',
     );
   } finally {
     // This is the isolated test window; it may intentionally still contain a broken draft.

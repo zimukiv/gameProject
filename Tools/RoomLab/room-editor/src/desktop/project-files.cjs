@@ -2,7 +2,8 @@
 const fs = require('node:fs'),
   path = require('node:path'),
   crypto = require('node:crypto'),
-  M = require('../project/model.cjs');
+  M = require('../project/model.cjs'),
+  Archive = require('../project/archive.cjs');
 const sha = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
 function inside(root, relative) {
   if (
@@ -30,6 +31,14 @@ function inside(root, relative) {
   return target;
 }
 function readProject(file) {
+  if (path.extname(file).toLowerCase() === '.zip') {
+    const pack = Archive.unpack(new Uint8Array(fs.readFileSync(file)));
+    return {
+      project: pack.project,
+      files: [...pack.files].map(([assetPath, bytes]) => ({ path: assetPath, bytes })),
+      missing: [],
+    };
+  }
   const project = M.migrate(JSON.parse(fs.readFileSync(file, 'utf8'))),
     errors = M.validate(project).errors;
   if (errors.length) throw new Error(errors[0]);
@@ -46,6 +55,21 @@ function readProject(file) {
   }
   return { project, files, missing };
 }
+function writeWithBackup(file, bytes) {
+  const root = path.dirname(path.resolve(file)),
+    temp = file + '.tmp-' + crypto.randomUUID();
+  fs.writeFileSync(temp, bytes);
+  if (fs.existsSync(file)) {
+    const backups = path.join(root, '.project-backups');
+    fs.mkdirSync(backups, { recursive: true });
+    fs.copyFileSync(
+      file,
+      path.join(backups, Date.now() + '-' + crypto.randomUUID() + path.extname(file)),
+    );
+  }
+  fs.renameSync(temp, file);
+  return { file, root };
+}
 function writeProject(file, project, files) {
   const errors = M.validate(project).errors;
   if (errors.length) throw new Error(errors[0]);
@@ -53,6 +77,8 @@ function writeProject(file, project, files) {
   fs.mkdirSync(root, { recursive: true });
   const map = new Map(files.map((item) => [item.path, new Uint8Array(item.bytes)])),
     builtIns = require('../assets/seeds.cjs').restoreBuiltIns(project.assets, new Map());
+  if (path.extname(file).toLowerCase() === '.zip')
+    return writeWithBackup(file, Archive.pack(project, map));
   // Preflight all collisions before writing project.json or any bytes.
   const writes = [];
   for (const a of project.assets) {
@@ -72,18 +98,9 @@ function writeProject(file, project, files) {
     fs.mkdirSync(path.dirname(item.target), { recursive: true });
     fs.writeFileSync(item.target, item.bytes);
   }
-  const temp = file + '.tmp-' + crypto.randomUUID();
-  fs.writeFileSync(
-    temp,
+  return writeWithBackup(
+    file,
     JSON.stringify(require('../project/collision.cjs').portable(project), null, 2),
-    'utf8',
   );
-  if (fs.existsSync(file)) {
-    const backups = path.join(root, '.project-backups');
-    fs.mkdirSync(backups, { recursive: true });
-    fs.copyFileSync(file, path.join(backups, Date.now() + '-' + crypto.randomUUID() + '.json'));
-  }
-  fs.renameSync(temp, file);
-  return { file, root };
 }
 module.exports = { inside, readProject, writeProject };

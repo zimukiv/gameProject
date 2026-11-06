@@ -1,5 +1,6 @@
 'use strict';
 const Nodes = require('./rail-nodes.cjs');
+const Motion = require('./brick-motion.cjs');
 const kinds = ['tiles', 'objects', 'movables', 'entries', 'exits', 'zones'];
 const key = (ref) => ref.kind + ':' + (ref.kind === 'tiles' ? ref.x + ',' + ref.y : ref.id);
 const get = (room, ref) =>
@@ -27,6 +28,17 @@ function combine(previous, incoming, mode = 'replace') {
   return [...result.values()];
 }
 function move(room, refs, dx, dy) {
+  if (
+    refs.some((ref) => {
+      const item = get(room, ref);
+      return (
+        ref.kind === 'movables' &&
+        item?.brickGroup &&
+        Motion.groupMembers(room, item).some((member) => member.locked)
+      );
+    })
+  )
+    return false;
   const members = refs
       .map((ref) => ({ ref, item: get(room, ref) }))
       .filter((x) => x.item && !x.item.locked),
@@ -37,6 +49,7 @@ function move(room, refs, dx, dy) {
   if ([...selected].some((t) => stationary.has(t.x + dx + ',' + (t.y + dy)))) return false;
   for (const { ref, item } of members) {
     if (item.type === 'physics.rail') Nodes.moveOwner(item, item.x + dx, item.y + dy);
+    else if (ref.kind === 'movables') Motion.moveOwner(item, item.x + dx, item.y + dy);
     else {
       item.x += dx;
       item.y += dy;

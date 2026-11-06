@@ -93,7 +93,7 @@ test('same-theme courses isolate custom assets and defaults while retaining them
   seed.files.set(custom.path, seed.files.get(base.path));
   p.blockDefaults[type] = { params: { cooldown: 2 } };
   original.blockDefaults = {
-    [type]: { name: '本关积分板', params: { range: 20 }, assets: { idle: custom.id } },
+    [type]: { name: '本关积分板', params: { once: false }, assets: { idle: custom.id } },
   };
   const catalog = require('../src/assets/catalog.cjs');
   assert.deepEqual(
@@ -109,10 +109,10 @@ test('same-theme courses isolate custom assets and defaults while retaining them
   const placed = Registry.instantiate(loaded, type, 'a', 4, 4, loaded.courses[1]),
     other = Registry.instantiate(loaded, type, 'b', 4, 4, loaded.courses.at(-1));
   assert.equal(placed.name, '本关积分板');
-  assert.equal(placed.params.range, 20);
+  assert.equal(placed.params.once, false);
   assert.equal(placed.params.cooldown, 2);
   assert.deepEqual(placed.assetOverrides, { idle: custom.id });
-  assert.notEqual(other.params.range, 20);
+  assert.equal(other.params.once, true);
   assert.deepEqual(other.assetOverrides, {});
-  assert.equal(Registry.params(loaded, loaded.courses[1].rooms[0].objects[0]).range, 12);
+  assert.equal(Registry.params(loaded, loaded.courses[1].rooms[0].objects[0]).once, true);
 });

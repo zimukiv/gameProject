@@ -42,6 +42,28 @@ const { _electron } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     );
     assert.deepEqual(opened.project, snap);
     assert.equal(opened.files.length, 13);
+    const updated = { ...snap, notes: '直接保存到打开的文件' };
+    const overwritten = await page.evaluate(
+      ({ project, session }) =>
+        window.desktopAPI.saveProject({ project, files: [], session, testConfirm: false }),
+      { project: updated, session: opened.session },
+    );
+    assert.equal(overwritten.file, file);
+    assert.equal(JSON.parse(await fs.readFile(file, 'utf8')).notes, updated.notes);
+    const zip = path.join(root, 'project.zip'),
+      Archive = require('../src/project/archive.cjs');
+    await fs.writeFile(zip, Archive.pack(snap, seed.files));
+    const openedZip = await page.evaluate(
+      (file) => window.desktopAPI.openProject({ testPath: file }),
+      zip,
+    );
+    const overwrittenZip = await page.evaluate(
+      ({ project, files, session }) =>
+        window.desktopAPI.saveProject({ project, files, session, testConfirm: false }),
+      { project: updated, files: openedZip.files, session: openedZip.session },
+    );
+    assert.equal(overwrittenZip.file, zip);
+    assert.equal(Archive.unpack(await fs.readFile(zip)).project.notes, updated.notes);
     const art = path.join(root, '新美术.svg');
     await fs.writeFile(
       art,

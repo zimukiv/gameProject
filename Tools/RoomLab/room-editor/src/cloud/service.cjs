@@ -226,19 +226,52 @@ class Service {
         });
         const rev = this.repo.put(t, snapshot, p.message || '手动保存', parent);
         this.repo.draft(data.project, data.files, t.id);
-        if (previous !== source.id) {
-          this.repo.data.current = previous;
-          this.repo.save();
-        }
+        this.repo.data.current = previous;
+        this.repo.save();
         const c = this.vault.load();
         if (c) {
           await this.remote(c).upload(snapshot, rev, branch, null);
           t.base = rev.id;
+          t.readRevision = rev.id;
+          if (this.repo.data.current === source.id) this.repo.data.current = t.id;
+          this.liveSession = null;
           this.repo.save();
           this.message = p.parentRevision
             ? '已上传到所选节点下方，原节点保持不变'
             : '已从上次读取版本创建云端子分支';
         } else this.message = '本机版本已保存，连接云端后可上传';
+        return this.status();
+      }
+      if (name === 'saveCurrent') {
+        const t = this.repo.tree(p.treeId || this.repo.data.current),
+          connection = this.vault.load();
+        if (!connection || !t.base) throw new Error('请先读取一个已上传的云端分支');
+        const remote = this.remote(connection),
+          state = await remote.state(),
+          head = state.branches.find((branch) => branch.name === t.branch)?.head;
+        if (!head)
+          throw new Error('当前是历史版本，无法直接覆盖。请切换到分支最新版本或新建分支。');
+        if (head !== t.base) {
+          if (head !== t.head)
+            throw new Error('云端分支已有更新，本机草稿已保留。请先读取最新版本。');
+          // An upload can commit remotely even if its response was lost.
+          t.base = head;
+          t.readRevision = head;
+          this.repo.save();
+        }
+        const data = this.repo.working(t),
+          snapshot = C.encode(data.project, data.files);
+        if (t.head === head && t.fingerprint === snapshot.fingerprint) {
+          this.message = '当前云端版本已是最新';
+          return this.status();
+        }
+        const revision = this.repo.put(t, snapshot, '保存项目', head);
+        await remote.upload(snapshot, revision, t.branch, head);
+        t.base = revision.id;
+        t.readRevision = revision.id;
+        this.liveSession = null;
+        this.repo.save();
+        this.message = '已保存到当前云端分支';
         return this.status();
       }
       if (name === 'status') return this.status();

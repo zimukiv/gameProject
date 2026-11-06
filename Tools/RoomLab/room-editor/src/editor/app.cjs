@@ -193,15 +193,14 @@ class App {
         e.preventDefault();
         $('save-project').click();
       } else if (this.state.route === 'room') {
-        if (e.code === 'KeyM') this.setRoomTool?.('marquee');
+        const tools = require('./room-keys.cjs').tools;
+        const tool = Object.keys(tools).find((name) => e.code === 'Key' + tools[name]);
+        if (tool) this.setRoomTool?.(tool);
         if (e.code === 'Escape') this.clearRoomSelection?.();
         if (['Delete', 'Backspace'].includes(e.code)) {
           e.preventDefault();
           this.deleteRoomSelection?.();
         }
-        if (e.code === 'KeyB') this.setRoomTool?.('tile');
-        if (e.code === 'KeyV') this.setRoomTool?.('select');
-        if (e.code === 'KeyX') this.setRoomTool?.('erase');
       }
     });
     document.addEventListener('keyup', (e) => this.keys.delete(e.code));
@@ -341,22 +340,13 @@ class App {
     try {
       const loaded = await window.desktopAPI.openProject();
       if (!loaded) return;
-      if (loaded.archive) {
-        const pack = Archive.unpack(new Uint8Array(loaded.archive));
-        for (const [key, bytes] of pack.files) {
-          this.store.assetFiles.set(key, bytes);
-          await Assets.putBlob(key, bytes);
-        }
-        this.store.load(pack.project);
-      } else {
-        for (const file of loaded.files) {
-          this.store.assetFiles.set(file.path, new Uint8Array(file.bytes));
-          await Assets.putBlob(file.path, file.bytes);
-        }
-        this.store.load(loaded.project);
-        this.store.nativeSession = loaded.session;
-        if (loaded.cloudStatus) this.cloud.status = loaded.cloudStatus;
+      for (const file of loaded.files) {
+        this.store.assetFiles.set(file.path, new Uint8Array(file.bytes));
+        await Assets.putBlob(file.path, file.bytes);
       }
+      this.store.load(loaded.project);
+      this.store.nativeSession = loaded.session;
+      if (loaded.cloudStatus) this.cloud.status = loaded.cloudStatus;
       this.store.history.clear();
       this.store.dirty = false;
       this.state.courseId = this.store.project.courses[0].id;
@@ -485,11 +475,23 @@ class App {
       return true;
     }
     try {
+      const current = this.cloud.currentCloudTree(this.store.project.id);
+      const capture = this.cloud.capture();
+      const markSaved = () => {
+        if (JSON.stringify(this.store.project) === JSON.stringify(capture.project))
+          this.store.dirty = false;
+      };
+      if (!saveAs && !this.store.nativeSession && current && !current.localFile) {
+        const status = await this.cloud.saveCurrent(capture);
+        markSaved();
+        this.message(status.message);
+        return true;
+      }
       const files = this.store.project.assets
         .filter((a) => this.store.assetFiles.has(a.path))
         .map((a) => ({ path: a.path, bytes: this.store.assetFiles.get(a.path) }));
       const result = await window.desktopAPI.saveProject({
-        project: this.store.snapshot(),
+        project: capture.project,
         files,
         session: this.store.nativeSession,
         saveAs,
@@ -497,9 +499,9 @@ class App {
       if (result) {
         this.store.nativeSession = result.session;
         if (result.cloudStatus) this.cloud.status = result.cloudStatus;
-        this.store.dirty = false;
+        markSaved();
         this.message('项目与素材已保存：' + result.file);
-        if (window.desktopAPI?.cloud) this.cloud.saveVersion('保存项目').catch(() => {});
+        if (!saveAs && current) this.cloud.saveCurrent(capture).catch(() => {});
         return true;
       }
     } catch (e) {

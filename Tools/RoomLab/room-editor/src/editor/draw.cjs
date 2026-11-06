@@ -1,4 +1,5 @@
 'use strict';
+const Motion = require('../project/brick-motion.cjs');
 const Registry = require('../plugins/registry.cjs'),
   { clamp } = require('../shared/utils.cjs');
 const GraphLayout = require('./graph-layout.cjs');
@@ -115,6 +116,7 @@ function drawRoom(
     game = null,
     selection = null,
     selections = [],
+    selectedBrickNodeIndex = null,
     selectedRailNodeId = null,
     traces = null,
     hover = null,
@@ -180,26 +182,39 @@ function drawRoom(
       ctx.strokeRect(t.x * T, t.y * T, T, T);
     }
   }
-  if (targets)
+  if (!game)
     for (const b of r.movables) {
+      const selected = selection?.kind === 'movables' && selection.id === b.id;
+      if (!targets && !selected) continue;
+      const color = Motion.colorFor(r, b.padId),
+        pad = r.objects.find((o) => o.id === b.padId && Motion.isPad(o)),
+        path = Motion.nodes(b);
       ctx.setLineDash([4, 4]);
-      ctx.strokeStyle = '#6acc9877';
-      ctx.strokeRect(b.targetX * T, b.targetY * T, T, T);
-      line(
-        ctx,
-        (b.x + 0.5) * T,
-        (b.y + 0.5) * T,
-        (b.targetX + 0.5) * T,
-        (b.targetY + 0.5) * T,
-        '#6acc9855',
-      );
+      if (pad && targets) {
+        ctx.save();
+        ctx.globalAlpha = 0.42;
+        line(ctx, (pad.x + 0.5) * T, (pad.y + 0.5) * T, (b.x + 0.5) * T, (b.y + 0.5) * T, color);
+        ctx.restore();
+      }
+      let from = b;
+      for (const node of path) {
+        line(
+          ctx,
+          (from.x + 0.5) * T,
+          (from.y + 0.5) * T,
+          (node.x + 0.5) * T,
+          (node.y + 0.5) * T,
+          color,
+        );
+        from = node;
+      }
       ctx.setLineDash([]);
     }
   for (const b of r.movables) {
     const rect = game?.movableRect?.(b) || { x: b.x * T, y: b.y * T, w: T, h: T };
     ctx.fillStyle = '#364153';
     ctx.fillRect(rect.x, rect.y, T, T);
-    ctx.strokeStyle = '#b9c7d5';
+    ctx.strokeStyle = !game && targets ? Motion.colorFor(r, b.padId) : '#b9c7d5';
     ctx.strokeRect(rect.x, rect.y, T, T);
     text(ctx, '□', rect.x + 16, rect.y + 23, 16, '#d4e2ec', 'center');
     if (!Collision.enabled(b, 'movables')) ghostBorder(ctx, rect);
@@ -388,6 +403,29 @@ function drawRoom(
       text(ctx, '[AI]', game.ai.x, game.ai.y + 5, 15, '#21150c', 'center');
     }
   }
+  if (!game && targets) {
+    for (const pad of r.objects.filter(Motion.isPad)) {
+      const color = Motion.colorFor(r, pad.id);
+      ctx.fillStyle = color;
+      ctx.fillRect(pad.x * T + 1, pad.y * T + 1, T - 2, 3);
+    }
+  }
+  if (!game && selection?.kind === 'movables') {
+    const brick = r.movables.find((b) => b.id === selection.id);
+    if (brick) {
+      const color = Motion.colorFor(r, brick.padId),
+        { label } = require('../project/rail-nodes.cjs');
+      for (const [index, node] of Motion.nodes(brick).entries()) {
+        const x = (node.x + 0.5) * T,
+          y = (node.y + 0.5) * T;
+        ctx.fillStyle = '#101b2a';
+        ctx.fillRect(x - 9, y - 9, 18, 18);
+        ctx.strokeStyle = index === selectedBrickNodeIndex ? '#fff' : color;
+        ctx.strokeRect(x - 9, y - 9, 18, 18);
+        text(ctx, label(index + 1), x, y + 4, 10, color, 'center');
+      }
+    }
+  }
   const selectedItems = selections.length ? selections : selection ? [selection] : [];
   for (const selection of selectedItems) {
     const item = selection.kind === 'tile' ? selection : findItem(r, selection),
@@ -418,6 +456,29 @@ function drawRoom(
   if (hover) {
     ctx.fillStyle = '#7dc5f522';
     ctx.fillRect(hover.x * T, hover.y * T, T, T);
+  }
+  if (!game && selection?.kind === 'movables') {
+    const brick = findItem(r, selection);
+    if (brick?.brickGroup) {
+      const x = brick.x * T,
+        y = brick.y * T,
+        badge = 16 / v.scale;
+      ctx.save();
+      ctx.strokeStyle = '#ffe181';
+      ctx.lineWidth = 3 / v.scale;
+      ctx.strokeRect(x + 1, y + 1, T - 2, T - 2);
+      ctx.fillStyle = '#ffe181';
+      ctx.fillRect(x, Math.max(0, y - badge), Math.max(T, badge * 2.1), badge);
+      text(
+        ctx,
+        '代表',
+        x + 4 / v.scale,
+        Math.max(0, y - badge) + badge * 0.75,
+        11 / v.scale,
+        '#191407',
+      );
+      ctx.restore();
+    }
   }
   ctx.strokeStyle = '#7ba3c4';
   ctx.strokeRect(0, 0, r.cols * T, r.rows * T);

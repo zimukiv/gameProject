@@ -71,7 +71,7 @@ test('explicit cloud parent uploads below selection; no selection uses last read
   await a.svc.action('manualSave', { message: 'selected child', parentRevision: root });
   const child = a.repo.tree().head;
   assert.equal(remote.revisions.get(child).parent, root);
-  assert.equal(a.repo.tree().readRevision, root);
+  assert.equal(a.repo.tree().readRevision, child);
   const before = a.repo.data.trees.length;
   await assert.rejects(a.svc.action('manualSave', { parentRevision: 'f'.repeat(64) }), /不存在/);
   assert.equal(a.repo.data.trees.length, before);
@@ -97,6 +97,42 @@ test('explicit cloud parent uploads below selection; no selection uses last read
     graph: { metadata: [{ id: root, deletedAt: 1 }] },
   });
   await assert.rejects(a.svc.action('manualSave', { parentRevision: root }), /删除/);
+});
+test('regular save advances the opened cloud branch, while explicit upload activates a new branch', async () => {
+  const remote = new FakeRemote(),
+    { repo, svc } = fixture(remote),
+    { p, files } = sample();
+  const draft = () => svc.action('draft', { project: p, files: [...files] });
+  await draft();
+  await svc.action('manualSave', { message: 'first branch' });
+  const first = repo.tree().head;
+  assert.equal(repo.tree().readRevision, first);
+  const branch = repo.tree().branch;
+  p.notes = 'regular save';
+  await draft();
+  await svc.action('saveCurrent');
+  const second = repo.tree().head;
+  assert.notEqual(second, first);
+  assert.equal(repo.tree().readRevision, second);
+  assert.equal(repo.tree().branch, branch);
+  assert.equal(remote.heads.size, 1);
+  assert.equal(remote.revisions.get(second).parent, first);
+  await svc.action('manualSave', { message: 'new branch' });
+  assert.equal(remote.heads.size, 2);
+  assert.notEqual(repo.tree().branch, branch);
+  assert.equal(repo.tree().readRevision, repo.tree().head);
+  assert.equal(remote.revisions.get(repo.tree().head).parent, second);
+  const active = repo.tree().id;
+  remote.offline = true;
+  await assert.rejects(svc.action('manualSave', { message: 'offline' }), /离线/);
+  assert.equal(repo.tree().id, active);
+  remote.offline = false;
+  remote.heads.set(repo.tree().branch, 'b'.repeat(64));
+  p.notes = 'must not overwrite a remote update';
+  await draft();
+  await assert.rejects(svc.action('saveCurrent'), /云端分支已有更新/);
+  assert.equal(remote.heads.get(repo.tree().branch), 'b'.repeat(64));
+  assert.equal(repo.working().project.notes, p.notes);
 });
 test('snapshot canonical identity ignores ZIP timestamp; assets round-trip and deduplicate', () => {
   const { p, files } = sample(),

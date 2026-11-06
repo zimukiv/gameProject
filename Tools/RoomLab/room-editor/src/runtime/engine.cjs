@@ -6,6 +6,7 @@ const T = 32;
 const Performance = require('../project/performance.cjs');
 const Temperature = require('../project/temperature.cjs');
 const Collision = require('../project/collision.cjs');
+const Motion = require('../project/brick-motion.cjs');
 function direction(input, face) {
   let x = Number(!!input.right) - Number(!!input.left),
     y = input.up ? -1 : input.down ? 1 : 0;
@@ -303,10 +304,13 @@ class Engine {
         active: !s.anim,
       };
     }
+    const pos = b.motionPath
+      ? Motion.position(b, s.pathTime || 0)
+      : { x: b.x + (b.targetX - b.x) * s.progress, y: b.y + (b.targetY - b.y) * s.progress };
     return {
       id: b.id,
-      x: (b.x + (b.targetX - b.x) * s.progress) * T,
-      y: (b.y + (b.targetY - b.y) * s.progress) * T,
+      x: pos.x * T,
+      y: pos.y * T,
       w: T,
       h: T,
       kind: 'movable',
@@ -349,12 +353,23 @@ class Engine {
     return result;
   }
   transformGroup(o, kind) {
+    const explicitBinding = Motion.isPad(o);
     const pivot = { x: (o.x + 0.5) * T, y: o.y * T };
     for (const b of this.room.movables.filter((b) => b.padId === o.id)) {
       const rect = this.movableRect(b);
-      if (Math.hypot(rect.x + 16 - pivot.x, rect.y + 16 - pivot.y) > (o.params.range || 12) * T)
+      if (
+        !explicitBinding &&
+        Math.hypot(rect.x + 16 - pivot.x, rect.y + 16 - pivot.y) > (o.params.range || 12) * T
+      )
         continue;
       const s = this.movableStates.get(b.id);
+      if (explicitBinding && b.motionPath) {
+        const end = Motion.duration(b.motionPath),
+          at = s.pathTime || 0,
+          to = o.params.once || !(s.anim ? s.anim.to > 0 : at > 0) ? end : 0;
+        s.anim = at === to ? null : { kind: 'path', to };
+        continue;
+      }
       s.anim =
         kind === 'rotor'
           ? { kind: 'angle', from: s.angle, to: s.angle + (o.params.angle || 90), t: 0 }
@@ -703,6 +718,13 @@ class Engine {
     }
     for (const s of this.movableStates.values())
       if (s.anim) {
+        if (s.anim.kind === 'path') {
+          const to = s.anim.to,
+            at = s.pathTime || 0;
+          s.pathTime = at < to ? Math.min(to, at + dt) : Math.max(to, at - dt);
+          if (s.pathTime === to) s.anim = null;
+          continue;
+        }
         s.anim.t = Math.min(0.45, s.anim.t + dt);
         const v = s.anim.from + ((s.anim.to - s.anim.from) * s.anim.t) / 0.45;
         if (s.anim.kind === 'angle') s.angle = v;

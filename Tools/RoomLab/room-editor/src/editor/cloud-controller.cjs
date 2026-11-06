@@ -131,11 +131,35 @@ class CloudController {
           treeId: saved.savedTreeId,
           ...(parentRevision ? { parentRevision } : {}),
         });
+        const current = this.status.trees.find((tree) => tree.id === this.status.current);
+        if (current?.readRevision && current.id !== saved.savedTreeId) {
+          this.graphSelected = current.readRevision;
+          this.liveInfo = { online: false, peers: 0 };
+          this.retryAt = 0;
+        }
         this.app.message(this.status.message);
       } finally {
         this.status = await this.api.cloud('status');
         this.updateBadge();
       }
+    });
+  }
+  currentCloudTree(projectId) {
+    return (
+      this.status?.configured &&
+      this.status.trees.find(
+        (tree) => tree.id === this.status.current && tree.projectId === projectId && tree.base,
+      )
+    );
+  }
+  saveCurrent(capture = this.capture()) {
+    return this.enqueue(async () => {
+      const saved = await this.api.cloud('draft', capture);
+      this.status = await this.api.cloud('saveCurrent', { treeId: saved.savedTreeId });
+      const current = this.status.trees.find((tree) => tree.id === this.status.current);
+      this.graphSelected = current?.readRevision || null;
+      this.updateBadge();
+      return this.status;
     });
   }
   async apply(data, live = false) {
@@ -162,7 +186,7 @@ class CloudController {
       this.app.store.project = data.project;
       this.app.store.restoreBuiltIns();
       this.app.store.history.clear();
-      this.app.store.nativeSession = null;
+      if (!live) this.app.store.nativeSession = null;
       this.app.store.dirty = true;
       this.app.store.persist();
       if (data.status) this.status = data.status;

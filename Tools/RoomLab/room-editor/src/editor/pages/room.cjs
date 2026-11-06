@@ -13,12 +13,36 @@ const Limits = require('../../project/room-limits.cjs');
 const Select = require('../../project/selection.cjs');
 const Nodes = require('../../project/rail-nodes.cjs'),
   NodePanel = require('../rail-node-panel.cjs'),
+  Motion = require('../../project/brick-motion.cjs'),
+  BrickPanel = require('../brick-node-panel.cjs'),
   Regions = require('../region-handles.cjs');
+const brickRef = (brick) => ({ kind: 'movables', id: brick.id });
+const RoomKeys = require('../room-keys.cjs');
+const nodeTools = ['path', 'brick-path'];
+function expandGroups(room, refs) {
+  return Select.combine(
+    [],
+    refs.flatMap((ref) =>
+      ref.kind === 'movables'
+        ? Motion.groupMembers(room, Select.get(room, ref)).map(brickRef)
+        : [ref],
+    ),
+  );
+}
+function selectRepresentative(room, state) {
+  if (state.selection?.kind !== 'movables') return;
+  const representative = Motion.representative(
+    Motion.groupMembers(room, Select.get(room, state.selection)),
+  );
+  if (representative) state.selection = brickRef(representative);
+}
 function render(app) {
   let r = app.room();
   const c = app.course(),
     s = app.state;
+  if (!s.selection && ['brick-bind', 'brick-path'].includes(s.tool)) s.tool = 'select';
   s.multiSelection = (s.multiSelection || []).filter((ref) => Select.get(r, ref));
+  selectRepresentative(r, s);
   if (s.keyHints === undefined) {
     try {
       s.keyHints = localStorage.getItem('room-lab-key-hints') !== 'off';
@@ -27,7 +51,7 @@ function render(app) {
     }
   }
   $('app').innerHTML =
-    `<div class="room-shell ${s.keyHints ? 'show-key-hints' : ''}"><div class="room-title"><div><h1>${esc(r.name)}</h1><span class="room-size-tag">${r.cols} × ${r.rows} 格</span></div><div class="actions"><button id="back-course">接线板</button><button id="room-traces">试玩路径</button><button id="room-help">⌨ 按键说明</button><button id="room-hints" aria-pressed="${s.keyHints}">按键提示</button><button id="toggle-inspector">${s.inspectorHidden ? '显示属性' : '收起属性'}</button><button id="play-room" aria-label="试玩此房" class="primary">▶ 试玩此房</button></div></div><div class="room-tabs" aria-label="本大关房间"><span class="room-tabs-label">${esc(c.name)} / 房间</span><div>${c.rooms.map((v) => `<button data-nav-room="${esc(v.id)}" aria-current="${v.id === r.id ? 'page' : 'false'}" class="${v.id === r.id ? 'active' : ''}" title="${esc(v.notes)}">${esc(v.name)}</button>`).join('')}</div></div><div class="room-workspace ${s.inspectorHidden ? 'inspector-hidden' : ''}"><section class="panel canvas-panel room-canvas-panel"><div class="room-toolstrip"><div class="actions"><button data-tool="select">↖ 选择<span class="key-hint" aria-hidden="true">V</span></button><button data-tool="marquee">▧ 框选<span class="key-hint" aria-hidden="true">M</span></button><button data-tool="erase">⌫ 擦除<span class="key-hint" aria-hidden="true">X</span></button><button id="undo">撤销<span class="key-hint" aria-hidden="true">Ctrl Z</span></button><button id="redo">重做<span class="key-hint" aria-hidden="true">Ctrl Y</span></button></div><div class="actions"><button id="fit-room">适应房间</button><label class="check"><input id="targets" type="checkbox" checked>关联目标</label></div></div><div class="block-palette" aria-label="方块选择栏">${Palette.render(app, c)}</div><div class="canvas-heading"><span id="tool-label"></span><span><span id="room-pointer"></span> · <span id="room-zoom"></span></span></div><div class="canvas-wrap"><canvas id="room-canvas" width="960" height="540" tabindex="0" aria-label="房间编辑画布"></canvas></div></section><aside class="panel inspector form" id="room-inspector"></aside></div></div>`;
+    `<div class="room-shell ${s.keyHints ? 'show-key-hints' : ''}"><div class="room-title"><div><h1>${esc(r.name)}</h1><span class="room-size-tag">${r.cols} × ${r.rows} 格</span></div><div class="actions"><button id="back-course">接线板</button><button id="room-traces">试玩路径</button><button id="room-help">⌨ 按键说明</button><button id="room-hints" aria-pressed="${s.keyHints}">按键提示</button><button id="toggle-inspector">${s.inspectorHidden ? '显示属性' : '收起属性'}</button><button id="play-room" aria-label="试玩此房" class="primary">▶ 试玩此房</button></div></div><div class="room-tabs" aria-label="本大关房间"><span class="room-tabs-label">${esc(c.name)} / 房间</span><div>${c.rooms.map((v) => `<button data-nav-room="${esc(v.id)}" aria-current="${v.id === r.id ? 'page' : 'false'}" class="${v.id === r.id ? 'active' : ''}" title="${esc(v.notes)}">${esc(v.name)}</button>`).join('')}</div></div><div class="room-workspace ${s.inspectorHidden ? 'inspector-hidden' : ''}"><section class="panel canvas-panel room-canvas-panel"><div class="room-toolstrip"><div class="actions"><button data-tool="select">↖ 选择<span class="key-hint" aria-hidden="true">${RoomKeys.tools.select}</span></button><button data-tool="marquee">▧ 框选<span class="key-hint" aria-hidden="true">${RoomKeys.tools.marquee}</span></button><button data-tool="erase">⌫ 擦除<span class="key-hint" aria-hidden="true">${RoomKeys.tools.erase}</span></button><button id="undo">撤销<span class="key-hint" aria-hidden="true">Ctrl Z</span></button><button id="redo">重做<span class="key-hint" aria-hidden="true">Ctrl Y</span></button></div><div class="actions"><button id="fit-room">适应房间</button><label class="check"><input id="targets" type="checkbox" checked>关联目标</label></div></div><div class="block-palette" aria-label="方块选择栏">${Palette.render(app, c)}</div><div class="canvas-heading"><span id="tool-label"></span><span><span id="room-pointer"></span> · <span id="room-zoom"></span></span></div><div class="canvas-wrap"><canvas id="room-canvas" width="960" height="540" tabindex="0" aria-label="房间编辑画布"></canvas></div></section><aside class="panel inspector form" id="room-inspector"></aside></div></div>`;
   const settingsButton = document.createElement('button');
   settingsButton.id = 'room-settings';
   settingsButton.textContent = '房间设置';
@@ -64,8 +88,8 @@ function render(app) {
   };
   $('room-help').onclick = () =>
     modal(
-      '按键与放置说明',
-      '<table class="table"><tr><td>B / V / X</td><td>地形 / 选择 / 擦除地形 / 方块</td></tr><tr><td>方块栏 → 点击画布</td><td>选图标后直接放置；长按拖动可连续放置（出入口除外）</td></tr><tr><td>拖动 / Shift + 拖动</td><td>涂地形 / 画矩形地形</td></tr><tr><td>M / 框选</td><td>拖框多选，拖动所选整体移动；选择/框选工具中 Shift 左键追加、Shift 右键反选（点选或拖框），Delete 删除、Esc 清空</td></tr><tr><td>滚轮 / 中键拖动</td><td>缩放 / 平移画布</td></tr><tr><td>选择后拖动</td><td>移动对象；同格连续点选切换对象</td></tr><tr><td>踏板位置</td><td>方块坐标与贴图同格，踩顶面触发</td></tr><tr><td>Ctrl + Z / Ctrl + Y</td><td>撤销 / 重做</td></tr><tr><td>试玩</td><td>A/D 移动，空格跳跃，Shift 冲刺，R 重试，Esc 暂停</td></tr></table>',
+      require('../../project/themes.cjs').theme(c.kind).label + ' · 按键说明',
+      RoomKeys.help(c.kind),
       [{ label: '知道了' }],
     );
   $('undo').disabled = !app.store.history.past.length;
@@ -101,13 +125,17 @@ function render(app) {
     D.drawRoom(ctx, app.store.project, c, r, {
       view: s.roomView,
       selection: s.selection,
-      selections: s.multiSelection,
+      selections: expandGroups(
+        r,
+        s.multiSelection.length ? s.multiSelection : s.selection ? [s.selection] : [],
+      ),
       selectedRailNodeId: s.railNodeId,
+      selectedBrickNodeIndex: s.brickNodeOwner === s.selection?.id ? s.brickNodeIndex : null,
       hover,
       targets: $('targets')?.checked,
       assetURL: (id) => app.assetURL(id),
     });
-    if (stroke?.marquee) {
+    if (stroke?.marquee || (stroke?.rightAction === 'bind' && stroke.moved)) {
       const a = stroke.pixel,
         b = stroke.currentPixel || a;
       ctx.save();
@@ -134,23 +162,30 @@ function render(app) {
     app.nodePanelRefresh?.();
   };
   const setTool = (value) => {
+    if (nodeTools.includes(value) && !nodeTools.includes(s.tool))
+      s.nodeReturnTool = s.tool || 'select';
+    if (!nodeTools.includes(value)) s.nodeReturnTool = null;
     s.tool = value;
     if (!['select', 'marquee'].includes(value)) s.multiSelection = [];
     $('tool-label').textContent =
-      value === 'path'
-        ? '点击加节点 · 直接拖动节点 · Alt 精细移动'
-        : value === 'object'
-          ? '放置：' + Registry.get(s.objectType).name
-          : {
-              select: '选择并移动对象 · Shift 左键追加 / 右键反选',
-              marquee: '拖框选择 · Shift 左键追加 / 右键反选 · 拖动选中对象整体移动',
-              tile: '放置地形 · 拖动画砖',
-              movable: '放置机关砖 · 在关联中设置目标和机关',
-              erase: '擦除地形 / 方块',
-              entry: '放置房间入口',
-              exit: '放置房间出口',
-              zone: '拖画温控区域',
-            }[value] || value;
+      value === 'brick-bind'
+        ? '点击机关砖绑定或解绑 · Z 结束'
+        : value === 'brick-path'
+          ? '点击格子添加一个节点 · 添加后返回原工具'
+          : value === 'path'
+            ? '点击添加一个节点 · 添加后返回原工具'
+            : value === 'object'
+              ? '放置：' + Registry.get(s.objectType).name
+              : {
+                  select: '选择并移动对象 · Shift 左键追加 / 右键反选',
+                  marquee: '拖框选择 · Shift 左键追加 / 右键反选 · 拖动选中对象整体移动',
+                  tile: '放置地形 · 拖动画砖',
+                  movable: '放置机关砖 · 在节点图规划路径',
+                  erase: '擦除地形 / 方块',
+                  entry: '放置房间入口',
+                  exit: '放置房间出口',
+                  zone: '拖画温控区域',
+                }[value] || value;
     $('app')
       .querySelectorAll('[data-tool]')
       .forEach((b) => b.classList.toggle('active', b.dataset.tool === value));
@@ -165,6 +200,7 @@ function render(app) {
       .querySelectorAll('.block-card[data-tool]')
       .forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tool === value)));
     canvas.style.cursor = value === 'select' ? 'default' : 'crosshair';
+    $('quick-bind-bricks')?.setAttribute('aria-pressed', String(value === 'brick-bind'));
   };
   $('app')
     .querySelectorAll('[data-tool]')
@@ -220,6 +256,25 @@ function render(app) {
           return { owner: o, node: n };
     return null;
   };
+  const brickNodeHit = (e) => {
+    if (
+      !['select', 'brick-path'].includes(s.tool) ||
+      s.selection?.kind !== 'movables' ||
+      !['nodes', 'behavior'].includes(s.inspectorTab)
+    )
+      return null;
+    const brick = tileItem(s.selection);
+    if (!brick || Motion.groupMembers(r, brick).some((member) => member.locked)) return null;
+    const p = world(e);
+    return Motion.nodes(brick)
+      .map((node, index) => ({ node, index }))
+      .reverse()
+      .find(
+        ({ node }) =>
+          Math.hypot(node.x + 0.5 - p.x, node.y + 0.5 - p.y) * 32 * s.roomView.scale <= 10 &&
+          (node.x !== brick.x || node.y !== brick.y),
+      );
+  };
   const regionHit = (e) => {
     if (s.tool !== 'select' || s.selection?.kind !== 'zones') return null;
     const z = D.findItem(r, s.selection);
@@ -250,7 +305,30 @@ function render(app) {
       ? r.tiles.find((t) => t.x === ref.x && t.y === ref.y)
       : D.findItem(r, ref);
   }
-  function paint(pos) {
+  function paint(pos, tool = s.tool) {
+    if (tool === 'brick-bind') {
+      const pad = tileItem(s.selection),
+        brick = r.movables.find((b) => b.x === pos.x && b.y === pos.y);
+      if (Motion.isPad(pad) && brick) Motion.bind(r, brick, brick.padId === pad.id ? '' : pad.id);
+      return;
+    }
+    if (tool === 'brick-path') {
+      const brick = s.selection?.kind === 'movables' && tileItem(s.selection);
+      if (!brick || !Motion.inRoom(pos, r.cols, r.rows)) return;
+      const members = Motion.groupMembers(r, brick);
+      if (members.some((member) => member.locked)) return;
+      const path = Motion.nodes(brick);
+      if (path.length >= Motion.maxNodes) return;
+      const next = [...path, { ...pos, seconds: 0.45, mode: 'linear' }];
+      if (!Motion.applyGroupPath(r, members, brick, next)) {
+        stroke.error = '新增节点会让组内机关砖越界。';
+        return;
+      }
+      s.brickNodeOwner = brick.id;
+      s.brickNodeIndex = next.length - 1;
+      stroke.nodeAdded = true;
+      return;
+    }
     if (pos.x < 0 || pos.y < 0 || pos.x >= r.cols || pos.y >= r.rows) return;
     if (s.tool === 'tile') {
       if (!r.tiles.some((t) => t.x === pos.x && t.y === pos.y))
@@ -263,7 +341,8 @@ function render(app) {
         pos.x >= o.x && pos.x < o.x + (o.w || 1) && pos.y >= o.y && pos.y < o.y + (o.h || 1);
       const removed = new Set(r.objects.filter(covers).map((o) => o.id));
       r.objects = r.objects.filter((o) => !removed.has(o.id));
-      r.movables = r.movables.filter((o) => !covers(o));
+      const gone = new Set(r.movables.filter(covers).flatMap((b) => Motion.groupMembers(r, b)));
+      r.movables = r.movables.filter((b) => !gone.has(b));
       for (const b of r.movables) if (removed.has(b.padId)) b.padId = '';
       for (const o of r.objects) if (removed.has(o.params?.unlockPadId)) o.params.unlockPadId = '';
       s.selection = null;
@@ -294,11 +373,12 @@ function render(app) {
           collision: true,
           notes: '',
           assetOverrides: {},
+          motionPath: [],
         };
         r.movables.push(brick);
       }
       s.selection = { kind: 'movables', id: brick.id };
-      s.inspectorTab = 'links';
+      s.inspectorTab = 'nodes';
       return;
     }
     if (s.tool === 'exit') {
@@ -317,12 +397,6 @@ function render(app) {
     }
     if (s.tool === 'object') {
       let o = r.objects.find((o) => o.x === pos.x && o.y === pos.y && o.type === s.objectType);
-      if (s.multiSelection?.length > 1) {
-        host.innerHTML = `<h2>已选中 ${s.multiSelection.length} 项</h2><p>拖动任一选中项可整体移动；Shift 左键追加、Shift 右键反选，均支持点选和拖框。Delete 删除，Esc 清空；一次整体移动或删除可一次撤销。</p><button id="delete-selection" class="apply danger">删除所选</button><button id="clear-selection" class="apply">清空选择</button>`;
-        $('delete-selection').onclick = () => removeSelection(app, r, s.multiSelection);
-        $('clear-selection').onclick = () => app.clearRoomSelection();
-        return;
-      }
       if (!o) {
         o = Registry.instantiate(app.store.project, s.objectType, M.uid('block'), pos.x, pos.y, c);
         r.objects.push(o);
@@ -344,23 +418,36 @@ function render(app) {
       stroke.zone = zone;
       return;
     }
-    if (s.tool === 'path') {
+    if (tool === 'path') {
       const o = tileItem(s.selection);
-      if (o?.type !== 'physics.rail') return;
+      if (o?.type !== 'physics.rail' || o.locked) return;
       if ((o.params.path?.length || 0) >= 64) {
-        app.message('轨道最多支持 64 个节点', true);
+        stroke.error = '轨道最多支持 64 个节点';
         return;
       }
       const n = Nodes.add(o, stroke.world);
-      Nodes.move(o, n.id, n, r, 0.5);
+      Nodes.move(o, n.id, n, r, stroke.fine ? 0.01 : 0.5);
       s.railNodeId = n.id;
       s.inspectorTab = 'nodes';
+      stroke.nodeAdded = true;
     }
   }
   canvas.onpointerdown = (e) => {
+    const owner = s.multiSelection.length <= 1 ? tileItem(s.selection) : null,
+      rightAction =
+        e.button === 2 &&
+        !e.shiftKey &&
+        (Motion.isPad(owner)
+          ? 'bind'
+          : owner?.type === 'physics.rail'
+            ? 'path'
+            : c.kind === 'calculus' && owner && s.selection.kind === 'movables'
+              ? 'brick-path'
+              : null);
     if (
       e.button !== 0 &&
       e.button !== 1 &&
+      !rightAction &&
       !(e.button === 2 && e.shiftKey && ['select', 'marquee'].includes(s.tool))
     )
       return;
@@ -376,10 +463,20 @@ function render(app) {
       pixel: pixel(e),
       view: { ...s.roomView },
       pan: e.button === 1,
+      rightAction,
+      fine: e.altKey,
       rectangle: e.shiftKey && ['tile', 'erase'].includes(s.tool),
     };
     canvas.setPointerCapture(e.pointerId);
-    if (stroke.pan) return;
+    if (stroke.pan || rightAction) return;
+    const brickNode = brickNodeHit(e);
+    if (brickNode && !e.shiftKey && s.multiSelection.length <= 1) {
+      s.brickNodeOwner = s.selection.id;
+      s.brickNodeIndex = brickNode.index;
+      stroke.brickNode = { brick: tileItem(s.selection), index: brickNode.index };
+      inspector(app, r, setTool);
+      return;
+    }
     if (['select', 'marquee'].includes(s.tool)) {
       const existing = s.multiSelection?.length
         ? s.multiSelection
@@ -387,7 +484,10 @@ function render(app) {
           ? [s.selection]
           : [];
       if (e.shiftKey) {
-        stroke.marquee = { mode: e.button === 2 ? 'invert' : 'add', existing: M.clone(existing) };
+        stroke.marquee = {
+          mode: e.button === 2 ? 'invert' : 'add',
+          existing: expandGroups(r, existing),
+        };
         return;
       }
       if (
@@ -424,6 +524,7 @@ function render(app) {
       if (old >= 0 && !(s.selection.kind === 'zones' && list[0].kind !== 'zones')) {
         stroke.cycle = list.length > 1 ? list[(old + 1) % list.length] : null;
       } else s.selection = list[0] || null;
+      selectRepresentative(r, s);
       if (!list.length) stroke.marquee = { mode: 'replace', existing: [] };
       inspector(app, r, setTool);
     } else paint(pos);
@@ -434,7 +535,7 @@ function render(app) {
       const handle = regionHit(e);
       canvas.style.cursor = handle
         ? handle.cursor
-        : nodeHit(e)
+        : nodeHit(e) || brickNodeHit(e)
           ? 'grab'
           : s.tool === 'select'
             ? 'default'
@@ -450,11 +551,12 @@ function render(app) {
       s.roomView.y = stroke.view.y + p.y - stroke.pixel.y;
       return;
     }
-    if (stroke.marquee) {
+    if (stroke.marquee || stroke.rightAction) {
       stroke.last = pos;
       stroke.currentPixel = pixel(e);
       return;
     }
+    if (stroke.nodeAdded) return;
     if (stroke.group) {
       const dx = pos.x - stroke.last.x,
         dy = pos.y - stroke.last.y;
@@ -464,6 +566,14 @@ function render(app) {
     if (stroke.node) {
       Nodes.move(stroke.node.owner, stroke.node.id, world(e), r, e.altKey ? 0.01 : 0.5);
       canvas.style.cursor = 'grabbing';
+      return;
+    }
+    if (stroke.brickNode) {
+      const { brick, index } = stroke.brickNode;
+      if (stroke.moved && Motion.inRoom(pos, r.cols, r.rows)) {
+        const path = Motion.nodes(brick).map((n, i) => (i === index ? { ...n, ...pos } : n));
+        Motion.applyGroupPath(r, Motion.groupMembers(r, brick), brick, path);
+      }
       return;
     }
     if (stroke.resize) {
@@ -488,7 +598,12 @@ function render(app) {
           r.tiles.some((t) => t !== o && t.x === o.x + dx && t.y === o.y + dy)
         )
           return;
-        if (o.type === 'physics.rail') Nodes.moveOwner(o, o.x + dx, o.y + dy);
+        if (s.selection.kind === 'movables' && o.brickGroup) {
+          const members = Motion.groupMembers(r, o);
+          if (members.some((member) => member.locked)) return;
+          Select.move(r, members.map(brickRef), dx, dy);
+        } else if (s.selection.kind === 'movables') Motion.moveOwner(o, o.x + dx, o.y + dy);
+        else if (o.type === 'physics.rail') Nodes.moveOwner(o, o.x + dx, o.y + dy);
         else {
           o.x += dx;
           o.y += dy;
@@ -524,24 +639,60 @@ function render(app) {
     }
     stroke.last = pos;
   };
-  const finish = () => {
+  const finish = (event) => {
     if (!stroke) return;
+    if (stroke.rightAction) {
+      const { rightAction, before, start, moved } = stroke;
+      if (event.type === 'pointerup') {
+        const end = cell(event);
+        if (rightAction === 'bind') {
+          const refs = Select.box(r, start, moved ? end : start).filter(
+              (ref) => ref.kind === 'movables',
+            ),
+            bricks = expandGroups(r, refs).map((ref) => Select.get(r, ref)),
+            padId = s.selection.id;
+          const binding = bricks.every((brick) => brick.padId === padId) ? '' : padId;
+          for (const brick of bricks) brick.padId = binding;
+        } else if (!moved) {
+          paint(start, rightAction);
+          if (stroke.nodeAdded && rightAction === 'brick-path') s.inspectorTab = 'nodes';
+        }
+      }
+      const error = stroke.error;
+      stroke = null;
+      app.store.commit(before);
+      if (error) app.message(error, true);
+      return;
+    }
     if (stroke.marquee) {
       s.multiSelection = Select.combine(
         stroke.marquee.existing,
-        Select.box(r, stroke.start, stroke.last),
+        expandGroups(r, Select.box(r, stroke.start, stroke.last)),
         stroke.marquee.mode,
       );
       s.selection = s.multiSelection.length === 1 ? s.multiSelection[0] : null;
+      const selected = s.multiSelection.map((ref) => ref.kind === 'movables' && Select.get(r, ref));
+      if (
+        selected.length > 1 &&
+        selected[0]?.brickGroup &&
+        selected.every((brick) => brick?.brickGroup === selected[0].brickGroup)
+      ) {
+        s.selection = brickRef(Motion.representative(selected));
+        s.multiSelection = [];
+      }
       stroke = null;
       inspector(app, r, setTool);
       return;
     }
     if (!stroke.moved && stroke.cycle) s.selection = stroke.cycle;
+    selectRepresentative(r, s);
+    if (stroke.nodeAdded) setTool(s.nodeReturnTool || 'select');
     const before = stroke.before,
-      pan = stroke.pan;
+      pan = stroke.pan,
+      error = stroke.error;
     stroke = null;
     if (!pan) app.store.commit(before);
+    if (error) app.message(error, true);
   };
   canvas.onpointerup = finish;
   canvas.onpointercancel = finish;
@@ -559,13 +710,17 @@ function render(app) {
     stroke = null;
     s.multiSelection = [];
     s.selection = null;
+    if (nodeTools.includes(s.tool) || s.tool === 'brick-bind') setTool('select');
     inspector(app, r, setTool);
   };
   app.deleteRoomSelection = () =>
     removeSelection(
       app,
       r,
-      s.multiSelection?.length ? s.multiSelection : s.selection ? [s.selection] : [],
+      expandGroups(
+        r,
+        s.multiSelection?.length ? s.multiSelection : s.selection ? [s.selection] : [],
+      ),
     );
   app.setRoomTool = setTool;
   inspector(app, r, setTool);
@@ -580,6 +735,50 @@ function inspector(app, r, setTool) {
         ? r.tiles.find((t) => t.x === ref.x && t.y === ref.y)
         : D.findItem(r, ref),
     tab = s.inspectorTab || 'base';
+  if (s.multiSelection.length > 1) {
+    const bricks = s.multiSelection.map((item) => item.kind === 'movables' && Select.get(r, item)),
+      canGroup =
+        app.course().kind === 'calculus' && bricks.every((brick) => brick && !brick.brickGroup),
+      samePad = canGroup && bricks.every((brick) => brick.padId === bricks[0].padId),
+      pads = r.objects.filter(Motion.isPad);
+    host.innerHTML = `<h2>已选中 ${s.multiSelection.length} 项</h2>
+      <p class="hint">拖动任一选中项可整体移动。Shift 左键追加，Shift 右键反选。</p>
+      ${
+        canGroup
+          ? `${select('整组绑定踏板', 'group-pad', samePad ? bricks[0].padId : '', [
+              ['', '仅编组，暂不绑定'],
+              ...pads.map((pad) => [
+                pad.id,
+                (pad.name || Registry.get(pad.type).name) + ' · ' + pad.x + ', ' + pad.y,
+              ]),
+            ])}<p class="hint">编组时沿用最靠近中心的砖的路线与逐段参数。其余砖保持相对位置。</p><button id="group-bricks" class="apply primary">编组并应用绑定</button>`
+          : ''
+      }
+      <button id="delete-selection" class="apply danger">删除所选</button><button id="clear-selection" class="apply">清空选择</button>`;
+    $('delete-selection').onclick = () =>
+      removeSelection(app, r, expandGroups(r, s.multiSelection));
+    $('clear-selection').onclick = () => app.clearRoomSelection();
+    if (canGroup) {
+      $('group-bricks').disabled = bricks.some((brick) => brick.locked);
+      $('group-bricks').onclick = () => {
+        const anchor = Motion.representative(r.movables.filter((brick) => bricks.includes(brick))),
+          padId = $('group-pad').value,
+          groupId = M.uid('brick-group');
+        let applied;
+        app.store.change(() => {
+          applied = Motion.applyGroupPath(r, bricks, anchor, Motion.nodes(anchor));
+          if (!applied) return;
+          for (const brick of bricks) Object.assign(brick, { brickGroup: groupId, padId });
+          s.multiSelection = [];
+          s.selection = brickRef(anchor);
+          s.inspectorTab = 'nodes';
+          setTool('select');
+        });
+        if (!applied) app.message('代表砖的路线会让组内其他砖越界。请先调整路线。', true);
+      };
+    }
+    return;
+  }
   if (!o) {
     s.selection = null;
     host.innerHTML = `<h2>房间属性</h2>${field('名称', 'room-name', r.name)}${area('备注', 'room-notes', r.notes)}<div class="row">${field('列数', 'room-cols', r.cols, { type: 'number', min: 6, max: Limits.MAX_COLS })}${field('行数', 'room-rows', r.rows, { type: 'number', min: 5, max: Limits.MAX_ROWS })}</div>${select(
@@ -595,7 +794,7 @@ function inspector(app, r, setTool) {
       ['inherit', '继承大关状态'],
       ['off', '本房关闭'],
       ['start', '本房立即启动'],
-    ])}${field('AI ID 覆盖（空白继承大关）', 'room-ai-id', r.aiId || '')}${select('默认温度', 'room-env', r.environment, ['cold', 'hot'])}${CameraPanel.render(r)}<button class="apply primary" id="apply-room">应用房间设置</button><p class="hint">缩小时保留越界对象，不自动裁剪。试玩视角独立保存于本房间。</p>`;
+    ])}${field('AI ID 覆盖（空白继承大关）', 'room-ai-id', r.aiId || '')}${['calculus', 'slacker'].includes(app.course().kind) ? '' : select('默认温度', 'room-env', r.environment, ['cold', 'hot'])}${CameraPanel.render(r)}<button class="apply primary" id="apply-room">应用房间设置</button><p class="hint">缩小时保留越界对象，不自动裁剪。试玩视角独立保存于本房间。</p>`;
     CameraPanel.bind();
     $('apply-room').onclick = () => {
       const cols = Number($('room-cols').value),
@@ -617,7 +816,7 @@ function inspector(app, r, setTool) {
         phase: $('room-phase').value,
         aiPolicy: $('room-ai-policy').value,
         aiId: $('room-ai-id').value.trim() || null,
-        environment: $('room-env').value,
+        environment: $('room-env')?.value ?? r.environment,
         playCamera,
       };
       const result = M.resizeRoom(r, cols, rows),
@@ -641,13 +840,15 @@ function inspector(app, r, setTool) {
     };
     return;
   }
-  const d = ref.kind === 'objects' ? Registry.get(o.type) : null;
-  host.innerHTML = `<h2>${esc(d?.name || { entries: '入口', exits: '出口', zones: '温控区域', movables: '机关砖', tiles: '固定砖' }[ref.kind])}</h2><div class="inspector-tabs ${d?.type === 'physics.rail' ? 'with-nodes' : ''}">${[
+  const d = ref.kind === 'objects' ? Registry.get(o.type) : null,
+    brickMotion = ref.kind === 'movables' && app.course().kind === 'calculus',
+    hasNodes = d?.type === 'physics.rail' || brickMotion;
+  host.innerHTML = `<h2>${esc(d?.name || { entries: '入口', exits: '出口', zones: '温控区域', movables: '机关砖', tiles: '固定砖' }[ref.kind])}</h2><div class="inspector-tabs ${hasNodes ? 'with-nodes' : ''}">${[
     ['base', '基础'],
     ['behavior', '行为'],
     ['links', '关联'],
     ['art', '外观'],
-    ...(d?.type === 'physics.rail' ? [['nodes', '节点图']] : []),
+    ...(hasNodes ? [['nodes', '节点图']] : []),
   ]
     .map(
       ([id, name]) =>
@@ -662,6 +863,28 @@ function inspector(app, r, setTool) {
       }),
   );
   const body = $('object-form');
+  const brickGroup = brickMotion && o.brickGroup ? Motion.groupMembers(r, o) : [];
+  if (brickGroup.length) {
+    body.insertAdjacentHTML(
+      'beforebegin',
+      `<p class="hint">机关砖组 · ${brickGroup.length} 块 · 代表砖 (${o.x}, ${o.y})</p>
+      <button id="ungroup-bricks" class="apply">解散机关砖组</button>`,
+    );
+    $('ungroup-bricks').onclick = () =>
+      app.store.change(() => {
+        for (const brick of brickGroup) delete brick.brickGroup;
+      });
+  }
+  if (Motion.isPad(o)) {
+    const color = Motion.colorFor(r, o.id),
+      count = r.movables.filter((b) => b.padId === o.id).length;
+    body.insertAdjacentHTML(
+      'beforebegin',
+      `<button id="quick-bind-bricks" class="apply" style="border-color:${color}" aria-pressed="${s.tool === 'brick-bind'}">快捷绑定 · ${count} 块</button>`,
+    );
+    $('quick-bind-bricks').onclick = () =>
+      setTool(s.tool === 'brick-bind' ? 'select' : 'brick-bind');
+  }
   host
     .querySelector('.inspector-tabs')
     .insertAdjacentHTML(
@@ -687,14 +910,23 @@ function inspector(app, r, setTool) {
         });
       };
     }
-    if (o.locked)
+    if (o.locked || brickGroup.some((brick) => brick.locked))
       for (const id of ['object-x', 'object-y', 'object-w', 'object-h'])
         if ($(id)) $(id).disabled = true;
     $('apply-object').onclick = () =>
       app.store.change(() => {
-        if (o.locked) return;
+        if (o.locked || brickGroup.some((brick) => brick.locked)) return;
         if (o.type === 'physics.rail')
           Nodes.moveOwner(o, Number($('object-x').value), Number($('object-y').value));
+        else if (brickGroup.length)
+          Select.move(
+            r,
+            brickGroup.map(brickRef),
+            Number($('object-x').value) - o.x,
+            Number($('object-y').value) - o.y,
+          );
+        else if (ref.kind === 'movables')
+          Motion.moveOwner(o, Number($('object-x').value), Number($('object-y').value));
         else {
           o.x = Number($('object-x').value);
           o.y = Number($('object-y').value);
@@ -712,6 +944,10 @@ function inspector(app, r, setTool) {
         }
       });
     $('delete-object').onclick = () => {
+      if (brickGroup.length > 1) {
+        removeSelection(app, r, brickGroup.map(brickRef));
+        return;
+      }
       const linked =
         ref.kind === 'entries'
           ? app.course().connections.filter((w) => w.to.entryId === o.id)
@@ -741,6 +977,8 @@ function inspector(app, r, setTool) {
     };
   } else if (tab === 'nodes' && d?.type === 'physics.rail') {
     NodePanel.render(app, o, r, body, setTool);
+  } else if (brickMotion && ['nodes', 'behavior'].includes(tab)) {
+    BrickPanel.render(app, o, r, body, setTool);
   } else if (tab === 'behavior') {
     if (d) {
       const p = Registry.params(app.store.project, o);
@@ -834,23 +1072,30 @@ function inspector(app, r, setTool) {
             (pad.name || Registry.get(pad.type).name) + ' · ' + pad.x + ', ' + pad.y,
           ]),
         ]) +
-        '<div class="row">' +
-        field('目标列 X', 'movable-target-x', o.targetX, {
-          type: 'number',
-          min: 0,
-          max: r.cols - 1,
-        }) +
-        field('目标行 Y', 'movable-target-y', o.targetY, {
-          type: 'number',
-          min: 0,
-          max: r.rows - 1,
-        }) +
-        '</div>' +
-        '<button id="apply-movable" class="apply primary">应用联动与目标</button>';
+        (brickMotion
+          ? '<p class="hint">路径、时间和运动方式在「节点图」设置。</p>'
+          : '<div class="row">' +
+            field('目标列 X', 'movable-target-x', o.targetX, {
+              type: 'number',
+              min: 0,
+              max: r.cols - 1,
+            }) +
+            field('目标行 Y', 'movable-target-y', o.targetY, {
+              type: 'number',
+              min: 0,
+              max: r.rows - 1,
+            }) +
+            '</div>') +
+        '<button id="apply-movable" class="apply primary">应用绑定</button>';
       $('apply-movable').onclick = () => {
+        const padId = $('movable-pad').value;
+        if (padId && !pads.some((pad) => pad.id === padId)) return;
+        if (brickMotion) {
+          app.store.change(() => Motion.bind(r, o, padId));
+          return;
+        }
         const x = $('movable-target-x').valueAsNumber,
           y = $('movable-target-y').valueAsNumber;
-        const padId = $('movable-pad').value;
         if (
           !Number.isInteger(x) ||
           !Number.isInteger(y) ||
@@ -862,7 +1107,6 @@ function inspector(app, r, setTool) {
           app.message('机关砖目标必须是房间内的整数格坐标。', true);
           return;
         }
-        if (padId && !pads.some((pad) => pad.id === padId)) return;
         app.store.change(() => Object.assign(o, { targetX: x, targetY: y, padId }));
       };
     } else if (ref.kind === 'objects') {
