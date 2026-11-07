@@ -314,7 +314,7 @@ namespace RoomLab.Native
             try{
                 foreach(var c in candidate.Courses)foreach(var r in c.Rooms)if(!NativeMotion.SupportsRoom(r,out var reason))throw new NativeDataException(reason);
                 if(restored!=null&&(!ReferenceEquals(restored.Project,candidate)||restored.Rules!=rules))throw new NativeDataException("存档与目标关卡不一致");
-                motor=restored??new NativeMotion(candidate,rules:rules);decoded=NativeDemoAssets.Decode(candidate,allowUnresolvedAssets);render=new NativePixelWorld(motor,decoded,builtIn);render.Refresh(0,view,false);
+                motor=restored??new NativeMotion(candidate,rules:rules);NativeDisplayCopy.Apply(motor);decoded=NativeDemoAssets.Decode(candidate,allowUnresolvedAssets);render=new NativePixelWorld(motor,decoded,builtIn);render.Refresh(0,view,false);
                 nextIdentity=(builtIn?"builtin-":"import-")+(((JArray)candidate.OriginalJson["courses"]).Count==1?candidate.SourceSha256+"-"+rules:NativeProjectLoader.Sha(Encoding.UTF8.GetBytes(candidate.SourceSha256+"\n"+motor.Course.Id+"\n"+rules))+"-"+rules);
             }catch{render?.Dispose();decoded?.Dispose();view.transform.position=cameraPosition;view.orthographicSize=cameraSize;view.backgroundColor=cameraBackground;throw;}
             // The current game remains owned and visible until the complete candidate has passed
@@ -322,7 +322,7 @@ namespace RoomLab.Native
             var oldWorld=world;var oldAssets=assets;world=render;assets=decoded;Game=motor;isBuiltin=builtIn;identity=nextIdentity;tainted=false;notice="";loadedRoom=Game.Room.Id;lastCheckpoint=Game.Checkpoint.id;lastEvent=null;timeline.Reset();keys.Clear();map=false;RootActivate();oldWorld?.Dispose();oldAssets?.Dispose();ReadRecord();
         }
         void RootActivate(){world.Root.SetActive(true);}
-        void SetGame(NativeMotion g){DrainAutoSaves();var next=new NativePixelWorld(g,assets,isBuiltin);next.Refresh(0,view,map);var old=world;Game=g;world=next;world.Root.SetActive(true);old.Dispose();loadedRoom=g.Room.Id;lastCheckpoint=g.Checkpoint.id;timeline.Reset();keys.Clear();lastEvent=null;}
+        void SetGame(NativeMotion g){DrainAutoSaves();NativeDisplayCopy.Apply(g);var next=new NativePixelWorld(g,assets,isBuiltin);next.Refresh(0,view,map);var old=world;Game=g;world=next;world.Root.SetActive(true);old.Dispose();loadedRoom=g.Room.Id;lastCheckpoint=g.Checkpoint.id;timeline.Reset();keys.Clear();lastEvent=null;}
         // Loads a designer package. A bare JSON whose assets folder is missing is accepted through the
         // built-in art fallback instead of being rejected outright.
         NativeProject LoadImport(string path,bool strict,out bool substituted,string courseId=null)
@@ -405,7 +405,7 @@ namespace RoomLab.Native
         void BuildBuiltinSelection(RectTransform root){
             var panel=NativeUiKit.Column(root,"作业待办",10,14,14);NativeUiKit.Center(panel,Mathf.Min(560,designWidth-32));panel.gameObject.AddComponent<Image>().color=Ink;
             NativeUiKit.Label(panel,"作业待办",20,Paper);
-            string[] names={"01 · 实验楼的回路","02 · 纸页回廊","03 · 醒与梦的回廊"};
+            string[] names={"物理","高数","水课"};
             for(int i=0;i<CampaignIds.Length;i++){string id=CampaignIds[i];NativeUiKit.Button(panel,names[i],()=>{LoadAutosaveCourse(id);ForgetImport();Show("menu");},13,30,Teal);}
             NativeUiKit.Button(panel,"返回",()=>Show("menu"),12,24);NativeUiKit.Fit(panel,Mathf.Min(560,designWidth-32),designHeight-20);
         }
@@ -416,7 +416,7 @@ namespace RoomLab.Native
         }
         void ForgetImport(){if(!string.IsNullOrEmpty(importedLevel)){importedLevel="";importedCourseId="";SaveSettings();}}
         void PickImport(){SaveProgress();keys.Clear();timeline.Reset();string path=NativeDemoFileDialog.Pick();ImportFile(path);if(status!=null)status.text=notice;}
-        string ThemeHint()=>Game.IsRework?(Game.Course.Kind=="calculus"?"纸上的路，总还有另一种写法。":Game.Course.Kind=="slacker"?"钟声快响了。窗外似乎换了天。":"楼梯封了。实验记录还在上面。"):Game.Course.Kind=="calculus"?"踩积分板聚合搭桥 · 踩求导板展开道路":Game.Course.Kind=="slacker"?"踩签到板记录 · 清醒板加速前进":"按 "+KeyName()+" 启动 AI · 引 AI 去吃收藏品";
+        string ThemeHint()=>NativeDisplayCopy.Active(Game)?NativeDisplayCopy.Text(Game,"notes"):Game.IsRework?(Game.Course.Kind=="calculus"?"纸上的路，总还有另一种写法。":Game.Course.Kind=="slacker"?"钟声快响了。窗外似乎换了天。":"楼梯封了。实验记录还在上面。"):Game.Course.Kind=="calculus"?"踩积分板聚合搭桥 · 踩求导板展开道路":Game.Course.Kind=="slacker"?"踩签到板记录 · 清醒板加速前进":"按 "+KeyName()+" 启动 AI · 引 AI 去吃收藏品";
         void NewGame(){guidanceSeen.Clear();guidanceRoom=null;storyRoom=null;SetGame(new NativeMotion(Game.Project,rules:Game.Rules));tainted=false;notice=ThemeHint();SaveProgress();Show("play");}
         bool CanContinue(){try{if(new FileInfo(SaveFile).Length>4*1024*1024)return false;var data=JObject.Parse(File.ReadAllText(SaveFile));if(data["continuation"] is JObject saved){NativeMotion.FromContinuation(Game.Project,saved,Game.Rules);return true;}}catch{}return false;}
         void Continue(){try{var saved=(JObject)JObject.Parse(File.ReadAllText(SaveFile))["continuation"];SetGame(NativeMotion.FromContinuation(Game.Project,saved,Game.Rules));tainted=false;notice="已从最近检查点恢复";Show("play");}catch(Exception e){notice="存档不可用，已安全返回菜单："+e.Message;Show("menu");}}

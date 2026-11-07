@@ -30,11 +30,11 @@ namespace RoomLab.Native
             this.game=game;root=new GameObject("Deadline route signage");root.transform.SetParent(parent,false);
             ink=new Material(Shader.Find("Sprites/Default"));
             halo=Ring("AI readable warning",.6f);portal=Ring("Destination warning",.65f);
-            font=Resources.Load<Font>(game.IsRework&&game.Course.Kind!="physics"?"DiegeticFont/LXGWWenKai-Regular":"PhysicsPixelFont/FusionPixel");
+            font=Resources.Load<Font>(NativeDisplayCopy.Active(game)||game.IsRework&&game.Course.Kind!="physics"?"DiegeticFont/LXGWWenKai-Regular":"PhysicsPixelFont/FusionPixel");
             string ShortExit(string name){if(name.Contains("◆"))return "◆";if(name.Contains("β"))return "β";if(name.Contains("γ"))return "γ";if(name.Contains("返")||name.Contains("↶"))return "↶";if(name.Contains("提交")||name.Contains("今晚"))return "交卷";return "→";}
             foreach(var exit in game.Room.Exits)
             {
-                if(game.IsGuided)AddDestination(exit);
+                if(game.IsGuided||NativeDisplayCopy.Active(game))AddDestination(exit);
                 else Label(game.IsRework?ShortExit(exit.Name):"提交 ↓",exit.X+.7f,exit.Y-.4f,new Color(.5f,1,.85f));
             }
             if(game.Room.Raw["nativeCampaign"]?["route"] is JArray route)foreach(var lane in route){int direction=(int)lane["direction"];float floor=(float)lane["floor"];Label(direction>0?"→":"←",direction>0?5:game.Room.Cols-6,floor-2,new Color(.55f,.85f,.8f));}
@@ -86,7 +86,7 @@ namespace RoomLab.Native
                 signQuad.colors=new[]{Color.white,Color.white,Color.white,Color.white};
                 signQuad.triangles=new[]{0,1,2,0,2,3};signQuad.RecalculateBounds();
             }
-            var sign=new DoorSign{exit=exit,destination=Destination(exit),condition=(string)exit.Raw["rework"]?["lockedText"]};
+            var sign=new DoorSign{exit=exit,destination=Destination(exit),condition=NativeDisplayCopy.Locked(game,exit,(string)exit.Raw["rework"]?["lockedText"])};
             sign.title=Label(sign.destination,exit.X+exit.W/2f,exit.Y-1,Color.white);
             sign.title.fontSize=40;sign.title.characterSize=.18f*Mathf.Min(1,(Mathf.Min(11,game.Room.Cols-1)-.45f)/Mathf.Max(1,ApproximateWidth(sign.destination)));sign.title.GetComponent<MeshRenderer>().sortingOrder=8;
             sign.detail=Label("",exit.X+exit.W/2f,exit.Y-.5f,Color.white);
@@ -120,7 +120,7 @@ namespace RoomLab.Native
                 string detail="";
                 if(!open&&distance<6)
                 {
-                    detail=!game.CampaignExitOpen?"助手还没跟上":string.IsNullOrWhiteSpace(sign.condition)?"这边暂时走不通":sign.condition;
+                    detail=!game.CampaignExitOpen?(NativeDisplayCopy.Active(game)?"还没到齐。":"助手还没跟上"):string.IsNullOrWhiteSpace(sign.condition)?"这边暂时走不通":sign.condition;
                     if(detail.Length>16)detail=detail.Substring(0,15)+"…";
                 }
                 sign.detail.text=detail;
@@ -155,7 +155,7 @@ namespace RoomLab.Native
         LineRenderer Ring(string name,float radius){var go=new GameObject(name);go.transform.SetParent(root.transform,false);var line=go.AddComponent<LineRenderer>();line.sharedMaterial=ink;line.useWorldSpace=false;line.loop=true;line.positionCount=32;line.startWidth=line.endWidth=.055f;line.sortingOrder=12;for(int i=0;i<32;i++){float a=i*Mathf.PI/16;line.SetPosition(i,new Vector3(Mathf.Cos(a)*radius,Mathf.Sin(a)*radius));}return line;}
         public void Refresh()
         {
-            if(game.IsGuided)RefreshDestinations();
+            if(game.IsGuided||NativeDisplayCopy.Active(game))RefreshDestinations();
             bool charge=game.CampaignSkill=="charge",burst=game.CampaignSkill=="burst";halo.enabled=game.AI.active&&(charge||burst);halo.transform.position=new Vector3((float)game.AI.x/32,game.Room.Rows-(float)game.AI.y/32,0);halo.transform.localScale=Vector3.one*(charge?1+(float)Math.Sin(game.Elapsed*8)*.16f:1.25f);halo.startColor=halo.endColor=charge?new Color(1,.65f,.2f,.9f):new Color(1,.3f,.2f,.8f);
             portal.enabled=game.AI.warning!=null;if(game.AI.warning!=null){portal.transform.position=new Vector3((float)game.AI.warning.to.x/32,game.Room.Rows-(float)game.AI.warning.to.y/32,0);portal.startColor=portal.endColor=new Color(.85f,.6f,1,.7f+(float)Math.Sin(game.Elapsed*7)*.12f);}
         }

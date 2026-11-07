@@ -1,0 +1,236 @@
+﻿﻿DDL · 截止之前 — 自定义资产与关卡规范
+符号房名与弱提示版 / 2026-11-07
+
+最快替换方法
+1. 退出游戏。打开成品旁的“资产模板”，找到要替换的原文件。
+2. 保持文件名和图片尺寸，把新文件放进“自定义资产/images”或“自定义资产/audio”。
+3. 重新启动游戏。只替换放进去的项目，其余继续使用内置素材。
+不需要 Unity，不需要上传，不需要重新打包。不要改 RoomLabPhysics_Data 内的文件。
+图片、音乐与音效的同名文件替换无需打开隐藏开发页，也无需输入按键口令。
+撤回替换：把相应文件移出“自定义资产”，重启即可。不要删除个人存档。
+
+目录
+RoomLabPhysics.exe                 启动入口
+自定义资产/images/*.png            全局图片覆盖
+自定义资产/audio/*.wav             全局音乐与音效覆盖
+自定义资产/ui.json                 标题与三种界面颜色
+资产模板/images/                   当前原图，供照尺寸重画
+资产模板/audio/                    本次原创声音原文件
+资产模板/asset-catalog.json         每张图片的精确尺寸、声音长度与用途名称
+文案模板/contact-auto.json          当前显示文案副本；修改需放回源码并重建
+关卡导入/                          放置你们从编辑器导出的 JSON / ZIP
+关卡源文件/deadline-autosave.json    本轮路径网络可编辑源文件
+
+一、图片与动画
+格式：PNG，建议RGBA透明背景；每张不超过16MB；尺寸必须和asset-catalog一致。
+保留32 PPU、32×32格、角色32×64、脚底基线距底8像素、默认向右。
+运行时按最近邻显示。不要对像素图做模糊缩放，不要加JPEG压缩；画布尺寸不可随意裁掉透明边。
+玩家碰撞体为24×28，与32×64角色绘图分开。改图不会改变碰撞、跳跃、触发范围。
+
+常用角色帧键（文件名不含扩展名的部分）：
+player-idle00..03      待机，4帧，6fps
+player-run00..05       奔跑，6帧，10fps
+player-jump00..01      起跳，2帧，末帧保持
+player-fall00..01      下落，2帧
+player-dash00..01      冲刺，2帧，14fps，末帧保持
+player-crouch00..01    蹲下，2帧
+player-death00..03     重试反馈，4帧
+ai-idle00..03          待机助手
+ai-chase00..05         追逐助手
+ai-skill00..03         物理过载蓄力
+ai-knockback00..01     过载散热
+同一动作尽量整组更换，保持轮廓、脚点和配色。当前槽位数和播放速度固定；新增帧数需要改源码并重建。
+
+背景键：background、rework-calculus-background、rework-classroom-awake、rework-classroom-dream。旧calculus-background、slacker-background继续供旧示例使用。
+高数平台：rework-calculus-paper-tile.png。完整纸页材质，不需拆图；保持模板尺寸。深灰墨线站立边由运行时绘制，防止换材质后看不清碰撞。
+其他程序纹理：rework-physics-tile-*、rework-slacker-tile-*；其中tile-4是可变平台。rework-calculus-tile-*是备用生成纹理，当前高数正式皮肤不读取它们。
+地形和机关：terrain_pickups-*、physics_mechanisms-*、physics_cannon-*、campus_interactables-*。
+calculus-world、slacker-world、theme-mechanisms是图集，必须保持图集尺寸与元素格位；不要只把整张图替换成一个物体。
+图集的当前切片坐标在 Assets/RoomLabNative/Presentation/NativePixelWorld.cs 的 WorldSlice/ThemeMechanism；通常更建议通过编辑器给对象绑定独立图片。
+
+素材优先级：导入关卡中有效的作者对象/房间/大关素材绑定，优先于全局内置回退图片。
+“自定义资产/images”覆盖的是内置及回退图片；它不会强制覆盖另一位作者显式绑定的素材。
+如果要改变特定关卡某个机关的外观，请用 RoomLab 的素材绑定并导出ZIP，这样文件随关卡走。
+编辑器导入支持已有PNG/JPEG/SVG/WebP/GIF链路；直接放入images的全局覆盖只支持PNG。
+
+美术约定
+保留暖黄学生与青紫CRT助手的身份；物理深靛实验室、青冷橙热；高数白纸与坐标；水课梦境拼贴。
+玩家、可站立边缘、危险物和可互动机关应比背景更清楚。低饱和背景不要盖过高亮奖励。
+危险状态除颜色外保留轮廓、动作、文字或音效提示；不要只靠红绿区分。
+界面与游戏世界可以有不同精细度，但各自内部保持一致；不要混用随机分辨率的角色帧。
+本轮后两章由路径网络组成。高数双环、地下联络与上层支路；水课在常驻返程之间选择资源层路线。详细路径与解法单独放在设计与测试目录。
+
+二、音乐与音效
+直接覆盖仅支持 WAV：PCM 16-bit，1或2声道，8000–48000Hz，每文件不超过64MB且不超过180秒。
+推荐22050Hz或44100Hz，音乐双声道，音效可单声道。浮点WAV、24-bit、MP3、OGG不属于本版外置覆盖协议。
+使用压缩音频可先在你们的音频软件导出为以上WAV规格。
+
+每章有两个同步音轨：
+physics-explore.wav / physics-chase.wav      104 BPM，16小节
+calculus-explore.wav / calculus-chase.wav    112 BPM，16小节
+slacker-explore.wav / slacker-chase.wav       96 BPM，16小节
+explore是持续的主题音乐，chase是叠加的紧张节奏层；不要把完整混音重复放到两个文件里。
+同一章两文件应从同一工程、同一起点导出，长度与节拍完全一致。
+两层同时从同一音频时钟启动，AI启动后淡入追逐层，暂停/地图时减弱。
+若两层按采样数与采样率换算的循环时长不完全相等，会整对恢复内置音乐，避免错拍。只换一层时，新层仍须与另一层长度匹配。
+循环首尾接缝要平顺，避免长前奏和尾部静音；预留混音余量，避免持续削波。
+
+音效键：ui、jump、land、dash、coin、collectible、temperature、retry、finish、jet、rail-start、
+ice-melt、ice-create、checkpoint、calculus-integral、calculus-derivative、checkin、awake、
+ai-start、ai-charge、ai-burst、ai-recover、ai-teleport、steal。
+coin是玩家资源，collectible是AI替玩家收下研究藏品。新版ai-charge与1秒可见预警相配。水课音乐会随清醒层平滑滤波，梦境低通1800Hz、朦胧5000Hz、清醒18000Hz。
+重要提示保持短而独特；不要用同一种提示同时表示存档、受击与奖励。
+设置页面有主音量、音乐和音效独立控制；不会改系统音量。
+
+三、界面配置
+编辑“自定义资产/ui.json”，例如：
+{
+  "title": "DDL · 截止之前",
+  "ink": "#0E1624",
+  "paper": "#E0DEC4",
+  "accent": "#33B8B8"
+}
+title须为单行，最多12个字符，不接受换行、制表符等控制字符；ink用于主面板，paper用于主要文字，accent用于主操作。
+按钮文字会按背景亮度选择黑/白以提高对比；普通说明文字仍需你们确保paper和ink清晰可读。
+只支持以上字段；字体、布局、字号层级、菜单结构和新增UI图片不是该JSON的控制范围。
+字体目前随Unity打包，换字体需在工程内修改并重新构建。保持中文字符覆盖和现有字体许可证。
+
+四、关卡、剧情与功能参数
+把最新 RoomLab 3.0.0 build11 导出的JSON或ZIP放入“关卡导入”。用键盘方向键连续输入 ↑↑↓↓←→←→ 打开隐藏开发页，再点击“替换导入”选择文件；必须使用 Arrow 方向键，W/A/S/D 不代替这组按键。
+ZIP推荐用于带自定义图片的关卡；JSON引用相对资源时，把资源文件夹一并保留。
+取消选择、损坏文件和不支持的模块不会替换当前可用关卡。改变关卡内容后，存档按来源哈希隔离；旧存档保留。
+第一大关直接使用原11房作者Demo，房间和参数原样保留；原三主题示例仍从隐藏开发页进入。教程、恢复内置大关和导入规则切换也集中在该页；普通主菜单、暂停页与设置不再显示这些开发操作。
+方向键口令只在设计者交付文档中说明，不作为普通玩家界面提示；读取存档、正常设置和素材文件替换仍直接可用。
+
+本次关卡文件容器仍为version=2。兼容2.5.5既有模块及build11高数多节点路径：
+movable.motionPath = [{"x":10,"y":12,"seconds":0.8,"mode":"smooth"}]
+节点数0–32；整数格坐标；每段0.05–60秒；mode为linear/smooth/easeIn/easeOut。
+高数积分/求导按padId明确绑定，不再使用旧range裁剪；旧legacy机关保持原规则。
+
+自定义关卡的微剧情可写在room.notes，停滞提示使用room.nativeCampaign.softHint；不要把解法全文塞入提示。本版固定来源的32房显示文案来自独立DisplayCopy目录，详见末尾第九节。不要仅为改显示名而重写内置关卡JSON，否则来源哈希和存档身份会改变。替换对白不会生成语音。
+机关力度、温控、轨道、签到、碰撞与素材按编辑器实例参数编辑，不需改运行代码。
+新增技能或全新机关类型仍需实现C#逻辑并重新构建；本版不会加载任意脚本、DLL或插件。
+
+nativeCampaign元数据是正式游戏扩展：
+以下开关/平台/巡逻字段用于后两章；本轮authoredCourses标记的原physics章保留原作者数据，不要求补入这些数组，也不启用重做版追逐技能。
+根 nativeCampaign.id = "deadline-rework-v2" 才启用本次规则；旧deadline-night-v1继续使用旧规则。
+每章 nativeCampaign.signals 是跨房信号名称数组，例如["beta","beta2","gamma2"]。
+每房 nativeCampaign.switches 是本房开关名称数组；默认值false。
+每房 nativeCampaign.platforms、patrols 必须是数组，不用时填[]；awareness初值0–100。
+
+可变平台例子（坐标单位是32px格，y向下）：
+{"id":"paper-alpha","x":12,"y":23,"w":9,"h":1,"toY":16,"switch":"fold","seconds":2.8,"label":"α"}
+false时在x/y，true时平滑移动到toX/toY；目标未填的轴保持原位。seconds为0.1–10秒。
+跨房驱动改用signal字段；平台最多128块，宽高至少0.25，起点/终点矩形必须在房内。
+运动会载人，并在即将挤压玩家时暂停；不要用相互闭合的两平台设计无法离开的夹缝。
+图层band可为dream/haze/awake/all；dream<35、haze35–64、awake>=65。
+visibleSignal与visibleValue可控制跨房条件可见性，隐藏层不碰撞、不触发、不收集。
+旧tiles/objects/movables也可以附rework.band；隐藏碰撞体会有淡色预览，藏品只有所在层能领。
+
+控制板例子：
+对象rework={"switch":"fold","value":true,"label":"∫ α","message":"纸页展开了"}
+数学integral/derivative的该扩展优先于默认移动机关；物理thermal和水课checkin仍执行原机制，再记开关。
+跨房控制使用signal，message可写“跨房连动 · β”；只出现一次简短回声，不把内部key显示给玩家。
+清醒控制使用rework={"clarityTarget":50}，0.7秒预告后切换；若新实体压住玩家或助手，会等双方离开再生效。
+助手脉冲在已有待切换目标上减20，不会吞掉咖啡操作。clarityTarget是旧关/自定义关的兼容字段；本轮水课的一次性道具使用第八节clarityDelta，不通过反复踩座位恢复。
+
+出口条件：rework可填switch或signal与期望value（默认true），band，allSwitches，
+states={"fold":false,"released":true}，signals={"beta2":true,"gamma2":true}；各条件为“同时满足”。
+锁定时门框变暗，首次尝试过门短显提示。不要只用任意布尔门禁卡玩家，应有对应可见障碍和符号。
+本房checkins/requireAI仍生效；不要把出生点或必经路放进返回出口的触发矩形。
+
+巡逻例子：
+{"id":"hall-patrol","speed":95,"nodes":[{"x":22,"y":24.55},{"x":28,"y":24.55}]}
+每房最多4个，节点2–16，speed30–220像素/秒。只在追逐、AI启用且房间aiPolicy允许时出现。
+巡逻会预告、在端点停顿、受地形阻挡；只接触捕获，不替主助手拿藏品。
+重做版三类主助手技能分别为蓄力加速、标记旧位置后可见空间内换位、困意脉冲；本轮原作者physics章不启用额外蓄力技能。源码参数修改后需重建。
+
+弱引导与字体：
+实验设备/菜单保留Fusion Pixel；高数/水课HUD、批注、座位短标签使用霞鹜文楷1.530。
+字体文件在Assets/RoomLabNative/Resources/DiegeticFont/LXGWWenKai-Regular.ttf。
+换字体请替换工程中的字体文件并重新构建；成品旁放TTF不会被自动加载。
+保留OFL.txt。发行时不要去掉两套字体的许可；修改字体后遵守其保留名称条款。
+默认首遇提示约2–3.5秒并淡出；座位名称只在靠近时显示3.5秒，离开190px后再靠近可重看。
+平台用形状、颜色、运动表达；□为清醒、○为朦胧、◇为梦境，低透明度为另一层。
+环境标记和控制板使用相同α/β/γ等符号。长说明放暂停页，不在奔跑时连续讲解。
+
+walkthrough/targetMinutes是设计和自动输入验证记录，不是实测首次时长。
+RoomLab 3.0.0 build11保留扩展字段，但预览不会运行这套Unity专属意识、信号、巡逻和技能。
+兼容只表示导入与数据往返可用；改完后必须在这个本地试玩程序里检查路线。
+
+五、失败回退与验收
+替换文件缺失：使用内置素材。格式、尺寸、长度不合法：记录CUSTOM_ASSET_FALLBACK并使用内置素材。
+可按附带“开始前读我.txt”末尾的路径找到日志，核对CUSTOM_IMAGE_LOADED / CUSTOM_AUDIO_LOADED是否出现。
+每次先只换一组，检查待机/奔跑/跳跃/死亡、冷/热、探索/追逐、暂停/继续，再换下一组。
+换关卡后检查出生点、所有出口、门禁数量、检查点重试、保存继续和藏品领取；图片替换成功不证明关卡可通。
+有损坏素材时不要反复覆盖原包；暂时移出覆盖文件即可回退。
+
+六、文件来源
+原有美术和字体许可证继续随包保留。此次30个WAV为原创合成配乐与音效，无外部音乐采样。
+资产模板是本版本的可替换基准，不是其他游戏素材合集。
+未来替换素材请在你们的项目内记录作者、来源、许可和版本，便于后续维护与分发。
+
+七、参考经验与本版落实（方法借鉴，不复制他人资产）
+Maddy Thorson, Celeste & Forgiveness：操作容错和落地前输入缓冲。
+https://www.maddymakesgames.com/articles/celeste_and_forgiveness/index.html
+落实：保留0.1秒土狼时间、0.12秒跳跃缓冲；清理必须触发板附近的跳台；通过正常输入测试通路。
+
+Maddy Thorson, GDC Level Design Workshop: Designing Celeste：关卡教学、奖励与主题结构。
+https://www.gamedeveloper.com/design/gdc-2017-level-design-workshop
+落实：先安全使用机关，再组合；主路与可选折返藏品分离；用检查点缩短失败后的重复。
+
+Pedro Medeiros, My Thoughts on Style Consistency：分辨率、颜色与游戏世界/UI的内部一致性。
+https://saint11.art/blog/consistency/
+落实：32格与现有人物轮廓不变；Point显示；文字独立于场景；外置PNG尺寸校验；三主题各自统一。
+
+Lena Raine 关于互动音乐的原访谈：配乐结构要响应实际玩法，作曲与关卡实现一起迭代。
+https://www.destructoid.com/celeste-composer-lena-raine-talks-video-game-music-philosophy-and-upcoming-projects/
+落实：三章共享动机、不同音色；探索/追逐同步分层；机关声音有独立身份；开放音轨替换。
+
+Game Accessibility Guidelines：文字对比、视觉/声音双重提示与独立音量。
+https://gameaccessibilityguidelines.com/full-list/
+落实：主操作按钮自动选择黑白文字；AI预警持续保留声音、动作与光圈，首次技能另有一句短提示；音乐/音效分别调节。
+
+
+八、回环与资源版补充协议（优先于上面的旧版扩展说明）
+文件：关卡源文件/deadline-autosave.json，配套 assets/ 下的9份原作者SVG必须一并保留。旧deadline-guided.json、deadline-network.json、deadline-rework.json、deadline-night.json均作为历史保留版本。
+根nativeCampaign.id仍为deadline-rework-v2，network=true、guided=true；新增saveMode="contact-auto-v1"和authoredCourses=["physics"]。三个course.id为physics、guided-calculus、guided-slacker。原physics完整course未改，不套用重做版追逐/意识扩展。
+三章统一在门矩形内按交互键进入，默认E，跟随设置中的改键。只接触门不进入、不记过门自动档；按键进入后保存目标房间入口。不要求落地、不设走离来路门的额外距离。
+
+水课course.nativeCampaign.resourceAwareness=true；只在此模式把清醒度和待生效值跨房携带。
+一次性物品：type=slacker.awake，collision=false，trigger.mode=region，trigger.once=true，resetPolicy=checkpoint；rework.clarityDelta=30或-30。
+使用相对数值，不能同时再写clarityTarget。游戏本版杯子/讲义是程序矢量轮廓；数字按实际delta显示，换轮廓需改NativeReworkPresentation.cs并重新构建，不属于全局PNG覆盖槽。也可以在编辑器给该道具绑定独立图片并导出ZIP，作者绑定会优先于程序轮廓。
+新水课不放可重复设置任意清醒值的座位。旧文件clarityTarget仍按旧规则读取，互不改写。
+清醒度范围0–100，<35梦境、35–64朦胧、>=65清醒；不按时间偷偷衰减。
+room.nativeCampaign.pulseBudget为本房困意脉冲总次数，0–3整数；主线追逐取1，探索房取0。跨房再回来不会重置额度，检查点回退会恢复当时额度。
+
+走到实体旗子只会静默自动保存，不暂停、不弹选槽页。离开再碰到才产生下一条自动记录；站着不动不反复刷档。
+站在旗子旁按E，才打开6栏手动保存；选空栏或确认覆盖成功后保存，取消不写入手动槽。
+自动档保留最近3份，最新在前；手动6槽独立，不会被自动历史挤掉。主菜单/暂停读档页可切换“自动/手动”。三章共用同一关卡文件的历史与手动栏。
+水课保存当时的房间状态、一次性消耗、清醒度及待生效值、机关、收藏和跨房信号。暂停“从上个存档点开始”及R恢复当前检查点状态；读档不会赠送一份新资源。
+地图知识保留，本局藏品/分数按保存时刻恢复；研究记录收藏册保留曾领取过的条目。
+门口按交互键进入后自动保存。手动保存只在旗旁；同位未启动的AI终端先响应E，启动后同位旗才响应E，距离更近的其他道具仍按就近交互；同一次按键不会顺带过门。
+
+地图：room.graph.x/y是总图节点布局坐标；用编辑器摆好的网络坐标即可。
+当前全景展示整个当前房间；沿途总图仅显示已访问的房间小图标与实际走过的有向边。
+总图不能传送，未知房名称、位置图标不会提前露出。两种模式暂停玩家、AI和计时。设置存储默认模式。
+当前节点实心标记，实体资源存档点加小旗；高数折线像演算连线，水课用投影曲线。
+两种地图、状态条图案、字号和字体位置在NativeExplorationMap.cs/NativeAwarenessHud.cs；改布局须重新构建。
+
+本轮仍以真人首次探索约30分钟为设计目标，尚无首次真人整章计时。正常输入跑通与熟路自动耗时不能证明这个时长已达标。
+本轮准确测试结果见设计与测试/验收目录；旧版本报告不复用为本次完整结论。
+
+互动过门版本沿用deadline-autosave.json字节与deadline-autosave-progress-v1保存目录；上一自动存档版的6手动槽和3自动历史可继续使用。旧程序独立保留，不覆盖。
+
+
+九、符号房名与弱提示（本轮显示层规则）
+本轮只调整房间显示名和提示文案，不改变关卡数据、存档来源或机关行为。三章门仍按交互键进入，触旗自动保存、最近三自动档与六手动槽不变。
+文案源码：Assets/RoomLabNative/Resources/DisplayCopy/contact-auto.json。成品附“文案模板/contact-auto.json”作为编辑起点，它不是可导入关卡，也不是自定义资产ui.json。
+修改文案模板后，将文件放回上述Unity源码位置，再重新构建程序。成品不会在运行时读取旁边的文案模板；只把JSON放入自定义资产目录不会生效。图片/音频同名替换仍可直接在成品外置目录使用，不需Unity重建。
+
+根sourceSha256绑定内置deadline-autosave.json的完整字节哈希。只有contact-auto模式且来源哈希完全一致时，才使用这套显示文案；导入自己修改过的关卡会沿用作者原文，不强套内置房名。不要改sourceSha256伪装成另一个关卡，也不要改存档source字段。
+文案以courses[courseId].rooms[roomId]定位。courseId/roomId/locked中的exitId都使用稳定原ID，不要用符号名替代键。
+每房字段：originalName（原编辑器名，便于核对）、name（符号显示名）、notes（暂停手记）、objective（当前目标短句）、arrivalHint（首次进入短提示）、progressHint（机关推进反馈）、softHint（停滞提示）、locked（按出口ID填写锁门提示）。
+保持JSON格式。name在高数章用短希腊字母及组合符号，物理与水课采用环境短名/图形记号，保证章内辨认和门牌/地图/存档的对应关系；不要把整句解法写进名字。提示写玩家眼前可感知的变化或情绪，保留必要操作信息，避免逐步命令。
+文案层不写回Raw关卡，也不改存档里的课程/房间身份。修改提示不会生成声音或新增触发机制；显示时机仍由游戏逻辑决定。
+文案修改后检查门牌、当前房名、两种地图、存读档页、暂停页和短提示，确保符号字体覆盖、长度和换行清楚。

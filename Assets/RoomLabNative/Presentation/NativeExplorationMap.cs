@@ -67,6 +67,7 @@ namespace RoomLab.Native
                 Game.IsGuided && Game.IsAwarenessResource
                     ? MapRoomName(Game.Room) + "    本房剩余：" + MapResourceCount(Game.Room.Id)
                     : explored ? MapRoomName(Game.Room) : "当前场景", 11, Teal, TextAnchor.MiddleLeft);
+            if(NativeDisplayCopy.Active(Game)&&NoteFont!=null)location.font=NoteFont;
             location.text = MapCaption(location.text, location, width - 38);
 
             Rect opening = new Rect(16, 82, width - 32, height - 133);

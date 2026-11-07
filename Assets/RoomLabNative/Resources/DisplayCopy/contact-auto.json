@@ -1,0 +1,365 @@
+{
+  "version": 1,
+  "sourceSha256": "523b045170f88881cf14cc4a401f023f76f5169a16aaf8f98b5bb2a9ca472ab5",
+  "courses": {
+    "physics": {
+      "rooms": {
+        "jet-room": {
+          "originalName": "喷气起跳",
+          "name": "起风",
+          "notes": "风声从脚下传来。",
+          "objective": "",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "风还在往上走。",
+          "locked": {}
+        },
+        "rail-room": {
+          "originalName": "电磁加速",
+          "name": "磁轨",
+          "notes": "这道光还通着电。",
+          "objective": "",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "脚下的光，一直亮到那头。",
+          "locked": {}
+        },
+        "room-mv0w2u2r-qkzk40": {
+          "originalName": "冰 跑酷",
+          "name": "薄冰",
+          "notes": "脚印留不住。",
+          "objective": "",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "冰面没刚才那么亮了。",
+          "locked": {}
+        },
+        "room-mv0wnwtu-dxmqc7": {
+          "originalName": "冲刺锻炼",
+          "name": "一瞬",
+          "notes": "差一点就够到了。",
+          "objective": "",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "中间那段，可以很短。",
+          "locked": {}
+        },
+        "room-mvaapi4e-crbnks": {
+          "originalName": "冰引入",
+          "name": "温差",
+          "notes": "冰面也会改主意。",
+          "objective": "",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "同一块冰，两副样子。",
+          "locked": {}
+        },
+        "room-mvaapqu4-6xob5m": {
+          "originalName": "喷气跳跃熟悉",
+          "name": "连风",
+          "notes": "这阵风还没完。",
+          "objective": "",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "远处还有风声。",
+          "locked": {}
+        },
+        "room-mvndxqmk-k9xt7n": {
+          "originalName": "8",
+          "name": "余热",
+          "notes": "冰下还有一点光。",
+          "objective": "",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "原来的路，没全消失。",
+          "locked": {}
+        },
+        "room-mvnf7n9x-0t6ggh": {
+          "originalName": "AI追逐1",
+          "name": "催交",
+          "notes": "后面那位也着急了。",
+          "objective": "",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "脚步声越来越近。",
+          "locked": {}
+        },
+        "room-mvnf7nel-q8wikm": {
+          "originalName": "新房间 10",
+          "name": "候场",
+          "notes": "这份还没收走。",
+          "objective": "",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "旁边那盏灯，还没亮。",
+          "locked": {}
+        },
+        "room-mvnf7nm5-vf4wbu": {
+          "originalName": "新房间 12",
+          "name": "擦线",
+          "notes": "还差一点。",
+          "objective": "",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "出口就在这一页。",
+          "locked": {}
+        },
+        "room-mvnkr562-1ihb3g": {
+          "originalName": "XX",
+          "name": "末页",
+          "notes": "后面居然还有一页。",
+          "objective": "",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "走过的地方，还认得。",
+          "locked": {}
+        }
+      }
+    },
+    "guided-calculus": {
+      "rooms": {
+        "network-calculus-01": {
+          "originalName": "01 · 等号的另一端",
+          "name": "∫α",
+          "notes": "同一个α，在两处。",
+          "objective": "纸边还悬着。",
+          "arrivalHint": "纸边还悬着。",
+          "progressHint": "",
+          "softHint": "α的墨迹连得上。",
+          "locked": {}
+        },
+        "network-calculus-02": {
+          "originalName": "02 · 演算中庭",
+          "name": "Σ",
+          "notes": "怎么又回这层了。",
+          "objective": "隔页还透着光。",
+          "arrivalHint": "隔页还透着光。",
+          "progressHint": "",
+          "softHint": "β那边，还留着笔迹。",
+          "locked": {
+            "network-calculus-02-out-paper": "β这一笔，还没接上。",
+            "network-calculus-02-out-beta": "β这一笔，还没接上。",
+            "network-calculus-02-out-gamma": "γ的折痕还没展开。"
+          }
+        },
+        "network-calculus-03": {
+          "originalName": "03 · α的两面",
+          "name": "α",
+          "notes": "翻过去，还是这张纸。",
+          "objective": "另一面也写着α。",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "纸边的记号，没变。",
+          "locked": {
+            "network-calculus-03-out-underpass": "β这一笔，还没接上。"
+          }
+        },
+        "network-calculus-04": {
+          "originalName": "04 · β在隔页",
+          "name": "β",
+          "notes": "隔页的β，露着一角。",
+          "objective": "这一笔还没落稳。",
+          "arrivalHint": "",
+          "progressHint": "隔壁像是挪了桌子。",
+          "softHint": "门边也印着β。",
+          "locked": {
+            "network-calculus-04-out-hub": "β这一笔，还没接上。",
+            "network-calculus-04-out-gallery": "γ的折痕还没展开。"
+          }
+        },
+        "network-calculus-05": {
+          "originalName": "05 · 折纸库的夹层",
+          "name": "α↑",
+          "notes": "纸堆底下，还有一层。",
+          "objective": "这张纸比别的宽。",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "纸页动时，上面也在动。",
+          "locked": {}
+        },
+        "network-calculus-06": {
+          "originalName": "06 · γ的阁楼",
+          "name": "γ",
+          "notes": "楼上那页，露着一个角。",
+          "objective": "γ就在折痕边。",
+          "arrivalHint": "",
+          "progressHint": "来路的折痕，变了。",
+          "softHint": "来路和这里，挨得很近。",
+          "locked": {
+            "network-calculus-06-out-hub": "γ的折痕还没展开。",
+            "network-calculus-06-out-gallery": "γ的折痕还没展开。"
+          }
+        },
+        "network-calculus-07": {
+          "originalName": "07 · 地下演算",
+          "name": "dδ",
+          "notes": "桌底也留着空白。",
+          "objective": "δ有正反两面。",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "上下两层，用着同一张纸。",
+          "locked": {}
+        },
+        "network-calculus-08": {
+          "originalName": "08 · 请沿证明经过",
+          "name": "β↔γ",
+          "notes": "这页不交也行。",
+          "objective": "都走到这了。",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "脚步声还在另一头。",
+          "locked": {}
+        },
+        "network-calculus-09": {
+          "originalName": "09 · 提交之前",
+          "name": "β+γ",
+          "notes": "还没敢写“最终版”。",
+          "objective": "两道墨迹，在这里相遇。",
+          "arrivalHint": "还有一页。",
+          "progressHint": "",
+          "softHint": "β和γ，都留过痕迹。",
+          "locked": {}
+        },
+        "network-calculus-10": {
+          "originalName": "10 · 最后一行会改写",
+          "name": "αβγ",
+          "notes": "最后一行，又绕回来了。",
+          "objective": "这张纸还没写完。",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "刚才脚下那页，也是下一层的顶。",
+          "locked": {}
+        }
+      }
+    },
+    "guided-slacker": {
+      "rooms": {
+        "network-slacker-01": {
+          "originalName": "01 · 剩下半杯",
+          "name": "半杯",
+          "notes": "杯沿还有点温。",
+          "objective": "离下课还有一会儿。",
+          "arrivalHint": "杯沿还有点温。",
+          "progressHint": "",
+          "softHint": "杯底只剩这些了。",
+          "locked": {}
+        },
+        "network-slacker-02": {
+          "originalName": "02 · 座位之间",
+          "name": "空座",
+          "notes": "像是坐过这里。",
+          "objective": "黑板那边还亮着。",
+          "arrivalHint": "黑板那边还亮着。",
+          "progressHint": "",
+          "softHint": "楼上那一点白，还没擦掉。",
+          "locked": {
+            "network-slacker-02-exit-028": "○那页还空着。",
+            "network-slacker-02-exit-029": "◇那页还空着。"
+          }
+        },
+        "network-slacker-03": {
+          "originalName": "03 · 擦不掉的一行",
+          "name": "板书□",
+          "notes": "老师擦得真快。",
+          "objective": "只剩这一行。",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "清醒一点，字才不晃。",
+          "locked": {
+            "network-slacker-03-exit-014": "□那页还空着。",
+            "network-slacker-03-exit-015": "◇那页还空着。"
+          }
+        },
+        "network-slacker-04": {
+          "originalName": "04 · 画框外侧",
+          "name": "画背",
+          "notes": "正面看着挺普通。",
+          "objective": "边角露出一点空白。",
+          "arrivalHint": "",
+          "progressHint": "那一笔还在。",
+          "softHint": "背面好像少了一笔。",
+          "locked": {
+            "network-slacker-04-exit-017": "背面还留着一点空白。"
+          }
+        },
+        "network-slacker-05": {
+          "originalName": "05 · 漏光的幻灯片",
+          "name": "漏光○",
+          "notes": "眼睛睁太大，反而花了。",
+          "objective": "有一点困，刚刚好。",
+          "arrivalHint": "",
+          "progressHint": "光留在纸上了。",
+          "softHint": "半睁着眼，反倒看得清。",
+          "locked": {
+            "network-slacker-05-exit-013": "◇那页还空着。"
+          }
+        },
+        "network-slacker-06": {
+          "originalName": "06 · 后门茶水间",
+          "name": "茶水",
+          "notes": "纸杯还在。",
+          "objective": "这里没人催。",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "地图上，还留着哪些？",
+          "locked": {}
+        },
+        "network-slacker-07": {
+          "originalName": "07 · 梦写在背面",
+          "name": "梦字◇",
+          "notes": "梦里那页居然有字。",
+          "objective": "一睁眼，字就淡了。",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "困意里，字才完整。",
+          "locked": {
+            "network-slacker-07-exit-018": "◇那页还空着。",
+            "network-slacker-07-exit-019": "◇那页还空着。"
+          }
+        },
+        "network-slacker-08": {
+          "originalName": "08 · 名字从远处传来",
+          "name": "点名",
+          "notes": "后排那位。对，就你。",
+          "objective": "脚步声近了。",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "地面还看得清。",
+          "locked": {}
+        },
+        "network-slacker-09": {
+          "originalName": "09 · 三页叠在一起",
+          "name": "叠页",
+          "notes": "三张纸，边角对上了。",
+          "objective": "快下课了。",
+          "arrivalHint": "快下课了。",
+          "progressHint": "",
+          "softHint": "空着的地方，还能认出来。",
+          "locked": {
+            "network-slacker-09-exit-014": "三页里，还有空白。"
+          }
+        },
+        "network-slacker-10": {
+          "originalName": "10 · 铃声之后",
+          "name": "下课",
+          "notes": "铃响了，书还没合上。",
+          "objective": "门外有人收书包。",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "那边的光没关。",
+          "locked": {}
+        },
+        "network-slacker-11": {
+          "originalName": "11 · 无人放映的画廊",
+          "name": "散场",
+          "notes": "投影停在最后一张。",
+          "objective": "这间没人点名。",
+          "arrivalHint": "",
+          "progressHint": "",
+          "softHint": "另一头也有光。",
+          "locked": {}
+        }
+      }
+    }
+  }
+}

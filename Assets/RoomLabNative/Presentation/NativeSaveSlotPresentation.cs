@@ -128,6 +128,7 @@ namespace RoomLab.Native
         {
             value=value??"";int divider=value.IndexOf('·');return SlotText(divider<0?value:value.Substring(divider+1),19);
         }
+        string SlotRoomDisplayName(NativeSaveSlot slot)=>SlotRoomName(NativeDisplayCopy.SavedRoom(Game,slot.Data,SlotField(slot,"room")));
         static string SlotChapter(string kind)=>kind=="physics"?"物理":kind=="calculus"?"高数":kind=="slacker"?"水课":"课程";
         static string SlotField(NativeSaveSlot slot,string name)
         {
@@ -153,6 +154,7 @@ namespace RoomLab.Native
         Text SlotLabel(Transform parent,float x,float y,float width,float height,string text,int size,Color color)
         {
             var label=NativeUiKit.AbsLabel(parent,x,y,width,height,text,size,color,TextAnchor.MiddleLeft);
+            if(NativeDisplayCopy.Active(Game))label.font=NoteFont??font;
             label.horizontalOverflow=HorizontalWrapMode.Overflow;label.verticalOverflow=VerticalWrapMode.Truncate;
             return label;
         }
@@ -183,7 +185,7 @@ namespace RoomLab.Native
                 else if(!slot.Readable)SlotLabel(rect,9,24,cardWidth-18,34,saving?"无法读取，可覆盖":"无法读取",11,Orange);
                 else
                 {
-                    SlotLabel(rect,9,20,cardWidth-18,16,SlotRoomName(SlotField(slot,"room")),11,Paper);
+                    SlotLabel(rect,9,20,cardWidth-18,16,SlotRoomDisplayName(slot),11,Paper);
                     SlotLabel(rect,9,36,cardWidth-18,14,SlotProgress(slot),10,new Color(.68f,.79f,.79f));
                     SlotLabel(rect,9,50,cardWidth-18,16,SlotTime(slot),10,new Color(.55f,.65f,.68f));
                 }
@@ -205,7 +207,7 @@ namespace RoomLab.Native
             NativeUiKit.MarkBackdrop(panel.gameObject);panel.gameObject.AddComponent<Image>().color=Ink;
             var slot=SaveSlots.Read(overwriteSlot);
             NativeUiKit.Label(panel,"覆盖存档 "+overwriteSlot.ToString("00")+"？",20,Paper);
-            NativeUiKit.Label(panel,slot.Readable?SlotChapter(SlotField(slot,"kind"))+" · "+SlotRoomName(SlotField(slot,"room"))+"\n"+SlotTime(slot):"这个位置已经有一份记录。",12,Teal);
+            var summary=NativeUiKit.Label(panel,slot.Readable?SlotChapter(SlotField(slot,"kind"))+" · "+SlotRoomDisplayName(slot)+"\n"+SlotTime(slot):"这个位置已经有一份记录。",12,Teal);if(NativeDisplayCopy.Active(Game))summary.font=NoteFont??font;
             var row=NativeUiKit.Row(panel,"Overwrite choice",30,10);
             NativeUiKit.Button(row,"再想想",()=>{if(Time.unscaledTime>=saveSlotReadyAt)Show("save-slots");},12,30);
             NativeUiKit.Button(row,"覆盖并保存",ConfirmOverwriteSlot,12,30,Teal);

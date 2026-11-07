@@ -33,7 +33,7 @@ namespace RoomLab.Native
             if(!HasChapterFlow)return;
             if(storyRoom!=Game.Room.Id){storyRoom=Game.Room.Id;storyUntil=Game.Elapsed+8;}
             if(hud!=null)hud.text=Game.Room.Name+"   "+Game.Tokens+"   ↔ "+(Game.Player.freeDash?"●":"○")+" +"+Game.Charges+"   ◇ "+Game.CampaignCollected;
-            if(Game.IsRework||Game.IsContactAutosave){if(hud!=null&&Game.Course.Kind!="physics"){hud.font=NoteFont??font;hud.fontSize=13;}WeakGuide();return;}if(hint!=null&&!tainted&&Game.RespawnRemaining<=0){
+            if(Game.IsRework||Game.IsContactAutosave){if(hud!=null&&(Game.Course.Kind!="physics"||NativeDisplayCopy.Active(Game))){hud.font=NoteFont??font;hud.fontSize=13;}WeakGuide();return;}if(hint!=null&&!tainted&&Game.RespawnRemaining<=0){
                 string skill=Game.CampaignSkill=="charge"?"AI 过载预警 · 准备冲刺！":Game.CampaignSkill=="burst"?"AI 过载 · 继续移动":Game.CampaignSkill=="recover"?"AI 散热 · 可以折返带路":Game.AI.warning!=null?"坐标出口正在闪烁 · 让开落点":"";
                 string line=Game.IsRework&&Game.ReworkNoticeUntil>Game.Elapsed?Game.ReworkNotice:Game.Elapsed<storyUntil?(string)Game.Room.Raw["notes"]:Game.CampaignObjective;
                 if(Game.NearbyInteraction!=null&&!Game.AI.active)line=InteractionPrompt(Game.NearbyInteraction);
@@ -48,7 +48,7 @@ namespace RoomLab.Native
         }
         void CampaignSelection(Transform panel){
             NativeUiKit.Label(panel,"作业待办",18,Paper);
-            string[] names={"01 实验楼的回路 · 借风、熔开与折返","02 纸页回廊 · 折返、连动与扣环","03 醒与梦的回廊 · 选择、余量与归路"};
+            string[] names={"物理","高数","水课"};
             for(int i=0;i<3;i++){string id=CampaignIds[i];NativeUiKit.Button(panel,names[i],()=>{LoadAutosaveCourse(id);ForgetImport();Show("menu");},12,25,Teal);}
         }
         void BuildCollection(Transform root){
@@ -60,7 +60,11 @@ namespace RoomLab.Native
         }
         void CampaignPause(Transform panel,string state){
             if(!HasChapterFlow)return;
-            if(!Game.IsContactAutosave||!Game.IsAuthoredPhysics){var story=NativeUiKit.Label(panel,(string)Game.Room.Raw["notes"],12,Paper);NativeUiKit.Size(story,height:40);if(Game.IsRework){story.font=NoteFont??font;story.fontSize=14;NativeUiKit.Label(panel,Game.CampaignObjective,11,Teal);}}
+            if(NativeDisplayCopy.Active(Game)){
+                var roomName=NativeUiKit.Label(panel,Game.Room.Name,15,Teal);roomName.font=NoteFont??font;
+                var story=NativeUiKit.Label(panel,NativeDisplayCopy.Text(Game,"notes"),13,Paper);story.font=NoteFont??font;
+                string objective=NativeDisplayCopy.Text(Game,"objective");if(!string.IsNullOrWhiteSpace(objective)){var line=NativeUiKit.Label(panel,objective,12,Teal);line.font=NoteFont??font;}
+            }else if(!Game.IsContactAutosave||!Game.IsAuthoredPhysics){var story=NativeUiKit.Label(panel,(string)Game.Room.Raw["notes"],12,Paper);NativeUiKit.Size(story,height:40);if(Game.IsRework){story.font=NoteFont??font;story.fontSize=14;NativeUiKit.Label(panel,Game.CampaignObjective,11,Teal);}}
             if(state=="won"){
                 var chapters=CurrentChapterIds;int index=Array.IndexOf(chapters,Game.Course.Id);NativeUiKit.Label(panel,"用时 "+TimeSpan.FromSeconds(Game.Elapsed).ToString(@"mm\:ss")+"   重试 "+Game.Deaths+"   ◇ "+Game.CampaignCollected,12,Paper);
                 NativeUiKit.Label(panel,index==2?"交完了。走，吃点东西。":"这门交了，还有下一门。",12,Teal);

@@ -1,5 +1,7 @@
 # 更新记录
 
+- [2026-11-07：符号房名与弱提示版](Handoff/SYMBOLS_20261107.md)
+
 - [2026-11-07：DDL Demo v2 互动过门版源码发布](Handoff/DDL_DEMO_V2_RELEASE_20261107.md)
 
 - [2026-W45：三主题Demo与截止之前本地初期版](changelog/2026-W45.md)

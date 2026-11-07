@@ -96,7 +96,7 @@ namespace RoomLab.Native
                 }}
             foreach(var m in r.Movables)moves.Add(m.Id,Add(m.Id,WorldArt("common.solid","terrain_pickups-platformMiddle",4),Game.MovableRect(m),2));
             player=Add("Student visual / separate 24x28 motor",Art("player","idle","player-idle00",null,true),Game.Player.Rect,10);ai=Add("CRT assistant",Art("ai","idle","ai-idle00"),new MotionRect(null,0,0,24,28),9);
-            if(Game.IsRework)reworkPresentation=new NativeReworkPresentation(Game,Root.transform,name=>Pixel(name,true),o=>!Builtin&&Bound(o.Type,RenderState(o),o)!=null);if(Game.IsCampaign)campaignEffects=new NativeCampaignEffects(Game,Root.transform);if(Game.Course.Kind=="calculus")mathPresentation=new NativeMathPresentation(Game,Root.transform,authorBackdrop);
+            if(Game.IsRework)reworkPresentation=new NativeReworkPresentation(Game,Root.transform,name=>Pixel(name,true),o=>!Builtin&&Bound(o.Type,RenderState(o),o)!=null);if(Game.IsCampaign||NativeDisplayCopy.Active(Game))campaignEffects=new NativeCampaignEffects(Game,Root.transform);if(Game.Course.Kind=="calculus")mathPresentation=new NativeMathPresentation(Game,Root.transform,authorBackdrop);
             if(Game.Course.Kind=="slacker")dreamPresentation=new NativeDreamPresentation(Game,Root.transform);
             if(Game.IsGuided)guidedPresentation=new NativeGuidedPresentation(Game,Root.transform);
         }
