@@ -16,6 +16,9 @@ const Nodes = require('../../project/rail-nodes.cjs'),
   Motion = require('../../project/brick-motion.cjs'),
   BrickPanel = require('../brick-node-panel.cjs'),
   Regions = require('../region-handles.cjs');
+const Native = require('../../project/native-compat.cjs'),
+  NativePanel = require('../native-panel.cjs'),
+  NativeDraw = require('../native-draw.cjs');
 const brickRef = (brick) => ({ kind: 'movables', id: brick.id });
 const RoomKeys = require('../room-keys.cjs');
 const nodeTools = ['path', 'brick-path'];
@@ -52,6 +55,23 @@ function render(app) {
   }
   $('app').innerHTML =
     `<div class="room-shell ${s.keyHints ? 'show-key-hints' : ''}"><div class="room-title"><div><h1>${esc(r.name)}</h1><span class="room-size-tag">${r.cols} × ${r.rows} 格</span></div><div class="actions"><button id="back-course">接线板</button><button id="room-traces">试玩路径</button><button id="room-help">⌨ 按键说明</button><button id="room-hints" aria-pressed="${s.keyHints}">按键提示</button><button id="toggle-inspector">${s.inspectorHidden ? '显示属性' : '收起属性'}</button><button id="play-room" aria-label="试玩此房" class="primary">▶ 试玩此房</button></div></div><div class="room-tabs" aria-label="本大关房间"><span class="room-tabs-label">${esc(c.name)} / 房间</span><div>${c.rooms.map((v) => `<button data-nav-room="${esc(v.id)}" aria-current="${v.id === r.id ? 'page' : 'false'}" class="${v.id === r.id ? 'active' : ''}" title="${esc(v.notes)}">${esc(v.name)}</button>`).join('')}</div></div><div class="room-workspace ${s.inspectorHidden ? 'inspector-hidden' : ''}"><section class="panel canvas-panel room-canvas-panel"><div class="room-toolstrip"><div class="actions"><button data-tool="select">↖ 选择<span class="key-hint" aria-hidden="true">${RoomKeys.tools.select}</span></button><button data-tool="marquee">▧ 框选<span class="key-hint" aria-hidden="true">${RoomKeys.tools.marquee}</span></button><button data-tool="erase">⌫ 擦除<span class="key-hint" aria-hidden="true">${RoomKeys.tools.erase}</span></button><button id="undo">撤销<span class="key-hint" aria-hidden="true">Ctrl Z</span></button><button id="redo">重做<span class="key-hint" aria-hidden="true">Ctrl Y</span></button></div><div class="actions"><button id="fit-room">适应房间</button><label class="check"><input id="targets" type="checkbox" checked>关联目标</label></div></div><div class="block-palette" aria-label="方块选择栏">${Palette.render(app, c)}</div><div class="canvas-heading"><span id="tool-label"></span><span><span id="room-pointer"></span> · <span id="room-zoom"></span></span></div><div class="canvas-wrap"><canvas id="room-canvas" width="960" height="540" tabindex="0" aria-label="房间编辑画布"></canvas></div></section><aside class="panel inspector form" id="room-inspector"></aside></div></div>`;
+  if (Native.active(app.store.project, app.course())) {
+    const bar = document.createElement('div');
+    bar.className = 'native-toolbar actions';
+    bar.innerHTML =
+      '<span>测试版扩展</span>' +
+      [
+        ['platforms', '平台'],
+        ['patrols', '巡逻'],
+        ['signs', '标记'],
+      ]
+        .map(([k, t]) => '<button data-tool="native-' + k + '">＋' + t + '</button>')
+        .join('') +
+      '<label>清醒层 <select id="native-band"><option value="all">全部叠加</option><option value="awake">清醒</option><option value="haze">朦胧</option><option value="dream">梦境</option></select></label>';
+    $('app').querySelector('.block-palette').after(bar);
+    $('native-band').value = s.nativeBand || 'all';
+    $('native-band').onchange = () => (s.nativeBand = $('native-band').value);
+  }
   const settingsButton = document.createElement('button');
   settingsButton.id = 'room-settings';
   settingsButton.textContent = '房间设置';
@@ -130,6 +150,7 @@ function render(app) {
         s.multiSelection.length ? s.multiSelection : s.selection ? [s.selection] : [],
       ),
       selectedRailNodeId: s.railNodeId,
+      nativeBand: s.nativeBand || 'all',
       selectedBrickNodeIndex: s.brickNodeOwner === s.selection?.id ? s.brickNodeIndex : null,
       hover,
       targets: $('targets')?.checked,
@@ -276,7 +297,7 @@ function render(app) {
       );
   };
   const regionHit = (e) => {
-    if (s.tool !== 'select' || s.selection?.kind !== 'zones') return null;
+    if (s.tool !== 'select' || !['zones', 'platforms'].includes(s.selection?.kind)) return null;
     const z = D.findItem(r, s.selection);
     if (!z || z.locked) return null;
     const p = world(e);
@@ -291,10 +312,11 @@ function render(app) {
   const item = () => D.findItem(r, s.selection);
   function hits(pos) {
     const result = [];
-    for (const kind of ['entries', 'exits', 'objects', 'movables', 'zones'])
-      for (const o of r[kind]) {
+    for (const kind of ['entries', 'exits', 'objects', 'movables', ...Native.kinds, 'zones'])
+      for (const [i, item] of Native.list(r, kind).entries()) {
+        const o = Native.rect(kind, item);
         if (pos.x >= o.x && pos.x < o.x + (o.w || 1) && pos.y >= o.y && pos.y < o.y + (o.h || 1))
-          result.push({ kind, id: o.id });
+          result.push({ kind, id: Native.identity(item, i) });
       }
     if (r.tiles.some((t) => t.x === pos.x && t.y === pos.y))
       result.push({ kind: 'tiles', x: pos.x, y: pos.y });
@@ -330,6 +352,15 @@ function render(app) {
       return;
     }
     if (pos.x < 0 || pos.y < 0 || pos.x >= r.cols || pos.y >= r.rows) return;
+    if (s.tool.startsWith('native-')) {
+      const kind = s.tool.slice(7);
+      if (Native.kinds.includes(kind)) {
+        s.selection = Native.create(r, kind, pos);
+        stroke.nodeAdded = true;
+        s.nodeReturnTool = 'select';
+      }
+      return;
+    }
     if (s.tool === 'tile') {
       if (!r.tiles.some((t) => t.x === pos.x && t.y === pos.y))
         r.tiles.push({ ...pos, collision: true });
@@ -339,6 +370,11 @@ function render(app) {
       r.tiles = r.tiles.filter((t) => t.x !== pos.x || t.y !== pos.y);
       const covers = (o) =>
         pos.x >= o.x && pos.x < o.x + (o.w || 1) && pos.y >= o.y && pos.y < o.y + (o.h || 1);
+      for (const kind of Native.kinds)
+        if (r.nativeCampaign)
+          r.nativeCampaign[kind] = Native.list(r, kind).filter(
+            (o) => o.locked || !covers(Native.rect(kind, o)),
+          );
       const removed = new Set(r.objects.filter(covers).map((o) => o.id));
       r.objects = r.objects.filter((o) => !removed.has(o.id));
       const gone = new Set(r.movables.filter(covers).flatMap((b) => Motion.groupMembers(r, b)));
@@ -469,6 +505,15 @@ function render(app) {
     };
     canvas.setPointerCapture(e.pointerId);
     if (stroke.pan || rightAction) return;
+    const nativeNode =
+      !e.shiftKey &&
+      ['select', 'marquee'].includes(s.tool) &&
+      s.multiSelection.length <= 1 &&
+      NativeDraw.hitNode(r, s.selection, world(e), s.roomView.scale);
+    if (nativeNode) {
+      stroke.nativeNode = nativeNode;
+      return;
+    }
     const brickNode = brickNodeHit(e);
     if (brickNode && !e.shiftKey && s.multiSelection.length <= 1) {
       s.brickNodeOwner = s.selection.id;
@@ -505,7 +550,12 @@ function render(app) {
     const handle = s.multiSelection.length > 1 ? null : regionHit(e);
     if (handle) {
       const z = D.findItem(r, s.selection);
-      stroke.resize = { id: z.id, corner: handle.id, origin: { x: z.x, y: z.y, w: z.w, h: z.h } };
+      stroke.resize = {
+        kind: s.selection.kind,
+        id: z.id,
+        corner: handle.id,
+        origin: { x: z.x, y: z.y, w: z.w, h: z.h },
+      };
       return;
     }
     const node = s.multiSelection.length > 1 ? null : nodeHit(e);
@@ -563,6 +613,22 @@ function render(app) {
       if (Select.move(r, s.multiSelection, dx, dy)) stroke.last = pos;
       return;
     }
+    if (stroke.nativeNode) {
+      const o = Native.get(r, stroke.nativeNode),
+        p = world(e),
+        snap = (n) => Math.round(n * (e.altKey ? 100 : 2)) / (e.altKey ? 100 : 2);
+      if (stroke.nativeNode.kind === 'patrols') {
+        o.nodes[stroke.nativeNode.index] = {
+          ...o.nodes[stroke.nativeNode.index],
+          x: clamp(snap(p.x), 0.5, r.cols - 0.5),
+          y: clamp(snap(p.y), 0.5, r.rows - 0.5),
+        };
+      } else {
+        o.toX = clamp(snap(p.x - 0.5), 0, r.cols - o.w);
+        o.toY = clamp(snap(p.y - 0.5), 0, r.rows - o.h);
+      }
+      return;
+    }
     if (stroke.node) {
       Nodes.move(stroke.node.owner, stroke.node.id, world(e), r, e.altKey ? 0.01 : 0.5);
       canvas.style.cursor = 'grabbing';
@@ -577,7 +643,7 @@ function render(app) {
       return;
     }
     if (stroke.resize) {
-      const zone = r.zones.find((z) => z.id === stroke.resize.id);
+      const zone = Native.get(r, stroke.resize);
       Object.assign(zone, Regions.resize(stroke.resize.origin, stroke.resize.corner, world(e), r));
       for (const [id, value] of [
         ['object-x', zone.x],
@@ -602,7 +668,9 @@ function render(app) {
           const members = Motion.groupMembers(r, o);
           if (members.some((member) => member.locked)) return;
           Select.move(r, members.map(brickRef), dx, dy);
-        } else if (s.selection.kind === 'movables') Motion.moveOwner(o, o.x + dx, o.y + dy);
+        } else if (Native.kinds.includes(s.selection.kind))
+          Native.move(s.selection.kind, o, dx, dy);
+        else if (s.selection.kind === 'movables') Motion.moveOwner(o, o.x + dx, o.y + dy);
         else if (o.type === 'physics.rail') Nodes.moveOwner(o, o.x + dx, o.y + dy);
         else {
           o.x += dx;
@@ -726,6 +794,31 @@ function render(app) {
   inspector(app, r, setTool);
 }
 function inspector(app, r, setTool) {
+  const host = $('room-inspector'),
+    ref = app.state.selection,
+    o = ref && D.findItem(r, ref);
+  if (ref && Native.kinds.includes(ref.kind) && app.state.multiSelection.length <= 1) {
+    NativePanel.entity(app, r, ref, host);
+    return;
+  }
+  baseInspector(app, r, setTool);
+  if (app.state.multiSelection.length > 1) return;
+  if (o) {
+    if (
+      Native.active(app.store.project, app.course()) &&
+      o.rework &&
+      ['slacker.awake', 'calculus.integral', 'calculus.derivative'].includes(o.type) &&
+      app.state.inspectorTab === 'behavior'
+    ) {
+      const form = $('object-form');
+      if (form)
+        form.innerHTML =
+          '<p class="hint">此对象按测试版扩展规则运行；请展开下方设置。旧版加速／机关砖参数不代表测试版效果。</p>';
+    }
+    NativePanel.rulesPanel(app, r, o, host);
+  } else NativePanel.room(app, r, host);
+}
+function baseInspector(app, r, setTool) {
   app.nodePanelRefresh = null;
   const s = app.state,
     host = $('room-inspector'),

@@ -126,6 +126,7 @@ function prepare(
       return Object.fromEntries(Object.entries(v).map(([k, x]) => [map.get(k) || k, remap(x)]));
     return v;
   }
+  require('./native-compat.cjs').importContext(result, source, course, from, room, options);
   const imported = remap(room),
     base = original.name || '导入房间';
   let name = base,

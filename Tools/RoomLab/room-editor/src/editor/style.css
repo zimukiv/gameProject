@@ -1633,3 +1633,37 @@ body.room-editing main {
     max-width: none;
   }
 }
+
+.room-canvas-panel:has(.native-toolbar) {
+  grid-template-rows: 40px 96px auto 28px minmax(0, 1fr);
+}
+.native-toolbar {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-bottom: 1px solid #355063;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.native-toolbar select {
+  width: auto;
+}
+.native-panel {
+  margin-top: 16px;
+  padding: 10px;
+  border: 1px solid #375466;
+  border-radius: 8px;
+}
+.native-panel > summary {
+  cursor: pointer;
+  color: #8adbd7;
+  margin-bottom: 8px;
+}
+.native-panel .form {
+  gap: 8px;
+}
+.native-panel button[data-native-id] {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  margin: 6px 0;
+}

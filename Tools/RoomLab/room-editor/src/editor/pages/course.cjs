@@ -17,6 +17,8 @@ function addRoom(app, c) {
       x: 40 + (c.rooms.length % 3) * (GraphLayout.card(r).width + 30),
       y: 90 + Math.floor(c.rooms.length / 3) * (GraphLayout.card(r).height + 35),
     };
+    if (require('../../project/native-compat.cjs').active(app.store.project, c))
+      require('../../project/native-compat.cjs').initRoom(r);
     c.rooms.push(r);
   });
 }
@@ -73,6 +75,7 @@ function rooms(app, c) {
 function settings(app, c) {
   $('course-content').innerHTML =
     `<div class="panel form" style="max-width:650px">${field('大关名称', 'course-name', c.name)}${area('大关备注', 'course-notes', c.notes)}${field('默认 AI ID（不配置技能）', 'course-ai', c.aiId)}<div class="row">${field('新房间默认列数', 'course-cols', c.defaultSize.cols, { type: 'number', min: 6, max: Limits.MAX_COLS })}${field('新房间默认行数', 'course-rows', c.defaultSize.rows, { type: 'number', min: 5, max: Limits.MAX_ROWS })}</div><p class="hint">默认尺寸只影响以后创建的房间。首冲落地恢复，并计入每周期三次上限；付费库存不因落地补满。</p><button id="save-course" class="primary apply">应用大关设置</button></div>`;
+  require('../native-panel.cjs').course(app, c, $('course-content').querySelector('.form'));
   $('save-course').onclick = () => {
     const cols = Number($('course-cols').value),
       rows = Number($('course-rows').value);
@@ -315,10 +318,58 @@ function renderGraphInspector(app, c) {
     exportButton.textContent = '导出此房间（含素材）';
     exportButton.onclick = () => app.exportRoom(c.id, r.id);
     $('graph-edit').after(exportButton);
-    $('graph-copy').onclick = () =>
-      app.store.change(() => {
-        c.rooms.push(M.duplicateRoom(c, r.id));
-      });
+    $('graph-copy').onclick = () => {
+      const N = require('../../project/native-compat.cjs');
+      const copy = (independent = false) =>
+        app.store.change(() => {
+          const next = M.duplicateRoom(c, r.id);
+          if (independent) {
+            const occupied = new Set(c.nativeCampaign.signals),
+              map = {};
+            for (const rule of N.rules(next))
+              for (const name of [
+                rule.signal,
+                rule.visibleSignal,
+                ...Object.keys(rule.signals || {}),
+              ].filter(Boolean))
+                if (!map[name]) {
+                  let candidate = name.slice(0, 36) + '-副本',
+                    i = 2;
+                  while (occupied.has(candidate)) candidate = name.slice(0, 36) + '-副本' + i++;
+                  map[name] = candidate;
+                  occupied.add(candidate);
+                }
+            for (const rule of N.rules(next)) {
+              for (const key of ['signal', 'visibleSignal'])
+                if (map[rule[key]]) rule[key] = map[rule[key]];
+              if (rule.signals)
+                rule.signals = Object.fromEntries(
+                  Object.entries(rule.signals).map(([k, v]) => [map[k] || k, v]),
+                );
+            }
+            if (c.nativeCampaign.signals.length + Object.keys(map).length > 32) {
+              app.message('独立信号将超过32项，请先调整已有信号，或选择复用原信号。', true);
+              return;
+            }
+            c.nativeCampaign.signals.push(...Object.values(map));
+          }
+          c.rooms.push(next);
+        });
+      if (
+        N.active(app.store.project, c) &&
+        N.rules(r).some((x) => x.signal || x.visibleSignal || Object.keys(x.signals || {}).length)
+      )
+        modal(
+          '复制房间 · 跨房信号',
+          '<p>复用会继续控制原房间；独立会创建新信号，外部控制来源需要重新绑定。两种操作均可撤销。</p>',
+          [
+            { label: '取消' },
+            { label: '复用原信号', action: () => copy() },
+            { label: '创建独立信号', action: () => copy(true) },
+          ],
+        );
+      else copy();
+    };
     $('graph-delete').onclick = () => {
       if (c.rooms.length === 1) {
         app.message('至少保留一个房间。', true);
