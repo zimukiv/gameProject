@@ -401,6 +401,9 @@ function validate(p, { play = false } = {}) {
           if (id && !assetIds.has(id)) warnings.push('缺失实例素材：' + id);
     }
   }
+  const native = require('./native-validation.cjs').validate(p, { play });
+  errors.push(...native.errors);
+  warnings.push(...native.warnings);
   return { errors: [...new Set(errors)], warnings: [...new Set(warnings)] };
 }
 function resizeRoom(r, cols, rows) {
@@ -423,6 +426,7 @@ function resizeRoom(r, cols, rows) {
   for (const o of next.objects)
     for (const n of o.params?.path || [])
       if (n.x > cols || n.y > rows) out.push({ kind: 'path', id: o.id });
+  out.push(...require('./native-compat.cjs').outOfBounds(next, cols, rows));
   return { room: next, out };
 }
 function duplicateRoom(course, sourceId) {
@@ -446,6 +450,7 @@ function duplicateRoom(course, sourceId) {
       o.params.unlockPadId = map.get(o.params.unlockPadId) || o.params.unlockPadId;
   }
   for (const b of r.movables) if (b.padId) b.padId = map.get(b.padId) || '';
+  require('./native-compat.cjs').duplicate(r);
   return r;
 }
 function connect(course, fromRoomId, exitId, toRoomId, entryId, velocity = 'reset') {

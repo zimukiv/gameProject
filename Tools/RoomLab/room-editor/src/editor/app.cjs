@@ -513,7 +513,18 @@ class App {
     this.edges = {};
     this.acc = 0;
   }
-  startPlay(roomId, entryId) {
+  startPlay(roomId, entryId, acknowledged = false) {
+    if (require('../project/native-compat.cjs').enabled(this.store.project) && !acknowledged) {
+      modal(
+        '测试版关卡 · 试玩限制',
+        '<p>此处只运行原有基础机制，不执行测试版扩展平台、清醒层、信号、巡逻及存档规则。请导出后在测试版中验证完整效果。</p>',
+        [
+          { label: '返回编辑' },
+          { label: '仅检查基础机制', action: () => this.startPlay(roomId, entryId, true) },
+        ],
+      );
+      return;
+    }
     try {
       this.game = new Engine(this.store.project, this.course().id, roomId, entryId);
       this.traceRecorder = new Recorder(this.game);

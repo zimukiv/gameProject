@@ -80,12 +80,23 @@ function open(app, incoming, options = {}) {
         courseId,
         selections,
         $('room-import-art').checked,
+        {
+          signalMode: $('native-import-signals')?.value,
+          adoptNative: $('native-import-adopt')?.checked,
+        },
       );
-      if (plan.overwritten.length) {
+      if (plan.overwritten.length || plan.adoptedNative || plan.compatibilityWarnings?.length) {
         pending = { plan, stamp };
         $('room-import-confirm').hidden = false;
         $('room-import-impact').innerHTML =
           `<p>将覆盖 ${plan.overwritten.length} 个房间：</p><ul>${plan.overwritten.map((r) => `<li>${esc(r.name)}</li>`).join('')}</ul><p>将清理或替换 ${plan.droppedConnections} 条不兼容 / 冲突连线。现有房间 ID 和匹配的出入口会保留；本次导入可整体撤销。</p>`;
+        $('room-import-impact').innerHTML +=
+          (plan.adoptedNative
+            ? '<p>将为整个目标项目启用来源测试版规则；旧房间的运行方式可能改变。原文件不变，本次操作可撤销。</p>'
+            : '') +
+          '<ul>' +
+          (plan.compatibilityWarnings || []).map((x) => '<li>' + esc(x) + '</li>').join('') +
+          '</ul>';
         $('room-import-confirm').scrollIntoView({ block: 'nearest' });
       } else commit(plan, stamp);
     } catch (e) {
@@ -94,7 +105,7 @@ function open(app, incoming, options = {}) {
   }
   modal(
     '导入房间',
-    `<p>${esc(options.label || incoming.project.name)} · 勾选要导入的房间。默认作为独立房间追加；同名可选覆盖。</p><label>目标大关<select id="room-import-course">${app.store.project.courses.map((c) => `<option value="${esc(c.id)}" ${c.id === app.state.courseId ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></label><div class="button-row"><button id="room-import-all">全选</button><button id="room-import-invert">反选</button><span id="room-import-count"></span></div><div id="room-import-choice" class="room-import-choices"></div><label class="check"><input type="checkbox" id="room-import-art" checked>保留房间原美术</label><p class="hint">使用目标项目的移动和冲刺规则。勾选房间之间的接线一并保留，未选房间不会被导入。</p><section id="room-import-confirm" hidden><div id="room-import-impact"></div><button id="room-import-confirm-yes" class="danger">确认覆盖并导入</button><button id="room-import-confirm-no">返回选择</button></section><p id="room-import-feedback" role="status"></p>`,
+    `<p>${esc(options.label || incoming.project.name)} · 勾选要导入的房间。默认作为独立房间追加；同名可选覆盖。</p><label>目标大关<select id="room-import-course">${app.store.project.courses.map((c) => `<option value="${esc(c.id)}" ${c.id === app.state.courseId ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></label><div class="button-row"><button id="room-import-all">全选</button><button id="room-import-invert">反选</button><span id="room-import-count"></span></div><div id="room-import-choice" class="room-import-choices"></div>${require('../project/native-compat.cjs').enabled(incoming.project) ? `<label>同名跨房信号<select id="native-import-signals"><option value="">请选择处理方式</option><option value="independent">独立信号（本批导入共用新名称）</option><option value="reuse">复用目标大关同名信号</option></select></label>${!require('../project/native-compat.cjs').enabled(app.store.project) ? '<label class="check"><input type="checkbox" id="native-import-adopt">为整个目标项目启用来源测试版规则（影响旧房间）</label>' : ''}` : ''}<label class="check"><input type="checkbox" id="room-import-art" checked>保留房间原美术</label><p class="hint">使用目标项目的移动和冲刺规则。勾选房间之间的接线一并保留，未选房间不会被导入。</p><section id="room-import-confirm" hidden><div id="room-import-impact"></div><button id="room-import-confirm-yes" class="danger">确认影响并导入</button><button id="room-import-confirm-no">返回选择</button></section><p id="room-import-feedback" role="status"></p>`,
     [
       { label: '取消' },
       { label: '导入到大关', primary: true, close: false, action: importSelected },
@@ -141,6 +152,8 @@ function open(app, incoming, options = {}) {
     renderChoices();
   };
   $('room-import-art').onchange = invalidate;
+  for (const id of ['native-import-signals', 'native-import-adopt'])
+    if ($(id)) $(id).onchange = invalidate;
   $('room-import-all').onclick = () => {
     choices.forEach((_, i) => selected.add(i));
     invalidate();

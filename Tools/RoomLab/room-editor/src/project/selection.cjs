@@ -1,11 +1,12 @@
 'use strict';
 const Nodes = require('./rail-nodes.cjs');
 const Motion = require('./brick-motion.cjs');
-const kinds = ['tiles', 'objects', 'movables', 'entries', 'exits', 'zones'];
+const Native = require('./native-compat.cjs');
+const kinds = ['tiles', 'objects', 'movables', 'entries', 'exits', 'zones', ...Native.kinds];
 const key = (ref) => ref.kind + ':' + (ref.kind === 'tiles' ? ref.x + ',' + ref.y : ref.id);
 const get = (room, ref) =>
-  (room[ref.kind] || []).find((o) =>
-    ref.kind === 'tiles' ? o.x === ref.x && o.y === ref.y : o.id === ref.id,
+  Native.list(room, ref.kind).find((o, i) =>
+    ref.kind === 'tiles' ? o.x === ref.x && o.y === ref.y : Native.identity(o, i) === ref.id,
   );
 function box(room, start, end) {
   const x0 = Math.min(start.x, end.x),
@@ -13,9 +14,12 @@ function box(room, start, end) {
     x1 = Math.max(start.x, end.x) + 1,
     y1 = Math.max(start.y, end.y) + 1;
   return kinds.flatMap((kind) =>
-    room[kind]
-      .filter((o) => o.x < x1 && o.y < y1 && o.x + (o.w || 1) > x0 && o.y + (o.h || 1) > y0)
-      .map((o) => (kind === 'tiles' ? { kind, x: o.x, y: o.y } : { kind, id: o.id })),
+    Native.list(room, kind)
+      .map((o, i) => ({ o, i, box: Native.rect(kind, o) }))
+      .filter(({ box: o }) => o.x < x1 && o.y < y1 && o.x + o.w > x0 && o.y + o.h > y0)
+      .map(({ o, i }) =>
+        kind === 'tiles' ? { kind, x: o.x, y: o.y } : { kind, id: Native.identity(o, i) },
+      ),
   );
 }
 function combine(previous, incoming, mode = 'replace') {
@@ -48,7 +52,8 @@ function move(room, refs, dx, dy) {
   );
   if ([...selected].some((t) => stationary.has(t.x + dx + ',' + (t.y + dy)))) return false;
   for (const { ref, item } of members) {
-    if (item.type === 'physics.rail') Nodes.moveOwner(item, item.x + dx, item.y + dy);
+    if (Native.kinds.includes(ref.kind)) Native.move(ref.kind, item, dx, dy);
+    else if (item.type === 'physics.rail') Nodes.moveOwner(item, item.x + dx, item.y + dy);
     else if (ref.kind === 'movables') Motion.moveOwner(item, item.x + dx, item.y + dy);
     else {
       item.x += dx;
@@ -66,10 +71,17 @@ function remove(course, room, refs) {
     gone = new Set(refs.filter((r) => r.id).map((r) => r.id));
   if (room.entries.every((o) => selected.has(key({ kind: 'entries', id: o.id }))))
     throw new Error('每间房至少保留一个入口。');
-  for (const kind of kinds)
-    room[kind] = room[kind].filter(
-      (o) => !selected.has(key(kind === 'tiles' ? { kind, x: o.x, y: o.y } : { kind, id: o.id })),
+  for (const kind of kinds) {
+    const values = Native.list(room, kind).filter(
+      (o, i) =>
+        !selected.has(
+          key(kind === 'tiles' ? { kind, x: o.x, y: o.y } : { kind, id: Native.identity(o, i) }),
+        ),
     );
+    if (Native.kinds.includes(kind)) {
+      if (room.nativeCampaign) room.nativeCampaign[kind] = values;
+    } else room[kind] = values;
+  }
   course.connections = course.connections.filter(
     (w) => !gone.has(w.from.exitId) && !gone.has(w.to.entryId),
   );

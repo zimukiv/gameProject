@@ -3,7 +3,16 @@ const Import = require('./room-import.cjs'),
   M = require('./model.cjs'),
   { uid } = require('../shared/utils.cjs');
 const key = (courseId, roomId) => JSON.stringify([courseId, roomId]);
-function prepare(target, files, source, incomingFiles, courseId, choices, keepArt = true) {
+function prepare(
+  target,
+  files,
+  source,
+  incomingFiles,
+  courseId,
+  choices,
+  keepArt = true,
+  nativeOptions = {},
+) {
   const original = target.courses.find((c) => c.id === courseId);
   if (!original || !choices.length) throw new Error('请选择目标大关和至少一个房间');
   const seen = new Set(),
@@ -24,6 +33,29 @@ function prepare(target, files, source, incomingFiles, courseId, choices, keepAr
   }
   if (original.rooms.length + choices.length - targets.size > 64)
     throw new Error('导入后房间超过 64 个');
+  const Native = require('./native-compat.cjs'),
+    signalMaps = new Map();
+  if (Native.enabled(source))
+    for (const choice of choices) {
+      if (signalMaps.has(choice.courseId)) continue;
+      const from = source.courses.find((c) => c.id === choice.courseId),
+        map = {};
+      const occupied = new Set([
+        ...(original.nativeCampaign?.signals || []),
+        ...[...signalMaps.values()].flatMap(Object.values),
+      ]);
+      for (const n of from.nativeCampaign?.signals || []) {
+        let next = n,
+          i = 2;
+        if (occupied.has(n) && !['reuse', 'independent'].includes(nativeOptions.signalMode))
+          throw Error('存在同名跨房信号，请选择复用或独立导入');
+        if (nativeOptions.signalMode === 'independent')
+          while (occupied.has(next)) next = n.slice(0, 38) + '-导入' + i++;
+        map[n] = next;
+        occupied.add(next);
+      }
+      signalMaps.set(choice.courseId, map);
+    }
   let project = target,
     output = files,
     droppedConnections = 0;
@@ -39,7 +71,11 @@ function prepare(target, files, source, incomingFiles, courseId, choices, keepAr
       choice.courseId,
       choice.roomId,
       keepArt,
-      { replaceRoomId: choice.mode === 'overwrite' ? choice.targetRoomId : null },
+      {
+        ...nativeOptions,
+        signalMap: signalMaps.get(choice.courseId),
+        replaceRoomId: choice.mode === 'overwrite' ? choice.targetRoomId : null,
+      },
     );
     project = r.project;
     output = r.files;
@@ -75,6 +111,19 @@ function prepare(target, files, source, incomingFiles, courseId, choices, keepAr
     addedAssets: project.assets.length - target.assets.length,
     droppedConnections,
     overwritten: rooms.filter((r) => r.mode === 'overwrite'),
+    compatibilityWarnings: Native.enabled(source)
+      ? [
+          ...(Native.active(project,course)?Native.dependencyWarnings(course):[]),
+          ...source.courses.flatMap((c) =>
+            c.connections
+              .filter(
+                (w) => seen.has(key(c.id, w.from.roomId)) !== seen.has(key(c.id, w.to.roomId)),
+              )
+              .map(() => '部分跨房连接的另一端未导入，需重新接线'),
+          ),
+        ].filter((v, i, a) => a.indexOf(v) === i)
+      : [],
+    adoptedNative: !Native.enabled(target) && Native.enabled(project),
   };
 }
 module.exports = { prepare, key };

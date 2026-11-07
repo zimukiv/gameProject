@@ -1,4 +1,6 @@
 'use strict';
+const Native = require('../project/native-compat.cjs'),
+  NativeDraw = require('./native-draw.cjs');
 const Motion = require('../project/brick-motion.cjs');
 const Registry = require('../plugins/registry.cjs'),
   { clamp } = require('../shared/utils.cjs');
@@ -96,6 +98,7 @@ function miniature(ctx, r, x, y, w, h, padding = 4) {
       o.type === 'physics.ice' ? '#73bde4' : o.type === 'common.checkpoint' ? '#e2b85f' : '#6fd4c3';
     ctx.fillRect(o.x * T, o.y * T, T, T);
   }
+  NativeDraw.draw(ctx, r, { scale: v.scale, mini: true, targets: false });
   for (const e of r.entries) {
     ctx.fillStyle = '#83cba5';
     ctx.fillRect(e.x * T, e.y * T, T, T);
@@ -123,6 +126,7 @@ function drawRoom(
     targets = true,
     assetURL = () => null,
     grid = true,
+    nativeBand = 'all',
   } = {},
 ) {
   if (r.artBindings)
@@ -480,6 +484,8 @@ function drawRoom(
       ctx.restore();
     }
   }
+  if (!game)
+    NativeDraw.draw(ctx, r, { scale: v.scale, selection, selections, targets, band: nativeBand });
   ctx.strokeStyle = '#7ba3c4';
   ctx.strokeRect(0, 0, r.cols * T, r.rows * T);
   ctx.restore();
@@ -488,7 +494,7 @@ function findItem(r, selection) {
   if (!selection) return null;
   if (['tile', 'tiles'].includes(selection.kind))
     return r.tiles.find((t) => t.x === selection.x && t.y === selection.y);
-  return (r[selection.kind] || []).find((o) => o.id === selection.id);
+  return Native.get(r, selection);
 }
 function graphPorts(r) {
   const x = r.graph?.x || 0,

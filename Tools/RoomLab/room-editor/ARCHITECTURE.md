@@ -1,5 +1,7 @@
 # Room Lab 架构
 
+3.0.0 build12：`project/native-compat.cjs` 负责测试版扩展数据访问、移动、身份、信号重命名和导入规则；`native-validation.cjs` 对照 NativeReworkValidation 校验。`editor/native-panel.cjs` 与 `native-draw.cjs` 仅承担编辑和绘制，不运行游戏机制。原 `nativeCampaign` / `rework` 格式原地保留，项目仍是 v2；`contact-auto-v1` 的 `authoredCourses` 物理课程跳过扩展规则。内置试玩需先确认运行限制。
+
 3.0.0 build3：`Store.hasProject` 区分未开始和有效本地草稿，`load` 建立可恢复草稿；未开始时不备份占位示例。大关的 `blockDefaults` 按大关 ID 隔离，`Registry.instantiate` 将参数和选定素材写入新对象。现有对象沿用自己的参数与 v2 项目级默认值。素材按具体大关、通用或内置主题模板解析。
 
 3.0.0：`project/themes.cjs` 是主题元数据与三主题起始 factory 的唯一来源（稳定 kind：`physics` / `calculus` / `slacker`，各带序号、主题色、独立 AI ID 与起始房）。`M.example()` 继续输出旧物理基线，`M.themedExample()` 只供初次打开的 UI；`migrate` 不追加或重写旧工程课程，项目格式仍为 v2。`plugins/calculus.cjs` 与 `plugins/slacker.cjs` 只通过 Engine context（`transformGroup` / `launchPlayer` / `emit` / `say`）操作，碰撞与重试快照仍由共享引擎拥有。`plugins/registry.cjs` 按 `course.kind` 过滤工具栏定义，`assets/seeds.cjs` 通过 `themeBindings` 为三主题提供素材绑定，`assets/catalog.cjs` 以主题 kind 作为素材归属，不把新主题归为物理。`editor/menus.cjs` 负责顶部「项目」「工具」折叠菜单的键盘、外部点击与 Esc 收起。

@@ -12,6 +12,8 @@ function add(project, kind = 'physics', { blank = false } = {}) {
   const versions = Themes.pluginVersions();
   if (theme.kind === 'slacker' && !blank) versions['common.checkpoint'] = '1.0.0';
   for (const [type, version] of Object.entries(versions)) project.pluginManifest[type] ??= version;
+  const Native = require('./native-compat.cjs');
+  if (Native.active(project, course)) Native.initCourse(course);
   project.courses.push(course);
   return course;
 }
