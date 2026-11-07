@@ -1,0 +1,24 @@
+{
+  "changedRooms": [
+    "network-calculus-10"
+  ],
+  "authoredPhysicsDeepEqual": true,
+  "runtimeChecks": 169,
+  "routeChecks": 4,
+  "routeFrames": 3162,
+  "source": "54855f159e43923772bcfd4b68d7524bea7b2d8e8b4b86f2459edb0a60d7ff08",
+  "runtimeAssemblySha256": "4f59523172ab93b602b9bf67180bbbeb9e0c80ab3714de4838e1f67e1a7459cc",
+  "routeCore": {
+    "cases": 53,
+    "assertions": 136,
+    "failures": 0
+  },
+  "migrationChecks": 32,
+  "doorSaveChecks": 50,
+  "compatibility": {
+    "gameplayAssertions": 4110794,
+    "progressChecks": 572,
+    "aiJumpAssertions": 378
+  },
+  "visualReview": "Reviewed d-alpha platform and all three descending ledges; next landing visible in captured production camera. No human full campaign playthrough."
+}

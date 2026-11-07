@@ -76479,6 +76479,34 @@
             {
               "x": 9,
               "y": 12
+            },
+            {
+              "x": 31,
+              "y": 22
+            },
+            {
+              "x": 32,
+              "y": 22
+            },
+            {
+              "x": 33,
+              "y": 25
+            },
+            {
+              "x": 34,
+              "y": 25
+            },
+            {
+              "x": 35,
+              "y": 32
+            },
+            {
+              "x": 36,
+              "y": 32
+            },
+            {
+              "x": 37,
+              "y": 32
             }
           ],
           "objects": [
@@ -76706,7 +76734,15 @@
               "x": 3,
               "y": 25,
               "w": 2,
-              "h": 2
+              "h": 2,
+              "rework": {
+                "states": {
+                  "final-alpha": false,
+                  "final-beta": true,
+                  "final-gamma": true
+                },
+                "lockedText": "还差一笔。"
+              }
             }
           ],
           "nativeCampaign": {
@@ -76727,7 +76763,8 @@
                 "toY": 36,
                 "switch": "final-alpha",
                 "seconds": 0.55,
-                "label": "α"
+                "label": "α",
+                "foldOnReturnAfterSwitch": "final-beta"
               },
               {
                 "id": "network-calculus-10-paper-005",
@@ -76738,7 +76775,8 @@
                 "toY": 35,
                 "switch": "final-alpha",
                 "seconds": 0.55,
-                "label": ""
+                "label": "",
+                "foldOnReturnAfterSwitch": "final-beta"
               },
               {
                 "id": "network-calculus-10-paper-006",
@@ -76749,7 +76787,8 @@
                 "toY": 34,
                 "switch": "final-alpha",
                 "seconds": 0.55,
-                "label": ""
+                "label": "",
+                "foldOnReturnAfterSwitch": "final-beta"
               },
               {
                 "id": "network-calculus-10-paper-007",
@@ -76760,7 +76799,8 @@
                 "toY": 33,
                 "switch": "final-alpha",
                 "seconds": 0.55,
-                "label": ""
+                "label": "",
+                "foldOnReturnAfterSwitch": "final-beta"
               },
               {
                 "id": "network-calculus-10-paper-008",
@@ -76771,7 +76811,8 @@
                 "toY": 32,
                 "switch": "final-alpha",
                 "seconds": 0.55,
-                "label": ""
+                "label": "",
+                "foldOnReturnAfterSwitch": "final-beta"
               },
               {
                 "id": "network-calculus-10-paper-009",
@@ -76782,7 +76823,8 @@
                 "toY": 31,
                 "switch": "final-alpha",
                 "seconds": 0.55,
-                "label": ""
+                "label": "",
+                "foldOnReturnAfterSwitch": "final-beta"
               },
               {
                 "id": "network-calculus-10-paper-010",
@@ -76793,7 +76835,8 @@
                 "toY": 30,
                 "switch": "final-alpha",
                 "seconds": 0.55,
-                "label": ""
+                "label": "",
+                "foldOnReturnAfterSwitch": "final-beta"
               },
               {
                 "id": "network-calculus-10-paper-011",
@@ -76804,7 +76847,8 @@
                 "toY": 29,
                 "switch": "final-alpha",
                 "seconds": 0.55,
-                "label": ""
+                "label": "",
+                "foldOnReturnAfterSwitch": "final-beta"
               },
               {
                 "id": "network-calculus-10-paper-012",
@@ -76815,7 +76859,8 @@
                 "toY": 28,
                 "switch": "final-alpha",
                 "seconds": 0.55,
-                "label": ""
+                "label": "",
+                "foldOnReturnAfterSwitch": "final-beta"
               },
               {
                 "id": "network-calculus-10-paper-013",
@@ -76826,7 +76871,8 @@
                 "toY": 27,
                 "switch": "final-alpha",
                 "seconds": 0.55,
-                "label": ""
+                "label": "",
+                "foldOnReturnAfterSwitch": "final-beta"
               },
               {
                 "id": "network-calculus-10-paper-014",
@@ -77116,6 +77162,21 @@
                 "text": "γ",
                 "x": 35,
                 "y": 33
+              },
+              {
+                "text": "γ",
+                "x": 32,
+                "y": 20
+              },
+              {
+                "text": "γ",
+                "x": 35,
+                "y": 30
+              },
+              {
+                "text": "γ",
+                "x": 34,
+                "y": 24
               }
             ],
             "awareness": 50,
@@ -84306,6 +84367,7 @@
     "dressing": {
       "enabled": false,
       "density": 0
-    }
+    },
+    "revision": "dalpha-descent-20261108"
   }
 }

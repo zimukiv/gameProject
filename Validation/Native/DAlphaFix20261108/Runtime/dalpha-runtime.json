@@ -1,0 +1,134 @@
+{
+  "checks": [
+    {
+      "check": "ordinary input reaches completed exit",
+      "pass": true
+    },
+    {
+      "check": "no deaths",
+      "pass": true
+    },
+    {
+      "check": "developer controls unused",
+      "pass": true
+    },
+    {
+      "check": "all replay markers captured",
+      "pass": true
+    }
+  ],
+  "source": "54855f159e43923772bcfd4b68d7524bea7b2d8e8b4b86f2459edb0a60d7ff08",
+  "runtimeAssemblySha256": "4f59523172ab93b602b9bf67180bbbeb9e0c80ab3714de4838e1f67e1a7459cc",
+  "normalInputOnly": true,
+  "start": "native final room entrance; no actor placement or switch edits",
+  "frames": 3162,
+  "dt": 0.0083333333333333332,
+  "captures": [
+    {
+      "file": "dalpha-00018-00.png",
+      "frame": 18,
+      "target": "3,37 ",
+      "x": 2.8411458333333321,
+      "feet": 37.0,
+      "cameraRows": 20.8
+    },
+    {
+      "file": "dalpha-00653-01.png",
+      "frame": 653,
+      "target": "26,27 ",
+      "x": 26.023437500000011,
+      "feet": 27.0,
+      "cameraRows": 20.8
+    },
+    {
+      "file": "dalpha-01112-02.png",
+      "frame": 1112,
+      "target": "55,27 ",
+      "x": 54.835286458332696,
+      "feet": 27.0,
+      "cameraRows": 20.8
+    },
+    {
+      "file": "dalpha-01233-03.png",
+      "frame": 1233,
+      "target": "51,26 ",
+      "x": 51.197265624999496,
+      "feet": 26.0,
+      "cameraRows": 20.8
+    },
+    {
+      "file": "dalpha-01748-04.png",
+      "frame": 1748,
+      "target": "33,17 ",
+      "x": 33.195312500000057,
+      "feet": 17.0,
+      "cameraRows": 20.8
+    },
+    {
+      "file": "dalpha-01875-05.png",
+      "frame": 1875,
+      "target": "23,17 ",
+      "x": 23.404296874999975,
+      "feet": 17.0,
+      "cameraRows": 20.8
+    },
+    {
+      "file": "dalpha-02094-06.png",
+      "frame": 2094,
+      "target": "31.5,22 ",
+      "x": 31.511067708333471,
+      "feet": 22.0,
+      "cameraRows": 20.8
+    },
+    {
+      "file": "dalpha-02168-07.png",
+      "frame": 2168,
+      "target": "33.5,25 ",
+      "x": 33.544921875000078,
+      "feet": 25.0,
+      "cameraRows": 20.8
+    },
+    {
+      "file": "dalpha-02264-08.png",
+      "frame": 2264,
+      "target": "36,32 ",
+      "x": 36.037109374999993,
+      "feet": 32.0,
+      "cameraRows": 20.8
+    },
+    {
+      "file": "dalpha-02358-09.png",
+      "frame": 2358,
+      "target": "39,37 ",
+      "x": 39.044921874999886,
+      "feet": 37.0,
+      "cameraRows": 20.8
+    },
+    {
+      "file": "dalpha-02393-10.png",
+      "frame": 2393,
+      "target": "35,37 ",
+      "x": 34.839843749999886,
+      "feet": 37.0,
+      "cameraRows": 20.8
+    },
+    {
+      "file": "dalpha-03081-11.png",
+      "frame": 3081,
+      "target": "8,27 ",
+      "x": 8.195312500000016,
+      "feet": 27.0,
+      "cameraRows": 20.8
+    },
+    {
+      "file": "dalpha-03100-12.png",
+      "frame": 3100,
+      "target": "7,27 ",
+      "x": 7.4218750000000142,
+      "feet": 27.0,
+      "cameraRows": 20.8
+    }
+  ],
+  "deaths": 0,
+  "completed": true
+}

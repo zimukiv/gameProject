@@ -41,9 +41,12 @@ namespace RoomLab.Native
             string signal=(string)p["signal"],local=(string)p["switch"];
             return !string.IsNullOrEmpty(signal)?Signal(signal):!string.IsNullOrEmpty(local)&&Switch(local);
         }
+        public bool ReworkFolding(JToken p)=>!PlatformTarget(p)&&!string.IsNullOrEmpty((string)p["foldOnReturnAfterSwitch"])&&Switch((string)p["foldOnReturnAfterSwitch"]);
+        public double ReworkPlatformVisibility(JToken p)=>ReworkFolding(p)?(ReworkPositions.TryGetValue((string)p["id"],out var v)?v:0):1;
         public MotionRect ReworkPlatformRect(JToken p)
         {
             double t=ReworkPositions.TryGetValue((string)p["id"],out var progress)?progress:0;
+            if(ReworkFolding(p))t=1;
             t=t*t*(3-2*t);
             double x=(double)p["x"],y=(double)p["y"];
             return new MotionRect((string)p["id"],(x+(((double?)p["toX"]??x)-x)*t)*32,(y+(((double?)p["toY"]??y)-y)*t)*32,((double?)p["w"]??1)*32,((double?)p["h"]??1)*32);
@@ -100,7 +103,7 @@ namespace RoomLab.Native
                         // A folding stair must not turn a fresh landing into a ride to its
                         // storage position. Keep its support until the rider steps/jumps off.
                         // Deployed lifts and their downward return still carry normally.
-                        blocked=target==0&&after.y<before.y;
+                        blocked=ReworkFolding(p)||target==0&&after.y<before.y;
                         if(!blocked)
                         {
                             var carried=new MotionRect(null,Player.x+after.x-before.x,Player.y+after.y-before.y,Player.w,Player.h);
@@ -115,7 +118,7 @@ namespace RoomLab.Native
         void AddReworkColliders()
         {
             if(!IsRework||ReworkPlatforms==null)return;
-            foreach(var p in ReworkPlatforms)if(LayerActive(p)){var r=ReworkPlatformRect(p);r.index=colliders.Count;colliders.Add(r);}
+            foreach(var p in ReworkPlatforms)if(LayerActive(p)&&ReworkPlatformVisibility(p)>0){var r=ReworkPlatformRect(p);r.index=colliders.Count;colliders.Add(r);}
         }
         public string BlockedExit {get;private set;} public double BlockedExitUntil {get;private set;}
         public bool ReworkExitOpen(NativeRegion exit)

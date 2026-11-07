@@ -1,0 +1,256 @@
+{
+  "checks": 50,
+  "failures": 0,
+  "results": [
+    {
+      "name": "physics correct isolated profile",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "physics flag contact still saves silently",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "physics E at flag still opens six-slot choice",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "physics six manual slots and cancel preserve automatic anchor",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "physics touching or standing in door stays put and exposes nearby door",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "physics normal E inside door enters without save UI",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "physics E transition captures safe target-room autosave",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "physics releasing E at overlapping return door never bounces",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "physics loaded doorway stays silent without E",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "physics deliberate second E returns without walking 2.5 tiles away",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "physics loaded doorway also accepts deliberate E immediately after cooldown",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "calculus correct isolated profile",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "calculus flag contact still saves silently",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "calculus E at flag still opens six-slot choice",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "calculus six manual slots and cancel preserve automatic anchor",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "calculus touching or standing in door stays put and exposes nearby door",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "calculus normal E inside door enters without save UI",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "calculus E transition captures safe target-room autosave",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "calculus releasing E at overlapping return door never bounces",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "calculus loaded doorway stays silent without E",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "calculus deliberate second E returns without walking 2.5 tiles away",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "calculus loaded doorway also accepts deliberate E immediately after cooldown",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "slacker correct isolated profile",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "slacker flag contact still saves silently",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "slacker E at flag still opens six-slot choice",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "slacker six manual slots and cancel preserve automatic anchor",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "slacker touching or standing in door stays put and exposes nearby door",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "slacker normal E inside door enters without save UI",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "slacker E transition captures safe target-room autosave",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "slacker releasing E at overlapping return door never bounces",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "slacker loaded doorway stays silent without E",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "slacker deliberate second E returns without walking 2.5 tiles away",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "slacker loaded doorway also accepts deliberate E immediately after cooldown",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "physics airborne rectangle overlap alone never enters",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "physics airborne E enters using original rectangle contact",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "calculus airborne rectangle overlap alone never enters",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "calculus airborne E enters using original rectangle contact",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "slacker airborne rectangle overlap alone never enters",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "slacker airborne E enters using original rectangle contact",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "E door commits water resources to target entry",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "door retry restores resource value and one-use item state",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "last door also waits for E",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "last E preserves pre-completion safe snapshot",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "terminal restore does not complete or save without E",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "deliberate terminal E can complete again without leaving door",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "legacy network still waits for interaction",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "legacy network E still crosses without new auto history",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "legacy physics retains original contact transition",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "latest three automatic records remain atomic history",
+      "pass": true,
+      "details": null
+    },
+    {
+      "name": "failed atomic history replacement leaves all previous records intact",
+      "pass": true,
+      "details": null
+    }
+  ]
+}

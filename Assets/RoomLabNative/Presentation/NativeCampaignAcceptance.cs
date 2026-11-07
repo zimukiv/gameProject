@@ -11,6 +11,7 @@ namespace RoomLab.Native
         bool campaignVerify;
         IEnumerator VerifyCampaign(){
             yield return null;
+            if(Array.IndexOf(Environment.GetCommandLineArgs(),"-nativeDAlphaRouteVerify")>=0){yield return VerifyDAlphaRoute();yield break;}
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-nativeAutosaveVerify")>=0){yield return VerifyAutosaveEdition();yield break;}
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-nativeGuidedVerify")>=0)yield return VerifyGuidedPresentation();
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-nativeCustomAssetsVerify")>=0){

@@ -1,0 +1,693 @@
+{
+  "checks": [
+    {
+      "check": "fresh edition defaults to authored physics",
+      "pass": true
+    },
+    {
+      "check": "original physics runs without rework rules",
+      "pass": true
+    },
+    {
+      "check": "author course data unchanged",
+      "pass": true
+    },
+    {
+      "check": "new game does not invent autosaves",
+      "pass": true
+    },
+    {
+      "check": "normal movement touched autosave flag calculus",
+      "pass": true
+    },
+    {
+      "check": "contact never opens manual modal",
+      "pass": true
+    },
+    {
+      "check": "contact stays in live gameplay",
+      "pass": true
+    },
+    {
+      "check": "first contact writes one automatic record",
+      "pass": true
+    },
+    {
+      "check": "standing at flag does not rotate history",
+      "pass": true
+    },
+    {
+      "check": "interaction opens manual selection",
+      "pass": true
+    },
+    {
+      "check": "layout save-slots 1280x720: ",
+      "pass": true
+    },
+    {
+      "check": "manual six slots retained",
+      "pass": true
+    },
+    {
+      "check": "button enabled 不存，继续走",
+      "pass": true
+    },
+    {
+      "check": "manual cancel retains automatic retry anchor",
+      "pass": true
+    },
+    {
+      "check": "button enabled Save slot 01",
+      "pass": true
+    },
+    {
+      "check": "manual write does not rotate automatic history",
+      "pass": true
+    },
+    {
+      "check": "normal movement touched autosave flag calculus",
+      "pass": true
+    },
+    {
+      "check": "contact never opens manual modal",
+      "pass": true
+    },
+    {
+      "check": "contact stays in live gameplay",
+      "pass": true
+    },
+    {
+      "check": "normal movement touched autosave flag calculus",
+      "pass": true
+    },
+    {
+      "check": "contact never opens manual modal",
+      "pass": true
+    },
+    {
+      "check": "contact stays in live gameplay",
+      "pass": true
+    },
+    {
+      "check": "normal movement touched autosave flag calculus",
+      "pass": true
+    },
+    {
+      "check": "contact never opens manual modal",
+      "pass": true
+    },
+    {
+      "check": "contact stays in live gameplay",
+      "pass": true
+    },
+    {
+      "check": "four contacts retain only latest three",
+      "pass": true
+    },
+    {
+      "check": "automatic history newest first",
+      "pass": true
+    },
+    {
+      "check": "automatic history newest first",
+      "pass": true
+    },
+    {
+      "check": "automatic history newest first",
+      "pass": true
+    },
+    {
+      "check": "layout load-slots 1280x720: ",
+      "pass": true
+    },
+    {
+      "check": "three automatic load choices",
+      "pass": true
+    },
+    {
+      "check": "button enabled 手动",
+      "pass": true
+    },
+    {
+      "check": "layout load-slots 1280x720: ",
+      "pass": true
+    },
+    {
+      "check": "load tabs separate six manual slots",
+      "pass": true
+    },
+    {
+      "check": "button enabled 自动",
+      "pass": true
+    },
+    {
+      "check": "button enabled Auto load slot 01",
+      "pass": true
+    },
+    {
+      "check": "restored flag stays quiet",
+      "pass": true
+    },
+    {
+      "check": "normal movement touched autosave flag slacker",
+      "pass": true
+    },
+    {
+      "check": "contact never opens manual modal",
+      "pass": true
+    },
+    {
+      "check": "contact stays in live gameplay",
+      "pass": true
+    },
+    {
+      "check": "automatic history shared across chapters",
+      "pass": true
+    },
+    {
+      "check": "button enabled Auto load slot 02",
+      "pass": true
+    },
+    {
+      "check": "automatic load restores another chapter",
+      "pass": true
+    },
+    {
+      "check": "normal movement touched autosave flag calculus",
+      "pass": true
+    },
+    {
+      "check": "contact never opens manual modal",
+      "pass": true
+    },
+    {
+      "check": "contact stays in live gameplay",
+      "pass": true
+    },
+    {
+      "check": "failed automatic write preserves history without pausing",
+      "pass": true
+    },
+    {
+      "check": "automatic history never overwrites manual slot",
+      "pass": true
+    },
+    {
+      "check": "pending contact exists before same-frame interaction",
+      "pass": true
+    },
+    {
+      "check": "failed contact and interaction still open manual page",
+      "pass": true
+    },
+    {
+      "check": "button enabled 不存，继续走",
+      "pass": true
+    },
+    {
+      "check": "failed-save notice waits until gameplay is visible",
+      "pass": true
+    },
+    {
+      "check": "modal delay keeps previous automatic history intact",
+      "pass": true
+    },
+    {
+      "check": "door waits for interaction without saving",
+      "pass": true
+    },
+    {
+      "check": "interaction enters door without manual modal",
+      "pass": true
+    },
+    {
+      "check": "one interaction writes one destination autosave",
+      "pass": true
+    },
+    {
+      "check": "door autosave records destination room",
+      "pass": true
+    },
+    {
+      "check": "arrival does not bounce or resave",
+      "pass": true
+    },
+    {
+      "check": "button enabled Auto load slot 01",
+      "pass": true
+    },
+    {
+      "check": "door save loads safe destination",
+      "pass": true
+    },
+    {
+      "check": "revised descent uses explicit new source identity",
+      "pass": true
+    },
+    {
+      "check": "previous slot room label resolves to current short name",
+      "pass": true
+    },
+    {
+      "check": "music playing physics",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed jet-room",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained jet-room",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name jet-room",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed rail-room",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained rail-room",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name rail-room",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed room-mv0w2u2r-qkzk40",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained room-mv0w2u2r-qkzk40",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name room-mv0w2u2r-qkzk40",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed room-mv0wnwtu-dxmqc7",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained room-mv0wnwtu-dxmqc7",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name room-mv0wnwtu-dxmqc7",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed room-mvaapi4e-crbnks",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained room-mvaapi4e-crbnks",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name room-mvaapi4e-crbnks",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed room-mvaapqu4-6xob5m",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained room-mvaapqu4-6xob5m",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name room-mvaapqu4-6xob5m",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed room-mvndxqmk-k9xt7n",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained room-mvndxqmk-k9xt7n",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name room-mvndxqmk-k9xt7n",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed room-mvnf7n9x-0t6ggh",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained room-mvnf7n9x-0t6ggh",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name room-mvnf7n9x-0t6ggh",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed room-mvnf7nel-q8wikm",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained room-mvnf7nel-q8wikm",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name room-mvnf7nel-q8wikm",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed room-mvnf7nm5-vf4wbu",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained room-mvnf7nm5-vf4wbu",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name room-mvnf7nm5-vf4wbu",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed room-mvnkr562-1ihb3g",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained room-mvnkr562-1ihb3g",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name room-mvnkr562-1ihb3g",
+      "pass": true
+    },
+    {
+      "check": "layout pause 1280x720: ",
+      "pass": true
+    },
+    {
+      "check": "music playing calculus",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-calculus-01",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-calculus-01",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-calculus-01",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-calculus-02",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-calculus-02",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-calculus-02",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-calculus-03",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-calculus-03",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-calculus-03",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-calculus-04",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-calculus-04",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-calculus-04",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-calculus-05",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-calculus-05",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-calculus-05",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-calculus-06",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-calculus-06",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-calculus-06",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-calculus-07",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-calculus-07",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-calculus-07",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-calculus-08",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-calculus-08",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-calculus-08",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-calculus-09",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-calculus-09",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-calculus-09",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-calculus-10",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-calculus-10",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-calculus-10",
+      "pass": true
+    },
+    {
+      "check": "layout pause 1280x720: ",
+      "pass": true
+    },
+    {
+      "check": "music playing slacker",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-slacker-01",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-slacker-01",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-slacker-01",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-slacker-02",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-slacker-02",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-slacker-02",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-slacker-03",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-slacker-03",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-slacker-03",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-slacker-04",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-slacker-04",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-slacker-04",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-slacker-05",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-slacker-05",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-slacker-05",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-slacker-06",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-slacker-06",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-slacker-06",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-slacker-07",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-slacker-07",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-slacker-07",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-slacker-08",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-slacker-08",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-slacker-08",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-slacker-09",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-slacker-09",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-slacker-09",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-slacker-10",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-slacker-10",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-slacker-10",
+      "pass": true
+    },
+    {
+      "check": "repeated dressing removed network-slacker-11",
+      "pass": true
+    },
+    {
+      "check": "short display name with original Raw retained network-slacker-11",
+      "pass": true
+    },
+    {
+      "check": "HUD displays short name network-slacker-11",
+      "pass": true
+    },
+    {
+      "check": "layout pause 1280x720: ",
+      "pass": true
+    },
+    {
+      "check": "normal page hides development controls menu",
+      "pass": true
+    },
+    {
+      "check": "layout builtin-select 1280x720: ",
+      "pass": true
+    },
+    {
+      "check": "layout load-slots 1024x768: ",
+      "pass": true
+    },
+    {
+      "check": "button enabled 手动",
+      "pass": true
+    },
+    {
+      "check": "layout load-slots 1024x768: ",
+      "pass": true
+    }
+  ],
+  "renderedRooms": 32,
+  "displayCopyRooms": 32,
+  "displayCopySourceUnchanged": false,
+  "sourceRevision": "dalpha-descent-20261108; explicit legacy migration",
+  "displayCopyCatalogSha256": "df4d190e789bce3d9915bc812d2e34d77c7399637c621ab2df92dcd414e5ffec",
+  "contactFlagInput": "normal movement",
+  "doorMode": "interaction",
+  "doorUiContactSetup": "synthetic location; no-input retention then interaction edge, not route completion",
+  "source": "54855f159e43923772bcfd4b68d7524bea7b2d8e8b4b86f2459edb0a60d7ff08",
+  "runtimeAssemblySha256": "4f59523172ab93b602b9bf67180bbbeb9e0c80ab3714de4838e1f67e1a7459cc",
+  "defaultPhysics": "original authored course deep-equal",
+  "allDressingRemoved": true,
+  "fullManualPlaythrough": false
+}

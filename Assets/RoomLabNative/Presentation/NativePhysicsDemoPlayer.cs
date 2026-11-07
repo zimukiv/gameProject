@@ -315,6 +315,7 @@ namespace RoomLab.Native
                 foreach(var c in candidate.Courses)foreach(var r in c.Rooms)if(!NativeMotion.SupportsRoom(r,out var reason))throw new NativeDataException(reason);
                 if(restored!=null&&(!ReferenceEquals(restored.Project,candidate)||restored.Rules!=rules))throw new NativeDataException("存档与目标关卡不一致");
                 motor=restored??new NativeMotion(candidate,rules:rules);NativeDisplayCopy.Apply(motor);decoded=NativeDemoAssets.Decode(candidate,allowUnresolvedAssets);render=new NativePixelWorld(motor,decoded,builtIn);render.Refresh(0,view,false);
+                foreach(var migration in NativeCampaignSaveMigration.Run(saveDirectory,candidate,builtIn))Debug.Log("SAVE_MIGRATION "+migration);
                 nextIdentity=(builtIn?"builtin-":"import-")+(((JArray)candidate.OriginalJson["courses"]).Count==1?candidate.SourceSha256+"-"+rules:NativeProjectLoader.Sha(Encoding.UTF8.GetBytes(candidate.SourceSha256+"\n"+motor.Course.Id+"\n"+rules))+"-"+rules);
             }catch{render?.Dispose();decoded?.Dispose();view.transform.position=cameraPosition;view.orthographicSize=cameraSize;view.backgroundColor=cameraBackground;throw;}
             // The current game remains owned and visible until the complete candidate has passed

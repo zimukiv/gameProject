@@ -80,7 +80,7 @@ namespace RoomLab.Native
             OpenLoadSlots("pause");yield return new WaitForSecondsRealtime(.25f);GuidedClick("Auto load slot 01",true);GuidedCheck(Game.Room.Id==destination&&Game.SafePosition(Game.Player.x,Game.Player.y),"door save loads safe destination");
 
             int rooms=0;
-            GuidedCheck(Game.Project.SourceSha256=="523b045170f88881cf14cc4a401f023f76f5169a16aaf8f98b5bb2a9ca472ab5","display copy preserves existing save source identity");
+            GuidedCheck(Game.Project.SourceSha256=="54855f159e43923772bcfd4b68d7524bea7b2d8e8b4b86f2459edb0a60d7ff08","revised descent uses explicit new source identity");
             var oldLabelSlot=SaveSlots.Read(1);oldLabelSlot.Data["room"]="01 · 等号的另一端";
             GuidedCheck(SlotRoomDisplayName(oldLabelSlot)=="∫α","previous slot room label resolves to current short name");
             foreach(var id in CampaignIds)
@@ -96,7 +96,7 @@ namespace RoomLab.Native
             Show("builtin-select");GuidedLayout();yield return Capture("autosave-chapters");
             OpenLoadSlots("menu");yield return new WaitForSecondsRealtime(.25f);Screen.SetResolution(1024,768,FullScreenMode.Windowed);yield return new WaitForSecondsRealtime(.3f);Show("load-slots");yield return new WaitForSecondsRealtime(.25f);GuidedLayout();yield return Capture("autosave-three-1024");
             GuidedClick("手动");yield return new WaitForSecondsRealtime(.25f);GuidedLayout();yield return Capture("autosave-six-1024");CloseLoadSlots();
-            File.WriteAllText(Path.Combine(Evidence(),"autosave-runtime.json"),new JObject{{"checks",guidedUiChecks},{"renderedRooms",rooms},{"displayCopyRooms",rooms},{"displayCopySourceUnchanged",true},{"displayCopyCatalogSha256",NativeDisplayCopy.CatalogSha256},{"contactFlagInput","normal movement"},{"doorMode","interaction"},{"doorUiContactSetup","synthetic location; no-input retention then interaction edge, not route completion"},{"source",Game.Project.SourceSha256},{"runtimeAssemblySha256",NativeProjectLoader.Sha(File.ReadAllBytes(typeof(NativePhysicsDemoPlayer).Assembly.Location))},{"defaultPhysics","original authored course deep-equal"},{"allDressingRemoved",true},{"fullManualPlaythrough",false}}.ToString());
+            File.WriteAllText(Path.Combine(Evidence(),"autosave-runtime.json"),new JObject{{"checks",guidedUiChecks},{"renderedRooms",rooms},{"displayCopyRooms",rooms},{"displayCopySourceUnchanged",false},{"sourceRevision","dalpha-descent-20261108; explicit legacy migration"},{"displayCopyCatalogSha256",NativeDisplayCopy.CatalogSha256},{"contactFlagInput","normal movement"},{"doorMode","interaction"},{"doorUiContactSetup","synthetic location; no-input retention then interaction edge, not route completion"},{"source",Game.Project.SourceSha256},{"runtimeAssemblySha256",NativeProjectLoader.Sha(File.ReadAllBytes(typeof(NativePhysicsDemoPlayer).Assembly.Location))},{"defaultPhysics","original authored course deep-equal"},{"allDressingRemoved",true},{"fullManualPlaythrough",false}}.ToString());
             Debug.Log("AUTOSAVE_RUNTIME_PASS checks="+guidedUiChecks.Count+" rooms="+rooms+" recent=3 manual=6 default=authored-physics dressing=removed");Finish(0);
         }
     }

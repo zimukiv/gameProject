@@ -1,15 +1,15 @@
 # DDL · 截止之前 — RoomLab 原生 Unity Demo v2
 
-当前入口为 **2026-11-07 符号与弱提示版**：原作者物理 11 房、高数 10 房、水课 11 房，共 32 房、67 条有向连接、27 件藏品。默认从原物理关开始；主菜单「作业待办」可选择章节。高数围绕积分、求导和折返环路展开；水课通过一次性咖啡/讲义管理清醒度，保留已探索地图与已知房间道具余量。
+当前入口为 **2026-11-08 dα 下行路线修复版**：原作者物理 11 房、高数 10 房、水课 11 房，共 32 房、67 条有向连接、27 件藏品。默认从原物理关开始；主菜单「作业待办」可选择章节。高数围绕积分、求导和折返环路展开；水课通过一次性咖啡/讲义管理清醒度，保留已探索地图与已知房间道具余量。
 
-- 发布标签：`roomlab-native-v2-ddl-symbols-20261107`；[本版发布页](https://github.com/zimukiv/gameProject/releases/tag/roomlab-native-v2-ddl-symbols-20261107)。
-- Windows 下载名：`RoomLab-Demo-v2-DDL-Symbols-20261107-win-x64.zip`。完整解压后运行 `RoomLabPhysics.exe`，保留同目录数据和 DLL。
+- 发布标签：`roomlab-native-v2-ddl-dalpha-route-20261108`；[本版发布页](https://github.com/zimukiv/gameProject/releases/tag/roomlab-native-v2-ddl-dalpha-route-20261108)。
+- Windows 下载名：`RoomLab-Demo-v2-DDL-DAlphaRoute-20261108-win-x64.zip`。完整解压后运行 `RoomLabPhysics.exe`，保留同目录数据和 DLL。
 - Unity：**6000.6.4f1**。用 Unity Hub 打开仓库根目录，加载 `Assets/RoomLabNative/Scenes/PhysicsDemo/NativePhysicsDemo.unity` 后 Play。
 - 默认关卡：`Assets/StreamingAssets/RoomLabNative/Campaign/deadline-autosave.json`；课程 ID 为 `physics`、`guided-calculus`、`guided-slacker`。文件名沿用自动存档阶段，**本版门操作已经改为交互进入**。
 - 原作者 `AuthoredPhysics/authored-physics.json` 未改；合包的 physics 完整课程与其规范化数据相同，9 个作者 SVG 配套保留。
 - 旧程序、旧课程 JSON 和旧存档继续保留；2026-11-05 的机制示例版见下方历史入口。
 
-本轮将高数房间改为简短希腊字母和组合符号，物理与水课采用环境短名，部分水课房名带图形记号；提示更短、更含蓄。同时修复高数终局 dα 回收纸页把玩家带到上方的问题：向上回收时若有人站在纸页上，纸页会等玩家离开后继续回收。普通积分电梯不受此改动影响。关卡 JSON、房间 ID、清醒度资源、门操作和保存方式保持原样，既有存档来源不变。上一互动过门版仍可从[原发布页](https://github.com/zimukiv/gameProject/releases/tag/roomlab-native-v2-ddl-20261107)取得。
+本轮修正高数终局 dα 后纸阶飞走、下一段路不清的问题：α 纸阶原位消隐，右侧新增三级固定下行台和少量 γ 记号，可逐段看见落点，无需抢回收时机。末门保持机关组合与互动进入。简短房名、含蓄提示和原作者物理关延续。关卡来源显式升级，已知上一版内置存档复制迁移，原档保留且不覆盖新槽；自定义关卡继续隔离。
 
 ## 门、存档与引导
 
@@ -183,3 +183,7 @@ Unity 编辑器和试玩程序共用该目录的 `RoomLabRuntime`，请完整保
 - [实际游戏截图](Validation/Previews/)
 
 本机 Unity 6000.6.4f1 脚本编译及记录中的自动检查已通过；完整三关人工跑关、整体难度平衡和本轮 Windows 独立构建仍需完成，详见交接说明。测试脚本须在独立工程运行，避免影响正常试玩存档。
+
+### 2026-11-08 dα 路线修复
+
+本轮针对纸阶回收后下行路线不清的问题继续调整。交付合同见 [Handoff/DALPHA_ROUTE_20261108.md](Handoff/DALPHA_ROUTE_20261108.md)，Windows 构建、普通输入终局重放、存档迁移及相关兼容检查已通过；实际发布信息以对应发布页为准。
