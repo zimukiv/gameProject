@@ -1,0 +1,16 @@
+{
+  "method": "built-in image_gen",
+  "files": {
+    "rework-calculus-background": "exec-79c913de-6dd2-478a-a590-0d9377fc3bf7.png",
+    "rework-classroom-awake": "exec-b4aadfb5-c050-454d-8dbf-a7d1c8ac8fb1.png",
+    "rework-classroom-dream": "exec-637f75a4-1d94-4be6-ae4c-c49115f2de45.png",
+    "rework-calculus-paper-tile": "exec-5fcf0dc9-085d-4f61-ba2d-7b482a2d6181.png"
+  },
+  "intent": [
+    "warm ivory graph-paper university study hall; layered parchment platforms with graphite contact edges",
+    "ordered general education classroom with board, windows, geometric art and map/terrain exhibit",
+    "same classroom anchors in dusky dream state, projected doorway and drifting paper; gameplay platforms separate"
+  ],
+  "sourceReference": "original calculus-background.png for first asset; generated awake classroom for dream edit",
+  "generatedAssetsNotExternalGameRips": true
+}

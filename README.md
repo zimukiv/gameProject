@@ -1,3 +1,58 @@
+# DDL · 截止之前 — RoomLab 原生 Unity Demo v2
+
+当前入口为 **2026-11-07 互动过门版**：原作者物理 11 房、高数 10 房、水课 11 房，共 32 房、67 条有向连接、27 件藏品。默认从原物理关开始；主菜单「作业待办」可选择章节。高数围绕积分、求导和折返环路展开；水课通过一次性咖啡/讲义管理清醒度，保留已探索地图与已知房间道具余量。
+
+- 发布标签：`roomlab-native-v2-ddl-20261107`；[本版发布页](https://github.com/zimukiv/gameProject/releases/tag/roomlab-native-v2-ddl-20261107)。
+- Windows 下载名：`RoomLab-Demo-v2-DDL-20261107-win-x64.zip`。完整解压后运行 `RoomLabPhysics.exe`，保留同目录数据和 DLL。
+- Unity：**6000.6.4f1**。用 Unity Hub 打开仓库根目录，加载 `Assets/RoomLabNative/Scenes/PhysicsDemo/NativePhysicsDemo.unity` 后 Play。
+- 默认关卡：`Assets/StreamingAssets/RoomLabNative/Campaign/deadline-autosave.json`；课程 ID 为 `physics`、`guided-calculus`、`guided-slacker`。文件名沿用自动存档阶段，**本版门操作已经改为交互进入**。
+- 原作者 `AuthoredPhysics/authored-physics.json` 未改；合包的 physics 完整课程与其规范化数据相同，9 个作者 SVG 配套保留。
+- 旧程序、旧课程 JSON 和旧存档继续保留；2026-11-05 的机制示例版见下方历史入口。
+
+## 门、存档与引导
+
+在门内按交互键进入，默认 **E**，随设置改键；单纯经过、站在门口或跳过门都不会传送。门牌写实际去向，每章第一次靠近门时短暂提示交互键。门口同时有可交互物件时，一次按键处理物件后不会顺带过门。
+
+触碰旗子静默自动保存，不打断操作；旗旁按 E 打开 **6 个手动存档槽**。读取页面分别显示最近 **3 份自动档**和 6 个手动档。过门仍保存目标入口，暂停可以回到存档点；保存失败保留旧磁盘记录。当前版本沿用 `deadline-autosave-progress-v1` 和 `settings-autosave-v1.json`，不挪动旧 Demo 存档。
+
+UI 使用像素字体和环境笔记字体，提示短暂出现；重复背景字条与摆件已移除。三章配有探索/追逐音乐、机关音效、角色动作和 AI 反馈。首次探索约 30 分钟是设计目标，仍需真人计时与难度校准。
+
+## 自定义资产与关卡
+
+成品附同名 PNG/WAV 替换目录、图片/音频模板、UI 文案入口和关卡源文件。具体格式、尺寸、命名与错误回退见 [当前资产规范](Handoff/CUSTOM_ASSETS_INTERACT_20261107.txt) 和 [互动过门与存档补充规范](Handoff/INTERACT_CUSTOMIZATION_ADDENDUM.txt)。源文件替换无需开发入口。
+
+设计者在主菜单或暂停界面用方向键连续输入 **↑↑↓↓←→←→** 打开隐藏开发页（不是 WASD）。替换导入、原 Demo 与机制示例、教程、恢复内置和导入规则切换均在此页；普通玩家菜单不显示这些工具。支持 Room Lab 2.5.5 与 3.0 JSON/ZIP，JSON 的 `assets/` 必须一同保留。Unity 扩展字段可随编辑器往返，但编辑器预览不等同于完整 Unity 战役规则。
+
+## 构建与检查
+
+使用有有效授权的 Unity 6000.6.4f1；`RoomLab Native/Open pixel physics demo` 可重建当前场景。构建命令：
+
+```powershell
+& '<Unity安装目录>/Editor/Unity.exe' -batchmode -quit -projectPath '<本仓库目录>' -executeMethod RoomLab.Native.Editor.NativePhysicsDemoEditor.Build -logFile '<构建日志路径>'
+```
+
+默认输出 `Builds/NativePhysicsDemo-Final/RoomLabPhysics.exe`；可用环境变量 `ROOMLAB_NATIVE_BUILD_DIR` 指定独立目录。`Tools/RoomLabNative/package-interact.py` 整理已构建成品并核对程序集、关卡与本轮验收报告；脚本采用本机交付目录约定，异地使用前需调整 `BUILD`，不会代替 Unity 构建。
+
+关卡 JSON、原创音频、贴图和字体已随源码提供，运行无需重新生成。生成器位于 `Tools/RoomLabNative`；音频重生成需要 NumPy，包装需要 Pillow。字体许可见 `Assets/StreamingAssets/RoomLabNative/Licenses` 和 `Resources/DiegeticFont/OFL.txt`。原生图像解码插件已提供，全部第三方重建工具链未包含。
+
+安装 .NET 8 SDK 后，可在仓库根运行当前交互门与存档专项：
+
+```powershell
+dotnet run --project Validation/Native/InteractDoors20261107/CoreChecks/CoreChecks.csproj
+```
+
+本轮独立 Core **50/50**、Windows 运行验收 **103/103**，运行时覆盖 32 房显示、正常移动触旗、自动三档/手动六槽、跨章读档、保存失败保护和交互门行为。Windows 门专项先定位到门内，再验证无按键不进入、按键进入与入口恢复，**不是完整路径通关**。Core 使用独立夹具和输入步骤，也不代替三章真人跑关。原始结果见 [Core 报告](Validation/Native/InteractDoors20261107/CoreChecks/results.json)、[Windows 报告](Validation/Native/InteractDoors20261107/Runtime/autosave-runtime.json) 和 [规则说明](Validation/Native/InteractDoors20261107/CORE_INTEGRATION.md)。
+
+上一自动过门阶段的关卡数据/编辑器往返与正常输入路线记录保留为历史证据，不能视为本轮 E 过门全流程重跑。尚未完成本轮真人完整试玩、首次 30 分钟计时或低配性能验收。发布范围与证据边界见 [本轮源码发布说明](Handoff/DDL_DEMO_V2_RELEASE_20261107.md)。
+
+改动前先读 [AGENTS.md](AGENTS.md)，核对远端并保留工作区内容。同仓库编辑器与云服务位于 [Tools/RoomLab](Tools/RoomLab/README.md)，使用独立发布标签；本次不替换其源码。
+
+---
+
+# 历史入口：2026-11-05 编辑器 build6 三主题示例版
+
+以下保留当时说明。其中“当前”“本轮”及下载包名仅指 2026-11-05 版本，不是上方 32 房互动过门版。
+
 # RoomLab：三主题原生 Unity Demo v2 · 编辑器 3.0 build6 适配
 
 当前维护入口为 **Unity原生三主题Demo v2**：原作者物理11房，以及build6高数、水课各3房机制示例。主菜单「选择大关」切换；各课程进度独立。旧套壳连接版、旧三关场景及其历史v3包保留，见下方历史说明，勿与当前原生v2混用。

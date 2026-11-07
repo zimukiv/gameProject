@@ -1,0 +1,248 @@
+{
+  "failures": 0,
+  "cases": 41,
+  "reports": [
+    {
+      "name": "Raw complete authored physics course is byte-independent canonical identical",
+      "pass": true
+    },
+    {
+      "name": "Author root performance/default settings retained",
+      "pass": true
+    },
+    {
+      "name": "Author root block defaults retained",
+      "pass": true
+    },
+    {
+      "name": "Shared movement performance is identical to guided chapters",
+      "pass": true
+    },
+    {
+      "name": "All nine author asset declarations preserved",
+      "pass": true
+    },
+    {
+      "name": "Autosave profile and authored course selector",
+      "pass": true
+    },
+    {
+      "name": "Exact three course IDs",
+      "pass": true
+    },
+    {
+      "name": "Author asset bytes seed-metal",
+      "pass": true
+    },
+    {
+      "name": "Author asset bytes seed-ice-solid",
+      "pass": true
+    },
+    {
+      "name": "Author asset bytes seed-ice-cracked",
+      "pass": true
+    },
+    {
+      "name": "Author asset bytes seed-jet-idle",
+      "pass": true
+    },
+    {
+      "name": "Author asset bytes seed-jet-active",
+      "pass": true
+    },
+    {
+      "name": "Author asset bytes seed-thermal-cold",
+      "pass": true
+    },
+    {
+      "name": "Author asset bytes seed-thermal-hot",
+      "pass": true
+    },
+    {
+      "name": "Author asset bytes seed-rail-idle",
+      "pass": true
+    },
+    {
+      "name": "Author asset bytes seed-rail-active",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-calculus-01",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-calculus-02",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-calculus-03",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-calculus-04",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-calculus-05",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-calculus-06",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-calculus-07",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-calculus-08",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-calculus-09",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-calculus-10",
+      "pass": true
+    },
+    {
+      "name": "All later-chapter content identical except dressing/save wording guided-calculus",
+      "pass": true
+    },
+    {
+      "name": "No later-chapter ice instances affected by shared author defaults guided-calculus",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-slacker-01",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-slacker-02",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-slacker-03",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-slacker-04",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-slacker-05",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-slacker-06",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-slacker-07",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-slacker-08",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-slacker-09",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-slacker-10",
+      "pass": true
+    },
+    {
+      "name": "Dressing disabled network-slacker-11",
+      "pass": true
+    },
+    {
+      "name": "All later-chapter content identical except dressing/save wording guided-slacker",
+      "pass": true
+    },
+    {
+      "name": "No later-chapter ice instances affected by shared author defaults guided-slacker",
+      "pass": true
+    }
+  ],
+  "sourceSha256": {
+    "authored": "03b948a705210aafd718306a70947e90b41f7d1fa013a53a4087091d51809836",
+    "guided": "cb36915eea3f61084723253ed02e6acb235e6d132841f54c01a476bd9818a968",
+    "autosave": "523b045170f88881cf14cc4a401f023f76f5169a16aaf8f98b5bb2a9ca472ab5"
+  },
+  "physicsCanonicalSha256": "b1765e6e57a197ff05d40bb50690dea13fd06a7bfe07b1fe8d1f4607e99e27a1",
+  "assets": [
+    {
+      "id": "seed-metal",
+      "path": "assets/seed-metal.svg",
+      "sha256": "7654dd8c088c1994cb6323b680523ade7007f9489094e7476daa02512fe2333c"
+    },
+    {
+      "id": "seed-ice-solid",
+      "path": "assets/seed-ice-solid.svg",
+      "sha256": "7ced1ed4c5d649cd4f07c0155057df07b83366882c4408a488fff7d6d0fae04d"
+    },
+    {
+      "id": "seed-ice-cracked",
+      "path": "assets/seed-ice-cracked.svg",
+      "sha256": "23e6ac912d5eea83cd55d401f8d26a63e17a41384249ac54faab0d8461c83d9d"
+    },
+    {
+      "id": "seed-jet-idle",
+      "path": "assets/seed-jet-idle.svg",
+      "sha256": "f32967c0f98516ce8390c26bd95604fe670c16d079ccbaf5cef090776ce21992"
+    },
+    {
+      "id": "seed-jet-active",
+      "path": "assets/seed-jet-active.svg",
+      "sha256": "03ce6332f16b0c788d4bdedf6456477120994d74fce51466142a04f612ebfabb"
+    },
+    {
+      "id": "seed-thermal-cold",
+      "path": "assets/seed-thermal-cold.svg",
+      "sha256": "cc606a5d1fdfe79c2f39752f92aafb6f53846b5b856884f13e368145a0e82068"
+    },
+    {
+      "id": "seed-thermal-hot",
+      "path": "assets/seed-thermal-hot.svg",
+      "sha256": "a9acbaee624d85ae5ddb360d7713cc20263d47f14601a68bf923f9e8129d537c"
+    },
+    {
+      "id": "seed-rail-idle",
+      "path": "assets/seed-rail-idle.svg",
+      "sha256": "68f5595b1b90b8769a82ff5163399b6d256b1d3310edb6579084ed75ba099cad"
+    },
+    {
+      "id": "seed-rail-active",
+      "path": "assets/seed-rail-active.svg",
+      "sha256": "4494e03047ab7698589c0baf3b327f3e49efda905bde5eb04c20e224d3a3cf4e"
+    }
+  ],
+  "rootDifferences": {
+    "paidStockCap": {
+      "authoredAndAutosave": 3,
+      "guided": 1,
+      "DemoPhysicsRuntimeCap": 1
+    },
+    "iceDefaults": {
+      "authorPreserved": {
+        "name": "累计融化冰块",
+        "notes": "",
+        "params": {
+          "friction": 1.4,
+          "meltAfter": 1,
+          "respawnDelay": 1
+        }
+      },
+      "laterChapterIceInstances": 0
+    }
+  },
+  "counts": {
+    "rooms": 32,
+    "directedConnections": 67,
+    "flags": 49,
+    "collectibles": 27
+  }
+}

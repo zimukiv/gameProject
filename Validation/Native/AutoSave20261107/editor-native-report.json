@@ -1,0 +1,26 @@
+[
+  {
+    "file": "input.json",
+    "rooms": 32,
+    "courses": 3,
+    "source": "523b045170f88881cf14cc4a401f023f76f5169a16aaf8f98b5bb2a9ca472ab5"
+  },
+  {
+    "file": "json-save-open.json",
+    "rooms": 32,
+    "courses": 3,
+    "source": "fbfa11f3a97cfc171058b178b9f9e3596bc009478e0e3b37b85660d0138dfdac"
+  },
+  {
+    "file": "zip-save-open.zip",
+    "rooms": 32,
+    "courses": 3,
+    "source": "2732ffa1c62bcdb3dd812924c0450570f6a173af04542449d71cb88181d8115d"
+  },
+  {
+    "file": "zip-to-json-save-open.json",
+    "rooms": 32,
+    "courses": 3,
+    "source": "fbfa11f3a97cfc171058b178b9f9e3596bc009478e0e3b37b85660d0138dfdac"
+  }
+]

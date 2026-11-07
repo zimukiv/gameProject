@@ -59,7 +59,7 @@ namespace RoomLab.Native
             float step=game.Mode=="playing"?(float)Math.Max(0,Math.Min(dt,.1)):0;
             if(game.RespawnRemaining>0)remaining=0;
             remaining=Mathf.Max(0,remaining-step);clock+=step;
-            Clarity=Mathf.SmoothStep(0,1,Mathf.Min(1,remaining/.25f));
+            Clarity=game.IsRework?(float)game.Awareness/100:Mathf.SmoothStep(0,1,Mathf.Min(1,remaining/.25f));
             float cols=game.Room.Cols,rows=game.Room.Rows;
             for(int i=0;i<mist.Length;i++){
                 float y=rows*(i+.5f)/mist.Length+Mathf.Sin(clock*.25f+i)*.2f;

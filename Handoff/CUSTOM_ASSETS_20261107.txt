@@ -1,0 +1,152 @@
+DDL · 截止之前 — 自定义资产与关卡规范
+本地初期版 / 2026-11-07
+
+最快替换方法
+1. 退出游戏。打开成品旁的“资产模板”，找到要替换的原文件。
+2. 保持文件名和图片尺寸，把新文件放进“自定义资产/images”或“自定义资产/audio”。
+3. 重新启动游戏。只替换放进去的项目，其余继续使用内置素材。
+不需要 Unity，不需要上传，不需要重新打包。不要改 RoomLabPhysics_Data 内的文件。
+撤回替换：把相应文件移出“自定义资产”，重启即可。不要删除个人存档。
+
+目录
+RoomLabPhysics.exe                 启动入口
+自定义资产/images/*.png            全局图片覆盖
+自定义资产/audio/*.wav             全局音乐与音效覆盖
+自定义资产/ui.json                 标题与三种界面颜色
+资产模板/images/                   当前原图，供照尺寸重画
+资产模板/audio/                    本次原创声音原文件
+资产模板/asset-catalog.json         每张图片的精确尺寸、声音长度与用途名称
+关卡导入/                          放置你们从编辑器导出的 JSON / ZIP
+关卡源文件/deadline-night.json      本次24房、3章可编辑源文件
+
+一、图片与动画
+格式：PNG，建议RGBA透明背景；每张不超过16MB；尺寸必须和asset-catalog一致。
+保留32 PPU、32×32格、角色32×64、脚底基线距底8像素、默认向右。
+运行时按最近邻显示。不要对像素图做模糊缩放，不要加JPEG压缩；画布尺寸不可随意裁掉透明边。
+玩家碰撞体为24×28，与32×64角色绘图分开。改图不会改变碰撞、跳跃、触发范围。
+
+常用角色帧键（文件名不含扩展名的部分）：
+player-idle00..03      待机，4帧，6fps
+player-run00..05       奔跑，6帧，10fps
+player-jump00..01      起跳，2帧，末帧保持
+player-fall00..01      下落，2帧
+player-dash00..01      冲刺，2帧，14fps，末帧保持
+player-crouch00..01    蹲下，2帧
+player-death00..03     重试反馈，4帧
+ai-idle00..03          待机助手
+ai-chase00..05         追逐助手
+ai-skill00..03         物理过载蓄力
+ai-knockback00..01     过载散热
+同一动作尽量整组更换，保持轮廓、脚点和配色。当前槽位数和播放速度固定；新增帧数需要改源码并重建。
+
+背景键：background、calculus-background、slacker-background。
+地形和机关：terrain_pickups-*、physics_mechanisms-*、physics_cannon-*、campus_interactables-*。
+calculus-world、slacker-world、theme-mechanisms是图集，必须保持图集尺寸与元素格位；不要只把整张图替换成一个物体。
+图集的当前切片坐标在 Assets/RoomLabNative/Presentation/NativePixelWorld.cs 的 WorldSlice/ThemeMechanism；通常更建议通过编辑器给对象绑定独立图片。
+
+素材优先级：导入关卡中有效的作者对象/房间/大关素材绑定，优先于全局内置回退图片。
+“自定义资产/images”覆盖的是内置及回退图片；它不会强制覆盖另一位作者显式绑定的素材。
+如果要改变特定关卡某个机关的外观，请用 RoomLab 的素材绑定并导出ZIP，这样文件随关卡走。
+编辑器导入支持已有PNG/JPEG/SVG/WebP/GIF链路；直接放入images的全局覆盖只支持PNG。
+
+美术约定
+保留暖黄学生与青紫CRT助手的身份；物理深靛实验室、青冷橙热；高数白纸与坐标；水课梦境拼贴。
+玩家、可站立边缘、危险物和可互动机关应比背景更清楚。低饱和背景不要盖过高亮奖励。
+危险状态除颜色外保留轮廓、动作、文字或音效提示；不要只靠红绿区分。
+界面与游戏世界可以有不同精细度，但各自内部保持一致；不要混用随机分辨率的角色帧。
+本次新增支路采用反向阶梯：主路从下方经过，藏品在高处，玩家折返带AI上去领取。
+
+二、音乐与音效
+直接覆盖仅支持 WAV：PCM 16-bit，1或2声道，8000–48000Hz，每文件不超过64MB且不超过180秒。
+推荐22050Hz或44100Hz，音乐双声道，音效可单声道。浮点WAV、24-bit、MP3、OGG不属于本版外置覆盖协议。
+使用压缩音频可先在你们的音频软件导出为以上WAV规格。
+
+每章有两个同步音轨：
+physics-explore.wav / physics-chase.wav      104 BPM，16小节
+calculus-explore.wav / calculus-chase.wav    112 BPM，16小节
+slacker-explore.wav / slacker-chase.wav       96 BPM，16小节
+explore是持续的主题音乐，chase是叠加的紧张节奏层；不要把完整混音重复放到两个文件里。
+同一章两文件应从同一工程、同一起点导出，长度与节拍完全一致。
+两层同时从同一音频时钟启动，AI启动后淡入追逐层，暂停/地图时减弱。
+若两层按采样数与采样率换算的循环时长不完全相等，会整对恢复内置音乐，避免错拍。只换一层时，新层仍须与另一层长度匹配。
+循环首尾接缝要平顺，避免长前奏和尾部静音；预留混音余量，避免持续削波。
+
+音效键：ui、jump、land、dash、coin、collectible、temperature、retry、finish、jet、rail-start、
+ice-melt、ice-create、checkpoint、calculus-integral、calculus-derivative、checkin、awake、
+ai-start、ai-charge、ai-burst、ai-recover、ai-teleport、steal。
+coin是玩家资源，collectible是AI替玩家收下研究藏品。ai-charge需要与0.9秒可见预警相配，不宜短到听不清。
+重要提示保持短而独特；不要用同一种提示同时表示存档、受击与奖励。
+设置页面有主音量、音乐和音效独立控制；不会改系统音量。
+
+三、界面配置
+编辑“自定义资产/ui.json”，例如：
+{
+  "title": "DDL · 截止之前",
+  "ink": "#0E1624",
+  "paper": "#E0DEC4",
+  "accent": "#33B8B8"
+}
+title须为单行，最多12个字符，不接受换行、制表符等控制字符；ink用于主面板，paper用于主要文字，accent用于主操作。
+按钮文字会按背景亮度选择黑/白以提高对比；普通说明文字仍需你们确保paper和ink清晰可读。
+只支持以上字段；字体、布局、字号层级、菜单结构和新增UI图片不是该JSON的控制范围。
+字体目前随Unity打包，换字体需在工程内修改并重新构建。保持中文字符覆盖和现有字体许可证。
+
+四、关卡、剧情与功能参数
+把最新 RoomLab 3.0.0 build11 导出的JSON或ZIP放入“关卡导入”，游戏主菜单点击“替换导入”选择文件。
+ZIP推荐用于带自定义图片的关卡；JSON引用相对资源时，把资源文件夹一并保留。
+取消选择、损坏文件和不支持的模块不会替换当前可用关卡。改变关卡内容后，存档按来源哈希隔离；旧存档保留。
+原11房作者Demo及原三主题示例仍可在“作业待办”选择。
+
+本次关卡文件容器仍为version=2。兼容2.5.5既有模块及build11高数多节点路径：
+movable.motionPath = [{"x":10,"y":12,"seconds":0.8,"mode":"smooth"}]
+节点数0–32；整数格坐标；每段0.05–60秒；mode为linear/smooth/easeIn/easeOut。
+高数积分/求导按padId明确绑定，不再使用旧range裁剪；旧legacy机关保持原规则。
+
+微剧情保存在每个room.notes。替换对白不会生成语音；当前为途中文字提示，并可在暂停页重看。
+机关力度、温控、轨道、签到、碰撞与素材按编辑器实例参数编辑，不需改运行代码。
+新增技能或全新机关类型仍需实现C#逻辑并重新构建；本版不会加载任意脚本、DLL或插件。
+
+nativeCampaign元数据是正式游戏扩展：
+根 nativeCampaign.id = "deadline-night-v1" 开启本次战役规则。
+房间 nativeCampaign.objective 是任务提示；requireAI要求启动助手；checkins要求不同签到站数量。
+所需站点不得多于该房实际站点；requireAI房间须保留可达终端。删掉必要物件前先同步修改目标。
+branchRoutes / route / targetSeconds 是设计与测试记录，不会自动生成地图，也不是实测时长。
+编辑器会保留这些字段，但编辑器预览不执行Unity专属门禁、AI过载和界面剧情。
+因此，数据往返兼容不代表所有预览行为完全相同；最终用本地游戏测试。
+
+五、失败回退与验收
+替换文件缺失：使用内置素材。格式、尺寸、长度不合法：记录CUSTOM_ASSET_FALLBACK并使用内置素材。
+可按附带“开始前读我.txt”末尾的路径找到日志，核对CUSTOM_IMAGE_LOADED / CUSTOM_AUDIO_LOADED是否出现。
+每次先只换一组，检查待机/奔跑/跳跃/死亡、冷/热、探索/追逐、暂停/继续，再换下一组。
+换关卡后检查出生点、所有出口、门禁数量、检查点重试、保存继续和藏品领取；图片替换成功不证明关卡可通。
+有损坏素材时不要反复覆盖原包；暂时移出覆盖文件即可回退。
+
+六、文件来源
+原有美术和字体许可证继续随包保留。此次30个WAV为原创合成配乐与音效，无外部音乐采样。
+资产模板是本版本的可替换基准，不是其他游戏素材合集。
+未来替换素材请在你们的项目内记录作者、来源、许可和版本，便于后续维护与分发。
+
+七、参考经验与本版落实（方法借鉴，不复制他人资产）
+Maddy Thorson, Celeste & Forgiveness：操作容错和落地前输入缓冲。
+https://www.maddymakesgames.com/articles/celeste_and_forgiveness/index.html
+落实：保留0.1秒土狼时间、0.12秒跳跃缓冲；清理必须触发板附近的跳台；通过正常输入测试通路。
+
+Maddy Thorson, GDC Level Design Workshop: Designing Celeste：关卡教学、奖励与主题结构。
+https://www.gamedeveloper.com/design/gdc-2017-level-design-workshop
+落实：先安全使用机关，再组合；主路与可选折返藏品分离；用检查点缩短失败后的重复。
+
+Pedro Medeiros, My Thoughts on Style Consistency：分辨率、颜色与游戏世界/UI的内部一致性。
+https://saint11.art/blog/consistency/
+落实：32格与现有人物轮廓不变；Point显示；文字独立于场景；外置PNG尺寸校验；三主题各自统一。
+
+Lena Raine 关于互动音乐的原访谈：配乐结构要响应实际玩法，作曲与关卡实现一起迭代。
+https://www.destructoid.com/celeste-composer-lena-raine-talks-video-game-music-philosophy-and-upcoming-projects/
+落实：三章共享动机、不同音色；探索/追逐同步分层；机关声音有独立身份；开放音轨替换。
+
+Game Accessibility Guidelines：文字对比、视觉/声音双重提示与独立音量。
+https://gameaccessibilityguidelines.com/full-list/
+落实：主操作按钮自动选择黑白文字；AI预警同时有声音、动作、光圈和文字；音乐/音效分别调节。
+
+试玩时长说明
+目标首次探索约30分钟。最终自动连续主路约19分钟、零死亡且不拿支路藏品；不是真人首次体验。
+36件藏品分布在后半段支路，三个主题代表支路已用正常输入引AI领取。尚未完成真人30分钟全收集试玩。

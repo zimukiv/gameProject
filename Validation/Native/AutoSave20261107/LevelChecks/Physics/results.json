@@ -1,0 +1,247 @@
+{
+  "baselineOnly": false,
+  "authoredSha256": "03b948a705210aafd718306a70947e90b41f7d1fa013a53a4087091d51809836",
+  "combinedSha256": "523b045170f88881cf14cc4a401f023f76f5169a16aaf8f98b5bb2a9ca472ab5",
+  "cases": 13,
+  "failures": 0,
+  "pairedInputFrames": 13832,
+  "normalInputOnly": true,
+  "fullPhysicsPlaythrough": false,
+  "results": [
+    {
+      "name": "parsed physics parameters and movement equal original author",
+      "pass": true,
+      "trace": []
+    },
+    {
+      "name": "original jet mechanism reaches the first real connecting door",
+      "pass": true,
+      "trace": [
+        {
+          "target": "5,13 ",
+          "x": 1.1297743055555556,
+          "feet": 14.0,
+          "vy": 0.0,
+          "launch": false
+        },
+        {
+          "target": "5,13",
+          "seconds": 0.8333333333333328
+        },
+        {
+          "target": "6,12 ",
+          "x": 5.028211805555557,
+          "feet": 12.899088541666666,
+          "vy": -387.5,
+          "launch": false
+        },
+        {
+          "target": "6,12",
+          "seconds": 1.2583333333333313
+        },
+        {
+          "target": "4,11 ",
+          "x": 6.018663194444446,
+          "feet": 11.899088541666666,
+          "vy": -387.5,
+          "launch": false
+        },
+        {
+          "target": "4,11",
+          "seconds": 1.6833333333333298
+        },
+        {
+          "target": "7,10 ",
+          "x": 4.22352430555555,
+          "feet": 10.899088541666666,
+          "vy": -387.5,
+          "launch": false
+        },
+        {
+          "target": "7,10",
+          "seconds": 2.1083333333333285
+        },
+        {
+          "target": "11,14 jet",
+          "x": 6.882812500000006,
+          "feet": 10.0,
+          "vy": 0.0,
+          "launch": false
+        },
+        {
+          "jet": true,
+          "x": 10.835937499999982,
+          "feet": 14.0
+        },
+        {
+          "target": "28.5,8 door",
+          "x": 10.840711805555538,
+          "feet": 13.768880208333334,
+          "vy": -887.5,
+          "launch": true
+        },
+        {
+          "target": "28.5,8 door",
+          "x": 20.283203125000036,
+          "feet": 8.0,
+          "vy": 0.0,
+          "launch": false
+        },
+        {
+          "target": "28.5,8 door",
+          "x": 27.158203125000178,
+          "feet": 8.0,
+          "vy": 0.0,
+          "launch": false
+        },
+        {
+          "transition": "rail-room",
+          "seconds": 4.716666666666691
+        }
+      ]
+    },
+    {
+      "name": "normal input deterministic replay jet-room",
+      "pass": true,
+      "trace": [
+        {
+          "inputFrames": 1200,
+          "endRoom": "jet-room",
+          "deaths": 0,
+          "x": 0.0,
+          "y": 392.3958333333333
+        }
+      ]
+    },
+    {
+      "name": "normal input deterministic replay rail-room",
+      "pass": true,
+      "trace": [
+        {
+          "inputFrames": 1200,
+          "endRoom": "rail-room",
+          "deaths": 2,
+          "x": 0.0,
+          "y": 424.3958333333333
+        }
+      ]
+    },
+    {
+      "name": "normal input deterministic replay room-mv0w2u2r-qkzk40",
+      "pass": true,
+      "trace": [
+        {
+          "inputFrames": 1200,
+          "endRoom": "room-mv0w2u2r-qkzk40",
+          "deaths": 1,
+          "x": 128.0,
+          "y": 136.39583333333334
+        }
+      ]
+    },
+    {
+      "name": "normal input deterministic replay room-mv0wnwtu-dxmqc7",
+      "pass": true,
+      "trace": [
+        {
+          "inputFrames": 1200,
+          "endRoom": "room-mv0wnwtu-dxmqc7",
+          "deaths": 4,
+          "x": 0.0,
+          "y": 40.39583333333333
+        }
+      ]
+    },
+    {
+      "name": "normal input deterministic replay room-mvaapi4e-crbnks",
+      "pass": true,
+      "trace": [
+        {
+          "inputFrames": 1200,
+          "endRoom": "room-mvaapi4e-crbnks",
+          "deaths": 3,
+          "x": 0.0,
+          "y": 392.3958333333333
+        }
+      ]
+    },
+    {
+      "name": "normal input deterministic replay room-mvaapqu4-6xob5m",
+      "pass": true,
+      "trace": [
+        {
+          "inputFrames": 1200,
+          "endRoom": "room-mvaapqu4-6xob5m",
+          "deaths": 2,
+          "x": 0.25000000000000244,
+          "y": 40.39583333333333
+        }
+      ]
+    },
+    {
+      "name": "normal input deterministic replay room-mvndxqmk-k9xt7n",
+      "pass": true,
+      "trace": [
+        {
+          "inputFrames": 1200,
+          "endRoom": "room-mvndxqmk-k9xt7n",
+          "deaths": 5,
+          "x": 0.0,
+          "y": 424.3958333333333
+        }
+      ]
+    },
+    {
+      "name": "normal input deterministic replay room-mvnf7n9x-0t6ggh",
+      "pass": true,
+      "trace": [
+        {
+          "inputFrames": 1200,
+          "endRoom": "room-mvnf7n9x-0t6ggh",
+          "deaths": 5,
+          "x": 932.0,
+          "y": 292.0
+        }
+      ]
+    },
+    {
+      "name": "normal input deterministic replay room-mvnf7nel-q8wikm",
+      "pass": true,
+      "trace": [
+        {
+          "inputFrames": 1200,
+          "endRoom": "room-mvnf7nel-q8wikm",
+          "deaths": 4,
+          "x": 0.0,
+          "y": 360.3958333333333
+        }
+      ]
+    },
+    {
+      "name": "normal input deterministic replay room-mvnf7nm5-vf4wbu",
+      "pass": true,
+      "trace": [
+        {
+          "inputFrames": 1200,
+          "endRoom": "room-mvnf7nm5-vf4wbu",
+          "deaths": 4,
+          "x": 0.0,
+          "y": 136.39583333333334
+        }
+      ]
+    },
+    {
+      "name": "normal input deterministic replay room-mvnkr562-1ihb3g",
+      "pass": true,
+      "trace": [
+        {
+          "inputFrames": 1200,
+          "endRoom": "room-mvnkr562-1ihb3g",
+          "deaths": 5,
+          "x": 0.0,
+          "y": 1576.3958333333333
+        }
+      ]
+    }
+  ]
+}

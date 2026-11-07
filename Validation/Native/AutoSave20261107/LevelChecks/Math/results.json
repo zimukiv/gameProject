@@ -1,0 +1,6660 @@
+{
+  "failures": 0,
+  "coveredConnections": [
+    "network-calculus-link-01",
+    "network-calculus-link-02",
+    "network-calculus-link-03",
+    "network-calculus-link-04",
+    "network-calculus-link-05",
+    "network-calculus-link-06",
+    "network-calculus-link-07",
+    "network-calculus-link-08",
+    "network-calculus-link-09",
+    "network-calculus-link-10",
+    "network-calculus-link-11",
+    "network-calculus-link-12",
+    "network-calculus-link-13",
+    "network-calculus-link-14",
+    "network-calculus-link-15",
+    "network-calculus-link-16",
+    "network-calculus-link-17",
+    "network-calculus-link-18",
+    "network-calculus-link-19",
+    "network-calculus-link-20",
+    "network-calculus-link-21",
+    "network-calculus-link-22",
+    "network-calculus-link-23",
+    "network-calculus-link-24",
+    "network-calculus-link-25",
+    "network-calculus-link-26",
+    "network-calculus-link-27"
+  ],
+  "reports": [
+    {
+      "name": "final geometry with normal input",
+      "pass": true,
+      "trace": [
+        {
+          "target": "3,37 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 2.13,
+            "feet": 37.0,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "3,37 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 2.841,
+            "feet": 37.0,
+            "seconds": 0.15,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "26,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 2.898,
+            "feet": 37.0,
+            "seconds": 0.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "26,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 9.25,
+            "feet": 35.209,
+            "seconds": 1.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "26,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 13.737,
+            "feet": 32.418,
+            "seconds": 2.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "26,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 18.768,
+            "feet": 30.682,
+            "seconds": 3.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "26,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 23.25,
+            "feet": 28.004,
+            "seconds": 4.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "26,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 26.023,
+            "feet": 27.0,
+            "seconds": 4.91,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "55,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 26.028,
+            "feet": 27.0,
+            "seconds": 4.92,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "55,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 32.641,
+            "feet": 27.0,
+            "seconds": 5.92,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "55,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 39.516,
+            "feet": 27.0,
+            "seconds": 6.92,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "55,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 46.391,
+            "feet": 27.0,
+            "seconds": 7.92,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "55,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 53.266,
+            "feet": 27.0,
+            "seconds": 8.92,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "55,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 54.87,
+            "feet": 27.0,
+            "seconds": 9.15,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "51,26 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 54.865,
+            "feet": 26.899,
+            "seconds": 9.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "51,26 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 51.232,
+            "feet": 26.0,
+            "seconds": 10.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "51,26 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 51.232,
+            "feet": 26.0,
+            "seconds": 10.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "33,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 51.227,
+            "feet": 25.899,
+            "seconds": 10.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "33,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 46.9,
+            "feet": 22.639,
+            "seconds": 11.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "33,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 41.94,
+            "feet": 20.434,
+            "seconds": 12.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "33,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 37.0,
+            "feet": 18.616,
+            "seconds": 13.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "33,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 33.195,
+            "feet": 17.0,
+            "seconds": 13.98,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "23,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 33.191,
+            "feet": 16.899,
+            "seconds": 13.99,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "23,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 26.578,
+            "feet": 17.0,
+            "seconds": 14.99,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "23,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 23.427,
+            "feet": 17.0,
+            "seconds": 15.45,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "31.5,37 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 23.432,
+            "feet": 17.0,
+            "seconds": 15.46,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "31.5,37 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 30.044,
+            "feet": 17.0,
+            "seconds": 16.46,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "31.5,37 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 31.534,
+            "feet": 33.055,
+            "seconds": 17.46,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "31.5,37 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 31.534,
+            "feet": 37.0,
+            "seconds": 17.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "35,37 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 31.539,
+            "feet": 37.0,
+            "seconds": 17.61,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "35,37 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 34.828,
+            "feet": 37.0,
+            "seconds": 18.12,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "8,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 34.823,
+            "feet": 37.0,
+            "seconds": 18.13,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "8,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 28.211,
+            "feet": 36.284,
+            "seconds": 19.13,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "8,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 23.57,
+            "feet": 33.434,
+            "seconds": 20.13,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "8,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 18.539,
+            "feet": 31.639,
+            "seconds": 21.13,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "8,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 14.0,
+            "feet": 29.069,
+            "seconds": 22.13,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "8,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 9.398,
+            "feet": 26.395,
+            "seconds": 23.13,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "8,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 8.195,
+            "feet": 27.0,
+            "seconds": 23.32,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "7,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 8.191,
+            "feet": 27.0,
+            "seconds": 23.32,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "7,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 7.422,
+            "feet": 27.0,
+            "seconds": 23.47,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "proof": true,
+          "state": {
+            "room": "network-calculus-10",
+            "x": 7.422,
+            "feet": 27.0,
+            "seconds": 23.47,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "final chase with normal input",
+      "pass": true,
+      "trace": [
+        {
+          "target": "3,37 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 2.13,
+            "feet": 37.0,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "3,37 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 2.841,
+            "feet": 37.0,
+            "seconds": 0.15,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "26,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 2.898,
+            "feet": 37.0,
+            "seconds": 0.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "26,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 9.25,
+            "feet": 35.899,
+            "seconds": 1.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": -0.081,
+            "aiY": 36.562,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "26,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 13.25,
+            "feet": 33.707,
+            "seconds": 2.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 6.924,
+            "aiY": 36.205,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "26,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 17.25,
+            "feet": 31.528,
+            "seconds": 3.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 11.625,
+            "aiY": 34.052,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "26,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 21.25,
+            "feet": 29.362,
+            "seconds": 4.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 15.625,
+            "aiY": 32.421,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "26,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 25.298,
+            "feet": 26.727,
+            "seconds": 5.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 16.234,
+            "aiY": 31.244,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "26,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 26.023,
+            "feet": 27.0,
+            "seconds": 5.44,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 16.345,
+            "aiY": 31.244,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "55,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 26.028,
+            "feet": 27.0,
+            "seconds": 5.45,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 16.367,
+            "aiY": 31.244,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "55,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 32.641,
+            "feet": 27.0,
+            "seconds": 6.45,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 17.673,
+            "aiY": 30.304,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "55,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 39.516,
+            "feet": 27.0,
+            "seconds": 7.45,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 21.696,
+            "aiY": 28.245,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "55,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 46.391,
+            "feet": 27.0,
+            "seconds": 8.45,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 25.973,
+            "aiY": 26.028,
+            "switches": {
+              "final-alpha": true
+            }
+          }
+        },
+        {
+          "target": "55,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 54.835,
+            "feet": 27.0,
+            "seconds": 9.27,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 31.308,
+            "aiY": 26.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "51,26 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 54.831,
+            "feet": 26.899,
+            "seconds": 9.28,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 31.367,
+            "aiY": 26.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "51,26 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 51.197,
+            "feet": 26.0,
+            "seconds": 10.28,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 38.555,
+            "aiY": 26.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "51,26 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 51.197,
+            "feet": 26.0,
+            "seconds": 10.28,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 38.555,
+            "aiY": 26.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "33,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 51.192,
+            "feet": 25.899,
+            "seconds": 10.28,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 38.615,
+            "aiY": 26.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "33,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 47.0,
+            "feet": 23.707,
+            "seconds": 11.28,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 45.802,
+            "aiY": 26.562,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "33,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 43.0,
+            "feet": 21.528,
+            "seconds": 12.28,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 43.532,
+            "aiY": 25.375,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "33,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 39.0,
+            "feet": 19.362,
+            "seconds": 13.28,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 40.255,
+            "aiY": 25.375,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "33,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 34.952,
+            "feet": 16.727,
+            "seconds": 14.28,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 38.79,
+            "aiY": 25.375,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "33,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 33.195,
+            "feet": 17.0,
+            "seconds": 14.57,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 38.037,
+            "aiY": 25.375,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "23,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 33.191,
+            "feet": 16.899,
+            "seconds": 14.57,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 38.015,
+            "aiY": 25.375,
+            "switches": {
+              "final-alpha": true,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "23,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 23.748,
+            "feet": 17.0,
+            "seconds": 15.57,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 32.942,
+            "aiY": 25.375,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "23,17 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 23.404,
+            "feet": 17.0,
+            "seconds": 15.62,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 32.625,
+            "aiY": 25.333,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "31.5,37 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 23.409,
+            "feet": 17.0,
+            "seconds": 15.63,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 32.625,
+            "aiY": 25.273,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "31.5,37 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 31.534,
+            "feet": 20.516,
+            "seconds": 16.63,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "aiX": 32.575,
+            "aiY": 18.771,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "31.5,37 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 31.534,
+            "feet": 37.0,
+            "seconds": 17.24,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "aiX": 32.575,
+            "aiY": 18.771,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "35,37 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 31.539,
+            "feet": 37.0,
+            "seconds": 17.25,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "aiX": 32.575,
+            "aiY": 18.771,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true
+            }
+          }
+        },
+        {
+          "target": "35,37 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 35.395,
+            "feet": 37.0,
+            "seconds": 17.76,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "aiX": 31.909,
+            "aiY": 20.516,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "8,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 35.338,
+            "feet": 37.0,
+            "seconds": 17.77,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "aiX": 31.909,
+            "aiY": 20.576,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "8,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 28.463,
+            "feet": 36.284,
+            "seconds": 18.77,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "aiX": 31.909,
+            "aiY": 27.763,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "8,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 24.0,
+            "feet": 34.137,
+            "seconds": 19.77,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "aiX": 30.952,
+            "aiY": 34.043,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "8,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 20.0,
+            "feet": 32.004,
+            "seconds": 20.77,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "aiX": 23.787,
+            "aiY": 33.59,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "8,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 15.995,
+            "feet": 29.883,
+            "seconds": 21.77,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "aiX": 21.535,
+            "aiY": 32.244,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "8,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 11.685,
+            "feet": 27.477,
+            "seconds": 22.77,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "aiX": 20.375,
+            "aiY": 32.412,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "8,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 8.195,
+            "feet": 27.0,
+            "seconds": 23.42,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "aiX": 19.756,
+            "aiY": 31.244,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "7,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 8.191,
+            "feet": 27.0,
+            "seconds": 23.42,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "aiX": 19.734,
+            "aiY": 31.244,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "7,27 ",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 7.422,
+            "feet": 27.0,
+            "seconds": 23.57,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "aiX": 19.26,
+            "aiY": 31.244,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "collections": [
+            "走回来的最后一行"
+          ],
+          "state": {
+            "room": "network-calculus-10",
+            "x": 7.422,
+            "feet": 27.0,
+            "seconds": 24.51,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "aiX": 15.335,
+            "aiY": 29.244,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "target": "3.5,27 door",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 7.417,
+            "feet": 27.0,
+            "seconds": 24.52,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "aiX": 15.275,
+            "aiY": 29.244,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        },
+        {
+          "proof": true,
+          "state": {
+            "room": "network-calculus-10",
+            "x": 4.586,
+            "feet": 27.0,
+            "seconds": 24.97,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "aiX": 13.523,
+            "aiY": 27.955,
+            "switches": {
+              "final-alpha": false,
+              "final-beta": true,
+              "final-gamma": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "all 27 network connections with normal input",
+      "pass": true,
+      "trace": [
+        {
+          "target": "15,17 ",
+          "state": {
+            "room": "network-calculus-01",
+            "x": 1.13,
+            "feet": 24.0,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -3.656,
+            "aiY": 23.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "15,17 ",
+          "state": {
+            "room": "network-calculus-01",
+            "x": 6.25,
+            "feet": 21.137,
+            "seconds": 1.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -3.656,
+            "aiY": 23.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "15,17 ",
+          "state": {
+            "room": "network-calculus-01",
+            "x": 10.794,
+            "feet": 18.405,
+            "seconds": 2.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -3.656,
+            "aiY": 23.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "15,17 ",
+          "state": {
+            "room": "network-calculus-01",
+            "x": 15.023,
+            "feet": 16.727,
+            "seconds": 3.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -3.656,
+            "aiY": 23.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "15,17 ",
+          "state": {
+            "room": "network-calculus-01",
+            "x": 15.023,
+            "feet": 17.0,
+            "seconds": 3.05,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -3.656,
+            "aiY": 23.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "18,17 ",
+          "state": {
+            "room": "network-calculus-01",
+            "x": 15.028,
+            "feet": 17.0,
+            "seconds": 3.06,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -3.656,
+            "aiY": 23.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "18,17 ",
+          "state": {
+            "room": "network-calculus-01",
+            "x": 17.859,
+            "feet": 17.0,
+            "seconds": 3.51,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -3.656,
+            "aiY": 23.562,
+            "switches": {
+              "intro-alpha": true
+            }
+          }
+        },
+        {
+          "target": "36.5,17 door",
+          "state": {
+            "room": "network-calculus-01",
+            "x": 17.917,
+            "feet": 17.0,
+            "seconds": 3.52,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -3.656,
+            "aiY": 23.562,
+            "switches": {
+              "intro-alpha": true
+            }
+          }
+        },
+        {
+          "target": "36.5,17 door",
+          "state": {
+            "room": "network-calculus-01",
+            "x": 24.792,
+            "feet": 17.0,
+            "seconds": 4.52,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -3.656,
+            "aiY": 23.562,
+            "switches": {
+              "intro-alpha": true
+            }
+          }
+        },
+        {
+          "target": "36.5,17 door",
+          "state": {
+            "room": "network-calculus-01",
+            "x": 31.667,
+            "feet": 17.0,
+            "seconds": 5.52,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -3.656,
+            "aiY": 23.562,
+            "switches": {
+              "intro-alpha": true
+            }
+          }
+        },
+        {
+          "edge": "network-calculus-link-01",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 5.125,
+            "feet": 35.0,
+            "seconds": 6.65,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 0.344,
+            "aiY": 34.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "1.5,35 door",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 5.55,
+            "feet": 35.0,
+            "seconds": 6.77,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 0.344,
+            "aiY": 34.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-02",
+          "state": {
+            "room": "network-calculus-01",
+            "x": 33.125,
+            "feet": 17.0,
+            "seconds": 7.78,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 28.344,
+            "aiY": 16.562,
+            "switches": {
+              "intro-alpha": true
+            }
+          }
+        },
+        {
+          "target": "36.5,17 door",
+          "state": {
+            "room": "network-calculus-01",
+            "x": 32.7,
+            "feet": 17.0,
+            "seconds": 7.9,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 28.344,
+            "aiY": 16.562,
+            "switches": {
+              "intro-alpha": true
+            }
+          }
+        },
+        {
+          "edge": "network-calculus-link-01",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 5.125,
+            "feet": 35.0,
+            "seconds": 8.92,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 0.344,
+            "aiY": 34.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "10.5,35 door",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 5.13,
+            "feet": 35.0,
+            "seconds": 8.93,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 0.344,
+            "aiY": 34.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-03",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 4.125,
+            "feet": 28.0,
+            "seconds": 10.18,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "10,28 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 4.13,
+            "feet": 28.0,
+            "seconds": 10.18,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "10,28 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 9.826,
+            "feet": 28.0,
+            "seconds": 11.05,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "32,18 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 9.883,
+            "feet": 28.0,
+            "seconds": 11.06,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "32,18 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 15.68,
+            "feet": 25.434,
+            "seconds": 12.06,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "32,18 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 20.711,
+            "feet": 23.639,
+            "seconds": 13.06,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "32,18 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 25.25,
+            "feet": 21.069,
+            "seconds": 14.06,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "32,18 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 29.852,
+            "feet": 18.395,
+            "seconds": 15.06,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "32,18 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 32.023,
+            "feet": 18.0,
+            "seconds": 15.67,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "36.5,18 door",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 32.028,
+            "feet": 18.0,
+            "seconds": 15.67,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "edge": "network-calculus-link-05",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 4.125,
+            "feet": 29.0,
+            "seconds": 16.79,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "24,21 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 4.13,
+            "feet": 29.0,
+            "seconds": 16.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "24,21 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 10.742,
+            "feet": 27.564,
+            "seconds": 17.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "24,21 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 15.25,
+            "feet": 25.209,
+            "seconds": 18.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "24,21 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 19.737,
+            "feet": 22.418,
+            "seconds": 19.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "24,21 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 24.023,
+            "feet": 20.682,
+            "seconds": 20.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "24,21 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 24.023,
+            "feet": 21.0,
+            "seconds": 20.85,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "26,21 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 24.028,
+            "feet": 21.0,
+            "seconds": 20.86,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "26,21 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 25.828,
+            "feet": 21.0,
+            "seconds": 21.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "28.5,21 door",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 25.885,
+            "feet": 21.0,
+            "seconds": 21.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-07",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 38.125,
+            "feet": 25.0,
+            "seconds": 21.97,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 33.344,
+            "aiY": 24.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34.5,26 ",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 38.12,
+            "feet": 25.0,
+            "seconds": 21.98,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 33.344,
+            "aiY": 24.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34.5,26 ",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 34.888,
+            "feet": 26.0,
+            "seconds": 22.49,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 33.344,
+            "aiY": 24.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "36.5,25 ",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 34.893,
+            "feet": 25.899,
+            "seconds": 22.5,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 33.344,
+            "aiY": 24.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "36.5,25 ",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 36.539,
+            "feet": 25.0,
+            "seconds": 22.92,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 33.344,
+            "aiY": 24.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "39.5,25 door",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 35.713,
+            "feet": 25.0,
+            "seconds": 23.09,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 33.344,
+            "aiY": 24.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-08",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 28.125,
+            "feet": 21.0,
+            "seconds": 24.11,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 23.344,
+            "aiY": 20.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "10,28 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 28.12,
+            "feet": 21.0,
+            "seconds": 24.12,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 23.344,
+            "aiY": 20.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "10,28 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 21.508,
+            "feet": 22.0,
+            "seconds": 25.12,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 23.344,
+            "aiY": 20.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "10,28 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 14.633,
+            "feet": 25.215,
+            "seconds": 26.12,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 23.344,
+            "aiY": 20.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "10,28 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 10.221,
+            "feet": 28.0,
+            "seconds": 26.82,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 23.344,
+            "aiY": 20.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "1.5,29 door",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 10.217,
+            "feet": 28.0,
+            "seconds": 26.82,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 23.344,
+            "aiY": 20.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "1.5,29 door",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 3.604,
+            "feet": 29.0,
+            "seconds": 27.82,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 23.344,
+            "aiY": 20.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-06",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 36.125,
+            "feet": 18.0,
+            "seconds": 28.52,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 31.344,
+            "aiY": 17.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "14,27 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 36.12,
+            "feet": 18.0,
+            "seconds": 28.53,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 31.344,
+            "aiY": 17.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "14,27 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 29.508,
+            "feet": 19.0,
+            "seconds": 29.53,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 31.344,
+            "aiY": 17.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "14,27 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 22.633,
+            "feet": 22.215,
+            "seconds": 30.53,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 31.344,
+            "aiY": 17.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "14,27 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 15.758,
+            "feet": 26.0,
+            "seconds": 31.53,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 31.344,
+            "aiY": 17.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "14,27 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 14.211,
+            "feet": 27.0,
+            "seconds": 31.81,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 31.344,
+            "aiY": 17.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "1.5,28 door",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 14.206,
+            "feet": 27.0,
+            "seconds": 31.82,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 31.344,
+            "aiY": 17.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "1.5,28 door",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 7.594,
+            "feet": 28.0,
+            "seconds": 32.82,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 31.344,
+            "aiY": 17.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "edge": "network-calculus-link-04",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 14.125,
+            "feet": 35.0,
+            "seconds": 34.09,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 9.344,
+            "aiY": 34.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "10.5,35 door",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 14.55,
+            "feet": 35.0,
+            "seconds": 34.21,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 9.344,
+            "aiY": 34.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-03",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 4.125,
+            "feet": 28.0,
+            "seconds": 35.22,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "10,28 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 4.13,
+            "feet": 28.0,
+            "seconds": 35.23,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "10,28 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 9.826,
+            "feet": 28.0,
+            "seconds": 36.1,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "32,18 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 9.883,
+            "feet": 28.0,
+            "seconds": 36.11,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "32,18 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 15.68,
+            "feet": 25.434,
+            "seconds": 37.11,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "32,18 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 20.711,
+            "feet": 23.639,
+            "seconds": 38.11,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "32,18 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 25.25,
+            "feet": 21.069,
+            "seconds": 39.11,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "32,18 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 29.852,
+            "feet": 18.395,
+            "seconds": 40.11,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "32,18 ",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 32.023,
+            "feet": 18.0,
+            "seconds": 40.72,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "45.5,28 door",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 32.028,
+            "feet": 18.0,
+            "seconds": 40.72,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "45.5,28 door",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 38.641,
+            "feet": 18.0,
+            "seconds": 41.72,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "45.5,28 door",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 45.516,
+            "feet": 18.146,
+            "seconds": 42.72,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": false
+            }
+          }
+        },
+        {
+          "edge": "network-calculus-link-15",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 4.125,
+            "feet": 23.0,
+            "seconds": 43.86,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "1.5,23 door",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 5.524,
+            "feet": 22.616,
+            "seconds": 44.12,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-16",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 42.125,
+            "feet": 28.0,
+            "seconds": 45.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 37.344,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "45.5,28 door",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 41.7,
+            "feet": 28.0,
+            "seconds": 45.28,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 37.344,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "edge": "network-calculus-link-15",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 4.125,
+            "feet": 23.0,
+            "seconds": 46.3,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "21,15 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 4.13,
+            "feet": 23.0,
+            "seconds": 46.31,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "21,15 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 9.654,
+            "feet": 20.6,
+            "seconds": 47.31,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "21,15 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 14.25,
+            "feet": 18.137,
+            "seconds": 48.31,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "21,15 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 18.794,
+            "feet": 15.405,
+            "seconds": 49.31,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "21,15 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 21.023,
+            "feet": 15.0,
+            "seconds": 49.92,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "27,15 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 21.028,
+            "feet": 15.0,
+            "seconds": 49.93,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "27,15 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 26.839,
+            "feet": 15.0,
+            "seconds": 50.82,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "47.5,23 door",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 26.896,
+            "feet": 15.0,
+            "seconds": 50.82,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "47.5,23 door",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 33.771,
+            "feet": 16.0,
+            "seconds": 51.82,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "47.5,23 door",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 40.646,
+            "feet": 19.254,
+            "seconds": 52.82,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-17",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 9.125,
+            "feet": 30.0,
+            "seconds": 54.36,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 4.344,
+            "aiY": 29.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "7.5,30 door",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 11.498,
+            "feet": 30.0,
+            "seconds": 54.76,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 4.344,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": false
+            }
+          }
+        },
+        {
+          "edge": "network-calculus-link-18",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 46.125,
+            "feet": 23.0,
+            "seconds": 55.77,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "4,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 46.12,
+            "feet": 22.899,
+            "seconds": 55.77,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "4,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 41.9,
+            "feet": 19.639,
+            "seconds": 56.77,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "4,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 36.94,
+            "feet": 17.434,
+            "seconds": 57.77,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "4,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 32.0,
+            "feet": 15.616,
+            "seconds": 58.77,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "4,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 25.956,
+            "feet": 15.0,
+            "seconds": 59.77,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "4,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 19.081,
+            "feet": 15.752,
+            "seconds": 60.77,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "4,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 12.206,
+            "feet": 19.003,
+            "seconds": 61.77,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "4,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 5.331,
+            "feet": 23.0,
+            "seconds": 62.77,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "4,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 4.414,
+            "feet": 23.0,
+            "seconds": 62.91,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "1.5,23 door",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 4.357,
+            "feet": 23.0,
+            "seconds": 62.92,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "edge": "network-calculus-link-16",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 42.125,
+            "feet": 28.0,
+            "seconds": 63.72,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 37.344,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "target": "45.5,28 door",
+          "state": {
+            "room": "network-calculus-03",
+            "x": 41.7,
+            "feet": 28.0,
+            "seconds": 63.84,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 37.344,
+            "aiY": 27.562,
+            "switches": {
+              "yard-alpha": true
+            }
+          }
+        },
+        {
+          "edge": "network-calculus-link-15",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 4.125,
+            "feet": 23.0,
+            "seconds": 64.86,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "47.5,23 door",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 4.13,
+            "feet": 23.0,
+            "seconds": 64.87,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "47.5,23 door",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 10.742,
+            "feet": 23.0,
+            "seconds": 65.87,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "47.5,23 door",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 17.617,
+            "feet": 23.0,
+            "seconds": 66.87,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "47.5,23 door",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 24.492,
+            "feet": 23.0,
+            "seconds": 67.87,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "47.5,23 door",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 31.367,
+            "feet": 23.0,
+            "seconds": 68.87,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "47.5,23 door",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 38.242,
+            "feet": 23.0,
+            "seconds": 69.87,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "47.5,23 door",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 45.117,
+            "feet": 23.0,
+            "seconds": 70.87,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "edge": "network-calculus-link-17",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 9.125,
+            "feet": 30.0,
+            "seconds": 71.64,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 4.344,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": false
+            }
+          }
+        },
+        {
+          "target": "1.5,30 door",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 9.12,
+            "feet": 29.899,
+            "seconds": 71.65,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 4.344,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": false
+            }
+          }
+        },
+        {
+          "edge": "network-calculus-link-10",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 49.125,
+            "feet": 35.0,
+            "seconds": 73.18,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 44.344,
+            "aiY": 34.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "54.5,35 door",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 49.13,
+            "feet": 35.0,
+            "seconds": 73.19,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 44.344,
+            "aiY": 34.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-09",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 3.125,
+            "feet": 30.0,
+            "seconds": 74.44,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": false
+            }
+          }
+        },
+        {
+          "target": "17,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 3.13,
+            "feet": 30.0,
+            "seconds": 74.45,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": false
+            }
+          }
+        },
+        {
+          "target": "17,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 9.742,
+            "feet": 30.0,
+            "seconds": 75.45,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": false
+            }
+          }
+        },
+        {
+          "target": "17,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 16.617,
+            "feet": 29.993,
+            "seconds": 76.45,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "17,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 16.846,
+            "feet": 29.979,
+            "seconds": 76.48,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "17,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 16.904,
+            "feet": 29.873,
+            "seconds": 76.49,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "17,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 17.018,
+            "feet": 26.119,
+            "seconds": 77.49,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "17,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 17.018,
+            "feet": 21.27,
+            "seconds": 78.49,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "17,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 17.018,
+            "feet": 20.123,
+            "seconds": 79.07,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "27,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 17.023,
+            "feet": 20.112,
+            "seconds": 79.08,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "27,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 23.635,
+            "feet": 20.0,
+            "seconds": 80.08,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "27,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 26.844,
+            "feet": 20.0,
+            "seconds": 80.54,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "target": "32,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 26.901,
+            "feet": 20.0,
+            "seconds": 80.55,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "target": "32,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 32.0,
+            "feet": 23.988,
+            "seconds": 81.55,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "target": "32,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 32.0,
+            "feet": 30.0,
+            "seconds": 81.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "target": "46.5,30 door",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 32.005,
+            "feet": 30.0,
+            "seconds": 81.81,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "target": "46.5,30 door",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 38.617,
+            "feet": 30.0,
+            "seconds": 82.81,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "target": "46.5,30 door",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 45.492,
+            "feet": 30.0,
+            "seconds": 83.81,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "edge": "network-calculus-link-11",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 4.125,
+            "feet": 32.0,
+            "seconds": 84.38,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "1.5,32 door",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 5.524,
+            "feet": 32.0,
+            "seconds": 84.64,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-12",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 43.125,
+            "feet": 30.0,
+            "seconds": 85.66,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 38.344,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "target": "46.5,30 door",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 42.7,
+            "feet": 30.0,
+            "seconds": 85.78,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 38.344,
+            "aiY": 29.562,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "edge": "network-calculus-link-11",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 4.125,
+            "feet": 32.0,
+            "seconds": 86.79,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 4.13,
+            "feet": 32.0,
+            "seconds": 86.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 10.742,
+            "feet": 31.362,
+            "seconds": 87.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 15.622,
+            "feet": 28.454,
+            "seconds": 88.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 20.654,
+            "feet": 26.6,
+            "seconds": 89.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 25.25,
+            "feet": 24.137,
+            "seconds": 90.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 29.794,
+            "feet": 21.405,
+            "seconds": 91.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 34.023,
+            "feet": 19.727,
+            "seconds": 92.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 34.023,
+            "feet": 20.0,
+            "seconds": 92.84,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "39,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 34.028,
+            "feet": 20.0,
+            "seconds": 92.85,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "39,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 38.865,
+            "feet": 20.0,
+            "seconds": 93.59,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "12,32 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 38.86,
+            "feet": 20.0,
+            "seconds": 93.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "12,32 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 32.247,
+            "feet": 20.557,
+            "seconds": 94.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "12,32 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 25.372,
+            "feet": 24.0,
+            "seconds": 95.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "12,32 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 18.497,
+            "feet": 27.342,
+            "seconds": 96.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "12,32 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 12.195,
+            "feet": 31.916,
+            "seconds": 97.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "12,32 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 12.195,
+            "feet": 32.0,
+            "seconds": 97.61,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "7.5,32 door",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 12.191,
+            "feet": 32.0,
+            "seconds": 97.62,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-13",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 38.125,
+            "feet": 35.0,
+            "seconds": 98.73,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 33.344,
+            "aiY": 34.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "42.5,35 door",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 38.13,
+            "feet": 35.0,
+            "seconds": 98.73,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 33.344,
+            "aiY": 34.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-14",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 10.125,
+            "feet": 32.0,
+            "seconds": 99.83,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "12,32 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 10.13,
+            "feet": 32.0,
+            "seconds": 99.84,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "12,32 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 11.815,
+            "feet": 32.0,
+            "seconds": 100.13,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "14,30.5 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 11.872,
+            "feet": 31.899,
+            "seconds": 100.13,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "14,30.5 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 14.049,
+            "feet": 30.5,
+            "seconds": 100.46,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 14.054,
+            "feet": 30.5,
+            "seconds": 100.47,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 19.25,
+            "feet": 27.137,
+            "seconds": 101.47,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 23.794,
+            "feet": 24.405,
+            "seconds": 102.47,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 28.826,
+            "feet": 22.727,
+            "seconds": 103.47,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 33.25,
+            "feet": 19.942,
+            "seconds": 104.47,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 34.023,
+            "feet": 20.0,
+            "seconds": 104.78,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "42.5,20 door",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 34.028,
+            "feet": 20.0,
+            "seconds": 104.79,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "42.5,20 door",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 40.641,
+            "feet": 20.0,
+            "seconds": 105.79,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-22",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 56.125,
+            "feet": 31.0,
+            "seconds": 106.49,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 51.344,
+            "aiY": 30.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "56.5,31 door",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 52.716,
+            "feet": 28.564,
+            "seconds": 107.27,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 51.344,
+            "aiY": 30.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-21",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 42.125,
+            "feet": 20.0,
+            "seconds": 108.28,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 37.344,
+            "aiY": 19.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "42.5,20 door",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 38.721,
+            "feet": 20.0,
+            "seconds": 108.83,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 37.344,
+            "aiY": 19.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-22",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 56.125,
+            "feet": 31.0,
+            "seconds": 109.85,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 51.344,
+            "aiY": 30.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 56.12,
+            "feet": 30.899,
+            "seconds": 109.86,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 51.344,
+            "aiY": 30.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 51.9,
+            "feet": 27.639,
+            "seconds": 110.86,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 51.344,
+            "aiY": 30.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 46.94,
+            "feet": 25.434,
+            "seconds": 111.86,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 51.344,
+            "aiY": 30.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 42.0,
+            "feet": 23.616,
+            "seconds": 112.86,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 51.344,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 37.785,
+            "feet": 20.532,
+            "seconds": 113.86,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 51.344,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 34.195,
+            "feet": 20.0,
+            "seconds": 114.53,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 51.344,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "3,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 34.191,
+            "feet": 20.0,
+            "seconds": 114.53,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 51.344,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "3,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 27.578,
+            "feet": 20.0,
+            "seconds": 115.53,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 51.344,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "3,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 20.703,
+            "feet": 22.179,
+            "seconds": 116.53,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 51.344,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "3,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 13.828,
+            "feet": 26.0,
+            "seconds": 117.53,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 51.344,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "3,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 6.953,
+            "feet": 30.803,
+            "seconds": 118.53,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 51.344,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "3,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 3.229,
+            "feet": 31.0,
+            "seconds": 119.51,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 51.344,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "1.5,31 door",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 3.224,
+            "feet": 31.0,
+            "seconds": 119.52,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 51.344,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "edge": "network-calculus-link-20",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 46.125,
+            "feet": 29.0,
+            "seconds": 120.2,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "46.5,29 door",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 42.716,
+            "feet": 26.564,
+            "seconds": 120.98,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-19",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 3.125,
+            "feet": 31.0,
+            "seconds": 121.99,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "1.5,31 door",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 5.498,
+            "feet": 31.0,
+            "seconds": 122.39,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "edge": "network-calculus-link-20",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 46.125,
+            "feet": 29.0,
+            "seconds": 123.4,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "30,21 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 46.12,
+            "feet": 28.899,
+            "seconds": 123.41,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "30,21 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 41.9,
+            "feet": 25.639,
+            "seconds": 124.41,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "30,21 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 36.94,
+            "feet": 23.434,
+            "seconds": 125.41,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "30,21 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 32.0,
+            "feet": 21.616,
+            "seconds": 126.41,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "30,21 ",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 30.195,
+            "feet": 21.0,
+            "seconds": 126.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "28.5,21 door",
+          "state": {
+            "room": "network-calculus-04",
+            "x": 30.191,
+            "feet": 21.0,
+            "seconds": 126.81,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 41.344,
+            "aiY": 28.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-07",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 38.125,
+            "feet": 25.0,
+            "seconds": 127.48,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 33.344,
+            "aiY": 24.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "55.5,25 door",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 38.13,
+            "feet": 24.899,
+            "seconds": 127.49,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 33.344,
+            "aiY": 24.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "55.5,25 door",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 44.742,
+            "feet": 25.0,
+            "seconds": 128.49,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 33.344,
+            "aiY": 24.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "55.5,25 door",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 51.617,
+            "feet": 25.0,
+            "seconds": 129.49,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 33.344,
+            "aiY": 24.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-23",
+          "state": {
+            "room": "network-calculus-09",
+            "x": 4.125,
+            "feet": 27.0,
+            "seconds": 130.48,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 26.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "1.5,27 door",
+          "state": {
+            "room": "network-calculus-09",
+            "x": 5.524,
+            "feet": 27.0,
+            "seconds": 130.74,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 26.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-24",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 53.125,
+            "feet": 25.0,
+            "seconds": 131.76,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 48.344,
+            "aiY": 24.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "55.5,25 door",
+          "state": {
+            "room": "network-calculus-02",
+            "x": 51.726,
+            "feet": 25.0,
+            "seconds": 132.02,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 48.344,
+            "aiY": 24.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-23",
+          "state": {
+            "room": "network-calculus-09",
+            "x": 4.125,
+            "feet": 27.0,
+            "seconds": 133.03,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 26.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "7.5,27 door",
+          "state": {
+            "room": "network-calculus-09",
+            "x": 4.13,
+            "feet": 27.0,
+            "seconds": 133.04,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -0.656,
+            "aiY": 26.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-26",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 50.125,
+            "feet": 32.0,
+            "seconds": 134.0,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 45.344,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "51.5,32 door",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 47.752,
+            "feet": 32.0,
+            "seconds": 134.4,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 45.344,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-25",
+          "state": {
+            "room": "network-calculus-09",
+            "x": 10.125,
+            "feet": 27.0,
+            "seconds": 135.41,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 26.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,16 ",
+          "state": {
+            "room": "network-calculus-09",
+            "x": 10.13,
+            "feet": 27.0,
+            "seconds": 135.42,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 26.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,16 ",
+          "state": {
+            "room": "network-calculus-09",
+            "x": 15.68,
+            "feet": 24.434,
+            "seconds": 136.42,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 26.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,16 ",
+          "state": {
+            "room": "network-calculus-09",
+            "x": 20.711,
+            "feet": 22.639,
+            "seconds": 137.42,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 26.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,16 ",
+          "state": {
+            "room": "network-calculus-09",
+            "x": 25.25,
+            "feet": 20.069,
+            "seconds": 138.42,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 26.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,16 ",
+          "state": {
+            "room": "network-calculus-09",
+            "x": 29.852,
+            "feet": 17.395,
+            "seconds": 139.42,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 26.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,16 ",
+          "state": {
+            "room": "network-calculus-09",
+            "x": 34.023,
+            "feet": 15.776,
+            "seconds": 140.42,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 26.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,16 ",
+          "state": {
+            "room": "network-calculus-09",
+            "x": 34.023,
+            "feet": 16.0,
+            "seconds": 140.45,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 26.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "41.5,16 door",
+          "state": {
+            "room": "network-calculus-09",
+            "x": 34.028,
+            "feet": 16.0,
+            "seconds": 140.46,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": 5.344,
+            "aiY": 26.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "41.5,16 door",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 2.125,
+            "feet": 37.0,
+            "seconds": 141.46,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {}
+          }
+        },
+        {
+          "edge": "network-calculus-link-27",
+          "state": {
+            "room": "network-calculus-10",
+            "x": 2.125,
+            "feet": 37.0,
+            "seconds": 142.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {}
+          }
+        },
+        {
+          "covered": [
+            "network-calculus-link-01",
+            "network-calculus-link-02",
+            "network-calculus-link-03",
+            "network-calculus-link-04",
+            "network-calculus-link-05",
+            "network-calculus-link-06",
+            "network-calculus-link-07",
+            "network-calculus-link-08",
+            "network-calculus-link-09",
+            "network-calculus-link-10",
+            "network-calculus-link-11",
+            "network-calculus-link-12",
+            "network-calculus-link-13",
+            "network-calculus-link-14",
+            "network-calculus-link-15",
+            "network-calculus-link-16",
+            "network-calculus-link-17",
+            "network-calculus-link-18",
+            "network-calculus-link-19",
+            "network-calculus-link-20",
+            "network-calculus-link-21",
+            "network-calculus-link-22",
+            "network-calculus-link-23",
+            "network-calculus-link-24",
+            "network-calculus-link-25",
+            "network-calculus-link-26",
+            "network-calculus-link-27"
+          ],
+          "state": {
+            "room": "network-calculus-10",
+            "x": 2.125,
+            "feet": 37.0,
+            "seconds": 142.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": -2.656,
+            "aiY": 36.562,
+            "switches": {}
+          }
+        }
+      ]
+    },
+    {
+      "name": "all entries and flags SafePosition plus fresh continuation",
+      "pass": true,
+      "trace": [
+        {
+          "safePositionChecks": 114,
+          "defaultContinuations": 10
+        }
+      ]
+    },
+    {
+      "name": "paper lift two AI collections",
+      "pass": true,
+      "trace": [
+        {
+          "target": "5,30 ai",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 3.13,
+            "feet": 30.0,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 29.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "5,30 ai",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 4.872,
+            "feet": 30.0,
+            "seconds": 0.3,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 0.091,
+            "aiY": 29.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "17,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 4.93,
+            "feet": 30.0,
+            "seconds": 0.31,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 0.091,
+            "aiY": 29.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "17,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 11.805,
+            "feet": 30.0,
+            "seconds": 1.31,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 1.642,
+            "aiY": 29.422,
+            "switches": {
+              "store-alpha": false
+            }
+          }
+        },
+        {
+          "target": "17,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 16.846,
+            "feet": 29.979,
+            "seconds": 2.04,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 6.891,
+            "aiY": 28.945,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "17,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 16.904,
+            "feet": 29.873,
+            "seconds": 2.05,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 6.951,
+            "aiY": 28.939,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "17,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 17.018,
+            "feet": 26.119,
+            "seconds": 3.05,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 13.943,
+            "aiY": 28.445,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "17,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 17.018,
+            "feet": 21.27,
+            "seconds": 4.05,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 17.393,
+            "aiY": 25.742,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "17,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 17.018,
+            "feet": 20.123,
+            "seconds": 4.63,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 17.393,
+            "aiY": 23.285,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "6,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 16.797,
+            "feet": 20.112,
+            "seconds": 4.63,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 17.393,
+            "aiY": 23.268,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "6,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 13.227,
+            "feet": 20.0,
+            "seconds": 5.63,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 17.393,
+            "aiY": 21.914,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "6,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 6.409,
+            "feet": 20.0,
+            "seconds": 6.63,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 15.621,
+            "aiY": 21.375,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "28,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 6.414,
+            "feet": 20.0,
+            "seconds": 6.63,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 15.599,
+            "aiY": 21.375,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "28,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 18.686,
+            "feet": 20.0,
+            "seconds": 7.63,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 9.242,
+            "aiY": 21.375,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "28,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 25.561,
+            "feet": 20.0,
+            "seconds": 8.63,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 5.445,
+            "aiY": 19.625,
+            "switches": {
+              "store-alpha": true
+            }
+          }
+        },
+        {
+          "target": "28,20 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 27.853,
+            "feet": 20.0,
+            "seconds": 8.97,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 7.841,
+            "aiY": 19.625,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "target": "32,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 27.91,
+            "feet": 20.0,
+            "seconds": 8.98,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 7.901,
+            "aiY": 19.625,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "target": "32,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 32.035,
+            "feet": 27.415,
+            "seconds": 9.98,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 8.182,
+            "aiY": 19.562,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "target": "32,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 32.035,
+            "feet": 30.0,
+            "seconds": 10.08,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 7.463,
+            "aiY": 19.562,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "target": "45,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 32.04,
+            "feet": 30.0,
+            "seconds": 10.08,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 7.403,
+            "aiY": 19.562,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "target": "45,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 38.652,
+            "feet": 30.0,
+            "seconds": 11.08,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 13.581,
+            "aiY": 19.562,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "target": "45,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 45.012,
+            "feet": 28.564,
+            "seconds": 12.08,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 20.769,
+            "aiY": 19.562,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "target": "45,30 ",
+          "state": {
+            "room": "network-calculus-05",
+            "x": 45.012,
+            "feet": 30.0,
+            "seconds": 12.44,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 23.344,
+            "aiY": 19.562,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        },
+        {
+          "collections": [
+            "夹层里的旁注",
+            "被折起来的一页"
+          ],
+          "state": {
+            "room": "network-calculus-05",
+            "x": 45.012,
+            "feet": 30.0,
+            "seconds": 12.62,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 24.662,
+            "aiY": 19.562,
+            "switches": {
+              "store-alpha": true,
+              "store-release": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "loft AI collection",
+      "pass": true,
+      "trace": [
+        {
+          "target": "4,32 ai",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 3.13,
+            "feet": 32.0,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "4,32 ai",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 3.898,
+            "feet": 32.0,
+            "seconds": 0.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": -0.883,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 3.956,
+            "feet": 32.0,
+            "seconds": 0.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": -0.883,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 10.831,
+            "feet": 31.209,
+            "seconds": 1.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 0.674,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 15.25,
+            "feet": 29.069,
+            "seconds": 2.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 7.862,
+            "aiY": 31.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 19.25,
+            "feet": 26.942,
+            "seconds": 3.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 13.625,
+            "aiY": 29.884,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 23.264,
+            "feet": 24.828,
+            "seconds": 4.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 17.629,
+            "aiY": 27.523,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 27.298,
+            "feet": 22.727,
+            "seconds": 5.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 19.421,
+            "aiY": 27.244,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 31.737,
+            "feet": 20.418,
+            "seconds": 6.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 19.686,
+            "aiY": 26.271,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 34.023,
+            "feet": 20.0,
+            "seconds": 6.79,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 21.625,
+            "aiY": 26.465,
+            "switches": {}
+          }
+        },
+        {
+          "target": "44,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 34.028,
+            "feet": 20.0,
+            "seconds": 6.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 21.625,
+            "aiY": 26.405,
+            "switches": {}
+          }
+        },
+        {
+          "target": "44,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 40.641,
+            "feet": 19.528,
+            "seconds": 7.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 25.625,
+            "aiY": 24.001,
+            "switches": {}
+          }
+        },
+        {
+          "target": "44,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 44.021,
+            "feet": 20.0,
+            "seconds": 8.29,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 27.625,
+            "aiY": 22.859,
+            "switches": {}
+          }
+        },
+        {
+          "target": "36,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 44.016,
+            "feet": 19.899,
+            "seconds": 8.3,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 27.625,
+            "aiY": 22.799,
+            "switches": {}
+          }
+        },
+        {
+          "target": "36,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 36.407,
+            "feet": 20.0,
+            "seconds": 9.03,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 30.963,
+            "aiY": 21.244,
+            "switches": {}
+          }
+        },
+        {
+          "target": "44,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 36.412,
+            "feet": 20.0,
+            "seconds": 9.04,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 31.023,
+            "aiY": 21.244,
+            "switches": {}
+          }
+        },
+        {
+          "target": "44,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 43.024,
+            "feet": 18.776,
+            "seconds": 10.04,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 34.765,
+            "aiY": 19.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "44,20 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 43.998,
+            "feet": 20.0,
+            "seconds": 10.18,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 35.783,
+            "aiY": 19.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "50,32 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 44.055,
+            "feet": 20.0,
+            "seconds": 10.19,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 35.843,
+            "aiY": 19.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "50,32 ",
+          "state": {
+            "room": "network-calculus-06",
+            "x": 49.956,
+            "feet": 32.0,
+            "seconds": 11.05,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 42.012,
+            "aiY": 19.562,
+            "switches": {}
+          }
+        },
+        {
+          "collections": [
+            "阁楼的解法"
+          ],
+          "state": {
+            "room": "network-calculus-06",
+            "x": 49.956,
+            "feet": 32.0,
+            "seconds": 11.05,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 42.012,
+            "aiY": 19.562,
+            "switches": {}
+          }
+        }
+      ]
+    },
+    {
+      "name": "underpass AI collection and open lower return",
+      "pass": true,
+      "trace": [
+        {
+          "target": "5,23 ai",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 3.13,
+            "feet": 23.0,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "5,23 ai",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 4.872,
+            "feet": 23.0,
+            "seconds": 0.3,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 0.091,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "21,15 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 4.93,
+            "feet": 23.0,
+            "seconds": 0.31,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 0.091,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "21,15 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 10.25,
+            "feet": 20.069,
+            "seconds": 1.31,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 1.648,
+            "aiY": 22.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "21,15 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 14.25,
+            "feet": 17.942,
+            "seconds": 2.31,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 8.11,
+            "aiY": 21.128,
+            "switches": {}
+          }
+        },
+        {
+          "target": "21,15 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 18.264,
+            "feet": 15.828,
+            "seconds": 3.31,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 12.44,
+            "aiY": 19.244,
+            "switches": {}
+          }
+        },
+        {
+          "target": "21,15 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 21.023,
+            "feet": 15.0,
+            "seconds": 4.03,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 14.868,
+            "aiY": 17.244,
+            "switches": {}
+          }
+        },
+        {
+          "target": "27,15 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 21.028,
+            "feet": 15.0,
+            "seconds": 4.04,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 14.928,
+            "aiY": 17.244,
+            "switches": {}
+          }
+        },
+        {
+          "target": "27,15 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 26.839,
+            "feet": 15.0,
+            "seconds": 4.93,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 16.684,
+            "aiY": 16.276,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,17 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 26.896,
+            "feet": 15.0,
+            "seconds": 4.93,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 16.69,
+            "aiY": 16.26,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,17 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 33.771,
+            "feet": 16.0,
+            "seconds": 5.93,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 18.066,
+            "aiY": 16.244,
+            "switches": {}
+          }
+        },
+        {
+          "target": "34,17 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 34.0,
+            "feet": 17.0,
+            "seconds": 6.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 18.625,
+            "aiY": 16.361,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "46,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 34.005,
+            "feet": 17.0,
+            "seconds": 6.18,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 18.625,
+            "aiY": 16.383,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "46,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 40.617,
+            "feet": 19.215,
+            "seconds": 7.18,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 20.625,
+            "aiY": 14.771,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "46,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 46.003,
+            "feet": 21.454,
+            "seconds": 8.18,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 26.729,
+            "aiY": 14.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "46,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 46.003,
+            "feet": 23.0,
+            "seconds": 8.39,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 28.287,
+            "aiY": 14.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "4,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 45.998,
+            "feet": 23.0,
+            "seconds": 8.4,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 28.347,
+            "aiY": 14.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "4,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 39.385,
+            "feet": 23.0,
+            "seconds": 9.4,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 34.375,
+            "aiY": 16.397,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "4,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 26.85,
+            "feet": 23.0,
+            "seconds": 10.4,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 40.671,
+            "aiY": 18.622,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "4,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 19.975,
+            "feet": 23.0,
+            "seconds": 11.4,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 45.822,
+            "aiY": 22.336,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "4,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 13.1,
+            "feet": 23.0,
+            "seconds": 12.4,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 42.071,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "4,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 6.225,
+            "feet": 23.0,
+            "seconds": 13.4,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 34.884,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "target": "4,23 ",
+          "state": {
+            "room": "network-calculus-07",
+            "x": 4.392,
+            "feet": 23.0,
+            "seconds": 13.67,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 32.967,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        },
+        {
+          "collections": [
+            "两页之间的批注"
+          ],
+          "state": {
+            "room": "network-calculus-07",
+            "x": 4.392,
+            "feet": 23.0,
+            "seconds": 13.67,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 32.967,
+            "aiY": 22.562,
+            "switches": {
+              "under-delta": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "gallery AI collections and open lower return",
+      "pass": true,
+      "trace": [
+        {
+          "target": "4,31 ai",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 3.13,
+            "feet": 31.0,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "aiX": -1.656,
+            "aiY": 30.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "4,31 ai",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 3.898,
+            "feet": 31.0,
+            "seconds": 0.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": -0.883,
+            "aiY": 30.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "26,20 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 3.956,
+            "feet": 31.0,
+            "seconds": 0.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": -0.883,
+            "aiY": 30.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "26,20 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 9.25,
+            "feet": 28.069,
+            "seconds": 1.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 0.674,
+            "aiY": 30.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "26,20 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 13.25,
+            "feet": 25.942,
+            "seconds": 2.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 7.136,
+            "aiY": 29.128,
+            "switches": {}
+          }
+        },
+        {
+          "target": "26,20 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 17.264,
+            "feet": 23.828,
+            "seconds": 3.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 11.457,
+            "aiY": 27.244,
+            "switches": {}
+          }
+        },
+        {
+          "target": "26,20 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 21.298,
+            "feet": 21.727,
+            "seconds": 4.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 15.625,
+            "aiY": 25.493,
+            "switches": {}
+          }
+        },
+        {
+          "target": "26,20 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 25.737,
+            "feet": 19.418,
+            "seconds": 5.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 21.654,
+            "aiY": 21.339,
+            "switches": {}
+          }
+        },
+        {
+          "target": "26,20 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 26.023,
+            "feet": 20.0,
+            "seconds": 5.37,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 21.654,
+            "aiY": 21.339,
+            "switches": {}
+          }
+        },
+        {
+          "target": "32,20 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 26.028,
+            "feet": 20.0,
+            "seconds": 5.38,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 21.654,
+            "aiY": 21.339,
+            "switches": {}
+          }
+        },
+        {
+          "target": "32,20 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 31.839,
+            "feet": 20.0,
+            "seconds": 6.26,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 23.317,
+            "aiY": 20.459,
+            "switches": {}
+          }
+        },
+        {
+          "target": "42,24 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 31.896,
+            "feet": 20.0,
+            "seconds": 6.27,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 23.336,
+            "aiY": 20.449,
+            "switches": {}
+          }
+        },
+        {
+          "target": "42,24 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 38.771,
+            "feet": 21.342,
+            "seconds": 7.27,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 27.782,
+            "aiY": 19.562,
+            "switches": {}
+          }
+        },
+        {
+          "target": "42,24 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 42.036,
+            "feet": 24.0,
+            "seconds": 7.94,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 32.633,
+            "aiY": 19.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "54,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 42.041,
+            "feet": 24.0,
+            "seconds": 7.95,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 32.693,
+            "aiY": 19.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "54,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 48.654,
+            "feet": 26.254,
+            "seconds": 8.95,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 39.351,
+            "aiY": 21.095,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "54,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 54.039,
+            "feet": 31.0,
+            "seconds": 9.79,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 43.892,
+            "aiY": 23.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "3,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 54.034,
+            "feet": 31.0,
+            "seconds": 9.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 43.952,
+            "aiY": 23.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "3,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 41.762,
+            "feet": 31.0,
+            "seconds": 10.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 50.03,
+            "aiY": 26.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "3,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 32.057,
+            "feet": 31.0,
+            "seconds": 11.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 53.827,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "3,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 25.182,
+            "feet": 31.0,
+            "seconds": 12.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 46.639,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "3,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 18.307,
+            "feet": 31.0,
+            "seconds": 13.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 40.105,
+            "aiY": 29.244,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "3,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 11.432,
+            "feet": 31.0,
+            "seconds": 14.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 33.452,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "3,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 4.557,
+            "feet": 31.0,
+            "seconds": 15.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 26.264,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "target": "3,31 ",
+          "state": {
+            "room": "network-calculus-08",
+            "x": 3.239,
+            "feet": 31.0,
+            "seconds": 16.42,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 21.772,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        },
+        {
+          "collections": [
+            "过程比答案多一行",
+            "留给同伴的空白"
+          ],
+          "state": {
+            "room": "network-calculus-08",
+            "x": 3.239,
+            "feet": 31.0,
+            "seconds": 16.42,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "aiX": 21.772,
+            "aiY": 30.562,
+            "switches": {
+              "gallery-delta": true
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

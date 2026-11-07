@@ -1,0 +1,51 @@
+{
+  "pathway": "RoomLab desktop project-files.readProject -> writeProject -> readProject (JSON, ZIP, ZIP-to-JSON); actual migration/validation/portable/archive functions, no UI claim",
+  "editor": "G:/project null/room-editor",
+  "version": "3.0.0",
+  "source": "G:\\project null\\gameProject-roomlab255\\Assets\\StreamingAssets\\RoomLabNative\\Campaign\\deadline-autosave.json",
+  "sourceSha": "523b045170f88881cf14cc4a401f023f76f5169a16aaf8f98b5bb2a9ca472ab5",
+  "metadataPaths": 115,
+  "counts": {
+    "courses": 3,
+    "rooms": 32,
+    "connections": 67,
+    "network": true,
+    "resourceCourses": [
+      "guided-slacker"
+    ],
+    "clarityDeltaObjects": 8,
+    "graphs": 32
+  },
+  "phases": [
+    {
+      "name": "json-save-open",
+      "target": "G:\\project null\\gameProject-roomlab255\\Validation\\Native\\AutoSave20261107\\EditorRoundtrip\\json-save-open.json",
+      "sha": "fbfa11f3a97cfc171058b178b9f9e3596bc009478e0e3b37b85660d0138dfdac",
+      "validation": {
+        "errors": [],
+        "warnings": []
+      },
+      "metadataPreserved": true
+    },
+    {
+      "name": "zip-save-open",
+      "target": "G:\\project null\\gameProject-roomlab255\\Validation\\Native\\AutoSave20261107\\EditorRoundtrip\\zip-save-open.zip",
+      "sha": "2732ffa1c62bcdb3dd812924c0450570f6a173af04542449d71cb88181d8115d",
+      "validation": {
+        "errors": [],
+        "warnings": []
+      },
+      "metadataPreserved": true
+    },
+    {
+      "name": "zip-to-json-save-open",
+      "target": "G:\\project null\\gameProject-roomlab255\\Validation\\Native\\AutoSave20261107\\EditorRoundtrip\\zip-to-json-save-open.json",
+      "sha": "fbfa11f3a97cfc171058b178b9f9e3596bc009478e0e3b37b85660d0138dfdac",
+      "validation": {
+        "errors": [],
+        "warnings": []
+      },
+      "metadataPreserved": true
+    }
+  ]
+}

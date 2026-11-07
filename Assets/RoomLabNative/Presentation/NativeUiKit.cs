@@ -69,7 +69,7 @@ namespace RoomLab.Native
             var e=t.gameObject.AddComponent<LayoutElement>();e.minHeight=height;e.preferredHeight=height;e.flexibleHeight=0;
             if(width>0){e.minWidth=width;e.preferredWidth=width;e.flexibleWidth=0;}else e.flexibleWidth=flexWidth;
             var b=t.gameObject.AddComponent<Button>();var colors=b.colors;colors.highlightedColor=new Color(.72f,1,1);colors.pressedColor=new Color(.72f,.82f,.72f);b.colors=colors;
-            var text=Label(t,label,size,Color.white,TextAnchor.MiddleCenter);text.gameObject.name="Caption";
+            float Lum(float v)=>v<=.04045f?v/12.92f:Mathf.Pow((v+.055f)/1.055f,2.4f);float luminance=.2126f*Lum(img.color.r)+.7152f*Lum(img.color.g)+.0722f*Lum(img.color.b);var text=Label(t,label,size,luminance>.179f?Color.black:Color.white,TextAnchor.MiddleCenter);text.gameObject.name="Caption";
             b.onClick.AddListener(()=>{ClickSound?.Invoke();action();});
             return b;
         }

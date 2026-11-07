@@ -1,0 +1,155 @@
+{
+  "provenance": "Original synthesized composition by Codex, 2026-11-07. No external samples. Shared motif, 16 bars per chapter, synchronized chase percussion stems.",
+  "clips": {
+    "physics-explore": {
+      "seconds": 36.923,
+      "peak": 0.2576,
+      "rms": 0.0665
+    },
+    "physics-chase": {
+      "seconds": 36.923,
+      "peak": 0.4498,
+      "rms": 0.0487
+    },
+    "calculus-explore": {
+      "seconds": 34.286,
+      "peak": 0.2359,
+      "rms": 0.0542
+    },
+    "calculus-chase": {
+      "seconds": 34.286,
+      "peak": 0.4861,
+      "rms": 0.0517
+    },
+    "slacker-explore": {
+      "seconds": 40.0,
+      "peak": 0.2636,
+      "rms": 0.0606
+    },
+    "slacker-chase": {
+      "seconds": 40.0,
+      "peak": 0.4768,
+      "rms": 0.05
+    },
+    "ui": {
+      "seconds": 0.2,
+      "peak": 0.2381,
+      "rms": 0.081
+    },
+    "jump": {
+      "seconds": 0.26,
+      "peak": 0.3645,
+      "rms": 0.102
+    },
+    "dash": {
+      "seconds": 0.255,
+      "peak": 0.4691,
+      "rms": 0.1293
+    },
+    "coin": {
+      "seconds": 0.28,
+      "peak": 0.3946,
+      "rms": 0.1011
+    },
+    "collectible": {
+      "seconds": 0.59,
+      "peak": 0.3682,
+      "rms": 0.1071
+    },
+    "temperature": {
+      "seconds": 0.45,
+      "peak": 0.3647,
+      "rms": 0.1047
+    },
+    "retry": {
+      "seconds": 0.54,
+      "peak": 0.345,
+      "rms": 0.099
+    },
+    "finish": {
+      "seconds": 1.11,
+      "peak": 0.3316,
+      "rms": 0.1001
+    },
+    "jet": {
+      "seconds": 0.35,
+      "peak": 0.4349,
+      "rms": 0.1247
+    },
+    "rail-start": {
+      "seconds": 0.39,
+      "peak": 0.4312,
+      "rms": 0.1191
+    },
+    "ice-melt": {
+      "seconds": 0.27,
+      "peak": 0.5083,
+      "rms": 0.1219
+    },
+    "ice-create": {
+      "seconds": 0.3,
+      "peak": 0.4891,
+      "rms": 0.1155
+    },
+    "checkpoint": {
+      "seconds": 0.39,
+      "peak": 0.3165,
+      "rms": 0.0941
+    },
+    "calculus-integral": {
+      "seconds": 0.39,
+      "peak": 0.4189,
+      "rms": 0.12
+    },
+    "calculus-derivative": {
+      "seconds": 0.39,
+      "peak": 0.4192,
+      "rms": 0.1196
+    },
+    "checkin": {
+      "seconds": 0.33,
+      "peak": 0.3294,
+      "rms": 0.0982
+    },
+    "awake": {
+      "seconds": 0.36,
+      "peak": 0.3721,
+      "rms": 0.1067
+    },
+    "ai-start": {
+      "seconds": 0.63,
+      "peak": 0.3203,
+      "rms": 0.105
+    },
+    "ai-charge": {
+      "seconds": 0.85,
+      "peak": 0.3351,
+      "rms": 0.1032
+    },
+    "ai-burst": {
+      "seconds": 0.39,
+      "peak": 0.345,
+      "rms": 0.0954
+    },
+    "ai-recover": {
+      "seconds": 0.35,
+      "peak": 0.3364,
+      "rms": 0.0969
+    },
+    "ai-teleport": {
+      "seconds": 0.39,
+      "peak": 0.3143,
+      "rms": 0.1048
+    },
+    "land": {
+      "seconds": 0.185,
+      "peak": 0.2803,
+      "rms": 0.08
+    },
+    "steal": {
+      "seconds": 0.35,
+      "peak": 0.2692,
+      "rms": 0.0935
+    }
+  }
+}

@@ -45,7 +45,7 @@ namespace RoomLab.Native
         public readonly HashSet<string> Credited=new HashSet<string>(StringComparer.Ordinal);
         public readonly Dictionary<string,MotionObjectState> ObjectStates=new Dictionary<string,MotionObjectState>(StringComparer.Ordinal);
         readonly List<MotionRect> colliders=new List<MotionRect>(1024);
-        readonly List<MotionRect> terrain=new List<MotionRect>(1024);
+        readonly List<MotionRect> terrain=new List<MotionRect>(1024);readonly Dictionary<string,JObject> terrainLayers=new Dictionary<string,JObject>();
         readonly Dictionary<string,string> creditKeys=new Dictionary<string,string>(StringComparer.Ordinal);
         readonly Dictionary<string,NativeObject> objects=new Dictionary<string,NativeObject>(StringComparer.Ordinal);
         readonly Dictionary<string,double> config;int initialTokens,initialCharges=3,initialRecharge,initialScore;
@@ -68,16 +68,16 @@ namespace RoomLab.Native
         {
             RetryGameplay(reason);
         }
-        public void TogglePause(){if(Mode=="playing")Mode="paused";else if(Mode=="paused")Mode="playing";}
+        public void TogglePause(){if(UsesManualSaveSlots&&AwaitingSaveChoice)return;if(Mode=="playing")Mode="paused";else if(Mode=="paused")Mode="playing";}
         public void Emit(string type,JObject extra=null){var e=new JObject{{"type",type},{"room",Room.Id}};if(extra!=null)foreach(var p in extra.Properties())e[p.Name]=p.Value;Events.Add(e);if(Events.Count>200)Events.RemoveAt(0);}
         public void ClearEvents(){Events.Clear();}
         public MotionRect ObjectRect(NativeObject o){return new MotionRect(o.Id,o.X*32,o.Y*32,o.W*32,o.H*32);}
         public IReadOnlyList<MotionRect> CollisionRects{get{BuildColliders();return colliders;}}
         void BuildColliders()
         {
-            colliders.Clear();colliders.AddRange(terrain);int index=terrain.Count;
-            foreach(var o in Room.Objects){if(o.Type=="common.spike"||!o.Collision||Credited.Contains(creditKeys[o.Id])||(o.Type=="physics.ice"&&!ObjectStates[o.Id].solid))continue;var r=ObjectRect(o);if(o.ColliderShape=="pad"){r.h=8;r.priority=1;}r.index=index++;colliders.Add(r);}
-            foreach(var b in Room.Movables)if(b.Raw["collision"]?.Value<bool>()!=false){var r=MovableRect(b);if(objects.TryGetValue((string)b.Raw["padId"]??"",out var pad)&&pad.Type=="legacy.rotor"&&Movables[b.Id].anim!=null)continue;r.index=index++;colliders.Add(r);}
+            colliders.Clear();if(IsRework){foreach(var b in terrain){if(!terrainLayers.TryGetValue(b.id,out var rule)||LayerActive(rule))colliders.Add(b);}}else colliders.AddRange(terrain);int index=terrain.Count;
+            foreach(var o in Room.Objects){if(!LayerActive(o.Raw)||o.Type=="common.spike"||!o.Collision||Credited.Contains(creditKeys[o.Id])||IsSpent(o)||(o.Type=="physics.ice"&&!ObjectStates[o.Id].solid))continue;var r=ObjectRect(o);if(o.ColliderShape=="pad"){r.h=8;r.priority=1;}r.index=index++;colliders.Add(r);}
+            AddReworkColliders();foreach(var b in Room.Movables)if(LayerActive(b.Raw)&&b.Raw["collision"]?.Value<bool>()!=false){var r=MovableRect(b);if(objects.TryGetValue((string)b.Raw["padId"]??"",out var pad)&&pad.Type=="legacy.rotor"&&Movables[b.Id].anim!=null)continue;r.index=index++;colliders.Add(r);}
         }
         public void Launch(double x,double y){var p=Player;p.vx=x;p.vy=y;p.launched=true;p.launchX=x;p.rail=null;p.dash=0;p.grounded=false;p.coyote=p.buffer=0;p.invulnerable=Math.Max(p.invulnerable,.3);}
         public void StartRail(NativeObject o)
@@ -98,7 +98,8 @@ namespace RoomLab.Native
         }
         void Fire(NativeObject o)
         {
-            var s=ObjectStates[o.Id];if(s.cooldown>0||((o.Trigger["once"].Value<bool>()||o.Flag("once"))&&s.used))return;
+            // Flag contact already has an occupancy latch; a mechanism cooldown must not swallow a quick return.
+            var s=ObjectStates[o.Id];bool guidedCheckpoint=UsesManualSaveSlots&&o.Type=="common.checkpoint";if((s.cooldown>0&&!guidedCheckpoint)||((o.Trigger["once"].Value<bool>()||o.Flag("once"))&&s.used))return;
             s.used=true;double cooldown=o.Number("cooldown");s.cooldown=cooldown!=0?cooldown:o.Trigger["cooldown"].Value<double>();if(s.cooldown==0)s.cooldown=1;
             if(o.Type=="physics.jet"){Launch(o.Number("launchX"),o.Number("launchY"));if(o.Flag("affectAI",true))LaunchAI(o,o.Number("range",3),o.Number("launchX"),o.Number("launchY"));Emit("jet",new JObject{{"id",o.Id}});}
             else if(o.Type=="physics.rail"){StartRail(o);Emit("rail-start",new JObject{{"id",o.Id}});}
@@ -107,26 +108,28 @@ namespace RoomLab.Native
         }
         public NativeObject NearbyInteraction
         {
-            get{if(Rules==NativeGameplayRules.Editor255Compat)return null;bool thermal=Rules==NativeGameplayRules.LatestPhysics;NativeObject best=null;double distance=40;foreach(var o in Room.Objects)if(o.Type=="common.aiStart"||o.Type=="common.aiStartHollow"||thermal&&o.Type=="physics.thermal"){var r=ObjectRect(o);var pc=PlayerCenter;double n=Hypot(pc.x-Clamp(pc.x,r.x,r.x+r.w),pc.y-Clamp(pc.y,r.y,r.y+r.h));if(n<distance){distance=n;best=o;}}return best;}
+            get{if(Rules==NativeGameplayRules.Editor255Compat)return null;bool thermal=Rules==NativeGameplayRules.LatestPhysics;NativeObject best=null;double distance=40;foreach(var o in Room.Objects)if(LayerActive(o.Raw)&&(IsContactAutosave&&o.Type=="common.checkpoint"||IsAwarenessResource&&(o.Type=="common.checkpoint"&&!IsGuided||o.Raw["rework"]?["clarityDelta"]!=null)&&!IsSpent(o)||o.Type=="common.aiStart"||o.Type=="common.aiStartHollow"||thermal&&o.Type=="physics.thermal")){var r=ObjectRect(o);var pc=PlayerCenter;double n=Hypot(pc.x-Clamp(pc.x,r.x,r.x+r.w),pc.y-Clamp(pc.y,r.y,r.y+r.h));if(n<distance||Math.Abs(n-distance)<1e-7&&PreferContactInteraction(o,best)){distance=n;best=o;}}return best;}
         }
         void TriggerObjects(double oldBottom,MotionInput input)
         {
-            var p=Player;var interaction=NearbyInteraction;foreach(var o in Room.Objects){string mode=o.Trigger["mode"].Value<string>();if(mode=="none")continue;var s=ObjectStates[o.Id];var rect=ObjectRect(o);
+            var p=Player;var interaction=NearbyInteraction;foreach(var o in Room.Objects){if(!LayerActive(o.Raw))continue;string mode=o.Trigger["mode"].Value<string>();if(mode=="none")continue;var s=ObjectStates[o.Id];var rect=ObjectRect(o);
                 bool top=p.grounded&&p.vy>=0&&oldBottom<=rect.y+2&&Math.Abs(p.y+p.h-rect.y)<1&&p.x+p.w>rect.x+2&&p.x<rect.x+rect.w-2;
                 bool occupied=MotionRect.Overlap(p.Rect,rect)||top;
                 if(Rules==NativeGameplayRules.Editor255Compat&&o.Type=="physics.rail"&&o.Flag("sideTrigger")){bool vertical=p.y+p.h>rect.y&&p.y<rect.y+rect.h;bool left=p.x<=rect.x+2&&p.x+p.w>=rect.x-8;bool right=p.x>=rect.x+rect.w-2&&p.x<=rect.x+rect.w+8;bool inside=p.x+p.w>rect.x&&p.x<rect.x+rect.w;occupied=top||vertical&&(left||right||inside);}
-                bool manual=Rules.IsManualInteraction(o.Type);
-                if(manual){s.firedDuringContact=false;occupied=input.interactPressed&&interaction==o;}
+                if(IsContactAutosave&&o.Type=="common.checkpoint"){HandleContactCheckpoint(o,s,occupied,input,interaction);if(AwaitingSaveChoice)return;continue;}
+                bool manual=Rules.IsManualInteraction(o.Type)||IsAwarenessResource&&(o.Type=="common.checkpoint"&&!IsGuided||o.Raw["rework"]?["clarityDelta"]!=null)&&!IsSpent(o);
+                if(manual){s.firedDuringContact=false;occupied=input.interactPressed&&interaction==o;if(occupied&&IsNetwork)networkExitPressed=false;}
                 else if(Rules==NativeGameplayRules.LatestPhysics&&(o.Type=="physics.jet"||o.Type=="physics.rail"))occupied=top;
                 // Demo profile: a jet only fires on contact that is not a jump from underneath, so
                 // rising through the pad (or a collision-less side pad) no longer launches the player.
                 else if(Rules==NativeGameplayRules.DemoPhysics&&o.Type=="physics.jet")occupied=occupied&&p.vy>=-1;
                 if(!occupied){s.firedDuringContact=false;continue;}bool ready=!o.Trigger["requiresAI"].Value<bool>()||(AI.active&&AI.id==(o.AiId??Room.AiId??Course.AiId)&&Hypot(AI.x-(o.X+.5)*32,AI.y-o.Y*32)<=((double?)o.Trigger["distance"]??5)*32);s.waitingAI=!ready;s.hasWaitingAI=true;
-                if(ready&&!s.firedDuringContact){Fire(o);s.firedDuringContact=true;}
+                if(ready&&!s.firedDuringContact){Fire(o);s.firedDuringContact=true;if(AwaitingSaveChoice)return;}
             }
         }
         void TryCollect(NativeObject o)
         {
+            if(!LayerActive(o.Raw))return;
             // Collectibles are the AI's reward for being led somewhere hard to reach, not the player's.
             bool collectible=o.Type=="common.collectible"&&Rules!=NativeGameplayRules.DemoPhysics;
             if(o.Type!="common.coin"&&o.Type!="common.small"&&!collectible)return;
@@ -147,6 +150,9 @@ namespace RoomLab.Native
         }
         public void Tick(double dt,MotionInput input=default(MotionInput))
         {
+            // Keep the pending file transaction frozen even if a caller directly changes Mode.
+            if(UsesManualSaveSlots&&AwaitingSaveChoice){Mode="paused";return;}
+            networkExitPressed=input.interactPressed;
             if(Mode!="playing")return;dt=Clamp(dt,0,1.0/30);if(RespawnRemaining>0){RespawnRemaining=Math.Max(0,RespawnRemaining-dt);if(RespawnRemaining<1e-9)RespawnRemaining=0;return;}
             Elapsed+=dt;RoomTime+=dt;ExitCooldown=Math.Max(0,ExitCooldown-dt);var p=Player;bool wasGrounded=p.grounded;TickMechanisms(dt);BuildColliders();if(DeveloperFlight){TickFlight(dt,input);return;}
             p.invulnerable=Math.Max(0,p.invulnerable-dt);bool crouch=input.down&&p.grounded&&!p.launched&&p.rail==null&&p.dash<=0;
@@ -171,10 +177,10 @@ namespace RoomLab.Native
             if(p.grounded&&!wasGrounded){p.freeDash=true;p.dashCount=0;p.paidDashUsed=false;Emit("land");}
             if(p.y<0){p.y=0;p.vy=0;if(dashing)p.dashY=0;}
             if(p.y>Room.Rows*32+80){if(LockHealth){p.x=Checkpoint?.x??Entry.X*32+4;p.y=Checkpoint?.y??Entry.Y*32+4;ClearFlightMotion();if(DeveloperEnabled)ResetAITrackingAtPlayer();}else Retry("掉出房间");return;}
-            foreach(var o in Room.Objects){if(!LockHealth&&o.Type=="common.spike"&&SpikeTouches(p.Rect,ObjectRect(o),o.Text("direction","up"))){Retry("碰到尖刺");return;}TryCollect(o);}
-            TriggerObjects(oldBottom,input);UpdateInactiveAI(dt);if(Player!=p)return;CheckExits();
+            foreach(var o in Room.Objects){if(!LayerActive(o.Raw))continue;if(!LockHealth&&o.Type=="common.spike"&&SpikeTouches(p.Rect,ObjectRect(o),o.Text("direction","up"))){Retry("碰到尖刺");return;}TryCollect(o);}
+            TriggerObjects(oldBottom,input);if(AwaitingSaveChoice)return;UpdateInactiveAI(dt);if(Player!=p)return;CheckExits();
         }
-        void UpdateInactiveAI(double dt){UpdateAI(dt);}
+        void UpdateInactiveAI(double dt){UpdateAI(dt);TickPatrols(dt);}
         public static double Accelerate(double velocity,int horizontal,double speed,double dt,double ramp){if(horizontal==0)return 0;double current=Math.Sign(velocity)==horizontal?Math.Min(Math.Abs(velocity),speed):0;return horizontal*Math.Min(speed,current+speed/ramp*dt);}
         public static double Clamp(double n,double a,double b){return Math.Max(a,Math.Min(b,n));}
         public static double Hypot(double a,double b){return Math.Sqrt(a*a+b*b);}

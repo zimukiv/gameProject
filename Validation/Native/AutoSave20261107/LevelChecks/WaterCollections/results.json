@@ -1,0 +1,5611 @@
+{
+  "sourceSha256": "924f28fdaa66cf35c912565b8a1e4ccca4fdbfda0d088a78daa170266addc8c0",
+  "cases": 13,
+  "failures": 0,
+  "normalInputOnly": true,
+  "results": [
+    {
+      "name": "network-slacker-01 relic 31,20 initial=50",
+      "pass": true,
+      "trace": [
+        {
+          "target": "11,28 ai",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 3.13,
+            "feet": 28.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 27.56
+          }
+        },
+        {
+          "target": "11,28 ai",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 9.742,
+            "feet": 28.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 27.56
+          }
+        },
+        {
+          "target": "11,28 ai",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 10.888,
+            "feet": 28.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 6.11,
+            "aiY": 27.56
+          }
+        },
+        {
+          "target": "14,27 ",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 10.945,
+            "feet": 27.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.18,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 6.11,
+            "aiY": 27.56
+          }
+        },
+        {
+          "target": "14,27 ",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 13.867,
+            "feet": 27.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.61,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 6.11,
+            "aiY": 27.56
+          }
+        },
+        {
+          "target": "16,26 ",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 13.924,
+            "feet": 26.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.62,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 6.11,
+            "aiY": 27.56
+          }
+        },
+        {
+          "target": "16,26 ",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 16.044,
+            "feet": 26.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.03,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 6.59,
+            "aiY": 27.56
+          }
+        },
+        {
+          "target": "18,25 ",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 16.049,
+            "feet": 25.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.04,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 6.65,
+            "aiY": 27.56
+          }
+        },
+        {
+          "target": "18,25 ",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 18.021,
+            "feet": 25.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.46,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 9.64,
+            "aiY": 27.56
+          }
+        },
+        {
+          "target": "20,24 ",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 18.026,
+            "feet": 24.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.47,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 9.7,
+            "aiY": 27.56
+          }
+        },
+        {
+          "target": "20,24 ",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 20.055,
+            "feet": 24.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.88,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 12.1,
+            "aiY": 26.41
+          }
+        },
+        {
+          "target": "22,23 ",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 20.059,
+            "feet": 23.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.89,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 12.15,
+            "aiY": 26.37
+          }
+        },
+        {
+          "target": "22,23 ",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 22.031,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.31,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.56,
+            "aiY": 26.04
+          }
+        },
+        {
+          "target": "24,22 ",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 22.036,
+            "feet": 22.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.32,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.6,
+            "aiY": 25.99
+          }
+        },
+        {
+          "target": "24,22 ",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 24.008,
+            "feet": 22.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.73,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 16.48,
+            "aiY": 25.12
+          }
+        },
+        {
+          "target": "26,21 ",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 24.013,
+            "feet": 21.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.74,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 16.5,
+            "aiY": 25.07
+          }
+        },
+        {
+          "target": "26,21 ",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 26.042,
+            "feet": 21.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 4.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 18.4,
+            "aiY": 24.45
+          }
+        },
+        {
+          "target": "34,21 collect",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 26.046,
+            "feet": 21.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 4.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 18.41,
+            "aiY": 24.39
+          }
+        },
+        {
+          "target": "34,21 collect",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 32.659,
+            "feet": 21.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 5.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 22.59,
+            "aiY": 21.83
+          }
+        },
+        {
+          "target": "34,21 collect",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 34.034,
+            "feet": 21.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 6.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 28.04,
+            "aiY": 20.17
+          }
+        },
+        {
+          "collected": "network-slacker-01-obj-010",
+          "by": "ai",
+          "state": {
+            "room": "network-slacker-01",
+            "x": 34.034,
+            "feet": 21.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 6.53,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 30.67,
+            "aiY": 20.33
+          }
+        }
+      ]
+    },
+    {
+      "name": "network-slacker-02 relic 38,25 initial=50",
+      "pass": true,
+      "trace": [
+        {
+          "target": "61,34 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 3.13,
+            "feet": 34.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "61,34 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 8.654,
+            "feet": 31.6,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "61,34 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 13.685,
+            "feet": 30.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "61,34 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 20.56,
+            "feet": 31.616,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "61,34 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 25.465,
+            "feet": 28.532,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 4.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "61,34 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 30.482,
+            "feet": 26.503,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 5.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "61,34 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 36.435,
+            "feet": 26.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 6.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "61,34 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 43.31,
+            "feet": 27.898,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 7.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "61,34 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 50.185,
+            "feet": 31.033,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 8.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "61,34 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 57.06,
+            "feet": 34.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 9.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "61,34 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 60.841,
+            "feet": 34.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 9.56,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "61,34 ai",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 60.898,
+            "feet": 34.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 9.57,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 56.12,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "61,34 ai",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 60.898,
+            "feet": 34.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 9.57,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 56.12,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "52,33 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 60.894,
+            "feet": 34.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 9.58,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 56.12,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "52,33 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 54.281,
+            "feet": 32.883,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 10.58,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 57.67,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "52,33 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 52.195,
+            "feet": 33.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 11.13,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 54.22,
+            "aiY": 32.25
+          }
+        },
+        {
+          "target": "50,32 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 52.191,
+            "feet": 32.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 11.13,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 54.17,
+            "aiY": 32.26
+          }
+        },
+        {
+          "target": "50,32 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 50.195,
+            "feet": 32.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 11.55,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 52.25,
+            "aiY": 31.18
+          }
+        },
+        {
+          "target": "48,31 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 50.191,
+            "feet": 31.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 11.56,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 52.21,
+            "aiY": 31.14
+          }
+        },
+        {
+          "target": "48,31 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 48.195,
+            "feet": 31.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 11.97,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 49.66,
+            "aiY": 30.18
+          }
+        },
+        {
+          "target": "46,30 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 48.191,
+            "feet": 30.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 11.98,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 49.6,
+            "aiY": 30.17
+          }
+        },
+        {
+          "target": "46,30 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 46.195,
+            "feet": 30.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 12.4,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 49.43,
+            "aiY": 30.14
+          }
+        },
+        {
+          "target": "44,29 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 46.191,
+            "feet": 29.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 12.41,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 49.43,
+            "aiY": 30.14
+          }
+        },
+        {
+          "target": "44,29 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 44.195,
+            "feet": 29.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 12.82,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 49.33,
+            "aiY": 30.07
+          }
+        },
+        {
+          "target": "42,28 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 44.191,
+            "feet": 28.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 12.83,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 49.29,
+            "aiY": 30.03
+          }
+        },
+        {
+          "target": "42,28 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 42.195,
+            "feet": 28.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 13.25,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 46.76,
+            "aiY": 29.33
+          }
+        },
+        {
+          "target": "40,27 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 42.191,
+            "feet": 27.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 13.26,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 46.71,
+            "aiY": 29.37
+          }
+        },
+        {
+          "target": "40,27 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 40.195,
+            "feet": 27.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 13.67,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 45.04,
+            "aiY": 28.12
+          }
+        },
+        {
+          "target": "38,26 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 40.191,
+            "feet": 26.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 13.68,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 44.98,
+            "aiY": 28.15
+          }
+        },
+        {
+          "target": "38,26 ",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 38.195,
+            "feet": 26.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 14.1,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 43.35,
+            "aiY": 26.99
+          }
+        },
+        {
+          "target": "35,26 collect",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 38.191,
+            "feet": 26.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 14.11,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 43.3,
+            "aiY": 27.01
+          }
+        },
+        {
+          "collected": "network-slacker-02-obj-022",
+          "by": "ai",
+          "state": {
+            "room": "network-slacker-02",
+            "x": 35.245,
+            "feet": 26.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 15.05,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 39.33,
+            "aiY": 25.03
+          }
+        }
+      ]
+    },
+    {
+      "name": "network-slacker-03 relic 34,22 initial=80",
+      "pass": true,
+      "trace": [
+        {
+          "target": "8,30 ai",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 3.13,
+            "feet": 30.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "8,30 ai",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 7.909,
+            "feet": 30.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 0.74,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 3.13,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "12,29 ",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 7.966,
+            "feet": 29.899,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 0.75,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 3.13,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "12,29 ",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 12.023,
+            "feet": 29.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 1.7,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 4.33,
+            "aiY": 29.55
+          }
+        },
+        {
+          "target": "14,28 ",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 12.028,
+            "feet": 28.899,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 1.71,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 4.39,
+            "aiY": 29.55
+          }
+        },
+        {
+          "target": "14,28 ",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 14.057,
+            "feet": 28.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 2.12,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 7.38,
+            "aiY": 29.51
+          }
+        },
+        {
+          "target": "16,27 ",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 14.062,
+            "feet": 27.899,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 2.13,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 7.44,
+            "aiY": 29.51
+          }
+        },
+        {
+          "target": "16,27 ",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 16.034,
+            "feet": 27.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 2.55,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 10.43,
+            "aiY": 29.48
+          }
+        },
+        {
+          "target": "18,26 ",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 16.039,
+            "feet": 26.899,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 2.56,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 10.49,
+            "aiY": 29.48
+          }
+        },
+        {
+          "target": "18,26 ",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 18.01,
+            "feet": 26.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 2.97,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 12.24,
+            "aiY": 27.96
+          }
+        },
+        {
+          "target": "20,25 ",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 18.015,
+            "feet": 25.899,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 2.98,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 12.3,
+            "aiY": 27.95
+          }
+        },
+        {
+          "target": "20,25 ",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 20.044,
+            "feet": 25.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 3.4,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 13.93,
+            "aiY": 26.95
+          }
+        },
+        {
+          "target": "22,24 ",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 20.049,
+            "feet": 24.899,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 3.41,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 13.99,
+            "aiY": 26.95
+          }
+        },
+        {
+          "target": "22,24 ",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 22.021,
+            "feet": 24.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 3.82,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 15.58,
+            "aiY": 26.01
+          }
+        },
+        {
+          "target": "24,23 ",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 22.026,
+            "feet": 23.899,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 3.83,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 15.64,
+            "aiY": 25.99
+          }
+        },
+        {
+          "target": "24,23 ",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 24.055,
+            "feet": 23.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 4.25,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 17.47,
+            "aiY": 25.04
+          }
+        },
+        {
+          "target": "35.4,23 collect",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 24.059,
+            "feet": 23.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 4.26,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 17.53,
+            "aiY": 25.02
+          }
+        },
+        {
+          "target": "35.4,23 collect",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 30.672,
+            "feet": 23.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 5.26,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 21.89,
+            "aiY": 22.95
+          }
+        },
+        {
+          "target": "35.4,23 collect",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 35.427,
+            "feet": 23.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 6.26,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 27.41,
+            "aiY": 22.56
+          }
+        },
+        {
+          "collected": "network-slacker-03-obj-011",
+          "by": "ai",
+          "state": {
+            "room": "network-slacker-03",
+            "x": 35.427,
+            "feet": 23.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 7.13,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 33.64,
+            "aiY": 22.56
+          }
+        }
+      ]
+    },
+    {
+      "name": "network-slacker-04 relic 42,21 initial=20",
+      "pass": true,
+      "trace": [
+        {
+          "target": "11,30 ai",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 3.13,
+            "feet": 30.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "11,30 ai",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 9.742,
+            "feet": 30.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "11,30 ai",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 10.888,
+            "feet": 30.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 6.11,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "14,29 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 10.945,
+            "feet": 29.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.18,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 6.11,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "14,29 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 13.867,
+            "feet": 29.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.61,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 6.11,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "16,28 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 13.924,
+            "feet": 28.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.62,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 6.11,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "16,28 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 16.044,
+            "feet": 28.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.03,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 6.59,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "18,27 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 16.049,
+            "feet": 27.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.04,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 6.65,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "18,27 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 18.021,
+            "feet": 27.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.46,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 9.64,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "20,26 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 18.026,
+            "feet": 26.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.47,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 9.7,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "20,26 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 20.055,
+            "feet": 26.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.88,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 12.1,
+            "aiY": 28.41
+          }
+        },
+        {
+          "target": "22,25 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 20.059,
+            "feet": 25.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.89,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 12.15,
+            "aiY": 28.37
+          }
+        },
+        {
+          "target": "22,25 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 22.031,
+            "feet": 25.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.31,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.56,
+            "aiY": 28.04
+          }
+        },
+        {
+          "target": "24,24 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 22.036,
+            "feet": 24.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.32,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.6,
+            "aiY": 27.99
+          }
+        },
+        {
+          "target": "24,24 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 24.008,
+            "feet": 24.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.73,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 16.48,
+            "aiY": 27.12
+          }
+        },
+        {
+          "target": "26,23 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 24.013,
+            "feet": 23.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.74,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 16.5,
+            "aiY": 27.07
+          }
+        },
+        {
+          "target": "26,23 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 26.042,
+            "feet": 23.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 4.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 18.4,
+            "aiY": 26.45
+          }
+        },
+        {
+          "target": "28,22 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 26.046,
+            "feet": 22.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 4.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 18.41,
+            "aiY": 26.39
+          }
+        },
+        {
+          "target": "28,22 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 28.018,
+            "feet": 22.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 4.58,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 20.43,
+            "aiY": 25.29
+          }
+        },
+        {
+          "target": "31,22 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 28.023,
+            "feet": 22.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 4.59,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 20.43,
+            "aiY": 25.35
+          }
+        },
+        {
+          "target": "31,22 ",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 30.854,
+            "feet": 22.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 5.04,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 22.41,
+            "aiY": 24.2
+          }
+        },
+        {
+          "target": "35,22 jump",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 30.911,
+            "feet": 21.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 5.05,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 22.41,
+            "aiY": 24.26
+          }
+        },
+        {
+          "target": "35,22 jump",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 35.036,
+            "feet": 21.443,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 6.05,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 26.45,
+            "aiY": 22.28
+          }
+        },
+        {
+          "target": "35,22 jump",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 35.036,
+            "feet": 22.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 6.11,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 26.57,
+            "aiY": 21.88
+          }
+        },
+        {
+          "target": "43,22 collect",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 35.041,
+            "feet": 22.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 6.12,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 26.6,
+            "aiY": 21.83
+          }
+        },
+        {
+          "target": "43,22 collect",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 41.654,
+            "feet": 22.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 7.12,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 33.45,
+            "aiY": 21.26
+          }
+        },
+        {
+          "target": "43,22 collect",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 43.029,
+            "feet": 22.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 8.12,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 40.59,
+            "aiY": 21.15
+          }
+        },
+        {
+          "collected": "network-slacker-04-obj-014",
+          "by": "ai",
+          "state": {
+            "room": "network-slacker-04",
+            "x": 43.029,
+            "feet": 22.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 8.27,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 41.66,
+            "aiY": 21.31
+          }
+        }
+      ]
+    },
+    {
+      "name": "network-slacker-05 relic 45,22 initial=50",
+      "pass": true,
+      "trace": [
+        {
+          "target": "5,30 ai",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 3.13,
+            "feet": 30.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "5,30 ai",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 5.044,
+            "feet": 30.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.77,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 0.26,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "6,29 ",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 5.049,
+            "feet": 29.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.77,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 0.26,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "6,29 ",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 6.023,
+            "feet": 29.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.19,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 0.26,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "8,28 ",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 6.028,
+            "feet": 28.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.2,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 0.26,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "8,28 ",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 8.0,
+            "feet": 28.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.62,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 0.68,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "10,27 ",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 8.005,
+            "feet": 27.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.62,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 0.74,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "10,27 ",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 10.034,
+            "feet": 27.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.04,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 3.74,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "12,26 ",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 10.039,
+            "feet": 26.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.05,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 3.8,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "12,26 ",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 12.01,
+            "feet": 26.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.47,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 5.7,
+            "aiY": 28.23
+          }
+        },
+        {
+          "target": "14,25 ",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 12.015,
+            "feet": 25.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.47,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 5.74,
+            "aiY": 28.19
+          }
+        },
+        {
+          "target": "14,25 ",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 14.044,
+            "feet": 25.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.89,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 7.44,
+            "aiY": 27.05
+          }
+        },
+        {
+          "target": "16,24 ",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 14.049,
+            "feet": 24.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.9,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 7.5,
+            "aiY": 27.03
+          }
+        },
+        {
+          "target": "16,24 ",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 16.021,
+            "feet": 24.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.32,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 9.13,
+            "aiY": 26.22
+          }
+        },
+        {
+          "target": "18,23 ",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 16.026,
+            "feet": 23.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.32,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 9.18,
+            "aiY": 26.18
+          }
+        },
+        {
+          "target": "18,23 ",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 18.055,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.74,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 10.87,
+            "aiY": 25.47
+          }
+        },
+        {
+          "target": "46.4,23 collect",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 18.059,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.75,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 10.92,
+            "aiY": 25.43
+          }
+        },
+        {
+          "target": "46.4,23 collect",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 24.672,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 4.75,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 15.41,
+            "aiY": 23.07
+          }
+        },
+        {
+          "target": "46.4,23 collect",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 31.547,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 5.75,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 20.91,
+            "aiY": 22.56
+          }
+        },
+        {
+          "target": "46.4,23 collect",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 38.422,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 6.75,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 28.1,
+            "aiY": 22.56
+          }
+        },
+        {
+          "target": "46.4,23 collect",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 45.297,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 7.75,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 35.29,
+            "aiY": 22.56
+          }
+        },
+        {
+          "target": "46.4,23 collect",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 46.443,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 8.75,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 42.47,
+            "aiY": 22.56
+          }
+        },
+        {
+          "collected": "network-slacker-05-obj-011",
+          "by": "ai",
+          "state": {
+            "room": "network-slacker-05",
+            "x": 46.443,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 9.05,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 44.63,
+            "aiY": 22.56
+          }
+        }
+      ]
+    },
+    {
+      "name": "network-slacker-06 relic 34,25 initial=50",
+      "pass": true,
+      "trace": [
+        {
+          "target": "7,26 ai",
+          "state": {
+            "room": "network-slacker-06",
+            "x": 3.13,
+            "feet": 26.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 25.56
+          }
+        },
+        {
+          "target": "7,26 ai",
+          "state": {
+            "room": "network-slacker-06",
+            "x": 6.878,
+            "feet": 26.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.59,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.1,
+            "aiY": 25.56
+          }
+        },
+        {
+          "target": "37,26 collect",
+          "state": {
+            "room": "network-slacker-06",
+            "x": 6.935,
+            "feet": 26.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.1,
+            "aiY": 25.56
+          }
+        },
+        {
+          "target": "37,26 collect",
+          "state": {
+            "room": "network-slacker-06",
+            "x": 12.711,
+            "feet": 23.639,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 3.65,
+            "aiY": 25.46
+          }
+        },
+        {
+          "target": "37,26 collect",
+          "state": {
+            "room": "network-slacker-06",
+            "x": 17.25,
+            "feet": 21.069,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 10.37,
+            "aiY": 23.97
+          }
+        },
+        {
+          "target": "37,26 collect",
+          "state": {
+            "room": "network-slacker-06",
+            "x": 23.695,
+            "feet": 21.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.56,
+            "aiY": 21.97
+          }
+        },
+        {
+          "target": "37,26 collect",
+          "state": {
+            "room": "network-slacker-06",
+            "x": 30.57,
+            "feet": 21.179,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 4.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 18.85,
+            "aiY": 20.06
+          }
+        },
+        {
+          "target": "37,26 collect",
+          "state": {
+            "room": "network-slacker-06",
+            "x": 37.044,
+            "feet": 26.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 5.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 25.86,
+            "aiY": 20.56
+          }
+        },
+        {
+          "target": "37,26 collect",
+          "state": {
+            "room": "network-slacker-06",
+            "x": 37.044,
+            "feet": 26.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 6.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 32.23,
+            "aiY": 22.33
+          }
+        },
+        {
+          "collected": "network-slacker-06-obj-009",
+          "by": "ai",
+          "state": {
+            "room": "network-slacker-06",
+            "x": 37.044,
+            "feet": 26.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 7.08,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 33.66,
+            "aiY": 25.29
+          }
+        }
+      ]
+    },
+    {
+      "name": "network-slacker-07 relic 38,20 initial=20",
+      "pass": true,
+      "trace": [
+        {
+          "target": "12,30 ai",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 3.13,
+            "feet": 30.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "12,30 ai",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 9.742,
+            "feet": 28.564,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "12,30 ai",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 11.919,
+            "feet": 30.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.32,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 7.14,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "14,29 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 11.977,
+            "feet": 29.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.33,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 7.14,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "14,29 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 14.039,
+            "feet": 29.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.75,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 7.14,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "16,28 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 14.044,
+            "feet": 28.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.76,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 7.14,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "16,28 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 16.016,
+            "feet": 28.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 7.56,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "18,27 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 16.02,
+            "feet": 27.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.18,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 7.62,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "18,27 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 18.049,
+            "feet": 27.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 10.61,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "20,26 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 18.054,
+            "feet": 26.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.61,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 10.67,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "20,26 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 20.026,
+            "feet": 26.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.02,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 13.09,
+            "aiY": 28.45
+          }
+        },
+        {
+          "target": "22,25 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 20.031,
+            "feet": 25.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.03,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 13.14,
+            "aiY": 28.41
+          }
+        },
+        {
+          "target": "22,25 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 22.003,
+            "feet": 25.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.45,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.76,
+            "aiY": 27.6
+          }
+        },
+        {
+          "target": "24,24 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 22.007,
+            "feet": 24.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.46,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.8,
+            "aiY": 27.56
+          }
+        },
+        {
+          "target": "24,24 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 24.036,
+            "feet": 24.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.87,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 16.68,
+            "aiY": 26.67
+          }
+        },
+        {
+          "target": "26,23 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 24.041,
+            "feet": 23.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.88,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 16.71,
+            "aiY": 26.63
+          }
+        },
+        {
+          "target": "26,23 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 26.013,
+            "feet": 23.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 4.3,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 18.52,
+            "aiY": 26.01
+          }
+        },
+        {
+          "target": "28,22 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 26.018,
+            "feet": 22.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 4.31,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 18.55,
+            "aiY": 25.95
+          }
+        },
+        {
+          "target": "28,22 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 28.047,
+            "feet": 22.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 4.73,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 20.47,
+            "aiY": 25.1
+          }
+        },
+        {
+          "target": "30,21 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 28.052,
+            "feet": 21.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 4.73,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 20.49,
+            "aiY": 25.04
+          }
+        },
+        {
+          "target": "30,21 ",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 30.023,
+            "feet": 21.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 5.15,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 22.39,
+            "aiY": 24.43
+          }
+        },
+        {
+          "target": "39.4,21 collect",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 30.028,
+            "feet": 21.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 5.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 22.39,
+            "aiY": 24.37
+          }
+        },
+        {
+          "target": "39.4,21 collect",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 36.641,
+            "feet": 21.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 6.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 26.59,
+            "aiY": 21.8
+          }
+        },
+        {
+          "target": "39.4,21 collect",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 39.448,
+            "feet": 21.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 7.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 31.6,
+            "aiY": 20.56
+          }
+        },
+        {
+          "collected": "network-slacker-07-obj-013",
+          "by": "ai",
+          "state": {
+            "room": "network-slacker-07",
+            "x": 39.448,
+            "feet": 21.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 8.0,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 37.65,
+            "aiY": 20.56
+          }
+        }
+      ]
+    },
+    {
+      "name": "network-slacker-08 relic 35,23 initial=80",
+      "pass": true,
+      "trace": [
+        {
+          "target": "7,30 ai",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 3.13,
+            "feet": 30.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "7,30 ai",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 6.878,
+            "feet": 30.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 0.59,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.1,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "52.5,30 door",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 6.935,
+            "feet": 30.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 0.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.1,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "52.5,30 door",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 13.81,
+            "feet": 30.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 1.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 3.65,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "52.5,30 door",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 20.685,
+            "feet": 30.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 2.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 10.84,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "52.5,30 door",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 27.56,
+            "feet": 30.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 3.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 17.48,
+            "aiY": 28.47
+          }
+        },
+        {
+          "target": "52.5,30 door",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 34.435,
+            "feet": 30.0,
+            "awareness": 80.0,
+            "pending": null,
+            "seconds": 4.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "charge",
+            "aiX": 23.75,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "52.5,30 door",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 41.31,
+            "feet": 28.503,
+            "awareness": 80.0,
+            "pending": 60.0,
+            "seconds": 5.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "recover",
+            "aiX": 25.78,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "52.5,30 door",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 48.185,
+            "feet": 30.0,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 6.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "recover",
+            "aiX": 28.44,
+            "aiY": 29.56
+          }
+        },
+        {
+          "door": "network-slacker-08 -> network-slacker-09",
+          "visited": [
+            "network-slacker-08",
+            "network-slacker-09"
+          ],
+          "traversed": [
+            "water-8-records-9-rollcall"
+          ]
+        },
+        {
+          "target": "6,30 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 2.13,
+            "feet": 30.0,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 7.12,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -2.66,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "6,30 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 5.82,
+            "feet": 30.0,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 7.69,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -2.66,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "0.5,30 door",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 5.816,
+            "feet": 30.0,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 7.7,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -2.66,
+            "aiY": 29.56
+          }
+        },
+        {
+          "door": "network-slacker-09 -> network-slacker-08",
+          "visited": [
+            "network-slacker-08",
+            "network-slacker-09"
+          ],
+          "traversed": [
+            "water-8-records-9-rollcall",
+            "water-9-rollcall-8-records"
+          ]
+        },
+        {
+          "target": "53,30 ",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 50.13,
+            "feet": 30.0,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 8.36,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 45.34,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "53,30 ",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 52.846,
+            "feet": 30.0,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 8.79,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 45.34,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "50,28.75 ",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 52.842,
+            "feet": 29.899,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 8.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 45.34,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "50,28.75 ",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 50.24,
+            "feet": 28.75,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 9.72,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 49.42,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "48,28 ",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 50.235,
+            "feet": 28.649,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 9.73,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 49.48,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "48,28 ",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 48.206,
+            "feet": 28.0,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 10.18,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 52.71,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "46,27 ",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 48.201,
+            "feet": 27.899,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 10.18,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 52.77,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "46,27 ",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 46.195,
+            "feet": 27.0,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 10.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 51.59,
+            "aiY": 27.96
+          }
+        },
+        {
+          "target": "44,26 ",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 46.191,
+            "feet": 26.899,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 10.61,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 51.53,
+            "aiY": 27.97
+          }
+        },
+        {
+          "target": "44,26 ",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 44.195,
+            "feet": 26.0,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 11.03,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 50.61,
+            "aiY": 27.28
+          }
+        },
+        {
+          "target": "42,25 ",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 44.191,
+            "feet": 25.899,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 11.03,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 50.61,
+            "aiY": 27.34
+          }
+        },
+        {
+          "target": "42,25 ",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 42.195,
+            "feet": 25.0,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 11.45,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 49.5,
+            "aiY": 26.77
+          }
+        },
+        {
+          "target": "40,24 ",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 42.191,
+            "feet": 24.899,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 11.46,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 49.44,
+            "aiY": 26.75
+          }
+        },
+        {
+          "target": "40,24 ",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 40.195,
+            "feet": 24.0,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 11.87,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 48.13,
+            "aiY": 26.08
+          }
+        },
+        {
+          "target": "37,24 jump",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 40.191,
+            "feet": 23.899,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 11.88,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 48.07,
+            "aiY": 26.05
+          }
+        },
+        {
+          "target": "37,24 jump",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 37.245,
+            "feet": 24.0,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 12.41,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 45.61,
+            "aiY": 24.95
+          }
+        },
+        {
+          "target": "33,24 collect",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 37.24,
+            "feet": 24.0,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 12.42,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 45.55,
+            "aiY": 24.95
+          }
+        },
+        {
+          "target": "33,24 collect",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 33.206,
+            "feet": 24.0,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 13.42,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 41.11,
+            "aiY": 23.23
+          }
+        },
+        {
+          "collected": "network-slacker-08-obj-012",
+          "by": "ai",
+          "state": {
+            "room": "network-slacker-08",
+            "x": 33.206,
+            "feet": 24.0,
+            "awareness": 60.0,
+            "pending": null,
+            "seconds": 14.08,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 36.32,
+            "aiY": 23.44
+          }
+        }
+      ]
+    },
+    {
+      "name": "network-slacker-09 relic 38,22 initial=50",
+      "pass": true,
+      "trace": [
+        {
+          "target": "8,30 ai",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 3.13,
+            "feet": 30.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "8,30 ai",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 7.909,
+            "feet": 30.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.74,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 3.13,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "14,29 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 7.966,
+            "feet": 30.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.75,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 3.13,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "14,29 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 14.023,
+            "feet": 28.405,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.75,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 4.67,
+            "aiY": 29.39
+          }
+        },
+        {
+          "target": "14,29 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 14.023,
+            "feet": 29.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.88,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 5.63,
+            "aiY": 29.28
+          }
+        },
+        {
+          "target": "16,28 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 14.028,
+            "feet": 28.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.89,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 5.69,
+            "aiY": 29.27
+          }
+        },
+        {
+          "target": "16,28 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 16.057,
+            "feet": 28.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.31,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 8.66,
+            "aiY": 28.93
+          }
+        },
+        {
+          "target": "18,27 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 16.062,
+            "feet": 27.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.32,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 8.72,
+            "aiY": 28.92
+          }
+        },
+        {
+          "target": "18,27 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 18.034,
+            "feet": 27.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.73,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 11.41,
+            "aiY": 27.95
+          }
+        },
+        {
+          "target": "20,26 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 18.039,
+            "feet": 26.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.74,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 11.47,
+            "aiY": 27.96
+          }
+        },
+        {
+          "target": "20,26 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 20.01,
+            "feet": 26.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 13.5,
+            "aiY": 29.09
+          }
+        },
+        {
+          "target": "22,25 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 20.015,
+            "feet": 25.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.17,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 13.53,
+            "aiY": 29.04
+          }
+        },
+        {
+          "target": "22,25 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 22.044,
+            "feet": 25.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.58,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.66,
+            "aiY": 27.7
+          }
+        },
+        {
+          "target": "24,24 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 22.049,
+            "feet": 24.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.59,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.7,
+            "aiY": 27.65
+          }
+        },
+        {
+          "target": "24,24 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 24.021,
+            "feet": 24.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 4.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 16.52,
+            "aiY": 27.04
+          }
+        },
+        {
+          "target": "26,23 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 24.026,
+            "feet": 23.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 4.02,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 16.54,
+            "aiY": 26.98
+          }
+        },
+        {
+          "target": "26,23 ",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 26.055,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 4.43,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 18.47,
+            "aiY": 26.13
+          }
+        },
+        {
+          "target": "39.4,23 collect",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 26.059,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 4.44,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 18.49,
+            "aiY": 26.07
+          }
+        },
+        {
+          "target": "39.4,23 collect",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 32.672,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 5.44,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 22.65,
+            "aiY": 23.75
+          }
+        },
+        {
+          "target": "39.4,23 collect",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 39.432,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 6.44,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 27.88,
+            "aiY": 22.56
+          }
+        },
+        {
+          "target": "39.4,23 collect",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 39.432,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 7.44,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 35.07,
+            "aiY": 22.56
+          }
+        },
+        {
+          "collected": "network-slacker-09-obj-010",
+          "by": "ai",
+          "state": {
+            "room": "network-slacker-09",
+            "x": 39.432,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 7.8,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 37.65,
+            "aiY": 22.56
+          }
+        }
+      ]
+    },
+    {
+      "name": "network-slacker-10 relic 44,23 initial=50",
+      "pass": true,
+      "trace": [
+        {
+          "target": "7,34 ai",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 3.13,
+            "feet": 34.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "7,34 ai",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 6.878,
+            "feet": 34.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.59,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.1,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "12,33 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 6.935,
+            "feet": 34.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.1,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "12,33 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 12.023,
+            "feet": 33.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.59,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 3.59,
+            "aiY": 33.47
+          }
+        },
+        {
+          "target": "14,32 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 12.028,
+            "feet": 32.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 3.65,
+            "aiY": 33.46
+          }
+        },
+        {
+          "target": "14,32 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 14.057,
+            "feet": 32.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.02,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 6.64,
+            "aiY": 33.27
+          }
+        },
+        {
+          "target": "16,31 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 14.062,
+            "feet": 31.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.02,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 6.7,
+            "aiY": 33.27
+          }
+        },
+        {
+          "target": "16,31 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 16.034,
+            "feet": 31.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.44,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 9.69,
+            "aiY": 33.08
+          }
+        },
+        {
+          "target": "18,30 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 16.039,
+            "feet": 30.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.45,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 9.75,
+            "aiY": 33.07
+          }
+        },
+        {
+          "target": "18,30 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 18.01,
+            "feet": 30.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.87,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 11.64,
+            "aiY": 32.44
+          }
+        },
+        {
+          "target": "20,29 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 18.015,
+            "feet": 29.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.87,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 11.65,
+            "aiY": 32.38
+          }
+        },
+        {
+          "target": "20,29 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 20.044,
+            "feet": 29.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.29,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 13.15,
+            "aiY": 31.22
+          }
+        },
+        {
+          "target": "22,28 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 20.049,
+            "feet": 28.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.3,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 13.2,
+            "aiY": 31.18
+          }
+        },
+        {
+          "target": "22,28 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 22.021,
+            "feet": 28.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.72,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.9,
+            "aiY": 30.47
+          }
+        },
+        {
+          "target": "24,27 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 22.026,
+            "feet": 27.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.72,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.94,
+            "aiY": 30.43
+          }
+        },
+        {
+          "target": "24,27 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 24.055,
+            "feet": 27.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 4.14,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 16.81,
+            "aiY": 29.54
+          }
+        },
+        {
+          "target": "26,26 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 24.059,
+            "feet": 26.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 4.15,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 16.85,
+            "aiY": 29.5
+          }
+        },
+        {
+          "target": "26,26 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 26.031,
+            "feet": 26.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 4.57,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 18.58,
+            "aiY": 28.81
+          }
+        },
+        {
+          "target": "28,25 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 26.036,
+            "feet": 25.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 4.58,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 18.61,
+            "aiY": 28.76
+          }
+        },
+        {
+          "target": "28,25 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 28.008,
+            "feet": 25.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 4.99,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "charge",
+            "aiX": 19.29,
+            "aiY": 28.12
+          }
+        },
+        {
+          "target": "30,24 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 28.013,
+            "feet": 24.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 5.0,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "charge",
+            "aiX": 19.3,
+            "aiY": 28.11
+          }
+        },
+        {
+          "target": "30,24 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 30.042,
+            "feet": 24.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 5.42,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "charge",
+            "aiX": 20.12,
+            "aiY": 27.98
+          }
+        },
+        {
+          "target": "47,24 collect",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 30.046,
+            "feet": 24.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 5.43,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "charge",
+            "aiX": 20.13,
+            "aiY": 27.98
+          }
+        },
+        {
+          "target": "47,24 collect",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 36.659,
+            "feet": 24.0,
+            "awareness": 30.0,
+            "pending": null,
+            "seconds": 6.43,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "recover",
+            "aiX": 21.31,
+            "aiY": 27.13
+          }
+        },
+        {
+          "target": "47,24 collect",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 43.534,
+            "feet": 24.0,
+            "awareness": 30.0,
+            "pending": null,
+            "seconds": 7.43,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 24.19,
+            "aiY": 26.0
+          }
+        },
+        {
+          "target": "47,24 collect",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 47.029,
+            "feet": 24.0,
+            "awareness": 30.0,
+            "pending": null,
+            "seconds": 8.43,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 28.38,
+            "aiY": 24.48
+          }
+        },
+        {
+          "target": "47,24 collect",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 47.029,
+            "feet": 24.0,
+            "awareness": 30.0,
+            "pending": null,
+            "seconds": 9.43,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 34.09,
+            "aiY": 23.56
+          }
+        },
+        {
+          "target": "47,24 collect",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 47.029,
+            "feet": 24.0,
+            "awareness": 30.0,
+            "pending": null,
+            "seconds": 10.43,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 41.27,
+            "aiY": 23.56
+          }
+        },
+        {
+          "collected": "network-slacker-10-obj-015",
+          "by": "ai",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 47.029,
+            "feet": 24.0,
+            "awareness": 30.0,
+            "pending": null,
+            "seconds": 10.76,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 43.67,
+            "aiY": 23.56
+          }
+        }
+      ]
+    },
+    {
+      "name": "network-slacker-10 relic 58,31 initial=20",
+      "pass": true,
+      "trace": [
+        {
+          "target": "7,34 ai",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 3.13,
+            "feet": 34.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "7,34 ai",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 6.878,
+            "feet": 34.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 0.59,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.1,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "12,33 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 6.935,
+            "feet": 34.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 0.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.1,
+            "aiY": 33.56
+          }
+        },
+        {
+          "target": "12,33 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 12.023,
+            "feet": 33.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.59,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 3.59,
+            "aiY": 33.47
+          }
+        },
+        {
+          "target": "14,32 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 12.028,
+            "feet": 32.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 3.65,
+            "aiY": 33.46
+          }
+        },
+        {
+          "target": "14,32 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 14.057,
+            "feet": 32.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.02,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 6.64,
+            "aiY": 33.27
+          }
+        },
+        {
+          "target": "16,31 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 14.062,
+            "feet": 31.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.02,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 6.7,
+            "aiY": 33.27
+          }
+        },
+        {
+          "target": "16,31 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 16.034,
+            "feet": 31.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.44,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 9.69,
+            "aiY": 33.08
+          }
+        },
+        {
+          "target": "18,30 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 16.039,
+            "feet": 30.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.45,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 9.75,
+            "aiY": 33.07
+          }
+        },
+        {
+          "target": "18,30 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 18.01,
+            "feet": 30.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.87,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 11.64,
+            "aiY": 32.44
+          }
+        },
+        {
+          "target": "20,29 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 18.015,
+            "feet": 29.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.87,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 11.65,
+            "aiY": 32.38
+          }
+        },
+        {
+          "target": "20,29 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 20.044,
+            "feet": 29.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.29,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 13.15,
+            "aiY": 31.22
+          }
+        },
+        {
+          "target": "22,28 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 20.049,
+            "feet": 28.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.3,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 13.2,
+            "aiY": 31.18
+          }
+        },
+        {
+          "target": "22,28 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 22.021,
+            "feet": 28.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.72,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.9,
+            "aiY": 30.47
+          }
+        },
+        {
+          "target": "24,27 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 22.026,
+            "feet": 27.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.72,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.94,
+            "aiY": 30.43
+          }
+        },
+        {
+          "target": "24,27 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 24.055,
+            "feet": 27.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 4.14,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 16.81,
+            "aiY": 29.54
+          }
+        },
+        {
+          "target": "26,26 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 24.059,
+            "feet": 26.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 4.15,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 16.85,
+            "aiY": 29.5
+          }
+        },
+        {
+          "target": "26,26 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 26.031,
+            "feet": 26.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 4.57,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 18.58,
+            "aiY": 28.81
+          }
+        },
+        {
+          "target": "28,25 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 26.036,
+            "feet": 25.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 4.58,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 18.61,
+            "aiY": 28.76
+          }
+        },
+        {
+          "target": "28,25 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 28.008,
+            "feet": 25.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 4.99,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "charge",
+            "aiX": 19.29,
+            "aiY": 28.12
+          }
+        },
+        {
+          "target": "30,24 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 28.013,
+            "feet": 24.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 5.0,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "charge",
+            "aiX": 19.3,
+            "aiY": 28.11
+          }
+        },
+        {
+          "target": "30,24 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 30.042,
+            "feet": 24.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 5.42,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "charge",
+            "aiX": 20.12,
+            "aiY": 27.98
+          }
+        },
+        {
+          "target": "48,24 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 30.046,
+            "feet": 24.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 5.43,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "charge",
+            "aiX": 20.13,
+            "aiY": 27.98
+          }
+        },
+        {
+          "target": "48,24 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 36.659,
+            "feet": 24.0,
+            "awareness": 0.0,
+            "pending": null,
+            "seconds": 6.43,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "recover",
+            "aiX": 21.31,
+            "aiY": 27.13
+          }
+        },
+        {
+          "target": "48,24 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 43.534,
+            "feet": 24.0,
+            "awareness": 0.0,
+            "pending": null,
+            "seconds": 7.43,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 24.19,
+            "aiY": 26.0
+          }
+        },
+        {
+          "target": "48,24 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 47.831,
+            "feet": 24.0,
+            "awareness": 0.0,
+            "pending": null,
+            "seconds": 8.05,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 26.53,
+            "aiY": 24.96
+          }
+        },
+        {
+          "target": "53,34 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 47.888,
+            "feet": 24.0,
+            "awareness": 0.0,
+            "pending": null,
+            "seconds": 8.06,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 26.55,
+            "aiY": 24.91
+          }
+        },
+        {
+          "target": "53,34 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 53.044,
+            "feet": 31.197,
+            "awareness": 0.0,
+            "pending": null,
+            "seconds": 9.06,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 31.45,
+            "aiY": 23.56
+          }
+        },
+        {
+          "target": "53,34 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 53.044,
+            "feet": 34.0,
+            "awareness": 0.0,
+            "pending": null,
+            "seconds": 9.17,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 31.99,
+            "aiY": 23.56
+          }
+        },
+        {
+          "target": "54,33 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 53.049,
+            "feet": 33.899,
+            "awareness": 0.0,
+            "pending": null,
+            "seconds": 9.18,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 31.99,
+            "aiY": 23.56
+          }
+        },
+        {
+          "target": "54,33 ",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 54.023,
+            "feet": 33.0,
+            "awareness": 0.0,
+            "pending": null,
+            "seconds": 9.59,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 31.99,
+            "aiY": 23.56
+          }
+        },
+        {
+          "target": "59.3,32 collect",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 54.028,
+            "feet": 33.0,
+            "awareness": 0.0,
+            "pending": null,
+            "seconds": 9.6,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 31.99,
+            "aiY": 23.56
+          }
+        },
+        {
+          "target": "59.3,32 collect",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 59.323,
+            "feet": 32.0,
+            "awareness": 0.0,
+            "pending": null,
+            "seconds": 10.6,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 36.78,
+            "aiY": 23.56
+          }
+        },
+        {
+          "target": "59.3,32 collect",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 59.323,
+            "feet": 32.0,
+            "awareness": 0.0,
+            "pending": null,
+            "seconds": 11.6,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 43.97,
+            "aiY": 23.56
+          }
+        },
+        {
+          "target": "59.3,32 collect",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 59.323,
+            "feet": 32.0,
+            "awareness": 0.0,
+            "pending": null,
+            "seconds": 12.6,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 51.16,
+            "aiY": 23.56
+          }
+        },
+        {
+          "target": "59.3,32 collect",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 59.323,
+            "feet": 32.0,
+            "awareness": 0.0,
+            "pending": null,
+            "seconds": 13.6,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 53.42,
+            "aiY": 29.6
+          }
+        },
+        {
+          "collected": "network-slacker-10-obj-018",
+          "by": "ai",
+          "state": {
+            "room": "network-slacker-10",
+            "x": 59.323,
+            "feet": 32.0,
+            "awareness": 0.0,
+            "pending": null,
+            "seconds": 14.35,
+            "deaths": 0,
+            "aiHits": 1,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 57.64,
+            "aiY": 31.29
+          }
+        }
+      ]
+    },
+    {
+      "name": "network-slacker-11 relic 28,22 initial=50",
+      "pass": true,
+      "trace": [
+        {
+          "target": "7,30 ai",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 3.13,
+            "feet": 30.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "7,30 ai",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 6.878,
+            "feet": 30.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.59,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.1,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "10,29 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 6.935,
+            "feet": 29.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 0.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.1,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "10,29 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 9.857,
+            "feet": 29.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.02,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.1,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "12,28 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 9.914,
+            "feet": 28.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.03,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.1,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "12,28 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 12.034,
+            "feet": 28.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.45,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.58,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "14,27 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 12.039,
+            "feet": 27.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.46,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.64,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "14,27 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 14.01,
+            "feet": 27.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.87,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 5.63,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "16,26 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 14.015,
+            "feet": 26.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 1.88,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 5.69,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "16,26 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 16.044,
+            "feet": 26.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.3,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 8.09,
+            "aiY": 28.41
+          }
+        },
+        {
+          "target": "18,25 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 16.049,
+            "feet": 25.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.31,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 8.14,
+            "aiY": 28.37
+          }
+        },
+        {
+          "target": "18,25 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 18.021,
+            "feet": 25.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.72,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 10.55,
+            "aiY": 28.04
+          }
+        },
+        {
+          "target": "20,24 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 18.026,
+            "feet": 24.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 2.73,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 10.59,
+            "aiY": 27.99
+          }
+        },
+        {
+          "target": "20,24 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 20.055,
+            "feet": 24.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.15,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 12.47,
+            "aiY": 27.12
+          }
+        },
+        {
+          "target": "22,23 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 20.059,
+            "feet": 23.899,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 12.49,
+            "aiY": 27.07
+          }
+        },
+        {
+          "target": "22,23 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 22.031,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.57,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.39,
+            "aiY": 26.45
+          }
+        },
+        {
+          "target": "30,23 collect",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 22.036,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 3.58,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.4,
+            "aiY": 26.39
+          }
+        },
+        {
+          "target": "30,23 collect",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 28.648,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 4.58,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 18.58,
+            "aiY": 23.83
+          }
+        },
+        {
+          "target": "30,23 collect",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 30.023,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 5.58,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 24.04,
+            "aiY": 22.18
+          }
+        },
+        {
+          "collected": "network-slacker-11-obj-016",
+          "by": "ai",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 30.023,
+            "feet": 23.0,
+            "awareness": 50.0,
+            "pending": null,
+            "seconds": 6.09,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 27.68,
+            "aiY": 22.4
+          }
+        }
+      ]
+    },
+    {
+      "name": "network-slacker-11 relic 41,19 initial=20",
+      "pass": true,
+      "trace": [
+        {
+          "target": "7,30 ai",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 3.13,
+            "feet": 30.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 0.01,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": false,
+            "skill": "",
+            "aiX": -1.66,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "7,30 ai",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 6.878,
+            "feet": 30.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 0.59,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.1,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "10,29 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 6.935,
+            "feet": 29.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 0.6,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.1,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "10,29 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 9.857,
+            "feet": 29.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.02,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.1,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "12,28 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 9.914,
+            "feet": 28.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.03,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.1,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "12,28 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 12.034,
+            "feet": 28.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.45,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.58,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "14,27 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 12.039,
+            "feet": 27.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.46,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 2.64,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "14,27 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 14.01,
+            "feet": 27.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.87,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 5.63,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "16,26 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 14.015,
+            "feet": 26.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 1.88,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 5.69,
+            "aiY": 29.56
+          }
+        },
+        {
+          "target": "16,26 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 16.044,
+            "feet": 26.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.3,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 8.09,
+            "aiY": 28.41
+          }
+        },
+        {
+          "target": "18,25 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 16.049,
+            "feet": 25.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.31,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 8.14,
+            "aiY": 28.37
+          }
+        },
+        {
+          "target": "18,25 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 18.021,
+            "feet": 25.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.72,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 10.55,
+            "aiY": 28.04
+          }
+        },
+        {
+          "target": "20,24 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 18.026,
+            "feet": 24.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 2.73,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 10.59,
+            "aiY": 27.99
+          }
+        },
+        {
+          "target": "20,24 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 20.055,
+            "feet": 24.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.15,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 12.47,
+            "aiY": 27.12
+          }
+        },
+        {
+          "target": "22,23 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 20.059,
+            "feet": 23.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.16,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 12.49,
+            "aiY": 27.07
+          }
+        },
+        {
+          "target": "22,23 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 22.031,
+            "feet": 23.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.57,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.39,
+            "aiY": 26.45
+          }
+        },
+        {
+          "target": "32,22 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 22.036,
+            "feet": 23.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 3.58,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 14.4,
+            "aiY": 26.39
+          }
+        },
+        {
+          "target": "32,22 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 28.648,
+            "feet": 21.434,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 4.58,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 18.58,
+            "aiY": 23.83
+          }
+        },
+        {
+          "target": "32,22 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 32.023,
+            "feet": 22.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 5.33,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 22.17,
+            "aiY": 21.98
+          }
+        },
+        {
+          "target": "34,21 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 32.028,
+            "feet": 21.899,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 5.33,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 22.23,
+            "aiY": 22.0
+          }
+        },
+        {
+          "target": "34,21 ",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 34.057,
+            "feet": 21.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 5.75,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 24.78,
+            "aiY": 22.56
+          }
+        },
+        {
+          "target": "42.5,20 collect",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 34.062,
+            "feet": 21.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 5.76,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 24.84,
+            "aiY": 22.56
+          }
+        },
+        {
+          "target": "42.5,20 collect",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 40.674,
+            "feet": 20.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 6.76,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 30.87,
+            "aiY": 22.11
+          }
+        },
+        {
+          "target": "42.5,20 collect",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 42.508,
+            "feet": 20.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 7.76,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 34.8,
+            "aiY": 20.37
+          }
+        },
+        {
+          "collected": "network-slacker-11-obj-020",
+          "by": "ai",
+          "state": {
+            "room": "network-slacker-11",
+            "x": 42.508,
+            "feet": 20.0,
+            "awareness": 20.0,
+            "pending": null,
+            "seconds": 8.66,
+            "deaths": 0,
+            "aiHits": 0,
+            "aiActive": true,
+            "skill": "",
+            "aiX": 40.64,
+            "aiY": 19.35
+          }
+        }
+      ]
+    }
+  ]
+}

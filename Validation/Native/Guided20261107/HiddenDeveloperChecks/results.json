@@ -1,0 +1,271 @@
+{
+  "checks": 66,
+  "failures": 0,
+  "scope": "Pure state-machine key-down edges, not physical-human or Unity UI evidence",
+  "results": [
+    {
+      "name": "ordered edge 1 with gap 0",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 2 with gap 0",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 3 with gap 0",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 4 with gap 0",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 5 with gap 0",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 6 with gap 0",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 7 with gap 0",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 8 with gap 0",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 1 with gap 0.2",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 2 with gap 0.2",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 3 with gap 0.2",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 4 with gap 0.2",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 5 with gap 0.2",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 6 with gap 0.2",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 7 with gap 0.2",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 8 with gap 0.2",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 1 with gap 2",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 2 with gap 2",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 3 with gap 2",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 4 with gap 2",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 5 with gap 2",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 6 with gap 2",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 7 with gap 2",
+      "pass": true
+    },
+    {
+      "name": "ordered edge 8 with gap 2",
+      "pass": true
+    },
+    {
+      "name": "timeout rejects partial sequence at edge 2",
+      "pass": true
+    },
+    {
+      "name": "timeout rejects partial sequence at edge 3",
+      "pass": true
+    },
+    {
+      "name": "timeout rejects partial sequence at edge 4",
+      "pass": true
+    },
+    {
+      "name": "timeout rejects partial sequence at edge 5",
+      "pass": true
+    },
+    {
+      "name": "timeout rejects partial sequence at edge 6",
+      "pass": true
+    },
+    {
+      "name": "timeout rejects partial sequence at edge 7",
+      "pass": true
+    },
+    {
+      "name": "timeout rejects partial sequence at edge 8",
+      "pass": true
+    },
+    {
+      "name": "non-arrow/wrong key interrupts at edge 1",
+      "pass": true
+    },
+    {
+      "name": "fresh exact sequence succeeds after wrong edge 1",
+      "pass": true
+    },
+    {
+      "name": "non-arrow/wrong key interrupts at edge 2",
+      "pass": true
+    },
+    {
+      "name": "fresh exact sequence succeeds after wrong edge 2",
+      "pass": true
+    },
+    {
+      "name": "non-arrow/wrong key interrupts at edge 3",
+      "pass": true
+    },
+    {
+      "name": "fresh exact sequence succeeds after wrong edge 3",
+      "pass": true
+    },
+    {
+      "name": "non-arrow/wrong key interrupts at edge 4",
+      "pass": true
+    },
+    {
+      "name": "fresh exact sequence succeeds after wrong edge 4",
+      "pass": true
+    },
+    {
+      "name": "non-arrow/wrong key interrupts at edge 5",
+      "pass": true
+    },
+    {
+      "name": "fresh exact sequence succeeds after wrong edge 5",
+      "pass": true
+    },
+    {
+      "name": "non-arrow/wrong key interrupts at edge 6",
+      "pass": true
+    },
+    {
+      "name": "fresh exact sequence succeeds after wrong edge 6",
+      "pass": true
+    },
+    {
+      "name": "non-arrow/wrong key interrupts at edge 7",
+      "pass": true
+    },
+    {
+      "name": "fresh exact sequence succeeds after wrong edge 7",
+      "pass": true
+    },
+    {
+      "name": "non-arrow/wrong key interrupts at edge 8",
+      "pass": true
+    },
+    {
+      "name": "fresh exact sequence succeeds after wrong edge 8",
+      "pass": true
+    },
+    {
+      "name": "explicit modal reset discards prefix length 1",
+      "pass": true
+    },
+    {
+      "name": "explicit modal reset discards prefix length 2",
+      "pass": true
+    },
+    {
+      "name": "explicit modal reset discards prefix length 3",
+      "pass": true
+    },
+    {
+      "name": "explicit modal reset discards prefix length 4",
+      "pass": true
+    },
+    {
+      "name": "explicit modal reset discards prefix length 5",
+      "pass": true
+    },
+    {
+      "name": "explicit modal reset discards prefix length 6",
+      "pass": true
+    },
+    {
+      "name": "explicit modal reset discards prefix length 7",
+      "pass": true
+    },
+    {
+      "name": "invalid clock value resets: NaN",
+      "pass": true
+    },
+    {
+      "name": "invalid clock value resets: \u221E",
+      "pass": true
+    },
+    {
+      "name": "invalid clock value resets: -\u221E",
+      "pass": true
+    },
+    {
+      "name": "invalid clock value resets: -1",
+      "pass": true
+    },
+    {
+      "name": "wrong Up starts a new one-edge prefix",
+      "pass": true
+    },
+    {
+      "name": "restart prefix completes only with the remaining seven edges",
+      "pass": true
+    },
+    {
+      "name": "timed out Up begins a fresh prefix",
+      "pass": true
+    },
+    {
+      "name": "one fresh Up cannot substitute for two Up presses",
+      "pass": true
+    },
+    {
+      "name": "backward clock never completes an old prefix",
+      "pass": true
+    },
+    {
+      "name": "unknown direction resets",
+      "pass": true
+    },
+    {
+      "name": "first complete sequence opens once",
+      "pass": true
+    },
+    {
+      "name": "second complete sequence can open again",
+      "pass": true
+    }
+  ]
+}

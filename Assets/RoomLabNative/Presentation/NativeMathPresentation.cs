@@ -34,8 +34,8 @@ namespace RoomLab.Native {
             }
             foreach(var block in room.Movables){
                 var from=Grid(block.X+.5f,block.Y+.5f);float tx=(float?)block.Raw["targetX"]??block.X,ty=(float?)block.Raw["targetY"]??block.Y;
-                var to=Grid(tx+.5f,ty+.5f);var faint=new Color(.1f,.2f,.28f,.48f);
-                Segment(from,to,faint);
+                if(block.Raw["motionPath"] is Newtonsoft.Json.Linq.JArray path&&path.Count>0){var previous=from;foreach(var node in path){var point=Grid((float)node["x"]+.5f,(float)node["y"]+.5f);Segment(previous,point,new Color(.1f,.2f,.28f,.48f));previous=point;}tx=(float)path[path.Count-1]["x"];ty=(float)path[path.Count-1]["y"];}var to=Grid(tx+.5f,ty+.5f);var faint=new Color(.1f,.2f,.28f,.48f);
+                if(block.Raw["motionPath"]==null)Segment(from,to,faint);
                 Segment(Grid(tx,ty),Grid(tx+1,ty),faint);Segment(Grid(tx+1,ty),Grid(tx+1,ty+1),faint);Segment(Grid(tx+1,ty+1),Grid(tx,ty+1),faint);Segment(Grid(tx,ty+1),Grid(tx,ty),faint);
                 int offset=vertices.Count;for(int i=0;i<3;i++)Segment(from,from,faint);
                 dynamicLinks.Add(new Link{block=block,offset=offset,start=from,end=to});
@@ -51,7 +51,7 @@ namespace RoomLab.Native {
                 int i=link.offset;points[i]=link.start;points[i+1]=current;
                 points[i+2]=current+new Vector3(-.16f,0);points[i+3]=current+new Vector3(.16f,0);
                 points[i+4]=current+new Vector3(0,-.16f);points[i+5]=current+new Vector3(0,.16f);
-                bool derivative=state.anim!=null&&state.anim.to<state.anim.from;var color=state.anim!=null?(derivative?new Color(.06f,.35f,.4f,.8f):new Color(.3f,.16f,.48f,.8f)):new Color(.1f,.2f,.28f,.5f);
+                bool derivative=state.anim!=null&&state.anim.to<(state.anim.kind=="path"?state.pathTime:state.anim.from);var color=state.anim!=null?(derivative?new Color(.06f,.35f,.4f,.8f):new Color(.3f,.16f,.48f,.8f)):new Color(.1f,.2f,.28f,.5f);
                 for(int j=0;j<6;j++)colors[i+j]=color;
             }
             if(links.Length>0){mesh.vertices=points;mesh.colors=colors;}

@@ -56,7 +56,7 @@ namespace RoomLab.Native
                 foreach(var ot in Array(Object(rt,"room"),"objects"))CheckModule(normalized,Object(ot,"object"));
             var p=new NativeProject { sourceBytes=(byte[])bytes.Clone(),SourceSha256=Sha(bytes),OriginalJson=source,
                 NormalizedJson=normalized,Profile=opts.Profile,SourceKind=format,Id=Text(normalized,"id",""),Name=Text(normalized,"name","") };
-            Build(p);ResolveAssets(p,archive,opts);return p;
+            Build(p);NativeReworkValidation.Validate(p);ResolveAssets(p,archive,opts);return p;
         }
         public static string Sha(byte[] bytes) { using(var s=SHA256.Create())return BitConverter.ToString(s.ComputeHash(bytes)).Replace("-","").ToLowerInvariant(); }
         public static JObject Parse(byte[] bytes)
@@ -175,10 +175,10 @@ namespace RoomLab.Native
                         if(o.Parameters["path"] is JArray nodes)foreach(var nt in nodes) {var n=Object(nt,"node");if(n["id"]!=null)Id(n,ids);if(Text(n,"parentId",o.Id)!=o.Id)throw Bad("轨道节点归属无效");double x=Number(n,"x",0,true),y=Number(n,"y",0,true);if(x<0||x>room.Cols||y<0||y>room.Rows)throw Bad("轨道节点越界");}
                     }
                     var temperatures=new Dictionary<string,string>();foreach(var o in room.Objects)if(o.Type=="physics.thermal") {string value=Text(o.Parameters,"initialState","inherit"),zone=Text(o.Parameters,"zoneId","");if(value=="hot"||value=="cold"){if(temperatures.TryGetValue(zone,out var old)&&old!=value)throw Bad("同一区域初始温度互相冲突");temperatures[zone]=value;}}
-                    foreach(var m in room.Movables) {int tx=Int(m.Raw,"targetX"),ty=Int(m.Raw,"targetY");Bounds(tx,ty,1,1,room);if(Text(m.Raw,"padId","")!=""&&!room.Objects.Any(o=>o.Id==Text(m.Raw,"padId","")))throw Bad("机关砖绑定缺失");}
+                    foreach(var m in room.Movables) {if(m.Raw["motionPath"]==null){int tx=Int(m.Raw,"targetX"),ty=Int(m.Raw,"targetY");Bounds(tx,ty,1,1,room);}if(m.Raw["motionPath"]!=null){var path=Array(m.Raw,"motionPath");if(path.Count>32)throw Bad("机关砖路径超过32节点");foreach(var nt in path){var n=Object(nt,"motion node");Bounds(Int(n,"x"),Int(n,"y"),1,1,room);double seconds=Number(n,"seconds",0,true);string mode=Text(n,"mode","",true);if(seconds<.05||seconds>60||(mode!="linear"&&mode!="smooth"&&mode!="easeIn"&&mode!="easeOut"))throw Bad("机关砖路径参数无效");}}if(Text(m.Raw,"padId","")!=""&&!room.Objects.Any(o=>o.Id==Text(m.Raw,"padId","")))throw Bad("机关砖绑定缺失");}
                     foreach(var e in room.Entries)if(room.Tiles.Any(t=>t.Collision&&t.X==e.X&&t.Y==e.Y))throw Bad("入口埋在砖里："+e.Id);
                     if(r["playTraces"]!=null)foreach(var trace in Array(r,"playTraces")){var tr=Object(trace,"trace");Id(tr,ids);foreach(var point in Array(tr,"points")){Number(Object(point,"point"),"x",0,true);Number(Object(point,"point"),"y",0,true);}}
-                    course.Rooms.Add(room);
+                    if((string)p.OriginalJson["nativeCampaign"]?["id"]=="deadline-night-v1"&&r["nativeCampaign"] is JObject campaign){int count=Int(campaign,"checkins",0);if(count<0||count>room.Objects.Count(o=>o.Type=="slacker.checkin"))throw Bad("签到目标超过房间站点数");if((bool?)campaign["requireAI"]==true&&!room.Objects.Any(o=>o.Type=="common.aiStart"||o.Type=="common.aiStartHollow"))throw Bad("战役房间需要可用的AI终端");}course.Rooms.Add(room);
                 }
                 var usedOutputs=new HashSet<string>();foreach(var wt in c["connections"]==null?new JArray():Array(c,"connections")) {
                     var w=Object(wt,"connection");var from=Object(w["from"],"from");var to=Object(w["to"],"to");var edge=new NativeConnection {Id=Id(w,ids),FromRoomId=Text(from,"roomId","",true),ExitId=Text(from,"exitId","",true),ToRoomId=Text(to,"roomId","",true),EntryId=Text(to,"entryId","",true),Velocity=Text(w,"velocity","reset"),Raw=w};
