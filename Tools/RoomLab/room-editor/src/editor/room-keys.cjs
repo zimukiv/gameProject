@@ -33,8 +33,22 @@ const themes = {
     ['选择板块后点「行为」', '设置签到或清醒效果的参数'],
   ],
 };
-function help(kind) {
-  return `<table class="table">${[...(themes[kind] || []), ...common]
+function help(kind, native = false) {
+  const extra =
+    native && kind === 'calculus'
+      ? [
+          [
+            '选中机关砖＋右键',
+            '设置节点 I（开启位置）；再次右键调整该点。当前关卡为 0 / I 两态运动',
+          ],
+          [
+            '选中积分或求导板＋右键',
+            '点选或拖框绑定机关砖，重复操作解绑；同一开关的两种板共同控制',
+          ],
+          ['拖动节点 / 机关砖', '调整终点 / 整体平移起终点；属性中设置运动时间'],
+        ]
+      : themes[kind] || [];
+  return `<table class="table">${[...extra, ...common]
     .map(([key, action]) => `<tr><td>${esc(key)}</td><td>${esc(action)}</td></tr>`)
     .join('')}</table>`;
 }

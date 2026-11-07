@@ -13,10 +13,8 @@ function addRoom(app, c) {
       c.defaultSize.cols,
       c.defaultSize.rows,
     );
-    r.graph = {
-      x: 40 + (c.rooms.length % 3) * (GraphLayout.card(r).width + 30),
-      y: 90 + Math.floor(c.rooms.length / 3) * (GraphLayout.card(r).height + 35),
-    };
+    r.graph = GraphLayout.vacant(r, c.rooms);
+    app.state.graphNeedsFit = true;
     if (require('../../project/native-compat.cjs').active(app.store.project, c))
       require('../../project/native-compat.cjs').initRoom(r);
     c.rooms.push(r);
@@ -25,6 +23,22 @@ function addRoom(app, c) {
 function render(app) {
   const c = app.course(),
     tab = app.state.courseTab || 'graph';
+  const key = app.store.project.id + ':' + c.id;
+  app.state.graphChecked ||= new Set();
+  if (tab === 'graph' && !app.state.graphChecked.has(key)) {
+    app.state.graphChecked.add(key);
+    if (GraphLayout.overlaps(c.rooms)) {
+      const positions = GraphLayout.arrange(c);
+      app.state.graphNeedsFit = true;
+      app.store.change(() =>
+        c.rooms.forEach((r) => {
+          r.graph = positions[r.id];
+        }),
+      );
+      app.message('已按房间实际尺寸整理重叠卡片，可撤销；房间内容和连接未改变。');
+      return;
+    }
+  }
   $('app').innerHTML =
     `<div class="page-title"><div><h1>${esc(c.name)}</h1><p class="muted">${esc(c.notes)} · AI ID：${esc(c.aiId || '未指定')}</p></div><div class="actions"><button id="add-room">新建房间</button><button id="test-course" class="primary">从首房试玩</button></div></div><div class="tabs">${[
       ['graph', '缩略接线板'],
@@ -97,13 +111,45 @@ function graph(app, c) {
     `<div class="graph-layout"><div class="panel graph-panel"><div class="graph-controls"><span>缩略接线板</span><div class="actions"><span id="graph-zoom"></span><button id="graph-fit">查看全部</button><button id="graph-reset">100%</button></div></div><canvas id="graph" width="1120" height="650"></canvas><div class="graph-help">滚轮缩放 · 中键平移 · 双击进入房间。绿色为入口、橙色为出口，位置对应缩略图里的实际位置；悬停查看名称，从出口拉线到入口。</div></div><aside class="panel form" id="graph-inspector"></aside></div>`;
   const canvas = $('graph'),
     ctx = canvas.getContext('2d');
-  canvas.width = 1120;
-  canvas.height = 650;
+  canvas.width = Math.max(320, Math.round(canvas.getBoundingClientRect().width));
+  canvas.height = Math.max(280, window.innerHeight - canvas.getBoundingClientRect().top - 65);
+  const actions = $('graph-fit').parentElement;
+  for (const [id, label, fn] of [
+    [
+      'graph-arrange',
+      '整理排布',
+      () => {
+        const positions = GraphLayout.arrange(c);
+        app.state.graphNeedsFit = true;
+        app.store.change(() =>
+          c.rooms.forEach((r) => {
+            r.graph = positions[r.id];
+          }),
+        );
+      },
+    ],
+    ['graph-undo', '撤销', () => app.store.undo()],
+    ['graph-redo', '重做', () => app.store.redo()],
+  ]) {
+    const button = document.createElement('button');
+    button.id = id;
+    button.textContent = label;
+    button.onclick = fn;
+    actions.append(button);
+  }
   if (app.state.graphViewCourse !== c.id) {
-    app.state.graphView = { x: 0, y: 0, scale: 1 };
+    app.state.graphViews ||= {};
+    if (app.state.graphViewCourse)
+      app.state.graphViews[app.state.graphViewCourse] = app.state.graphView;
+    app.state.graphView =
+      app.state.graphViews[c.id] || GraphLayout.fit(c.rooms, canvas.width, canvas.height);
     app.state.graphViewCourse = c.id;
   }
   const view = app.state.graphView;
+  if (app.state.graphNeedsFit) {
+    Object.assign(view, GraphLayout.fit(c.rooms, canvas.width, canvas.height));
+    app.state.graphNeedsFit = false;
+  }
   let drag = null,
     wire = null,
     pan = null;
@@ -140,28 +186,18 @@ function graph(app, c) {
     $('graph-zoom').textContent = Math.round(view.scale * 100) + '%';
   };
   $('graph-reset').onclick = () => {
-    Object.assign(view, { x: 0, y: 0, scale: 1 });
+    Object.assign(view, GraphLayout.fit(c.rooms, canvas.width, canvas.height, 1));
     draw();
   };
   $('graph-fit').onclick = () => {
-    const minX = Math.min(...c.rooms.map((r) => r.graph.x)) - 25,
-      minY = Math.min(...c.rooms.map((r) => r.graph.y)) - 25,
-      maxX = Math.max(...c.rooms.map((r) => r.graph.x + GraphLayout.card(r).width)) + 25,
-      maxY = Math.max(...c.rooms.map((r) => r.graph.y + GraphLayout.card(r).height)) + 25;
-    view.scale = clamp(
-      Math.min(canvas.width / (maxX - minX), canvas.height / (maxY - minY)),
-      0.01,
-      3,
-    );
-    view.x = (canvas.width - (maxX - minX) * view.scale) / 2 - minX * view.scale;
-    view.y = (canvas.height - (maxY - minY) * view.scale) / 2 - minY * view.scale;
+    Object.assign(view, GraphLayout.fit(c.rooms, canvas.width, canvas.height));
     draw();
   };
   canvas.onwheel = (e) => {
     e.preventDefault();
     const p = pixel(e),
       world = point(e);
-    view.scale = clamp(view.scale * Math.exp(-e.deltaY * 0.0015), 0.01, 3);
+    view.scale = clamp(view.scale * Math.exp(-e.deltaY * 0.0015), 0.001, 4);
     view.x = p.x - world.x * view.scale;
     view.y = p.y - world.y * view.scale;
     draw();
@@ -228,6 +264,8 @@ function graph(app, c) {
       return;
     }
     app.state.graphSelection = null;
+    pan = { point: pixel(e), x: view.x, y: view.y };
+    canvas.style.cursor = 'grabbing';
     draw();
     renderGraphInspector(app, c);
   };
@@ -248,8 +286,8 @@ function graph(app, c) {
     }
     if (drag) {
       drag.r.graph = {
-        x: Math.max(8, drag.origin.x + p.x - drag.start.x),
-        y: Math.max(8, drag.origin.y + p.y - drag.start.y),
+        x: drag.origin.x + p.x - drag.start.x,
+        y: drag.origin.y + p.y - drag.start.y,
       };
       draw();
     }
@@ -353,6 +391,8 @@ function renderGraphInspector(app, c) {
             }
             c.nativeCampaign.signals.push(...Object.values(map));
           }
+          next.graph = GraphLayout.vacant(next, c.rooms);
+          app.state.graphNeedsFit = true;
           c.rooms.push(next);
         });
       if (

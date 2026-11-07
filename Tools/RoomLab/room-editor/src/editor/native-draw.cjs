@@ -56,7 +56,8 @@ function draw(
               10 / scale,
               10 / scale,
             );
-            text('终点', x + 0.7, y + 0.5);
+            text('I', x + 0.7, y + 0.5);
+            text('0', b.x + 0.1, b.y - 0.1);
           }
         }
         if (selected && !mini)
@@ -99,7 +100,21 @@ function draw(
         if (m.clarityDelta !== undefined)
           text((m.clarityDelta > 0 ? '+' : '') + m.clarityDelta, o.x, o.y - 0.1);
         if (targets && (m.signal || m.switch))
-          text((m.signal ? '跨房 ' : '本房 ') + (m.signal || m.switch), o.x, o.y - 0.15);
+          text(m.label || (m.signal ? '跨房 ' : '本房 ') + (m.signal || m.switch), o.x, o.y - 0.15);
+        if (targets && selection?.id === o.id && require('../project/native-bricks.cjs').isPad(o)) {
+          ctx.strokeStyle = signalColor(m.signal || m.switch || '');
+          ctx.setLineDash([4 / scale, 3 / scale]);
+          for (const brick of N.list(r, 'platforms').filter((b) =>
+            require('../project/native-bricks.cjs').bound(b, o),
+          )) {
+            ctx.beginPath();
+            ctx.moveTo((o.x + 0.5) * 32, (o.y + 0.5) * 32);
+            ctx.lineTo((brick.x + (brick.w || 1) / 2) * 32, (brick.y + (brick.h || 1) / 2) * 32);
+            ctx.stroke();
+            ctx.lineWidth = 3 / scale;
+            ctx.strokeRect(brick.x * 32, brick.y * 32, (brick.w || 1) * 32, (brick.h || 1) * 32);
+          }
+        }
         ctx.restore();
       }
 }

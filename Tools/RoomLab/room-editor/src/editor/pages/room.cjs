@@ -17,11 +17,12 @@ const Nodes = require('../../project/rail-nodes.cjs'),
   BrickPanel = require('../brick-node-panel.cjs'),
   Regions = require('../region-handles.cjs');
 const Native = require('../../project/native-compat.cjs'),
+  NativeBricks = require('../../project/native-bricks.cjs'),
   NativePanel = require('../native-panel.cjs'),
   NativeDraw = require('../native-draw.cjs');
 const brickRef = (brick) => ({ kind: 'movables', id: brick.id });
 const RoomKeys = require('../room-keys.cjs');
-const nodeTools = ['path', 'brick-path'];
+const nodeTools = ['path', 'brick-path', 'native-target'];
 function expandGroups(room, refs) {
   return Select.combine(
     [],
@@ -59,9 +60,9 @@ function render(app) {
     const bar = document.createElement('div');
     bar.className = 'native-toolbar actions';
     bar.innerHTML =
-      '<span>测试版扩展</span>' +
+      '<span>场景工具</span>' +
       [
-        ['platforms', '平台'],
+        ...(c.kind === 'calculus' ? [] : [['platforms', '平台']]),
         ['patrols', '巡逻'],
         ['signs', '标记'],
       ]
@@ -109,7 +110,7 @@ function render(app) {
   $('room-help').onclick = () =>
     modal(
       require('../../project/themes.cjs').theme(c.kind).label + ' · 按键说明',
-      RoomKeys.help(c.kind),
+      RoomKeys.help(c.kind, Native.active(app.store.project, c)),
       [{ label: '知道了' }],
     );
   $('undo').disabled = !app.store.history.past.length;
@@ -156,7 +157,10 @@ function render(app) {
       targets: $('targets')?.checked,
       assetURL: (id) => app.assetURL(id),
     });
-    if (stroke?.marquee || (stroke?.rightAction === 'bind' && stroke.moved)) {
+    if (
+      stroke?.marquee ||
+      (['bind', 'native-bind'].includes(stroke?.rightAction) && stroke.moved)
+    ) {
       const a = stroke.pixel,
         b = stroke.currentPixel || a;
       ctx.save();
@@ -191,7 +195,7 @@ function render(app) {
     $('tool-label').textContent =
       value === 'brick-bind'
         ? '点击机关砖绑定或解绑 · Z 结束'
-        : value === 'brick-path'
+        : ['brick-path', 'native-target'].includes(value)
           ? '点击格子添加一个节点 · 添加后返回原工具'
           : value === 'path'
             ? '点击添加一个节点 · 添加后返回原工具'
@@ -329,9 +333,31 @@ function render(app) {
   }
   function paint(pos, tool = s.tool) {
     if (tool === 'brick-bind') {
+      if (Native.active(app.store.project, c) && Motion.isPad(tileItem(s.selection))) {
+        const p = tileItem(s.selection),
+          bricks = Select.box(r, pos, pos)
+            .filter((ref) => ref.kind === 'platforms')
+            .map((ref) => Select.get(r, ref));
+        try {
+          NativeBricks.toggle(r, p, bricks);
+        } catch (e) {
+          stroke.error = e.message;
+        }
+        return;
+      }
       const pad = tileItem(s.selection),
         brick = r.movables.find((b) => b.x === pos.x && b.y === pos.y);
       if (Motion.isPad(pad) && brick) Motion.bind(r, brick, brick.padId === pad.id ? '' : pad.id);
+      return;
+    }
+    if (tool === 'native-target') {
+      const brick = s.selection?.kind === 'platforms' && tileItem(s.selection);
+      if (brick)
+        try {
+          stroke.nodeAdded = NativeBricks.setTarget(brick, stroke.world, r);
+        } catch (e) {
+          stroke.error = e.message;
+        }
       return;
     }
     if (tool === 'brick-path') {
@@ -397,6 +423,13 @@ function render(app) {
       return;
     }
     if (s.tool === 'movable') {
+      if (Native.active(app.store.project, c)) {
+        const existing = Native.list(r, 'platforms').find((b) => b.x === pos.x && b.y === pos.y);
+        s.selection = existing
+          ? { kind: 'platforms', id: existing.id }
+          : Native.create(r, 'platforms', pos);
+        return;
+      }
       let brick = r.movables.find((b) => b.x === pos.x && b.y === pos.y);
       if (!brick) {
         brick = {
@@ -435,6 +468,8 @@ function render(app) {
       let o = r.objects.find((o) => o.x === pos.x && o.y === pos.y && o.type === s.objectType);
       if (!o) {
         o = Registry.instantiate(app.store.project, s.objectType, M.uid('block'), pos.x, pos.y, c);
+        if (Native.active(app.store.project, c) && NativeBricks.isPad(o))
+          o.rework = { value: o.type === 'calculus.integral' };
         r.objects.push(o);
       }
       s.selection = { kind: 'objects', id: o.id };
@@ -474,12 +509,16 @@ function render(app) {
         e.button === 2 &&
         !e.shiftKey &&
         (Motion.isPad(owner)
-          ? 'bind'
+          ? Native.active(app.store.project, c)
+            ? 'native-bind'
+            : 'bind'
           : owner?.type === 'physics.rail'
             ? 'path'
-            : c.kind === 'calculus' && owner && s.selection.kind === 'movables'
-              ? 'brick-path'
-              : null);
+            : owner && s.selection.kind === 'platforms'
+              ? 'native-target'
+              : c.kind === 'calculus' && owner && s.selection.kind === 'movables'
+                ? 'brick-path'
+                : null);
     if (
       e.button !== 0 &&
       e.button !== 1 &&
@@ -713,7 +752,16 @@ function render(app) {
       const { rightAction, before, start, moved } = stroke;
       if (event.type === 'pointerup') {
         const end = cell(event);
-        if (rightAction === 'bind') {
+        if (rightAction === 'native-bind') {
+          const bricks = Select.box(r, start, moved ? end : start)
+            .filter((ref) => ref.kind === 'platforms')
+            .map((ref) => Select.get(r, ref));
+          try {
+            NativeBricks.toggle(r, tileItem(s.selection), bricks);
+          } catch (e) {
+            stroke.error = e.message;
+          }
+        } else if (rightAction === 'bind') {
           const refs = Select.box(r, start, moved ? end : start).filter(
               (ref) => ref.kind === 'movables',
             ),
@@ -798,7 +846,7 @@ function inspector(app, r, setTool) {
     ref = app.state.selection,
     o = ref && D.findItem(r, ref);
   if (ref && Native.kinds.includes(ref.kind) && app.state.multiSelection.length <= 1) {
-    NativePanel.entity(app, r, ref, host);
+    NativePanel.entity(app, r, ref, host, setTool);
     return;
   }
   baseInspector(app, r, setTool);
@@ -812,8 +860,7 @@ function inspector(app, r, setTool) {
     ) {
       const form = $('object-form');
       if (form)
-        form.innerHTML =
-          '<p class="hint">此对象按测试版扩展规则运行；请展开下方设置。旧版加速／机关砖参数不代表测试版效果。</p>';
+        form.innerHTML = '<p class="hint">在下方设置触发后的机关状态，并可直接在画布右键绑定。</p>';
     }
     NativePanel.rulesPanel(app, r, o, host);
   } else NativePanel.room(app, r, host);
