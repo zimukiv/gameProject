@@ -9,7 +9,7 @@
 - 原作者 `AuthoredPhysics/authored-physics.json` 未改；合包的 physics 完整课程与其规范化数据相同，9 个作者 SVG 配套保留。
 - 旧程序、旧课程 JSON 和旧存档继续保留；2026-11-05 的机制示例版见下方历史入口。
 
-本轮仅调整显示文案：高数房间改为简短希腊字母和组合符号，物理与水课采用环境短名，部分水课房名带图形记号；提示更短、更含蓄。关卡 JSON、房间 ID、机关、清醒度资源、门操作和保存方式沿用互动过门版，既有存档来源不变。上一互动过门版仍可从[原发布页](https://github.com/zimukiv/gameProject/releases/tag/roomlab-native-v2-ddl-20261107)取得。
+本轮将高数房间改为简短希腊字母和组合符号，物理与水课采用环境短名，部分水课房名带图形记号；提示更短、更含蓄。同时修复高数终局 dα 回收纸页把玩家带到上方的问题：向上回收时若有人站在纸页上，纸页会等玩家离开后继续回收。普通积分电梯不受此改动影响。关卡 JSON、房间 ID、清醒度资源、门操作和保存方式保持原样，既有存档来源不变。上一互动过门版仍可从[原发布页](https://github.com/zimukiv/gameProject/releases/tag/roomlab-native-v2-ddl-20261107)取得。
 
 ## 门、存档与引导
 
@@ -47,7 +47,7 @@ dotnet run --project Validation/Native/InteractDoors20261107/CoreChecks/CoreChec
 
 上一互动过门版独立 Core **50/50**、Windows 运行验收 **103/103**，运行时覆盖 32 房显示、正常移动触旗、自动三档/手动六槽、跨章读档、保存失败保护和交互门行为。Windows 门专项先定位到门内，再验证无按键不进入、按键进入与入口恢复，**不是完整路径通关**。Core 使用独立夹具和输入步骤，也不代替三章真人跑关。这些历史结果见 [Core 报告](Validation/Native/InteractDoors20261107/CoreChecks/results.json)、[Windows 报告](Validation/Native/InteractDoors20261107/Runtime/autosave-runtime.json) 和 [规则说明](Validation/Native/InteractDoors20261107/CORE_INTEGRATION.md)。
 
-上一自动过门阶段的关卡数据/编辑器往返与正常输入路线记录保留为历史证据，不能视为本轮 E 过门全流程重跑。尚未完成本轮真人完整试玩、首次 30 分钟计时或低配性能验收。本轮符号与弱提示验收以 `Validation/Native/Symbols20261107/Runtime/autosave-runtime.json` 为准；旧版通过数字不代替新程序验收。发布范围与证据边界见 [本轮说明](Handoff/SYMBOLS_20261107.md)。
+上一自动过门阶段的关卡数据/编辑器往返与正常输入路线记录保留为历史证据，不能视为本轮 E 过门全流程重跑。尚未完成本轮真人完整试玩、首次 30 分钟计时或低配性能验收。本轮符号与弱提示验收以 `Validation/Native/Symbols20261107/Runtime/autosave-runtime.json` 和新增 dα 修复专项为准；修复前的文案候选报告与旧版通过数字不代替修复后程序验收。发布范围与证据边界见 [本轮说明](Handoff/SYMBOLS_20261107.md)。
 
 改动前先读 [AGENTS.md](AGENTS.md)，核对远端并保留工作区内容。同仓库编辑器与云服务位于 [Tools/RoomLab](Tools/RoomLab/README.md)，使用独立发布标签；本次不替换其源码。
 

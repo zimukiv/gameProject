@@ -1,0 +1,26 @@
+[
+  {
+    "file": "Assets/RoomLabNative/Core/NativeReworkRules.cs",
+    "before": "0fa12aedef5dbefdf2aea0f25abbee984657ccab3d9b0ef298c204a0d7c778f9",
+    "after": "1d1aff4c9c30d5c19fa4bf6c2a05b425bf2092c157e086f4c8719ebe55fefed1",
+    "unchanged": false
+  },
+  {
+    "file": "Assets/RoomLabNative/Core/NativeGameplayState.cs",
+    "before": "346c3df4947c0b0b9d6f4b7d3a18a9c84cdfa0d6eca8a52544e0d39d0f450866",
+    "after": "346c3df4947c0b0b9d6f4b7d3a18a9c84cdfa0d6eca8a52544e0d39d0f450866",
+    "unchanged": true
+  },
+  {
+    "file": "Assets/RoomLabNative/Core/NativeMotion.cs",
+    "before": "860d52835328b57d9230c55d7c982b25178aaef26459b6929699125a40664c7a",
+    "after": "860d52835328b57d9230c55d7c982b25178aaef26459b6929699125a40664c7a",
+    "unchanged": true
+  },
+  {
+    "file": "Assets/StreamingAssets/RoomLabNative/Campaign/deadline-autosave.json",
+    "before": "523b045170f88881cf14cc4a401f023f76f5169a16aaf8f98b5bb2a9ca472ab5",
+    "after": "523b045170f88881cf14cc4a401f023f76f5169a16aaf8f98b5bb2a9ca472ab5",
+    "unchanged": true
+  }
+]

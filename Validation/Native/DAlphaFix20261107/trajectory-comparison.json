@@ -1,0 +1,47 @@
+[
+  {
+    "scenario": "stand",
+    "identicalInput": true,
+    "frames": 235,
+    "beforeMinimumFeet": 17.0,
+    "afterMinimumFeet": 17.0,
+    "beforeMaxFrameMovement": 1.8333333333333712,
+    "afterMaxFrameMovement": 1.8333333333333712
+  },
+  {
+    "scenario": "left",
+    "identicalInput": true,
+    "frames": 235,
+    "beforeMinimumFeet": 17.0,
+    "afterMinimumFeet": 17.0,
+    "beforeMaxFrameMovement": 7.720823214600308,
+    "afterMaxFrameMovement": 7.720823214600308
+  },
+  {
+    "scenario": "right",
+    "identicalInput": true,
+    "frames": 235,
+    "beforeMinimumFeet": 17.0,
+    "afterMinimumFeet": 17.0,
+    "beforeMaxFrameMovement": 4.831257536368409,
+    "afterMaxFrameMovement": 4.831257536368409
+  },
+  {
+    "scenario": "jump",
+    "identicalInput": true,
+    "frames": 235,
+    "beforeMinimumFeet": 2.020298923724158,
+    "afterMinimumFeet": 15.385416666666668,
+    "beforeMaxFrameMovement": 18.268477772468245,
+    "afterMaxFrameMovement": 5.61994371511947
+  },
+  {
+    "scenario": "dash",
+    "identicalInput": true,
+    "frames": 235,
+    "beforeMinimumFeet": 17.0,
+    "afterMinimumFeet": 17.0,
+    "beforeMaxFrameMovement": 7.720823214600295,
+    "afterMaxFrameMovement": 7.720823214600295
+  }
+]

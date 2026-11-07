@@ -49,7 +49,7 @@ def main():
     required = [BUILD / 'RoomLabPhysics.exe', BUILD / 'RoomLabPhysics_Data/Managed/Assembly-CSharp.dll']
     required += [SOURCE / name for name in CAMPAIGNS] + [RUNTIME / name for name in CAMPAIGNS]
     required += [ROOT / source for source, _ in DOCUMENTS]
-    required += [REPORTS / 'Runtime/autosave-runtime.json', DISPLAY_COPY]
+    required += [REPORTS / 'RuntimeFixed/autosave-runtime.json', DISPLAY_COPY]
     missing = [str(path) for path in required if not path.is_file()]
     if missing:
         raise SystemExit('SYMBOLS_PACKAGE_NOT_READY: 请先完成 Unity 构建与报告，再运行打包。缺少：\n' + '\n'.join(missing))
@@ -58,7 +58,7 @@ def main():
             raise SystemExit('SYMBOLS_PACKAGE_STALE_BUILD: 运行时关卡与当前源码不一致：' + name)
 
     # An earlier binary or display catalog must not certify this edition.
-    evidence_path = REPORTS / 'Runtime/autosave-runtime.json'
+    evidence_path = REPORTS / 'RuntimeFixed/autosave-runtime.json'
     evidence = json.loads(evidence_path.read_text(encoding='utf-8-sig'))
     checks = evidence.get('checks', [])
     required_checks = {
@@ -182,7 +182,9 @@ def main():
 碰到旗子只会自动保存，不打断游戏；站着不动不会反复刷档。自动记录保留最近 3 份，三章共用。
 在旗子旁按 E 才打开 6 格手动存档，选已占用的格子会先询问是否覆盖；取消不会覆盖手动档。
 主菜单和暂停读档页可切换“自动 / 手动”。自动三份历史和手动六槽各自独立。
-本轮只调整显示文案，关卡、机关、资源、门操作与保存规则不改。
+本轮调整显示文案，并修复高数终局 dα 回收纸页把人带到上方的问题。
+向上回收的纸页有人站住时会等候，离开后继续收回；普通积分电梯不变。
+关卡 JSON、清醒度资源、门操作与保存规则保持原样。
 本版沿用互动过门版的关卡来源、设置与存档目录，已有六槽和三份自动历史可继续读；旧程序保留。
 暂停里的“从上个存档点开始”用于当前一局的快速重试。
 
@@ -230,8 +232,9 @@ guided、network、rework、night 四份历史版本同时保留；导入本轮 
     (BUILD / '设计与测试/逐房流程说明.txt').write_text('\n'.join(lines), encoding='utf-8-sig')
     (BUILD / '设计与测试/测试说明.txt').write_text(
         '验收目录仅复制 Symbols20261107 本轮的 JSON/Markdown 报告并保留目录结构；不带源码备份、测试存档、隔离进度或编译缓存。\n'
-        'Runtime/autosave-runtime.json：真实Windows程序存读档界面、资源加载与门互动专项。门测试直接放到门内，先验证不按不会进入，再验证按交互键进入并保存，不冒充整关路线完成。\n'
-        '本轮以符号房名与弱提示显示验收为主；门与存读档覆盖以本轮运行报告实际条目为准。前版 Core 专项与旧路线通过数字不作为本轮新增结论。\n'
+        'RuntimeFixed/autosave-runtime.json：真实Windows程序存读档界面、资源加载与门互动专项。门测试直接放到门内，先验证不按不会进入，再验证按交互键进入并保存，不冒充整关路线完成。\n'
+        '本轮包含符号房名/弱提示显示和终局dα回收修复；向上回收纸页站人时等候，离开后继续，普通积分电梯不变。验收覆盖以重建后的运行报告及修复专项为准。\n'
+        '修复前文案候选、前版 Core 专项与旧路线通过数字不作为修复后程序通过的证据。\n'
         'displayCopyRooms=32与displayCopySourceUnchanged=true记录显示文案覆盖及关卡来源未被改写；文案模板需要Unity重建后才进入程序。\n'
         '打包前比对运行报告中的关卡、程序集及实际加载文案SHA-256，必须对应当前包内文件。\n'
         '运行窗口、界面与构建结果请看各自报告；静态编译与直接放置的截图检查不证明完整通关。\n'
@@ -242,9 +245,9 @@ guided、network、rework、night 四份历史版本同时保留；导入本轮 
                 'authoredCourses': ['physics'], 'authoredSvgAssets': len(asset_files),
                 'displayCopyRooms': 32, 'displayCopySourceSha256': display_copy['sourceSha256'],
                 'displayCopyCatalogSha256': digest(DISPLAY_COPY),
-                'displayOnlyRevision': True, 'releaseTag': 'roomlab-native-v2-ddl-symbols-20261107',
+                'displayOnlyRevision': False, 'coreFixes': ['occupied-upward-retraction-waits'], 'releaseTag': 'roomlab-native-v2-ddl-symbols-20261107',
                 'downloadName': 'RoomLab-Demo-v2-DDL-Symbols-20261107-win-x64.zip',
-                'features': ['symbolic-room-labels', 'subtle-temporary-hints', 'authored-physics-preserved', 'contact-autosave', 'interaction-required-doors', 'removed-repeated-background-props', 'destination-door-signs', 'known-room-resource-counts', 'staged-forward-routes'],
+                'features': ['occupied-upward-retraction-waits', 'symbolic-room-labels', 'subtle-temporary-hints', 'authored-physics-preserved', 'contact-autosave', 'interaction-required-doors', 'removed-repeated-background-props', 'destination-door-signs', 'known-room-resource-counts', 'staged-forward-routes'],
                 'chapters': [{'id': c['id'], 'rooms': len(c['rooms']), 'connections': len(c['connections'])} for c in campaign['courses']],
                 'images': len(catalog['images']), 'audio': len(catalog['audio']),
                 'durationTargetMinutes': 30, 'firstTimeHumanDurationVerified': False, 'files': {}}

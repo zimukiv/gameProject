@@ -87,7 +87,30 @@ namespace RoomLab.Native
                 BuildColliders();foreach(var solid in colliders)if(MotionRect.Overlap(Player.Rect,solid)||(AI.active&&MotionRect.Overlap(new MotionRect(null,AI.x-10,AI.y-10,20,20),solid))){blocked=true;break;}
                 if(blocked){Awareness=old;NoticeRework("轮廓还在等候");}else{PendingAwareness=null;NoticeRework("");}
             }}
-            if(ReworkPlatforms!=null)foreach(var p in ReworkPlatforms){string id=(string)p["id"];double value=ReworkPositions.TryGetValue(id,out var n)?n:0,target=PlatformTarget(p)?1:0;double step=dt/((double?)p["seconds"]??.9);var before=ReworkPlatformRect(p);ReworkPositions[id]=value<target?Math.Min(target,value+step):Math.Max(target,value-step);var after=ReworkPlatformRect(p);if(LayerActive(p)){bool blocked=false;if(Player.grounded&&Player.support==id){var carried=new MotionRect(null,Player.x+after.x-before.x,Player.y+after.y-before.y,Player.w,Player.h);foreach(var c in colliders)if(c.id!=id&&MotionRect.Overlap(carried,c)){blocked=true;break;}}else if(MotionRect.Overlap(Player.Rect,after)&&!MotionRect.Overlap(Player.Rect,before))blocked=true;if(blocked)ReworkPositions[id]=value;}}
+            if(ReworkPlatforms!=null)foreach(var p in ReworkPlatforms)
+            {
+                string id=(string)p["id"];double value=ReworkPositions.TryGetValue(id,out var n)?n:0,target=PlatformTarget(p)?1:0;
+                double step=dt/((double?)p["seconds"]??.9);var before=ReworkPlatformRect(p);
+                ReworkPositions[id]=value<target?Math.Min(target,value+step):Math.Max(target,value-step);var after=ReworkPlatformRect(p);
+                if(LayerActive(p))
+                {
+                    bool blocked=false;
+                    if(Player.grounded&&Player.support==id)
+                    {
+                        // A folding stair must not turn a fresh landing into a ride to its
+                        // storage position. Keep its support until the rider steps/jumps off.
+                        // Deployed lifts and their downward return still carry normally.
+                        blocked=target==0&&after.y<before.y;
+                        if(!blocked)
+                        {
+                            var carried=new MotionRect(null,Player.x+after.x-before.x,Player.y+after.y-before.y,Player.w,Player.h);
+                            foreach(var c in colliders)if(c.id!=id&&MotionRect.Overlap(carried,c)){blocked=true;break;}
+                        }
+                    }
+                    else if(MotionRect.Overlap(Player.Rect,after)&&!MotionRect.Overlap(Player.Rect,before))blocked=true;
+                    if(blocked)ReworkPositions[id]=value;
+                }
+            }
         }
         void AddReworkColliders()
         {
