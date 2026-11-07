@@ -40,7 +40,7 @@ function thumbnail(o, kind) {
     h = Math.max(1, Math.max(...ys) - y),
     s = Math.min(240 / w, 110 / h),
     loc = (n) => ({ x: 20 + (n.x - x) * s, y: 20 + (n.y - y) * s });
-  return `<svg viewBox="0 0 280 150" style="width:100%;background:#0b1722" aria-label="扩展节点缩略图"><polyline points="${points
+  return `<svg viewBox="0 0 280 150" style="width:100%;background:#0b1722" aria-label="机关砖节点图"><polyline points="${points
     .map((n) => {
       const p = loc(n);
       return p.x + ',' + p.y;
@@ -48,17 +48,29 @@ function thumbnail(o, kind) {
     .join(' ')}" fill="none" stroke="#8adbd7"/>${points
     .map((n, i) => {
       const p = loc(n);
-      return `<circle cx="${p.x}" cy="${p.y}" r="4" fill="#ffda8a"/><text x="${p.x + 6}" y="${p.y - 5}" fill="#d7eff2">${kind === 'platforms' ? (i ? '终' : '起') : i + 1}</text>`;
+      return `<circle cx="${p.x}" cy="${p.y}" r="4" fill="#ffda8a"/><text x="${p.x + 6}" y="${p.y - 5}" fill="#d7eff2">${kind === 'platforms' ? (i ? 'I' : '0') : i + 1}</text>`;
     })
     .join('')}</svg>`;
 }
-function entity(app, r, ref, host) {
+function entity(app, r, ref, host, setTool) {
   const o = N.get(r, ref);
   if (!o) return;
   const kind = ref.kind,
     b = N.rect(kind, o),
     c = app.course();
-  host.innerHTML = `<h2>${{ platforms: '扩展平台', patrols: '巡逻路线', signs: '场景标记' }[kind]}</h2>${kind !== 'signs' ? thumbnail(o, kind) : ''}${check('锁定位置', 'native-lock', !!o.locked)}${number('X', 'native-x', kind === 'patrols' ? o.nodes[0].x : o.x, 0, r.cols)}${number('Y', 'native-y', kind === 'patrols' ? o.nodes[0].y : o.y, 0, r.rows)}${kind === 'platforms' ? `${number('宽', 'native-w', o.w ?? 1, 0.25, r.cols)}${number('高', 'native-h', o.h ?? 1, 0.25, r.rows)}${number('终点 X（空白保持原位）', 'native-tx', o.toX ?? '', 0, r.cols)}${number('终点 Y（空白保持原位）', 'native-ty', o.toY ?? '', 0, r.rows)}${number('运动时间（秒）', 'native-seconds', o.seconds ?? 0.9, 0.1, 10)}${field('标记', 'native-label', o.label || '')}` : kind === 'patrols' ? number('速度（像素/秒）', 'native-speed', o.speed, 30, 220) : field('文字', 'native-text', o.text || '')}<button id="native-apply" class="primary">应用</button><div class="button-row"><button id="native-copy">复制</button><button id="native-delete" class="danger">删除</button></div>`;
+  host.innerHTML = `<h2>${{ platforms: c.kind === 'calculus' ? '机关砖' : '平台', patrols: '巡逻路线', signs: '场景标记' }[kind]}</h2>${kind !== 'signs' ? thumbnail(o, kind) : ''}${check('锁定位置', 'native-lock', !!o.locked)}${number('X', 'native-x', kind === 'patrols' ? o.nodes[0].x : o.x, 0, r.cols)}${number('Y', 'native-y', kind === 'patrols' ? o.nodes[0].y : o.y, 0, r.rows)}${kind === 'platforms' ? `${number('宽', 'native-w', o.w ?? 1, 0.25, r.cols)}${number('高', 'native-h', o.h ?? 1, 0.25, r.rows)}${number('终点 X（空白保持原位）', 'native-tx', o.toX ?? '', 0, r.cols)}${number('终点 Y（空白保持原位）', 'native-ty', o.toY ?? '', 0, r.rows)}${number('运动时间（秒）', 'native-seconds', o.seconds ?? 0.9, 0.1, 10)}${field('标记', 'native-label', o.label || '')}` : kind === 'patrols' ? number('速度（像素/秒）', 'native-speed', o.speed, 30, 220) : field('文字', 'native-text', o.text || '')}<button id="native-apply" class="primary">应用</button><div class="button-row"><button id="native-copy">复制</button><button id="native-delete" class="danger">删除</button></div>`;
+  if (kind === 'platforms') {
+    const button = document.createElement('button');
+    button.id = 'native-node-place';
+    button.textContent = '在画布设置节点 I';
+    button.onclick = () => setTool?.('native-target');
+    host.querySelector('svg').after(button);
+    const hint = document.createElement('p');
+    hint.className = 'hint';
+    hint.textContent =
+      '0 为关闭位置，I 为开启位置。选中后右键设置 I；移动砖时两点一起移动。当前关卡按一段平滑运动往返。';
+    button.after(hint);
+  }
   $('native-lock').onchange = () => change(app, () => (o.locked = $('native-lock').checked));
   $('native-apply').onclick = () => {
     const next = clone(o);
@@ -193,8 +205,27 @@ function rulesPanel(app, r, o, host, platform = false) {
       ['true', '真'],
       ['false', '假'],
     ],
-  )}${!platform ? `${field('短标签', 'nr-label', m.label || '')}${field('触发短提示', 'nr-message', m.message || '')}${field('锁门短提示', 'nr-lockedText', m.lockedText || '')}` : ''}${o.type === 'slacker.awake' ? `${number('清醒度增减（空白不使用）', 'nr-delta', m.clarityDelta ?? '', -100, 100)}<p class="hint">资源道具使用一次性与检查点回退；不会改成加速板。</p>` : ''}<button id="nr-save">应用扩展规则</button>`;
-  const el = addPanel(host, '测试版 · 分层与控制', html);
+  )}${!platform ? `${field('短标签', 'nr-label', m.label || '')}${field('触发短提示', 'nr-message', m.message || '')}${field('锁门短提示', 'nr-lockedText', m.lockedText || '')}` : ''}${o.type === 'slacker.awake' ? `${number('清醒度增减（空白不使用）', 'nr-delta', m.clarityDelta ?? '', -100, 100)}<p class="hint">资源道具使用一次性与检查点回退；不会改成加速板。</p>` : ''}<button id="nr-save">应用控制设置</button>`;
+  const el = addPanel(host, '机关控制与显示条件', html);
+  const Bricks = require('../project/native-bricks.cjs');
+  if (platform) {
+    $('nr-value').hidden = true;
+    $('nr-value').previousElementSibling.hidden = true;
+  }
+  if (Bricks.isPad(o)) {
+    el.open = true;
+    $('nr-value').options[0].textContent = '开启：移动到节点 I';
+    $('nr-value').options[1].textContent = '关闭：返回节点 0';
+    const matched = N.list(r, 'platforms').filter((b) => Bricks.bound(b, o));
+    const block = document.createElement('section');
+    block.className = 'native-binding-summary';
+    block.innerHTML =
+      '<strong>机关砖绑定 · ' +
+      matched.length +
+      ' 块</strong><p class="hint">选中此板后，右键点击或拖框绑定机关砖；重复操作取消绑定。同一开关的积分、求导板共同控制这一组砖。</p><button id="native-quick-bind">在画布快捷绑定</button>';
+    el.before(block);
+    $('native-quick-bind').onclick = () => app.setRoomTool?.('brick-bind');
+  }
   $('nr-save').onclick = () => {
     const next = clone(m);
     for (const key of ['band', 'switch', 'signal', 'visibleSignal']) {
