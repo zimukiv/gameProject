@@ -328,10 +328,7 @@ class Engine {
         w: T,
         h: T,
         kind: 'movable',
-        active:
-          b.movingCollision === undefined
-            ? !s.anim
-            : b.movingCollision !== false || !Motion.isMoving(b, s),
+        active: b.movingCollision === undefined ? !s.anim : Motion.movingCollision(b, s),
       };
     }
     const pos = b.motionPath
@@ -344,7 +341,7 @@ class Engine {
       w: T,
       h: T,
       kind: 'movable',
-      active: b.movingCollision !== false || !Motion.isMoving(b, s),
+      active: Motion.movingCollision(b, s),
     };
   }
   colliders() {

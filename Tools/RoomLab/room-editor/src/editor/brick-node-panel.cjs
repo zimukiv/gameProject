@@ -25,7 +25,7 @@ function render(app, brick, room, host, setTool) {
     <svg id="brick-node-preview" viewBox="0 0 220 142" width="100%" role="img" aria-label="机关砖路线缩略图" style="background:#0c1724"></svg>
     <p class="hint">0 为砖的起点。移动砖时整条轨迹跟随。每个节点设置从上一点到这里的运动。</p>
     <button id="brick-node-place" class="apply">在画布添加节点</button>
-    <div class="rail-node-list">${path.map((n, i) => `<button data-brick-node="${i}" class="${i === index ? 'active' : ''}"><b>${label(i + 1)}</b><span>${n.x}, ${n.y}</span><small>${n.seconds} 秒</small></button>`).join('')}</div>
+    <div class="rail-node-list">${path.map((n, i) => `<div class="brick-segment-row ${i === index ? 'active' : ''}"><button data-brick-node="${i}"><b>${label(i + 1)}</b><span>${n.x}, ${n.y}</span></button><input type="checkbox" data-segment-collision="${i}" data-live-field="1" aria-label="第${label(i + 1)}段移动碰撞" title="本段移动时具有碰撞体积（受总开关控制）" ${n.movingCollision !== false ? 'checked' : ''} ${locked ? 'disabled' : ''}><small>${n.seconds} 秒</small></div>`).join('')}</div>
     ${
       node
         ? `<div class="row">${number('列 X', 'brick-node-x', node.x, room.cols - 1)}${number('行 Y', 'brick-node-y', node.y, room.rows - 1)}</div>
@@ -75,6 +75,17 @@ function render(app, brick, room, host, setTool) {
     .forEach((b) => (b.onclick = () => choose(Number(b.dataset.brickNode))));
   $('brick-node-place').disabled = locked || path.length >= Motion.maxNodes;
   $('brick-node-place').onclick = () => setTool('brick-path');
+  host.querySelectorAll('[data-segment-collision]').forEach((input) => {
+    input.onchange = () =>
+      edit(
+        path.map((n, i) =>
+          i === Number(input.dataset.segmentCollision)
+            ? { ...n, movingCollision: input.checked }
+            : n,
+        ),
+        index,
+      );
+  });
   if (!node) return;
   $('brick-node-save').disabled = locked;
   $('brick-node-up').disabled = locked || index === 0;
@@ -91,6 +102,7 @@ function render(app, brick, room, host, setTool) {
   }
   $('brick-node-save').onclick = () => {
     const value = {
+      ...node,
       x: $('brick-node-x').valueAsNumber,
       y: $('brick-node-y').valueAsNumber,
       seconds: $('brick-node-seconds').valueAsNumber,

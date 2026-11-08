@@ -160,6 +160,7 @@ function render(app) {
       targets: $('targets')?.checked,
       assetURL: (id) => app.assetURL(id),
     });
+    require('../motion-timeline.cjs').draw(app, r, ctx, s.roomView);
     if (
       stroke?.marquee ||
       (['bind', 'native-bind'].includes(stroke?.rightAction) && stroke.moved)
@@ -871,10 +872,14 @@ function inspector(app, r, setTool) {
     require('../moving-collision-control.cjs').install(app, r, ref, o, host);
     installGroupControls(app, r, o, host);
     require('../live-fields.cjs').install(host);
+    require('../motion-timeline.cjs').install(app, r, host);
     return;
   }
   baseInspector(app, r, setTool);
-  if (app.state.multiSelection.length > 1) return;
+  if (app.state.multiSelection.length > 1) {
+    require('../motion-timeline.cjs').install(app, r, host);
+    return;
+  }
   if (o) {
     if (
       Native.active(app.store.project, app.course()) &&
@@ -891,6 +896,7 @@ function inspector(app, r, setTool) {
   installGroupControls(app, r, o, host);
   require('../moving-collision-control.cjs').install(app, r, ref, o, host);
   if (o) require('../live-fields.cjs').install(host);
+  require('../motion-timeline.cjs').install(app, r, host);
 }
 function installGroupControls(app, r, o, host) {
   if (!o?.assemblyId) return;

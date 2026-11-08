@@ -4,8 +4,8 @@ function install(app, room, ref, item, host) {
   if (!item || !['movables', 'platforms'].includes(ref?.kind)) return;
   host.insertAdjacentHTML(
     'afterbegin',
-    check('移动时具有碰撞体积', 'brick-moving-collision', item.movingCollision !== false) +
-      '<p class="hint">取消后仅移动期间可穿过，停下恢复原碰撞设置。附着方块各自判定。</p>',
+    check('移动碰撞总开关', 'brick-moving-collision', item.movingCollision !== false) +
+      '<p class="hint">开启时按各段勾选生效；关闭时所有移动段可穿过。停下恢复原碰撞设置，附着方块各自判定。</p>',
   );
   host.querySelector('#brick-moving-collision').onchange = (event) => {
     const value = event.target.checked;
