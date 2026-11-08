@@ -4,6 +4,19 @@ const test = require('node:test'),
   G = require('../src/editor/graph-layout.cjs'),
   B = require('../src/project/native-bricks.cjs'),
   { fixture } = require('./helpers/native-fixture.cjs');
+test('native brick target drag covers the whole target rectangle at any zoom', () => {
+  const { r } = fixture();
+  const hit = require('../src/editor/native-draw.cjs').hitNode;
+  r.nativeCampaign.platforms = [{ id: 'target', x: 1, y: 1, w: 1, h: 1, toX: 5, toY: 4 }];
+  const ref = { kind: 'platforms', id: 'target' };
+  for (const zoom of [0.2, 1, 3]) {
+    assert.ok(hit(r, ref, { x: 5.95, y: 4.95 }, zoom));
+    assert.ok(hit(r, ref, { x: 5.05, y: 4.05 }, zoom));
+    assert.equal(hit(r, ref, { x: 6.05, y: 4.5 }, zoom), null);
+  }
+  r.nativeCampaign.platforms[0].locked = true;
+  assert.equal(hit(r, ref, { x: 5.5, y: 4.5 }, 1), null);
+});
 test('actual-size graph layout separates varied cards without touching connections or room order', () => {
   const rooms = Array.from({ length: 32 }, (_, i) => ({
     id: String(i),

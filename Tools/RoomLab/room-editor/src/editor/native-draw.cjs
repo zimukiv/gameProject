@@ -130,6 +130,13 @@ function draw(
 function hitNode(r, ref, p, scale) {
   const o = ref && N.get(r, ref);
   if (!o || o.locked) return null;
+  if (ref.kind === 'platforms' && (o.toX !== undefined || o.toY !== undefined)) {
+    const x = o.toX ?? o.x,
+      y = o.toY ?? o.y;
+    return p.x >= x && p.x <= x + (o.w || 1) && p.y >= y && p.y <= y + (o.h || 1)
+      ? { kind: ref.kind, id: ref.id, index: 0 }
+      : null;
+  }
   const points =
     ref.kind === 'patrols'
       ? o.nodes

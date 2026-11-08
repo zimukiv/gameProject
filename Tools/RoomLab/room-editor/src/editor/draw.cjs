@@ -170,7 +170,8 @@ function drawRoom(
       temp === 'hot' ? '#eac29a' : '#a6d7f1',
     );
   }
-  for (const t of r.tiles) {
+  for (const source of r.tiles) {
+    const t = game?.worldObject?.(source) || source;
     const tileObject = { type: 'common.solid', assetOverrides: {} },
       id = assetId(project, course, tileObject, 'idle'),
       a = project.assets.find((a) => a.id === id);
@@ -237,7 +238,8 @@ function drawRoom(
     text(ctx, '□', rect.x + 16, rect.y + 23, 16, '#d4e2ec', 'center');
     if (!Collision.enabled(b, 'movables')) ghostBorder(ctx, rect);
   }
-  for (const o of r.objects) {
+  for (const source of r.objects) {
+    const o = game?.worldObject?.(source) || source;
     const d = Registry.get(o.type),
       state = game?.objectStates?.get(o.id) || {},
       slot = game

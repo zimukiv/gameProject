@@ -1,9 +1,9 @@
 {
   "repository": "zimukiv/gameProject",
   "version": "3.0.0",
-  "releaseTag": "roomlab-editor-v3.0.0-build15",
+  "releaseTag": "roomlab-editor-v3.0.0-build16",
   "createdAt": "2026-11-08",
-  "programSHA256": "d4c47493d831eb3bace16d8cd817253651ff9883ae5a877074425c6a987d7055",
+  "programSHA256": "30b27f25348e3acb176ddacbf3c2bddf4542bcf560d8cef25e0038017698db7e",
   "files": [
     {
       "path": "room-cloud/.gitignore",
@@ -677,7 +677,7 @@
     },
     {
       "path": "room-editor/ARCHITECTURE.md",
-      "sha256": "c92b8eb20cbfeaf59bf82b65bee7bad9eba9127d59f34084493625f908b33abe",
+      "sha256": "6c60d0b3e686e88481272a9544d97552cbd969e73fc9f18a97fd9d249a4e7064",
       "encoding": "utf8-lf"
     },
     {
@@ -692,7 +692,7 @@
     },
     {
       "path": "room-editor/docs/CHANGELOG.md",
-      "sha256": "ea8e4f0e0da1941ee67fb6b863f46a74563abcc31037a5f25d323c48396a32cf",
+      "sha256": "2ac601bf4af33a93e6e9d08705aed35f48087a5fa4516ecf7f58598f3828f444",
       "encoding": "utf8-lf"
     },
     {
@@ -797,7 +797,7 @@
     },
     {
       "path": "room-editor/examples/physics-project.zip",
-      "sha256": "640e812fa41d4424caab02005d40f866d104fa55a16b661adc20cf2d19b56962",
+      "sha256": "61ce4fbf309a1eb6bd109f55af8c617e3362aae96788e6469989831d488647cd",
       "encoding": "binary"
     },
     {
@@ -847,12 +847,12 @@
     },
     {
       "path": "room-editor/examples/physics/project.json",
-      "sha256": "027260d73a522d34a1baff9bcc4277c671e4575d4674cf562436ea709ded3f56",
+      "sha256": "b24c6eb7e834824f509a5769526e11945213d7c174dd2913496ca5e2ddd1af14",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/examples/three-themes-project.zip",
-      "sha256": "66f1713a2cd9a40fc35f440be62189ea420f6f0a506f390ebc85afea17c03974",
+      "sha256": "d2cb757b5cf96c3a9715af88ce6eba0b5d98c811988b5641f1c9b948922b75fa",
       "encoding": "binary"
     },
     {
@@ -1007,7 +1007,7 @@
     },
     {
       "path": "room-editor/src/editor/brick-node-panel.cjs",
-      "sha256": "53bc2506d8ea6425911f5f9a35a5b6b7a8ef7e705d6a3e7e66c3b98c38d44da0",
+      "sha256": "351593cb3efb1bf14e3c3a00e2d2dfbae44cbce435ede462538b6d12d62bec79",
       "encoding": "utf8-lf"
     },
     {
@@ -1032,7 +1032,7 @@
     },
     {
       "path": "room-editor/src/editor/draw.cjs",
-      "sha256": "6e358552dcdf9caaf3d112ea10dec6f6dc736a8359eb2a3a0e50a95e80abd340",
+      "sha256": "bedf2cffff8090ebe00238d26ace36ec4d04adc77a662f326691d2ea05535b2f",
       "encoding": "utf8-lf"
     },
     {
@@ -1051,13 +1051,18 @@
       "encoding": "utf8-lf"
     },
     {
+      "path": "room-editor/src/editor/live-fields.cjs",
+      "sha256": "fb5addcfcf7244eb13ecf0b452ce0d2f229a4793a1bf27f714dc7a78d8a86dc1",
+      "encoding": "utf8-lf"
+    },
+    {
       "path": "room-editor/src/editor/menus.cjs",
       "sha256": "7406dc3fe44b3578d2c9661d058a02c9f16ba453fe2773bb517a63c5ed629e6b",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/src/editor/native-draw.cjs",
-      "sha256": "63cdbff6e1fe7a24b2997c20f284c4262d00aba1e5e98d8c97098d8075a24b5d",
+      "sha256": "32ca081b7a1c9d7e5da66b3d9a90009672ab0534978f4227997d573869027c0c",
       "encoding": "utf8-lf"
     },
     {
@@ -1097,7 +1102,7 @@
     },
     {
       "path": "room-editor/src/editor/pages/room.cjs",
-      "sha256": "80a45c7165de4cca29a80a70188866ca51b924e4c57d839c3aaa8c88dad573b0",
+      "sha256": "7724833afa08aa9181cc15cff6a3fc1f3e7e7f5c5dcb9c4748ae4c281b6ed37f",
       "encoding": "utf8-lf"
     },
     {
@@ -1226,6 +1231,11 @@
       "encoding": "utf8-lf"
     },
     {
+      "path": "room-editor/src/project/block-groups.cjs",
+      "sha256": "14ab3362ced95888440dbd9023a82f9192c3aaf94f3c165ea61cda4e9f06925f",
+      "encoding": "utf8-lf"
+    },
+    {
       "path": "room-editor/src/project/brick-motion.cjs",
       "sha256": "d783ece88441ec549e2bf61ae31d089548f3fbb3b2d5077847977504bcc1dcb5",
       "encoding": "utf8-lf"
@@ -1257,7 +1267,7 @@
     },
     {
       "path": "room-editor/src/project/model.cjs",
-      "sha256": "b673302258d0f6193b9017b0e9b23f9edb6807596a57234bbe8e5bf741342b8b",
+      "sha256": "8c42a0d3f404aea5749f3c27df662d2c185e15723c44b354354d44f81b4e839e",
       "encoding": "utf8-lf"
     },
     {
@@ -1327,7 +1337,7 @@
     },
     {
       "path": "room-editor/src/project/selection.cjs",
-      "sha256": "f60dbbbe630f1e9d6b576966773f347cc77367ecc8196e9b000a0c2070dbfe66",
+      "sha256": "1a45e762e3f32005fd054eb3851d5c1daf62e9e1c13da54450d5088052a83543",
       "encoding": "utf8-lf"
     },
     {
@@ -1347,7 +1357,7 @@
     },
     {
       "path": "room-editor/src/runtime/engine.cjs",
-      "sha256": "283d3fff1cf4fc3958174a44caee1fc4fe2f9bba1e12a4cadf556121808ad6d9",
+      "sha256": "163092e66a51dd8055478a6ce418a6fe4c7fbead6fee05953b8da1f72e3040e4",
       "encoding": "utf8-lf"
     },
     {
@@ -1357,7 +1367,7 @@
     },
     {
       "path": "room-editor/src/runtime/moving-solids.cjs",
-      "sha256": "5e90eaadf4f929ab9b8c9d4eb1656affd90fa361bd377ce16d4b4df516cab2b6",
+      "sha256": "280ad5e56e387adfb09e7e1e11b2aa1c5180157e586e1d7cbf157013983d0902",
       "encoding": "utf8-lf"
     },
     {
@@ -1391,8 +1401,13 @@
       "encoding": "utf8-lf"
     },
     {
+      "path": "room-editor/tests/block-groups.test.cjs",
+      "sha256": "a040a6d40a3563efc854c4ba67eb8b4778bd7faddc7200696470d4a0c8212b4b",
+      "encoding": "utf8-lf"
+    },
+    {
       "path": "room-editor/tests/brick-motion-desktop-smoke.cjs",
-      "sha256": "3b8dd5ab3a7e9af4c3d80f05154ab6ed64cf2472d662efee09febf07f63f70b4",
+      "sha256": "439bcd4e9ebb2731b0ef689d20fe86a901e59a2d22fa3bf540dbd34cedd7aba8",
       "encoding": "utf8-lf"
     },
     {
@@ -1532,7 +1547,7 @@
     },
     {
       "path": "room-editor/tests/editor-integration.test.cjs",
-      "sha256": "daf98c410ab4b942b2d664993b031aa21540a6feec502488d6a0332084cd821a",
+      "sha256": "d40f2e32af09f634f678ac919db5e64de54e68997f7933bd6d9bd3624fe4b826",
       "encoding": "utf8-lf"
     },
     {
@@ -1691,13 +1706,18 @@
       "encoding": "utf8-lf"
     },
     {
+      "path": "room-editor/tests/mixed-groups-desktop-smoke.cjs",
+      "sha256": "6e72ea10cb75c32c2d8f5307a383e46a425c565049801a05a26dccc60fe01307",
+      "encoding": "utf8-lf"
+    },
+    {
       "path": "room-editor/tests/model.test.cjs",
       "sha256": "1a957b866f53be8bd781cdf95b4680f2ca9fc7481295c744ba8687856d52351f",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/tests/moving-solid.test.cjs",
-      "sha256": "51cb85e2a374746f8d7465993007e7578c78cfaca1aaad57f0d2f20697c75126",
+      "sha256": "cec2223bd5b1c4ef909af1b0873f8205f1d8a65e12488e517e1dfa8723820221",
       "encoding": "utf8-lf"
     },
     {

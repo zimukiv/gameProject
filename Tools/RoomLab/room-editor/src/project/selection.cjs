@@ -32,6 +32,18 @@ function combine(previous, incoming, mode = 'replace') {
   return [...result.values()];
 }
 function move(room, refs, dx, dy) {
+  const originalTiles = refs
+    .filter((ref) => ref.kind === 'tiles')
+    .map((ref) => ({ ref, item: get(room, ref) }));
+  const Groups = require('./block-groups.cjs');
+  refs = combine(
+    [],
+    refs.flatMap((ref) => {
+      const item = get(room, ref);
+      return item?.assemblyId ? Groups.members(room, item).map((v) => v.ref) : [ref];
+    }),
+  );
+  if (refs.some((ref) => get(room, ref)?.assemblyId && get(room, ref)?.locked)) return false;
   if (
     refs.some((ref) => {
       const item = get(room, ref);
@@ -64,6 +76,11 @@ function move(room, refs, dx, dy) {
       ref.y = item.y;
     }
   }
+  for (const { ref, item } of originalTiles)
+    if (item) {
+      ref.x = item.x;
+      ref.y = item.y;
+    }
   return true;
 }
 function remove(course, room, refs) {
@@ -86,6 +103,7 @@ function remove(course, room, refs) {
     (w) => !gone.has(w.from.exitId) && !gone.has(w.to.entryId),
   );
   for (const b of room.movables) if (gone.has(b.padId)) b.padId = '';
+  require('./block-groups.cjs').cleanup(room);
   for (const o of room.objects) {
     if (gone.has(o.params?.unlockPadId)) o.params.unlockPadId = '';
     if (gone.has(o.params?.zoneId)) o.params.zoneId = '';

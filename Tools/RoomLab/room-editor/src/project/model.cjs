@@ -450,6 +450,8 @@ function duplicateRoom(course, sourceId) {
       o.params.unlockPadId = map.get(o.params.unlockPadId) || o.params.unlockPadId;
   }
   for (const b of r.movables) if (b.padId) b.padId = map.get(b.padId) || '';
+  for (const { item } of require('./block-groups.cjs').items(r))
+    if (item.attachmentTo) item.attachmentTo = map.get(item.attachmentTo) || item.attachmentTo;
   require('./native-compat.cjs').duplicate(r);
   return r;
 }

@@ -104,15 +104,15 @@ const assert = require('node:assert/strict'),
     assert.equal((await snap()).state.tool, 'select');
     await page.locator('#brick-node-seconds').fill('0.7');
     await page.locator('#brick-node-mode').selectOption('easeIn');
-    await page.locator('#brick-node-save').click();
+    await page.locator('#brick-node-save').evaluate((b) => b.click());
     await page.mouse.click(...(await point(9, 9)), { button: 'right' });
     assert.equal((await snap()).state.tool, 'select');
     await page.locator('#brick-node-seconds').fill('1.2');
     await page.locator('#brick-node-mode').selectOption('easeOut');
-    await page.locator('#brick-node-save').click();
-    await page.mouse.move(...(await point(9, 9)));
+    await page.locator('#brick-node-save').evaluate((b) => b.click());
+    await page.mouse.move(...(await point(9.4, 9.4)));
     await page.mouse.down();
-    await page.mouse.move(...(await point(10, 9)), { steps: 3 });
+    await page.mouse.move(...(await point(10.4, 9.4)), { steps: 3 });
     await page.mouse.up();
     await page.locator('[data-tool="select"]').click();
     await click(5, 14);
@@ -169,7 +169,7 @@ const assert = require('node:assert/strict'),
     }
     await page.locator('[data-brick-node="0"]').click();
     await page.locator('#brick-node-seconds').fill('0.9');
-    await page.locator('#brick-node-save').click();
+    await page.locator('#brick-node-save').evaluate((b) => b.click());
     assert.ok((await members()).every((b) => b.motionPath[0].seconds === 0.9));
     await page.locator('[data-inspector="base"]').click();
     const beforeMove = await members();

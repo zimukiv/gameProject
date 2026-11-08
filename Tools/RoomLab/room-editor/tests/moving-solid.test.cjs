@@ -126,3 +126,85 @@ test('hazards crossed during fast transport are checked even when the final posi
     'hazard',
   );
 });
+
+test('a fractional side overlap with a single moving brick is contact, not crushing', () => {
+  const { transport } = require('../src/runtime/moving-solids.cjs');
+  const b = { id: 'b', kind: 'movable', x: 100, y: 100, w: 32, h: 32 };
+  for (const dx of [0, 1, -1]) {
+    const p = { x: 131.99, y: 102, w: 24, h: 28, vx: -100, vy: 0 };
+    const next = { ...b, x: b.x + dx, y: 99 };
+    assert.equal(transport(p, [b], [next]), true);
+    assert.equal(overlap(p, next), false);
+  }
+});
+
+test('a rider carried into an obstacle ahead along the motion direction is crushed', () => {
+  const { transport } = require('../src/runtime/moving-solids.cjs');
+  const b = { id: 'b', kind: 'movable', x: 100, y: 100, w: 32, h: 32 };
+  const wall = { id: 'wall', x: 130, y: 60, w: 32, h: 40 };
+  const p = { x: 106, y: 72, w: 24, h: 28, grounded: true, support: 'b', vx: 0, vy: 0 };
+  assert.equal(transport(p, [b, wall], [{ ...b, x: 104 }, wall]), false);
+  assert.equal(p.x, 106);
+});
+
+test('a full brick separates a standing actor from spikes underneath', () => {
+  const g = scene({ x: 5, y: 5 }, { x: 8, y: 5 }, { y: 132, grounded: true, support: 'moving' });
+  const spike = require('../src/plugins/registry.cjs').instantiate(
+    g.project,
+    'common.spike',
+    'underneath',
+    5,
+    6,
+  );
+  spike.collision = true;
+  g.room.objects = [spike];
+  g.objectStates.set(spike.id, {});
+  for (let i = 0; i < 50; i++) g.update(1 / 120, {});
+  assert.equal(g.deaths, 0);
+  assert.ok(g.player.grounded);
+});
+
+test('floating point touching faces and unrelated movers do not cause crush deaths', () => {
+  const { transport } = require('../src/runtime/moving-solids.cjs');
+  const floor = { id: 'floor', kind: 'movable', x: 100, y: 9 / 17, w: 32, h: 32 };
+  const other = { id: 'other', kind: 'movable', x: 400, y: 100, w: 32, h: 32 };
+  const p = {
+    x: 100,
+    y: floor.y - 28,
+    w: 24,
+    h: 28,
+    vx: 0,
+    vy: 0,
+    grounded: true,
+    support: 'floor',
+  };
+  assert.ok(p.y + p.h > floor.y, 'fixture reproduces floating point penetration');
+  assert.equal(transport(p, [floor, other], [floor, { ...other, x: 401 }]), true);
+});
+
+test('standing on a platform moving in any direction is safe without an opposing obstacle', () => {
+  const { transport } = require('../src/runtime/moving-solids.cjs');
+  for (const [dx, dy] of [
+    [20, 0],
+    [-20, 0],
+    [0, 20],
+    [0, -20],
+    [20, -20],
+  ]) {
+    const b = { id: 'b', kind: 'movable', x: 100, y: 100, w: 32, h: 32 };
+    const p = { x: 106, y: 72, w: 24, h: 28, grounded: true, support: 'b', vx: 0, vy: 0 };
+    assert.equal(transport(p, [b], [{ ...b, x: 100 + dx, y: 100 + dy }]), true);
+    assert.equal(p.x, 106 + dx);
+    assert.equal(p.y, 72 + dy);
+  }
+});
+
+test('an upward rider grazing a wall beside them is not squeezed along the motion direction', () => {
+  const { transport } = require('../src/runtime/moving-solids.cjs');
+  const b = { id: 'b', kind: 'movable', x: 100, y: 100, w: 32, h: 32 };
+  const wall = { id: 'side', x: 130, y: 40, w: 32, h: 60 };
+  const p = { x: 106.01, y: 72, w: 24, h: 28, grounded: true, support: 'b', vx: 0, vy: 0 };
+  assert.equal(transport(p, [b, wall], [{ ...b, y: 96 }, wall]), true);
+  assert.equal(p.y, 68);
+  assert.equal(p.x, 106);
+});

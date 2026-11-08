@@ -58,14 +58,36 @@ class Engine {
     this.message = message;
     this.messageTime = time;
   }
+  attachmentOffset(o) {
+    const owner = o.attachmentTo && this.room.movables.find((b) => b.id === o.attachmentTo);
+    if (!owner || !this.movableStates?.has(owner.id)) return { x: 0, y: 0 };
+    const rect = this.movableRect(owner);
+    return { x: rect.x - owner.x * T, y: rect.y - owner.y * T };
+  }
+  worldObject(o) {
+    const d = this.attachmentOffset(o);
+    if (!d.x && !d.y) return o;
+    return {
+      ...o,
+      x: o.x + d.x / T,
+      y: o.y + d.y / T,
+      params: o.params?.path
+        ? {
+            ...o.params,
+            path: o.params.path.map((p) => ({ ...p, x: p.x + d.x / T, y: p.y + d.y / T })),
+          }
+        : o.params,
+    };
+  }
   objectRect(o) {
+    const d = this.attachmentOffset(o);
     return {
       id: o.id,
-      x: o.x * T,
-      y: o.y * T,
+      x: o.x * T + d.x,
+      y: o.y * T + d.y,
       w: (o.w || 1) * T,
       h: (o.h || 1) * T,
-      kind: 'object',
+      kind: o.attachmentTo ? 'movable' : 'object',
       object: o,
     };
   }
@@ -77,7 +99,12 @@ class Engine {
       room: this.room,
       temperature: (target) =>
         target.type === 'physics.ice'
-          ? Temperature.at(this.room, target, this.zoneStates, this.roomEnvironment)
+          ? Temperature.at(
+              this.room,
+              this.worldObject(target),
+              this.zoneStates,
+              this.roomEnvironment,
+            )
           : this.zoneStates.get(target.params.zoneId) || this.roomEnvironment,
       setTemperature: (zoneId, value) => {
         if (zoneId) this.zoneStates.set(zoneId, value);
@@ -322,11 +349,11 @@ class Engine {
       .filter((t) => Collision.enabled(t, 'tiles'))
       .map((t) => ({
         id: 'tile-' + t.x + '-' + t.y,
-        x: t.x * T,
-        y: t.y * T,
+        x: t.x * T + this.attachmentOffset(t).x,
+        y: t.y * T + this.attachmentOffset(t).y,
         w: T,
         h: T,
-        kind: 'tile',
+        kind: t.attachmentTo ? 'movable' : 'tile',
         priority: 0,
       }));
     for (const o of this.room.objects) {
@@ -401,6 +428,7 @@ class Engine {
     this.player.invulnerable = Math.max(this.player.invulnerable, 0.3);
   }
   launchAI(o, range, x, y) {
+    o = this.worldObject(o);
     const pivot = { x: (o.x + 0.5) * T, y: o.y * T };
     if (this.ai.active && Math.hypot(this.ai.x - pivot.x, this.ai.y - pivot.y) <= range * T) {
       Object.assign(this.ai, {
@@ -443,7 +471,7 @@ class Engine {
     this.emit('ai-start', { investment, tier, resumed });
   }
   startRail(o) {
-    const points = o.params.path.map((p) => ({ x: p.x * T, y: p.y * T }));
+    const points = this.worldObject(o).params.path.map((p) => ({ x: p.x * T, y: p.y * T }));
     if (points.length < 2) {
       this.say('轨道至少需要两个节点。');
       return;
@@ -469,6 +497,9 @@ class Engine {
   moveRail(dt) {
     const p = this.player,
       r = p.rail;
+    const owner = this.room.objects.find((o) => o.id === r.id);
+    if (owner?.attachmentTo)
+      r.points = this.worldObject(owner).params.path.map((n) => ({ x: n.x * T, y: n.y * T }));
     r.speed = Math.min(r.maxSpeed, r.speed + r.acceleration * dt);
     r.distance = Math.min(r.total, r.distance + r.speed * dt);
     let remaining = r.distance,
@@ -530,7 +561,7 @@ class Engine {
         !required ||
         (this.ai.active &&
           this.ai.id === aiId &&
-          Math.hypot(this.ai.x - (o.x + 0.5) * T, this.ai.y - o.y * T) <= distance * T);
+          Math.hypot(this.ai.x - rect.x - rect.w / 2, this.ai.y - rect.y) <= distance * T);
       s.waitingAI = occupied && !ready;
       if (ready && !s.firedDuringContact) {
         this.fire(o);
@@ -540,6 +571,7 @@ class Engine {
   }
   setCheckpoint(o) {
     if (!o || o.type !== 'common.checkpoint') return;
+    o = this.worldObject(o);
     if (this.checkpoint.spawn?.objectId === o.id) return;
     for (const other of this.room.objects) {
       if (other.type !== 'common.checkpoint') continue;
@@ -711,6 +743,8 @@ class Engine {
     const p = this.player,
       wasGrounded = p.grounded,
       before = this.colliders();
+    const spikes = this.room.objects.filter((o) => o.type === 'common.spike');
+    const oldSpikes = new Map(spikes.map((o) => [o.id, this.objectRect(o)]));
     for (const o of this.room.objects) {
       const s = this.objectStates.get(o.id);
       s.cooldown = Math.max(0, s.cooldown - dt);
@@ -732,9 +766,25 @@ class Engine {
         if (s.anim.t === 0.45) s.anim = null;
       }
     const colliders = this.colliders();
-    const spikes = this.room.objects.filter((o) => o.type === 'common.spike');
-    const motionResult = require('./moving-solids.cjs').transport(p, before, colliders, (actor) =>
-      spikes.some((o) => require('./hazards.cjs').spikeContact(actor, o, this.objectRect(o))),
+    const hazardMotion = spikes.map((o) => ({
+      before: oldSpikes.get(o.id),
+      after: this.objectRect(o),
+    }));
+    const motionResult = require('./moving-solids.cjs').transport(
+      p,
+      before,
+      colliders,
+      (actor, t) =>
+        spikes.some((o, i) => {
+          const a = hazardMotion[i].before,
+            b = hazardMotion[i].after;
+          return require('./hazards.cjs').spikeContact(actor, o, {
+            ...b,
+            x: a.x + (b.x - a.x) * t,
+            y: a.y + (b.y - a.y) * t,
+          });
+        }),
+      hazardMotion,
     );
     if (motionResult === 'hazard') {
       this.retry('碰到尖刺');

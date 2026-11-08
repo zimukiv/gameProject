@@ -11,6 +11,7 @@ const Collision = require('../../project/collision.cjs');
 const Temperature = require('../../project/temperature.cjs');
 const Limits = require('../../project/room-limits.cjs');
 const Select = require('../../project/selection.cjs');
+const Groups = require('../../project/block-groups.cjs');
 const Nodes = require('../../project/rail-nodes.cjs'),
   NodePanel = require('../rail-node-panel.cjs'),
   Motion = require('../../project/brick-motion.cjs'),
@@ -27,9 +28,11 @@ function expandGroups(room, refs) {
   return Select.combine(
     [],
     refs.flatMap((ref) =>
-      ref.kind === 'movables'
-        ? Motion.groupMembers(room, Select.get(room, ref)).map(brickRef)
-        : [ref],
+      Select.get(room, ref)?.assemblyId
+        ? Groups.members(room, Select.get(room, ref)).map((v) => v.ref)
+        : ref.kind === 'movables'
+          ? Motion.groupMembers(room, Select.get(room, ref)).map(brickRef)
+          : [ref],
     ),
   );
 }
@@ -296,7 +299,10 @@ function render(app) {
       .reverse()
       .find(
         ({ node }) =>
-          Math.hypot(node.x + 0.5 - p.x, node.y + 0.5 - p.y) * 32 * s.roomView.scale <= 10 &&
+          p.x >= node.x &&
+          p.x <= node.x + 1 &&
+          p.y >= node.y &&
+          p.y <= node.y + 1 &&
           (node.x !== brick.x || node.y !== brick.y),
       );
   };
@@ -393,6 +399,14 @@ function render(app) {
       return;
     }
     if (s.tool === 'erase') {
+      const grouped = hits(pos).find((ref) => Select.get(r, ref)?.assemblyId);
+      if (grouped) {
+        const refs = expandGroups(r, [grouped]);
+        if (refs.some((ref) => Select.get(r, ref)?.locked)) return;
+        Select.remove(c, r, refs);
+        s.selection = null;
+        return;
+      }
       r.tiles = r.tiles.filter((t) => t.x !== pos.x || t.y !== pos.y);
       const covers = (o) =>
         pos.x >= o.x && pos.x < o.x + (o.w || 1) && pos.y >= o.y && pos.y < o.y + (o.h || 1);
@@ -703,7 +717,14 @@ function render(app) {
           r.tiles.some((t) => t !== o && t.x === o.x + dx && t.y === o.y + dy)
         )
           return;
-        if (s.selection.kind === 'movables' && o.brickGroup) {
+        if (o.assemblyId) {
+          Select.move(
+            r,
+            Groups.members(r, o).map((v) => v.ref),
+            dx,
+            dy,
+          );
+        } else if (s.selection.kind === 'movables' && o.brickGroup) {
           const members = Motion.groupMembers(r, o);
           if (members.some((member) => member.locked)) return;
           Select.move(r, members.map(brickRef), dx, dy);
@@ -847,6 +868,8 @@ function inspector(app, r, setTool) {
     o = ref && D.findItem(r, ref);
   if (ref && Native.kinds.includes(ref.kind) && app.state.multiSelection.length <= 1) {
     NativePanel.entity(app, r, ref, host, setTool);
+    installGroupControls(app, r, o, host);
+    require('../live-fields.cjs').install(host);
     return;
   }
   baseInspector(app, r, setTool);
@@ -864,6 +887,17 @@ function inspector(app, r, setTool) {
     }
     NativePanel.rulesPanel(app, r, o, host);
   } else NativePanel.room(app, r, host);
+  installGroupControls(app, r, o, host);
+  if (o) require('../live-fields.cjs').install(host);
+}
+function installGroupControls(app, r, o, host) {
+  if (!o?.assemblyId) return;
+  const members = Groups.members(r, o);
+  host.insertAdjacentHTML(
+    'afterbegin',
+    `<p class="hint">组合 · ${members.length} 块 · 方块保留各自碰撞与触发</p><button id="dissolve-assembly">解散组合</button>`,
+  );
+  $('dissolve-assembly').onclick = () => app.store.change(() => Groups.dissolve(r, o));
 }
 function baseInspector(app, r, setTool) {
   app.nodePanelRefresh = null;
@@ -883,6 +917,7 @@ function baseInspector(app, r, setTool) {
       pads = r.objects.filter(Motion.isPad);
     host.innerHTML = `<h2>已选中 ${s.multiSelection.length} 项</h2>
       <p class="hint">拖动任一选中项可整体移动。Shift 左键追加，Shift 右键反选。</p>
+      ${s.multiSelection.every((ref) => Groups.kinds.includes(ref.kind)) ? '<button id="group-mixed" class="apply">组合方块（有机关砖时随砖运动）</button>' : ''}
       ${
         canGroup
           ? `${select('整组绑定踏板', 'group-pad', samePad ? bricks[0].padId : '', [
@@ -898,6 +933,19 @@ function baseInspector(app, r, setTool) {
     $('delete-selection').onclick = () =>
       removeSelection(app, r, expandGroups(r, s.multiSelection));
     $('clear-selection').onclick = () => app.clearRoomSelection();
+    if ($('group-mixed'))
+      $('group-mixed').onclick = () => {
+        try {
+          app.store.change(() => {
+            s.selection = Groups.create(r, expandGroups(r, s.multiSelection));
+            s.multiSelection = [];
+            s.inspectorTab = s.selection.kind === 'movables' ? 'nodes' : 'base';
+            setTool('select');
+          });
+        } catch (e) {
+          app.message(e.message, true);
+        }
+      };
     if (canGroup) {
       $('group-bricks').disabled = bricks.some((brick) => brick.locked);
       $('group-bricks').onclick = () => {
@@ -1004,7 +1052,7 @@ function baseInspector(app, r, setTool) {
   );
   const body = $('object-form');
   const brickGroup = brickMotion && o.brickGroup ? Motion.groupMembers(r, o) : [];
-  if (brickGroup.length) {
+  if (brickGroup.length && !o.assemblyId) {
     body.insertAdjacentHTML(
       'beforebegin',
       `<p class="hint">机关砖组 · ${brickGroup.length} 块 · 代表砖 (${o.x}, ${o.y})</p>
@@ -1012,7 +1060,8 @@ function baseInspector(app, r, setTool) {
     );
     $('ungroup-bricks').onclick = () =>
       app.store.change(() => {
-        for (const brick of brickGroup) delete brick.brickGroup;
+        if (o.assemblyId) Groups.dissolve(r, o);
+        else for (const brick of brickGroup) delete brick.brickGroup;
       });
   }
   if (Motion.isPad(o)) {
@@ -1056,7 +1105,14 @@ function baseInspector(app, r, setTool) {
     $('apply-object').onclick = () =>
       app.store.change(() => {
         if (o.locked || brickGroup.some((brick) => brick.locked)) return;
-        if (o.type === 'physics.rail')
+        if (o.assemblyId)
+          Select.move(
+            r,
+            Groups.members(r, o).map((v) => v.ref),
+            Number($('object-x').value) - o.x,
+            Number($('object-y').value) - o.y,
+          );
+        else if (o.type === 'physics.rail')
           Nodes.moveOwner(o, Number($('object-x').value), Number($('object-y').value));
         else if (brickGroup.length)
           Select.move(
@@ -1277,6 +1333,7 @@ function baseInspector(app, r, setTool) {
   } else app.renderObjectArt(o, d, body);
 }
 function removeSelection(app, r, refs) {
+  refs = expandGroups(r, refs);
   if (!refs.length) return;
   const course = app.course(),
     ids = new Set(

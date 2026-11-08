@@ -1,6 +1,10 @@
 # Room Lab 架构
 
-3.0.0 build15：`runtime/moving-solids.cjs` 对机关砖前后碰撞盒做最大 4 像素步长的主动推动检查。角色不阻挡机关；推动途中先通过 `runtime/hazards.cjs` 检查尖刺，无法推开角色则报告挤压死亡，由 engine 执行原有死亡重生流程。玩家自身速度积分继续由 engine 负责。框选终点预览为纯绘制，不写入存档。
+3.0.0 build16：`project/block-groups.cjs` 使用房间内 `assemblyId` 组织混合方块，非机关砖用 `attachmentTo` 引用机关砖代表 ID。编辑状态只保存原坐标；运行时 `attachmentOffset` / `worldObject` / `objectRect` 计算随动偏移，不写回原存档，死亡与缓存沿用代表砖状态。动态图形、实体、尖刺触发均采用偏移，动态尖刺按子步插值检查。房间复制重映射 owner，删除与解散清理关系。Unity 原生平台仍不由内置试玩模拟，游戏端需要另行消费新附着字段。
+
+`editor/live-fields.cjs` 将既有属性提交逻辑绑定到 change 事件，复用校验与撤销事务，隐藏原应用按钮；时间步进控件同样触发 change。房间设置等不属于方块属性的确认流程保留。
+
+`runtime/moving-solids.cjs` 对机关砖前后碰撞盒做最大 4 像素步长的主动推动检查。推动途中先通过 `runtime/hazards.cjs` 检查尖刺；build16 起，仅搬运方向前方的实体阻挡或主动推动轴上的对向夹压才报告挤压死亡。浮点边界与普通侧面接触先分离，不以任意重叠作为死亡依据。engine 执行原有死亡重生流程；玩家自身速度积分继续由 engine 负责。框选终点预览为纯绘制，不写入存档。
 
 3.0.0 build12：`project/native-compat.cjs` 负责测试版扩展数据访问、移动、身份、信号重命名和导入规则；`native-validation.cjs` 对照 NativeReworkValidation 校验。`editor/native-panel.cjs` 与 `native-draw.cjs` 仅承担编辑和绘制，不运行游戏机制。原 `nativeCampaign` / `rework` 格式原地保留，项目仍是 v2；`contact-auto-v1` 的 `authoredCourses` 物理课程跳过扩展规则。内置试玩需先确认运行限制。
 

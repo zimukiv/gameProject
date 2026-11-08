@@ -7,7 +7,11 @@ function render(app, brick, room, host, setTool) {
   const path = Motion.nodes(brick),
     state = app.state,
     members = Motion.groupMembers(room, brick),
-    locked = members.some((member) => member.locked);
+    locked =
+      members.some((member) => member.locked) ||
+      require('../project/block-groups.cjs')
+        .members(room, brick)
+        .some(({ item }) => item.locked);
   if (state.brickNodeOwner !== brick.id) {
     state.brickNodeOwner = brick.id;
     state.brickNodeIndex = 0;
