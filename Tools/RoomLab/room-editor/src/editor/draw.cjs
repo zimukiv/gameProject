@@ -188,7 +188,9 @@ function drawRoom(
   }
   if (!game)
     for (const b of r.movables) {
-      const selected = selection?.kind === 'movables' && selection.id === b.id;
+      const selected = [selection, ...selections].some(
+        (s) => s?.kind === 'movables' && s.id === b.id,
+      );
       if (!targets && !selected) continue;
       const color = Motion.colorFor(r, b.padId),
         pad = r.objects.find((o) => o.id === b.padId && Motion.isPad(o)),
@@ -213,6 +215,18 @@ function drawRoom(
         from = node;
       }
       ctx.setLineDash([]);
+      if (selected && path.length) {
+        const end = path.at(-1);
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.28;
+        ctx.fillRect(end.x * T, end.y * T, T, T);
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2 / v.scale;
+        ctx.strokeRect(end.x * T, end.y * T, T, T);
+        ctx.restore();
+      }
     }
   for (const b of r.movables) {
     const rect = game?.movableRect?.(b) || { x: b.x * T, y: b.y * T, w: T, h: T };

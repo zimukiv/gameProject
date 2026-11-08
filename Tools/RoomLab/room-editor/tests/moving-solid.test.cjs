@@ -1,0 +1,82 @@
+'use strict';
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const { Engine } = require('../src/runtime/engine.cjs');
+const M = require('../src/project/model.cjs');
+const { overlap } = require('../src/shared/utils.cjs');
+function scene(from, to, player, collision = true) {
+  const g = new Engine(M.example(), 'physics');
+  Object.assign(g.room, {
+    tiles: [],
+    objects: [],
+    movables: [{ id: 'moving', ...from, targetX: to.x, targetY: to.y, collision }],
+  });
+  g.movableStates = new Map([
+    ['moving', { progress: 0, angle: 0, anim: { from: 0, to: 1, t: 0, kind: 'progress' } }],
+  ]);
+  Object.assign(g.player, {
+    x: 160,
+    y: 160,
+    vx: 0,
+    vy: 0,
+    grounded: false,
+    support: null,
+    ...player,
+  });
+  g.ai.active = false;
+  return g;
+}
+test('upward moving brick pushes stationary airborne player every tick', () => {
+  const g = scene({ x: 5, y: 7 }, { x: 5, y: 2 }, {});
+  for (let i = 0; i < 40; i++) {
+    g.update(1 / 120, {});
+    assert.equal(overlap(g.player, g.movableRect(g.room.movables[0])), false);
+  }
+  assert.ok(g.player.y < 100);
+});
+test('fast horizontal brick cannot tunnel through idle player', () => {
+  const g = scene({ x: 1, y: 5 }, { x: 50, y: 5 }, {});
+  for (let i = 0; i < 7; i++) g.update(1 / 120, {});
+  assert.ok(g.player.x > 230);
+});
+test('non-solid moving brick does not push player', () => {
+  const g = scene({ x: 1, y: 5 }, { x: 50, y: 5 }, {}, false);
+  for (let i = 0; i < 7; i++) g.update(1 / 120, {});
+  assert.equal(g.player.x, 160);
+});
+test('descending and leftward solids push without directional input', () => {
+  const { transport } = require('../src/runtime/moving-solids.cjs');
+  for (const [from, to, actor, expected] of [
+    [{ x: 100, y: 10 }, { x: 100, y: 200 }, { x: 100, y: 100 }, { y: 232 }],
+    [{ x: 200, y: 100 }, { x: 10, y: 100 }, { x: 100, y: 100 }, { x: -10 }],
+  ]) {
+    const p = { ...actor, w: 20, h: 28, vx: 0, vy: 0 };
+    const b = { id: 'b', kind: 'movable', w: 32, h: 32 };
+    assert.equal(transport(p, [{ ...b, ...from }], [{ ...b, ...to }]), true);
+    for (const [key, value] of Object.entries(expected)) assert.equal(p[key], value);
+  }
+});
+test('rider is carried once, blocked push leaves actor unchanged', () => {
+  const { transport } = require('../src/runtime/moving-solids.cjs');
+  const b = { id: 'b', kind: 'movable', x: 100, y: 100, w: 32, h: 32 };
+  const p = { x: 106, y: 72, w: 20, h: 28, grounded: true, support: 'b', vx: 0, vy: 0 };
+  assert.equal(transport(p, [b], [{ ...b, x: 120, y: 80 }]), true);
+  assert.equal(p.x, 126);
+  assert.equal(p.y, 52);
+  const wall = { id: 'ceiling', x: 0, y: 0, w: 500, h: 60 };
+  const stationary = { ...p, x: 106, y: 72 };
+  const snapshot = { ...stationary };
+  assert.equal(transport(stationary, [b, wall], [{ ...b, y: 50 }, wall]), false);
+  assert.deepEqual(stationary, snapshot);
+});
+test('blocked engine motion rolls back and resumes after player leaves', () => {
+  const g = scene({ x: 5, y: 5 }, { x: 5, y: 1 }, { y: 132, grounded: true, support: 'moving' });
+  g.room.tiles = [{ x: 5, y: 3 }];
+  for (let i = 0; i < 50; i++) g.update(1 / 120, {});
+  const stopped = g.movableStates.get('moving').progress;
+  assert.ok(stopped < 0.1);
+  assert.equal(overlap(g.player, g.movableRect(g.room.movables[0])), false);
+  g.player.x = 320;
+  for (let i = 0; i < 50; i++) g.update(1 / 120, {});
+  assert.ok(g.movableStates.get('moving').progress > stopped);
+});

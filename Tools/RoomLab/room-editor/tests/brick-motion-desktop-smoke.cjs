@@ -12,6 +12,32 @@ const assert = require('node:assert/strict'),
     env,
   });
   try {
+    const collisionResult = await app.evaluate(({ app }) => {
+      const root = app.getAppPath();
+      const require = process.getBuiltinModule('module').createRequire(root + '/package.json');
+      const { Engine } = require(root + '/src/runtime/engine.cjs');
+      const M = require(root + '/src/project/model.cjs');
+      const { overlap } = require(root + '/src/shared/utils.cjs');
+      const g = new Engine(M.example(), 'physics');
+      Object.assign(g.room, {
+        tiles: [],
+        objects: [],
+        movables: [{ id: 'push', x: 5, y: 7, targetX: 5, targetY: 2, collision: true }],
+      });
+      g.movableStates = new Map([
+        ['push', { progress: 0, angle: 0, anim: { from: 0, to: 1, t: 0, kind: 'progress' } }],
+      ]);
+      Object.assign(g.player, { x: 160, y: 160, vx: 0, vy: 0, grounded: false, support: null });
+      g.ai.active = false;
+      let penetrated = false;
+      for (let i = 0; i < 40; i++) {
+        g.update(1 / 120, {});
+        penetrated ||= overlap(g.player, g.movableRect(g.room.movables[0]));
+      }
+      return { penetrated, y: g.player.y };
+    });
+    assert.equal(collisionResult.penetrated, false);
+    assert.ok(collisionResult.y < 100);
     const page = await app.firstWindow(),
       errors = [],
       snap = () => page.evaluate(() => window.__ROOM_LAB__.snapshot());
@@ -85,6 +111,26 @@ const assert = require('node:assert/strict'),
     assert.equal((await snap()).state.selection.id, authored.id);
     assert.match(await page.locator('#room-inspector').textContent(), /代表砖/);
     assert.equal(grouped[1].motionPath[0].x, authored.motionPath[0].x - 1);
+    await page.evaluate(() => {
+      window.__previewRects = [];
+      const original = CanvasRenderingContext2D.prototype.fillRect;
+      CanvasRenderingContext2D.prototype.fillRect = function (...args) {
+        if (this.canvas.id === 'room-canvas' && Math.abs(this.globalAlpha - 0.28) < 0.001)
+          window.__previewRects.push(args);
+        return original.apply(this, args);
+      };
+    });
+    await page.mouse.move(...(await point(15, 6)));
+    await page.waitForFunction(() => window.__previewRects.length >= 3);
+    const previews = await page.evaluate(() => window.__previewRects);
+    for (const brick of grouped) {
+      const end = brick.motionPath.at(-1);
+      assert.ok(
+        previews.some(
+          ([x, y, w, h]) => x === end.x * 32 && y === end.y * 32 && w === 32 && h === 32,
+        ),
+      );
+    }
     await page.locator('[data-brick-node="0"]').click();
     await page.locator('#brick-node-seconds').fill('0.9');
     await page.locator('#brick-node-save').click();

@@ -1,5 +1,7 @@
 # Room Lab 架构
 
+3.0.0 build14：`runtime/moving-solids.cjs` 对机关砖前后碰撞盒做最大 4 像素步长的主动推动检查；所有运动和角色搬运作为一帧事务，无法推动时回退该帧所有机关砖，避免穿墙和组内撕裂。玩家自身速度积分继续由 engine 负责。框选终点预览为纯绘制，不写入存档。
+
 3.0.0 build12：`project/native-compat.cjs` 负责测试版扩展数据访问、移动、身份、信号重命名和导入规则；`native-validation.cjs` 对照 NativeReworkValidation 校验。`editor/native-panel.cjs` 与 `native-draw.cjs` 仅承担编辑和绘制，不运行游戏机制。原 `nativeCampaign` / `rework` 格式原地保留，项目仍是 v2；`contact-auto-v1` 的 `authoredCourses` 物理课程跳过扩展规则。内置试玩需先确认运行限制。
 
 3.0.0 build3：`Store.hasProject` 区分未开始和有效本地草稿，`load` 建立可恢复草稿；未开始时不备份占位示例。大关的 `blockDefaults` 按大关 ID 隔离，`Registry.instantiate` 将参数和选定素材写入新对象。现有对象沿用自己的参数与 v2 项目级默认值。素材按具体大关、通用或内置主题模板解析。

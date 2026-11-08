@@ -716,6 +716,7 @@ class Engine {
       s.cooldown = Math.max(0, s.cooldown - dt);
       Registry.get(o.type).tick?.(this.context(o), o, s, dt);
     }
+    const motionBefore = new Map([...this.movableStates].map(([id, s]) => [id, clone(s)]));
     for (const s of this.movableStates.values())
       if (s.anim) {
         if (s.anim.kind === 'path') {
@@ -731,14 +732,10 @@ class Engine {
         else s.progress = v;
         if (s.anim.t === 0.45) s.anim = null;
       }
-    const colliders = this.colliders();
-    if (p.grounded && p.support) {
-      const old = before.find((b) => b.id === p.support),
-        now = colliders.find((b) => b.id === p.support);
-      if (old && now) {
-        p.x += now.x - old.x;
-        p.y += now.y - old.y;
-      }
+    let colliders = this.colliders();
+    if (!require('./moving-solids.cjs').transport(p, before, colliders)) {
+      this.movableStates = motionBefore;
+      colliders = this.colliders();
     }
     p.invulnerable = Math.max(0, p.invulnerable - dt);
     const crouch = input.down && p.grounded && !p.launched && !p.rail && p.dash <= 0;
