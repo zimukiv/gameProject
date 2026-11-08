@@ -1,9 +1,9 @@
 {
   "repository": "zimukiv/gameProject",
   "version": "3.0.0",
-  "releaseTag": "roomlab-editor-v3.0.0-build18",
+  "releaseTag": "roomlab-editor-v3.0.0-build19",
   "createdAt": "2026-11-08",
-  "programSHA256": "231f959c2e1ee0d4a0f5f98243635bccfea8f85db51570d6902b835ffae9ceb5",
+  "programSHA256": "4bb02ce42d6cc7238f535ca9429221f2ba0e2c328e4d604332a0f20566b40839",
   "files": [
     {
       "path": "room-cloud/.gitignore",
@@ -491,8 +491,13 @@
       "encoding": "utf8-lf"
     },
     {
+      "path": "room-cloud/lib/room-library.mjs",
+      "sha256": "ef8783d98de33963e5db862ceed1fd0643580567db7a86c2ea61086f2952d7d7",
+      "encoding": "utf8-lf"
+    },
+    {
       "path": "room-cloud/lib/sync-handler.mjs",
-      "sha256": "48c744bf082ca69cee26f3ee74edf492e5c040ece78f790a63fba481e80426a2",
+      "sha256": "3518c9e6dc4181548e9c2406da76130a772ebfff4bd4bc3ed2daf7e7e13097ef",
       "encoding": "utf8-lf"
     },
     {
@@ -527,7 +532,7 @@
     },
     {
       "path": "room-cloud/README.md",
-      "sha256": "be7e990b351e4155db171b86689868ada50604a05c3a429748dede8c7955db17",
+      "sha256": "b5dd68c5b52590a2ed4d6b5031df84c5afb4698872076a47945d76b5176e8e38",
       "encoding": "utf8-lf"
     },
     {
@@ -631,6 +636,11 @@
       "encoding": "utf8-lf"
     },
     {
+      "path": "room-cloud/tests/storage-fixture.mjs",
+      "sha256": "d6ce06fbcf899069895e3ea051d288ece8c3ce516e00eef72a3c1bc637757a53",
+      "encoding": "utf8-lf"
+    },
+    {
       "path": "room-cloud/tsconfig.json",
       "sha256": "a4c1cc83b63ef9d39641d3babaefffa063dccbbc93338e18017b5013d713163e",
       "encoding": "utf8-lf"
@@ -677,7 +687,7 @@
     },
     {
       "path": "room-editor/ARCHITECTURE.md",
-      "sha256": "af4ea13fd30af20b47c2c656a4ef2147e2fba08b40d9af0f9819e6cdd3da8360",
+      "sha256": "94e88939c29f1898c481fb842dd63c39e6c83e28b2760ab0d4532e3e45f44a48",
       "encoding": "utf8-lf"
     },
     {
@@ -692,7 +702,7 @@
     },
     {
       "path": "room-editor/docs/CHANGELOG.md",
-      "sha256": "9f0d31767e687873da974c19cf2870aeaa48f4b062e68eba154a0d72f7e31849",
+      "sha256": "e296b495eb640ad783edfa991a1c13530f38b098593ff7dbecfe6e41bbaea9a9",
       "encoding": "utf8-lf"
     },
     {
@@ -797,7 +807,7 @@
     },
     {
       "path": "room-editor/examples/physics-project.zip",
-      "sha256": "5b5bcf29ad122eb11a1cbe6e1f79169011dbe1f835a2d3478072e6d34fa11c12",
+      "sha256": "d92a0bd34bcca8afc2ce6d441148f68ab743839706b9626906c414c2dbcb1e2b",
       "encoding": "binary"
     },
     {
@@ -847,12 +857,12 @@
     },
     {
       "path": "room-editor/examples/physics/project.json",
-      "sha256": "1a8ed497301e9ddb7a68d5dc6d41a3de98b9c21fe5b43d9d6ece28056bbcfb6a",
+      "sha256": "aa3e214b53ae8aabb3d2882818af1d5e930834848e8a68a91fdd2a485e59e101",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/examples/three-themes-project.zip",
-      "sha256": "b001e5187a5d9f15d8905afa08a5fee0ce885e00b12e32760919a5e027369009",
+      "sha256": "d189692b18a822fa99b5c92fbbe5e56b7359a55915d9622cff055eeed892d522",
       "encoding": "binary"
     },
     {
@@ -976,8 +986,13 @@
       "encoding": "utf8-lf"
     },
     {
+      "path": "room-editor/src/cloud/room-library.cjs",
+      "sha256": "ceb8753892f27205132665d50c1b340027f96cc63b4ce6c9f177784ee552a942",
+      "encoding": "utf8-lf"
+    },
+    {
       "path": "room-editor/src/cloud/service.cjs",
-      "sha256": "2acee46306d136b722bda024fda9ddadc882ae5bff146e6822b7df55a434bb0a",
+      "sha256": "01c2b1458342c737b6348e9d2f35d801ff5828a606c9a76f8c8daf3619e709c7",
       "encoding": "utf8-lf"
     },
     {
@@ -1026,13 +1041,18 @@
       "encoding": "utf8-lf"
     },
     {
+      "path": "room-editor/src/editor/cloud-room-library.cjs",
+      "sha256": "bf80f26386166fbebbb1fa448f586eb8cbedcb193ed2fd5e2962e34c2dfc7eab",
+      "encoding": "utf8-lf"
+    },
+    {
       "path": "room-editor/src/editor/dom.cjs",
       "sha256": "e89a4977b8f2c105bc503bf94b1ef08787f4bfaadb7b8dd468d2353f76581ffe",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/src/editor/draw.cjs",
-      "sha256": "a56b3035fdc80638d7c830418b7d1d60ace21a80d431f8ab60eaa15a4d9853b4",
+      "sha256": "51392e8031ea9bb1f0e4b2ddb7aa4f6a14de92edd1c0ab2f86d8aa43d59be362",
       "encoding": "utf8-lf"
     },
     {
@@ -1047,7 +1067,7 @@
     },
     {
       "path": "room-editor/src/editor/index.html",
-      "sha256": "d3669f8c59bf50f50a1ed247eaaf65c45edb227b499ffd5acdb478ab1a4e0f10",
+      "sha256": "8a9374dc8a0b69f740e21d6acc0f6b079629ba23de883b6a8faba139b4a9a7cc",
       "encoding": "utf8-lf"
     },
     {
@@ -1067,12 +1087,12 @@
     },
     {
       "path": "room-editor/src/editor/moving-collision-control.cjs",
-      "sha256": "10f7802fd7506499829e7f36085d4d2c8c6ccbfbc1ec3cf9ab2589454a2f0469",
+      "sha256": "68514d95a92593644ae5c3ecb3a3534040677b6c21ba325efc6c956302b1ae0c",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/src/editor/native-draw.cjs",
-      "sha256": "32ca081b7a1c9d7e5da66b3d9a90009672ab0534978f4227997d573869027c0c",
+      "sha256": "4fdb1456f871a2b14e88e4746e9c211626aa99512d097a04faec82b928fba405",
       "encoding": "utf8-lf"
     },
     {
@@ -1112,7 +1132,7 @@
     },
     {
       "path": "room-editor/src/editor/pages/room.cjs",
-      "sha256": "6bc70930be9bf5fe9554127b5946060b5dc66d00d01d044710e886d26c6f51bb",
+      "sha256": "e01f73a8db4d9d36068c9c759ec6286056a436fa31ee2596faf0f2a9ec7b925b",
       "encoding": "utf8-lf"
     },
     {
@@ -1152,7 +1172,7 @@
     },
     {
       "path": "room-editor/src/editor/room-transfer.cjs",
-      "sha256": "fd6d60a6d1d1e922f0d95285977743b197b8d53d715c156a58e118d808b62c5b",
+      "sha256": "b2c18c7063a0a4fb8c6dff7c58adf7d3239faf3d0d500196f130e616f9636f29",
       "encoding": "utf8-lf"
     },
     {
@@ -1162,7 +1182,7 @@
     },
     {
       "path": "room-editor/src/editor/style.css",
-      "sha256": "4d9bc0eb519b091eec90c7bef74ade69c6b6b0a144d8639b077d3023c63b34a2",
+      "sha256": "f74a4e22468c8601afd4668c65cfd5b69bf6b7c170d9d0603be9098e7b4dcb5d",
       "encoding": "utf8-lf"
     },
     {
@@ -1242,7 +1262,7 @@
     },
     {
       "path": "room-editor/src/project/block-groups.cjs",
-      "sha256": "14ab3362ced95888440dbd9023a82f9192c3aaf94f3c165ea61cda4e9f06925f",
+      "sha256": "336130c9139299f538b2fe3a375c1e017a7ae0a33ec8b486e0c7053ee3b3e31f",
       "encoding": "utf8-lf"
     },
     {
@@ -1252,7 +1272,7 @@
     },
     {
       "path": "room-editor/src/project/collision.cjs",
-      "sha256": "cd011c4c9a0ebed4c72b59bb8fe526e755fea2b0def2532b7436644ca5162e15",
+      "sha256": "5844f2abc75d8d58e7bcfdd8a073614eea5ab9c504314b95d40571f2ed40f9fc",
       "encoding": "utf8-lf"
     },
     {
@@ -1372,7 +1392,7 @@
     },
     {
       "path": "room-editor/src/runtime/engine.cjs",
-      "sha256": "af37ca9a60dac602750b8620b0e77edc16d2923c1cfde30264e8e8767dd0cd3e",
+      "sha256": "a78998f5ed2fc947900dc3d840a73c1bd310f9655b6de4ab217c923d9df0867b",
       "encoding": "utf8-lf"
     },
     {
@@ -1417,7 +1437,7 @@
     },
     {
       "path": "room-editor/tests/block-groups.test.cjs",
-      "sha256": "a040a6d40a3563efc854c4ba67eb8b4778bd7faddc7200696470d4a0c8212b4b",
+      "sha256": "6f673f0141af90224b57149ecf9f54908ed9de633617e56a87f22240613f2f75",
       "encoding": "utf8-lf"
     },
     {
@@ -1808,6 +1828,16 @@
     {
       "path": "room-editor/tests/room-import.test.cjs",
       "sha256": "6f3fd9428963b7460a513ac17bd8e5ec5ecc8d33eea18b7d33ab500521904e42",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/room-library-desktop-smoke.cjs",
+      "sha256": "97e28292b98bcb0c46d87ab837f8bdacea2c9f2e176a6037c8c2fedd8dfbcdb5",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/room-library.test.cjs",
+      "sha256": "fde2a444c8286f7dcdb66d0d8594ff35566bc7e3eda81d524da9b9fda8a0ca06",
       "encoding": "utf8-lf"
     },
     {

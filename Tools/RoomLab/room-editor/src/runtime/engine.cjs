@@ -341,12 +341,12 @@ class Engine {
       w: T,
       h: T,
       kind: 'movable',
-      active: Motion.movingCollision(b, s),
+      active: Collision.inherited(this.room, b, 'movables', {}, this.movableStates),
     };
   }
   colliders() {
     const result = this.room.tiles
-      .filter((t) => Collision.enabled(t, 'tiles'))
+      .filter((t) => Collision.inherited(this.room, t, 'tiles', {}, this.movableStates))
       .map((t) => ({
         id: 'tile-' + t.x + '-' + t.y,
         x: t.x * T + this.attachmentOffset(t).x,
@@ -359,7 +359,9 @@ class Engine {
     for (const o of this.room.objects) {
       const def = Registry.get(o.type),
         s = this.objectStates.get(o.id);
-      const shape = Collision.shape(o, def);
+      const shape = Collision.inherited(this.room, o, 'objects', def, this.movableStates)
+        ? def.collider || 'tile'
+        : false;
       if (!shape || (def.isSolid && !def.isSolid(this.context(o), o, s))) continue;
       if (
         ['common.coin', 'common.small', 'common.collectible'].includes(o.type) &&
@@ -373,7 +375,7 @@ class Engine {
     }
     result.push(
       ...this.room.movables
-        .filter((b) => Collision.enabled(b, 'movables'))
+        .filter((b) => Collision.inherited(this.room, b, 'movables', {}, this.movableStates))
         .map((b) => ({ ...this.movableRect(b), priority: 2 }))
         .filter((b) => b.active),
     );

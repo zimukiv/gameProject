@@ -3,10 +3,28 @@ const { clone } = require('../shared/utils.cjs');
 function enabled(o, kind = 'objects', definition = {}) {
   return typeof o.collision === 'boolean'
     ? o.collision
-    : kind === 'tiles' || kind === 'movables' || !!definition.collider;
+    : kind === 'tiles' || kind === 'movables' || kind === 'platforms' || !!definition.collider;
 }
 function shape(o, definition) {
   return enabled(o, 'objects', definition) ? definition.collider || 'tile' : false;
+}
+function owner(room, item, kind) {
+  return require('./block-groups.cjs').collisionOwner(room, item, kind);
+}
+function inherited(room, item, kind, definition = {}, states = null) {
+  const source = owner(room, item, kind);
+  const def =
+    source.item === item
+      ? definition
+      : source.kind === 'objects'
+        ? require('../plugins/registry.cjs').get(source.item.type)
+        : {};
+  if (!enabled(source.item, source.kind, def)) return false;
+  return (
+    !states ||
+    source.kind !== 'movables' ||
+    require('./brick-motion.cjs').movingCollision(source.item, states.get(source.item.id))
+  );
 }
 function normalize(p) {
   for (const c of p.courses || [])
@@ -37,4 +55,4 @@ function portable(project) {
       }
   return require('./compatibility.cjs').normalize(p);
 }
-module.exports = { enabled, shape, normalize, portable };
+module.exports = { enabled, shape, normalize, portable, owner, inherited };

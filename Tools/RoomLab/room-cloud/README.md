@@ -1,5 +1,7 @@
 # Room Lab Cloud / protocol 1
 
+3.0.0 build19: `GET/POST rooms` and `GET rooms/:id` provide a flat room library, separate from version trees. Records and list metadata live under `<workspace hash>/rooms/` in R2. Uploads verify the manifest, available chunks and a single-room project. Pagination uses an opaque R2 cursor. Existing D1 versions, graph relationships and live collaboration are unchanged. The editor provides the room node UI and compatibility-aware import; the existing browser version-tree page is unchanged.
+
 2.5.0: the deployed Site currently has public page access; workspace data still requires the shared workspace secret. Preserve the existing Sites audience. `POST graph/edit` manages display relationships with optimistic generations. `node_metadata` holds parent overrides and reversible deletion; immutable revision manifests, source parents and R2 chunks are never rewritten. Deletion lifts children; restore returns a root. Manual commits also advance the graph generation, so concurrent edits must refresh. The browser exposes editing; the desktop embedded graph exposes preview, checkout and child-upload only. The additive migration is `0003_adorable_wraith.sql`; older project JSON remains v2 and protocol remains 1.
 
 Sites relay for Room Lab. D1 stores immutable versions and branch heads, R2 stores SHA-256 content-addressed 4 MiB chunks. The platform service bearer and shared workspace key are never part of source, logs, or release packages.

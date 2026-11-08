@@ -17,6 +17,18 @@ function members(room, item) {
     item?.assemblyId ? v.item.assemblyId === item.assemblyId : v.item === item,
   );
 }
+function collisionOwner(room, item, kind) {
+  if (!item.assemblyId && !item.brickGroup) return { item, kind };
+  const all = item.assemblyId
+    ? members(room, item)
+    : Motion.groupMembers(room, item).map((item) => ({ item, ref: { kind: 'movables' } }));
+  const leader =
+    Motion.representative(all.filter((v) => v.ref.kind === 'movables').map((v) => v.item)) ||
+    all.find((v) => v.ref.kind === 'platforms')?.item ||
+    Motion.representative(all.map((v) => v.item));
+  const chosen = all.find((v) => v.item === leader);
+  return chosen ? { item: chosen.item, kind: chosen.ref.kind } : { item, kind };
+}
 function create(room, refs) {
   const all = items(room),
     selected = all.filter(({ ref }) =>
@@ -58,4 +70,4 @@ function cleanup(room) {
   for (const { item } of items(room))
     if (item.attachmentTo && !ids.has(item.attachmentTo)) delete item.attachmentTo;
 }
-module.exports = { kinds, items, members, create, dissolve, cleanup };
+module.exports = { kinds, items, members, create, dissolve, cleanup, collisionOwner };

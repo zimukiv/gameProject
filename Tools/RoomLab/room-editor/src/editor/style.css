@@ -501,6 +501,46 @@ p {
   overflow: auto;
   margin-top: 10px;
 }
+.room-cloud-graph {
+  height: 480px;
+  min-width: 0;
+  background: #091721;
+  border: 1px solid #365364;
+  border-radius: 8px;
+  overflow: hidden;
+  touch-action: none;
+}
+#dialog:has(#room-cloud-library) {
+  width: min(1200px, 94vw);
+  max-width: 94vw;
+}
+#room-cloud-library .cloud-graph-layout {
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 340px);
+}
+@media (max-width: 700px) {
+  #room-cloud-library .cloud-graph-layout {
+    grid-template-columns: 1fr;
+  }
+}
+.room-cloud-graph [data-library-room] {
+  cursor: pointer;
+}
+.room-cloud-details {
+  min-width: 0;
+  padding: 14px;
+  max-height: 480px;
+  overflow: auto;
+  background: #10222e;
+  border-radius: 8px;
+}
+.room-cloud-details canvas {
+  width: 100%;
+  height: auto;
+}
+.room-cloud-notes {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
 .trace-save-row {
   display: flex;
   gap: 8px;

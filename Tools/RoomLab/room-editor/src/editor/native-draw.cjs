@@ -34,6 +34,8 @@ function draw(
         ctx.setLineDash([5 / scale, 4 / scale]);
       }
       if (kind === 'platforms') {
+        if (!require('../project/collision.cjs').inherited(r, o, kind))
+          ctx.setLineDash([5 / scale, 4 / scale]);
         ctx.fillStyle = color + '55';
         ctx.fillRect(b.x * 32, b.y * 32, b.w * 32, b.h * 32);
         ctx.strokeRect(b.x * 32, b.y * 32, b.w * 32, b.h * 32);

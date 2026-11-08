@@ -3,6 +3,7 @@ const { $ } = require('./dom.cjs'),
   Archive = require('../project/archive.cjs'),
   Dialog = require('./room-import-dialog.cjs');
 function bind(app) {
+  $('cloud-room-library').onclick = () => require('./cloud-room-library.cjs').open(app);
   $('import-room').onclick = () => $('room-package-file').click();
   $('room-package-file').onchange = async (e) => {
     const file = e.target.files[0];

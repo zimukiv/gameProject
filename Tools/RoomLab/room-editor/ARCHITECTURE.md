@@ -1,5 +1,7 @@
 # Room Lab 架构
 
+3.0.0 build19：`cloud/room-library` 仅上传 `room-export.standalone` 的单房间快照；通过独立 rooms API 存取，不调用 Repository draft/put/create。服务端 room-library.mjs 将清单与摘要存入密钥散列隔离的 R2 rooms 前缀，复用内容分块而不写入 D1 revisions/branches。编辑器 cloud-room-library 提供无连线节点图，导入仍走 room-import-dialog/batch，云密钥不进入页面 URL 或项目文件。
+
 3.0.0 build18：`motionPath[].movingCollision` 缺省 true，由砖级 `movingCollision` 总开关覆盖。`brick-motion.movingCollision` 根据当前时间和方向确定运动段；字段随节点保存／排序并由 `applyGroupPath` 传递。节点行使用独立 checkbox，避开选择按钮嵌套及 live-fields 自动提交。`project/motion-preview` 只读收集框选／绑定路线、计算累计时间与位置；`editor/motion-timeline` 管理临时 UI 时钟和半透明绘制，原始项目不修改。旧机关路径使用相同 easing，原生双态平台仅线性布局预览，真实触发顺序由运行时负责。
 
 3.0.0 build17：机关砖 `movingCollision` 缺省为 true，与总开关 `collision` 独立；`brick-motion.isMoving` 检查路径当前是否产生位移，运行时仅在移动期间省略该砖的实体。附着物按自身设置计算；停止时恢复实体并处理端点重叠。旧旋转机关未写入此字段时保留历史碰撞规则。

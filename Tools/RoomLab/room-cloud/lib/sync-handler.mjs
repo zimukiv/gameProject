@@ -1,5 +1,6 @@
 // Transport-neutral relay. D1 compare-and-swap owns branch concurrency; R2 owns immutable chunks.
 import {graphState,editGraph} from './graph-management.mjs';
+import {roomLibrary} from './room-library.mjs';
 const HASH = /^[a-f0-9]{64}$/;
 const BRANCH = /^[\p{L}\p{N}_. /-]{1,100}$/u;
 const MAX_CHUNK = 4 * 1024 * 1024;
@@ -45,6 +46,7 @@ export async function handle(request, env) {
     const workspace = await sha(new TextEncoder().encode(key));
     if (!env.DB || !env.BUCKET) fail('存储尚未就绪',503);
     const prefix = workspace + '/';
+    if(route==='rooms'||route.startsWith('rooms/')) return await roomLibrary(request,env,workspace,route,{json,manifest,sha,canonical,fail,reply});
     if(route==='live' && request.method==='POST') {
       const {device,channel,base,proposal} = await json(request),now=Date.now();
       if(!/^[a-zA-Z0-9_-]{8,80}$/.test(device||'') || !HASH.test(channel||'') || !Number.isSafeInteger(base) || base<0)fail('协作会话无效');

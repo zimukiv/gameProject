@@ -181,7 +181,8 @@ function drawRoom(
       ctx.strokeStyle = '#7892a7';
       ctx.strokeRect(t.x * T + 0.5, t.y * T + 0.5, T - 1, T - 1);
     }
-    if (!Collision.enabled(t, 'tiles')) ghostBorder(ctx, { x: t.x * T, y: t.y * T, w: T, h: T });
+    if (!Collision.inherited(r, t, 'tiles', {}, game?.movableStates))
+      ghostBorder(ctx, { x: t.x * T, y: t.y * T, w: T, h: T });
     if (!game && (t.x < 0 || t.y < 0 || t.x >= r.cols || t.y >= r.rows)) {
       ctx.strokeStyle = '#f17f77';
       ctx.strokeRect(t.x * T, t.y * T, T, T);
@@ -236,7 +237,8 @@ function drawRoom(
     ctx.strokeStyle = !game && targets ? Motion.colorFor(r, b.padId) : '#b9c7d5';
     ctx.strokeRect(rect.x, rect.y, T, T);
     text(ctx, '□', rect.x + 16, rect.y + 23, 16, '#d4e2ec', 'center');
-    if (!Collision.enabled(b, 'movables') || (game && !rect.active)) ghostBorder(ctx, rect);
+    if (!Collision.inherited(r, b, 'movables', {}, game?.movableStates) || (game && !rect.active))
+      ghostBorder(ctx, rect);
   }
   for (const source of r.objects) {
     const o = game?.worldObject?.(source) || source;
@@ -329,7 +331,7 @@ function drawRoom(
       ctx.fillRect(rect.x - 2, rect.y + rect.h / 2 - 7, 3, 14);
       ctx.fillRect(rect.x + rect.w - 1, rect.y + rect.h / 2 - 7, 3, 14);
     }
-    if (!Collision.enabled(o, 'objects', d)) ghostBorder(ctx, rect);
+    if (!Collision.inherited(r, o, 'objects', d, game?.movableStates)) ghostBorder(ctx, rect);
     if (o.type === 'physics.ice' && game)
       text(
         ctx,
@@ -455,7 +457,7 @@ function drawRoom(
       ctx.lineWidth = 2 / v.scale;
       if (
         ['tiles', 'objects', 'movables'].includes(selection.kind) &&
-        !Collision.enabled(item, selection.kind, item.type ? Registry.get(item.type) : {})
+        !Collision.inherited(r, item, selection.kind, item.type ? Registry.get(item.type) : {})
       )
         ctx.setLineDash([5, 4]);
       ctx.strokeRect(rect.x - 1, rect.y - 1, rect.w + 2, rect.h + 2);

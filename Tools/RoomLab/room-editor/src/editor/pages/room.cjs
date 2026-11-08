@@ -1097,13 +1097,17 @@ function baseInspector(app, r, setTool) {
     if (['tiles', 'objects', 'movables'].includes(ref.kind)) {
       body.insertAdjacentHTML(
         'beforeend',
-        check('碰撞实体', 'object-collision', Collision.enabled(o, ref.kind, d || {})) +
+        check(
+          o.assemblyId || o.brickGroup ? '组合碰撞实体（由代表元控制）' : '碰撞实体',
+          'object-collision',
+          Collision.inherited(r, o, ref.kind, d || {}),
+        ) +
           '<p class="hint">关闭后可穿过方块，边界显示为虚线。触发体积独立，进入触发范围仍可启动机关。</p>',
       );
       $('object-collision').onchange = (e) => {
         const enabled = e.target.checked;
         app.store.change(() => {
-          o.collision = enabled;
+          Collision.owner(r, o, ref.kind).item.collision = enabled;
         });
       };
     }

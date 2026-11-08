@@ -72,3 +72,48 @@ test('a non-solid spike glued to a fast moving brick still kills on the swept pa
   assert.equal(g.deaths, 1);
   assert.ok(g.events.some((e) => JSON.stringify(e).includes('碰到尖刺')));
 });
+
+test('mixed groups share leader solid and per-segment movement collision, retaining member shapes', () => {
+  const { p, c, r, refs } = fixture();
+  G.create(r, refs);
+  const g = new Engine(p, c.id, r.id),
+    b = g.room.movables[0],
+    s = g.movableStates.get(b.id);
+  assert.equal(g.colliders().length, 3, 'leader true makes all three member shapes solid');
+  b.collision = false;
+  assert.equal(g.colliders().length, 0);
+  b.collision = true;
+  b.motionPath[0].movingCollision = false;
+  s.pathTime = 0.1;
+  s.anim = { kind: 'path', to: 0.45 };
+  assert.equal(g.colliders().length, 0, 'all members ghost during disabled segment');
+  s.anim = null;
+  assert.equal(g.colliders().length, 3, 'all members restore at rest');
+  G.dissolve(g.room, b);
+  assert.equal(g.colliders().length, 2, 'dissolve restores own spike collision setting');
+});
+test('static mixed groups inherit central member and legacy brick groups ignore individual overrides', () => {
+  const Collision = require('../src/project/collision.cjs');
+  const room = {
+    tiles: [
+      { x: 0, y: 0, collision: false },
+      { x: 1, y: 0, collision: true },
+      { x: 2, y: 0, collision: false },
+    ],
+    objects: [],
+    movables: [],
+  };
+  G.create(
+    room,
+    room.tiles.map((t) => ({ kind: 'tiles', x: t.x, y: t.y })),
+  );
+  assert.ok(room.tiles.every((t) => Collision.inherited(room, t, 'tiles')));
+  room.tiles[1].collision = false;
+  assert.ok(room.tiles.every((t) => !Collision.inherited(room, t, 'tiles')));
+  room.movables = [
+    { id: 'a', x: 5, y: 5, brickGroup: 'g', collision: false },
+    { id: 'b', x: 6, y: 5, brickGroup: 'g', collision: true },
+    { id: 'c', x: 7, y: 5, brickGroup: 'g', collision: false },
+  ];
+  assert.ok(room.movables.every((b) => Collision.inherited(room, b, 'movables')));
+});
