@@ -1,9 +1,9 @@
 {
   "repository": "zimukiv/gameProject",
   "version": "3.0.0",
-  "releaseTag": "roomlab-editor-v3.0.0-build14",
+  "releaseTag": "roomlab-editor-v3.0.0-build15",
   "createdAt": "2026-11-08",
-  "programSHA256": "5a8536af3c5dbffb7ab56411f8376b90dbfa8360d0469738cdc5a3aad1c57338",
+  "programSHA256": "d4c47493d831eb3bace16d8cd817253651ff9883ae5a877074425c6a987d7055",
   "files": [
     {
       "path": "room-cloud/.gitignore",
@@ -677,7 +677,7 @@
     },
     {
       "path": "room-editor/ARCHITECTURE.md",
-      "sha256": "3a28696600f0c8a0f48c2b939026148b87a31fb23f300d849b53c247ce5a4798",
+      "sha256": "c92b8eb20cbfeaf59bf82b65bee7bad9eba9127d59f34084493625f908b33abe",
       "encoding": "utf8-lf"
     },
     {
@@ -692,7 +692,7 @@
     },
     {
       "path": "room-editor/docs/CHANGELOG.md",
-      "sha256": "030a959e89acf2d25799950a05bfef71dd484f345f063738743fa5ee57f121cf",
+      "sha256": "ea8e4f0e0da1941ee67fb6b863f46a74563abcc31037a5f25d323c48396a32cf",
       "encoding": "utf8-lf"
     },
     {
@@ -797,7 +797,7 @@
     },
     {
       "path": "room-editor/examples/physics-project.zip",
-      "sha256": "700472d53ac007e5426ee113b208f9d94ee5198c34d02e4916d6aa38a9a71a9e",
+      "sha256": "640e812fa41d4424caab02005d40f866d104fa55a16b661adc20cf2d19b56962",
       "encoding": "binary"
     },
     {
@@ -847,12 +847,12 @@
     },
     {
       "path": "room-editor/examples/physics/project.json",
-      "sha256": "0f3f033e1a2f3e83908567baf69e5b5404e385155d64d23f2f835fe07156ef9d",
+      "sha256": "027260d73a522d34a1baff9bcc4277c671e4575d4674cf562436ea709ded3f56",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/examples/three-themes-project.zip",
-      "sha256": "10bda997c847c05ca3fdc056280108399a06ca6e90100a164feace7776e9c842",
+      "sha256": "66f1713a2cd9a40fc35f440be62189ea420f6f0a506f390ebc85afea17c03974",
       "encoding": "binary"
     },
     {
@@ -1347,12 +1347,17 @@
     },
     {
       "path": "room-editor/src/runtime/engine.cjs",
-      "sha256": "3e9aa4ebb07aad1ee2c8d64229f435e8d2d1b38f0271407dc69a1863adfcffc4",
+      "sha256": "283d3fff1cf4fc3958174a44caee1fc4fe2f9bba1e12a4cadf556121808ad6d9",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/runtime/hazards.cjs",
+      "sha256": "5fabf84aabe87c2d152013280965078b9ab3e467d9ac83e9aec4ba7674aaa0ea",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/src/runtime/moving-solids.cjs",
-      "sha256": "ceae11d4887856d7e41c7716bf6df67a1d30a506f6c6ed22f82d9d460e7aaf00",
+      "sha256": "5e90eaadf4f929ab9b8c9d4eb1656affd90fa361bd377ce16d4b4df516cab2b6",
       "encoding": "utf8-lf"
     },
     {
@@ -1387,7 +1392,7 @@
     },
     {
       "path": "room-editor/tests/brick-motion-desktop-smoke.cjs",
-      "sha256": "8dccb43a564938aa859dbbcb42c477d350a46fce35c02ee42880e1376cbeae50",
+      "sha256": "3b8dd5ab3a7e9af4c3d80f05154ab6ed64cf2472d662efee09febf07f63f70b4",
       "encoding": "utf8-lf"
     },
     {
@@ -1692,7 +1697,7 @@
     },
     {
       "path": "room-editor/tests/moving-solid.test.cjs",
-      "sha256": "d980e7cdf501b15679ebb4c0e4a3694942489ab657300bcd6948d133ad70d01a",
+      "sha256": "51cb85e2a374746f8d7465993007e7578c78cfaca1aaad57f0d2f20697c75126",
       "encoding": "utf8-lf"
     },
     {

@@ -2,8 +2,8 @@
 const { overlap } = require('../shared/utils.cjs');
 
 // Sweep the solids as well as the actor: zero actor velocity is still collidable.
-// Work on a copy so a blocked push can roll back the motion transaction safely.
-function transport(player, before, after) {
+// Work on a copy; a blocked push reports crushing without stopping the solid.
+function transport(player, before, after, lethal = () => false) {
   const old = new Map(before.map((b) => [b.id, b]));
   const moving = after.filter(
     (b) =>
@@ -30,6 +30,7 @@ function transport(player, before, after) {
       p.x += (rider.x - old.get(rider.id).x) / steps;
       p.y += (rider.y - old.get(rider.id).y) / steps;
     }
+    if (lethal(p)) return 'hazard';
     for (const b of moving) {
       const prev = at(b, (i - 1) / steps),
         next = at(b, i / steps);
@@ -50,7 +51,9 @@ function transport(player, before, after) {
         p.vx = Math.max(0, p.vx);
       } else return false;
     }
-    // No crush rule exists: pause coordinated motion if there is no room to push.
+    // Spikes take precedence over crushing, including non-solid hazards crossed mid-step.
+    if (lethal(p)) return 'hazard';
+    // The actor cannot stop a moving solid: no free space means crushing.
     if (scene.some((b) => overlap(p, b))) return false;
   }
   Object.assign(player, p);

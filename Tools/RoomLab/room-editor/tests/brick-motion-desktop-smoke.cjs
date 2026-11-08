@@ -34,10 +34,46 @@ const assert = require('node:assert/strict'),
         g.update(1 / 120, {});
         penetrated ||= overlap(g.player, g.movableRect(g.room.movables[0]));
       }
-      return { penetrated, y: g.player.y };
+      const y = g.player.y;
+      g.room.movables[0].y = 5;
+      g.room.movables[0].targetY = 1;
+      g.movableStates.set('push', {
+        progress: 0,
+        angle: 0,
+        anim: { from: 0, to: 1, t: 0, kind: 'progress' },
+      });
+      Object.assign(g.player, { x: 160, y: 132, vx: 0, vy: 0, grounded: true, support: 'push' });
+      const spike = require(root + '/src/plugins/registry.cjs').instantiate(
+        g.project,
+        'common.spike',
+        'spike',
+        5,
+        3,
+      );
+      spike.collision = true;
+      g.room.objects = [spike];
+      g.objectStates.set('spike', {});
+      for (let i = 0; i < 30 && !g.deaths; i++) g.update(1 / 120, {});
+      const h = new Engine(M.example(), 'physics');
+      Object.assign(h.room, {
+        tiles: [{ x: 5, y: 3 }],
+        objects: [],
+        movables: [{ id: 'push', x: 5, y: 5, targetX: 5, targetY: 1, collision: true }],
+      });
+      h.movableStates.set('push', {
+        progress: 0,
+        angle: 0,
+        anim: { from: 0, to: 1, t: 0, kind: 'progress' },
+      });
+      Object.assign(h.player, { x: 160, y: 132, vx: 0, vy: 0, grounded: true, support: 'push' });
+      h.ai.active = false;
+      for (let i = 0; i < 30 && !h.deaths; i++) h.update(1 / 120, {});
+      return { penetrated, y, deaths: g.deaths, crushDeaths: h.deaths };
     });
     assert.equal(collisionResult.penetrated, false);
     assert.ok(collisionResult.y < 100);
+    assert.equal(collisionResult.deaths, 1);
+    assert.equal(collisionResult.crushDeaths, 1);
     const page = await app.firstWindow(),
       errors = [],
       snap = () => page.evaluate(() => window.__ROOM_LAB__.snapshot());

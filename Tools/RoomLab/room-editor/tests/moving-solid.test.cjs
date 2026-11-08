@@ -69,14 +69,60 @@ test('rider is carried once, blocked push leaves actor unchanged', () => {
   assert.equal(transport(stationary, [b, wall], [{ ...b, y: 50 }, wall]), false);
   assert.deepEqual(stationary, snapshot);
 });
-test('blocked engine motion rolls back and resumes after player leaves', () => {
+test('a trapped rider is crushed instead of stopping the mechanism', () => {
   const g = scene({ x: 5, y: 5 }, { x: 5, y: 1 }, { y: 132, grounded: true, support: 'moving' });
   g.room.tiles = [{ x: 5, y: 3 }];
-  for (let i = 0; i < 50; i++) g.update(1 / 120, {});
-  const stopped = g.movableStates.get('moving').progress;
-  assert.ok(stopped < 0.1);
-  assert.equal(overlap(g.player, g.movableRect(g.room.movables[0])), false);
-  g.player.x = 320;
-  for (let i = 0; i < 50; i++) g.update(1 / 120, {});
-  assert.ok(g.movableStates.get('moving').progress > stopped);
+  for (let i = 0; i < 50 && !g.deaths; i++) g.update(1 / 120, {});
+  assert.equal(g.deaths, 1);
+  assert.ok(g.events.some((e) => JSON.stringify(e).includes('被机关挤压')));
+});
+
+test('sideways and downward pushes into solid terrain crush an idle actor', () => {
+  for (const [from, to, tile] of [
+    [
+      { x: 3, y: 5 },
+      { x: 9, y: 5 },
+      { x: 6, y: 5 },
+    ],
+    [
+      { x: 5, y: 3 },
+      { x: 5, y: 9 },
+      { x: 5, y: 6 },
+    ],
+  ]) {
+    const g = scene(from, to, {});
+    g.room.tiles = [tile];
+    for (let i = 0; i < 50 && !g.deaths; i++) g.update(1 / 120, {});
+    assert.equal(g.deaths, 1);
+    assert.ok(g.events.some((e) => JSON.stringify(e).includes('被机关挤压')));
+  }
+});
+
+test('a platform pushing an idle rider into solid spikes kills on contact', () => {
+  const g = scene({ x: 5, y: 5 }, { x: 5, y: 1 }, { y: 132, grounded: true, support: 'moving' });
+  const spike = require('../src/plugins/registry.cjs').instantiate(
+    g.project,
+    'common.spike',
+    'ceiling-spike',
+    5,
+    3,
+  );
+  spike.collision = true;
+  g.room.objects = [spike];
+  g.objectStates.set(spike.id, {});
+  for (let i = 0; i < 30 && !g.deaths; i++) g.update(1 / 120, {});
+  assert.equal(g.deaths, 1);
+});
+
+test('hazards crossed during fast transport are checked even when the final position is clear', () => {
+  const { transport } = require('../src/runtime/moving-solids.cjs');
+  const { spikeContact } = require('../src/runtime/hazards.cjs');
+  const b = { id: 'b', kind: 'movable', x: 0, y: 100, w: 32, h: 32 };
+  const p = { x: 6, y: 72, w: 20, h: 28, grounded: true, support: 'b', vx: 0, vy: 0 };
+  const spike = { collision: false },
+    rect = { x: 80, y: 64, w: 32, h: 32 };
+  assert.equal(
+    transport(p, [b], [{ ...b, x: 160 }], (actor) => spikeContact(actor, spike, rect)),
+    'hazard',
+  );
 });

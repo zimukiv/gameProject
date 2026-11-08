@@ -716,7 +716,6 @@ class Engine {
       s.cooldown = Math.max(0, s.cooldown - dt);
       Registry.get(o.type).tick?.(this.context(o), o, s, dt);
     }
-    const motionBefore = new Map([...this.movableStates].map(([id, s]) => [id, clone(s)]));
     for (const s of this.movableStates.values())
       if (s.anim) {
         if (s.anim.kind === 'path') {
@@ -732,10 +731,18 @@ class Engine {
         else s.progress = v;
         if (s.anim.t === 0.45) s.anim = null;
       }
-    let colliders = this.colliders();
-    if (!require('./moving-solids.cjs').transport(p, before, colliders)) {
-      this.movableStates = motionBefore;
-      colliders = this.colliders();
+    const colliders = this.colliders();
+    const spikes = this.room.objects.filter((o) => o.type === 'common.spike');
+    const motionResult = require('./moving-solids.cjs').transport(p, before, colliders, (actor) =>
+      spikes.some((o) => require('./hazards.cjs').spikeContact(actor, o, this.objectRect(o))),
+    );
+    if (motionResult === 'hazard') {
+      this.retry('碰到尖刺');
+      return;
+    }
+    if (!motionResult) {
+      this.retry('被机关挤压');
+      return;
     }
     p.invulnerable = Math.max(0, p.invulnerable - dt);
     const crouch = input.down && p.grounded && !p.launched && !p.rail && p.dash <= 0;
@@ -880,10 +887,7 @@ class Engine {
       const solidContact =
         o.collision === true &&
         overlap({ x: p.x - 0.2, y: p.y - 0.2, w: p.w + 0.4, h: p.h + 0.4 }, rect);
-      if (
-        o.type === 'common.spike' &&
-        (solidContact || overlap(p, { ...rect, y: rect.y + 22, h: 10 }))
-      ) {
+      if (o.type === 'common.spike' && require('./hazards.cjs').spikeContact(p, o, rect)) {
         this.retry('碰到尖刺');
         return;
       }
