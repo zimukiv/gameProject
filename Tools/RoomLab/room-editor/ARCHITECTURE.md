@@ -1,5 +1,7 @@
 # Room Lab 架构
 
+3.0.0 build17：机关砖 `movingCollision` 缺省为 true，与总开关 `collision` 独立；`brick-motion.isMoving` 检查路径当前是否产生位移，运行时仅在移动期间省略该砖的实体。附着物按自身设置计算；停止时恢复实体并处理端点重叠。旧旋转机关未写入此字段时保留历史碰撞规则。
+
 3.0.0 build16：`project/block-groups.cjs` 使用房间内 `assemblyId` 组织混合方块，非机关砖用 `attachmentTo` 引用机关砖代表 ID。编辑状态只保存原坐标；运行时 `attachmentOffset` / `worldObject` / `objectRect` 计算随动偏移，不写回原存档，死亡与缓存沿用代表砖状态。动态图形、实体、尖刺触发均采用偏移，动态尖刺按子步插值检查。房间复制重映射 owner，删除与解散清理关系。Unity 原生平台仍不由内置试玩模拟，游戏端需要另行消费新附着字段。
 
 `editor/live-fields.cjs` 将既有属性提交逻辑绑定到 change 事件，复用校验与撤销事务，隐藏原应用按钮；时间步进控件同样触发 change。房间设置等不属于方块属性的确认流程保留。

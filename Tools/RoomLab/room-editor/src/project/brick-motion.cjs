@@ -99,7 +99,23 @@ function position(brick, time) {
   }
   return { x: from.x, y: from.y };
 }
+function isMoving(brick, state) {
+  if (!state?.anim) return false;
+  if (state.anim.kind === 'path' && brick.motionPath) {
+    const time = state.pathTime || 0,
+      target = state.anim.to;
+    const next = time + Math.sign(target - time) * Math.min(0.001, Math.abs(target - time));
+    const a = position(brick, time),
+      b = position(brick, next);
+    return a.x !== b.x || a.y !== b.y;
+  }
+  if (state.anim.kind === 'angle') return state.angle !== state.anim.to;
+  return (
+    state.progress !== state.anim.to && (brick.x !== brick.targetX || brick.y !== brick.targetY)
+  );
+}
 module.exports = {
+  isMoving,
   modes,
   maxNodes,
   isPad,

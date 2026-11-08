@@ -1,9 +1,9 @@
 {
   "repository": "zimukiv/gameProject",
   "version": "3.0.0",
-  "releaseTag": "roomlab-editor-v3.0.0-build16",
+  "releaseTag": "roomlab-editor-v3.0.0-build17",
   "createdAt": "2026-11-08",
-  "programSHA256": "30b27f25348e3acb176ddacbf3c2bddf4542bcf560d8cef25e0038017698db7e",
+  "programSHA256": "51ef4c96c401240674ff3a0c292988ad9dfcabcba60048b626676468fd4c9375",
   "files": [
     {
       "path": "room-cloud/.gitignore",
@@ -677,7 +677,7 @@
     },
     {
       "path": "room-editor/ARCHITECTURE.md",
-      "sha256": "6c60d0b3e686e88481272a9544d97552cbd969e73fc9f18a97fd9d249a4e7064",
+      "sha256": "e827fbe85bafe20956bac695b8e2035cc56668da46e21d5d883f6b62676e8322",
       "encoding": "utf8-lf"
     },
     {
@@ -692,7 +692,7 @@
     },
     {
       "path": "room-editor/docs/CHANGELOG.md",
-      "sha256": "2ac601bf4af33a93e6e9d08705aed35f48087a5fa4516ecf7f58598f3828f444",
+      "sha256": "c8eb02cb78965f71b59ff0f5461c84cdce29e3cd9c9c6aac9f16567f453e204d",
       "encoding": "utf8-lf"
     },
     {
@@ -797,7 +797,7 @@
     },
     {
       "path": "room-editor/examples/physics-project.zip",
-      "sha256": "61ce4fbf309a1eb6bd109f55af8c617e3362aae96788e6469989831d488647cd",
+      "sha256": "ddc96c80351efe87df77a4022386d19933d86f047966cd22092ef9981cb4212d",
       "encoding": "binary"
     },
     {
@@ -847,12 +847,12 @@
     },
     {
       "path": "room-editor/examples/physics/project.json",
-      "sha256": "b24c6eb7e834824f509a5769526e11945213d7c174dd2913496ca5e2ddd1af14",
+      "sha256": "767bd011af6ce395b1936a41f78c96d41b5430e054eb662c6de7c485b578a070",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/examples/three-themes-project.zip",
-      "sha256": "d2cb757b5cf96c3a9715af88ce6eba0b5d98c811988b5641f1c9b948922b75fa",
+      "sha256": "42ca4bcd08217f42b30d26fe50082ae8ffeec12c0834cae13d1ee5682fed6b37",
       "encoding": "binary"
     },
     {
@@ -1032,7 +1032,7 @@
     },
     {
       "path": "room-editor/src/editor/draw.cjs",
-      "sha256": "bedf2cffff8090ebe00238d26ace36ec4d04adc77a662f326691d2ea05535b2f",
+      "sha256": "a56b3035fdc80638d7c830418b7d1d60ace21a80d431f8ab60eaa15a4d9853b4",
       "encoding": "utf8-lf"
     },
     {
@@ -1058,6 +1058,11 @@
     {
       "path": "room-editor/src/editor/menus.cjs",
       "sha256": "7406dc3fe44b3578d2c9661d058a02c9f16ba453fe2773bb517a63c5ed629e6b",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/moving-collision-control.cjs",
+      "sha256": "ea01de650c895788b242ed319a15b2d0ab99cb3b06591998dd68c3439631f5ad",
       "encoding": "utf8-lf"
     },
     {
@@ -1102,7 +1107,7 @@
     },
     {
       "path": "room-editor/src/editor/pages/room.cjs",
-      "sha256": "7724833afa08aa9181cc15cff6a3fc1f3e7e7f5c5dcb9c4748ae4c281b6ed37f",
+      "sha256": "ed96923b4c500787a93b56cf8bec5d8db8a99e0ccae16b52a226c773f4878b66",
       "encoding": "utf8-lf"
     },
     {
@@ -1237,7 +1242,7 @@
     },
     {
       "path": "room-editor/src/project/brick-motion.cjs",
-      "sha256": "d783ece88441ec549e2bf61ae31d089548f3fbb3b2d5077847977504bcc1dcb5",
+      "sha256": "05a24f54fdf09766632b12932190d56c2bc1f32d3b828b9afb7e183879962f41",
       "encoding": "utf8-lf"
     },
     {
@@ -1357,7 +1362,7 @@
     },
     {
       "path": "room-editor/src/runtime/engine.cjs",
-      "sha256": "163092e66a51dd8055478a6ce418a6fe4c7fbead6fee05953b8da1f72e3040e4",
+      "sha256": "b7c60d019bbcab8e0ed7afaa9f1e5de90d70d9fd17796307c4f0fce763cb805f",
       "encoding": "utf8-lf"
     },
     {
@@ -1367,7 +1372,7 @@
     },
     {
       "path": "room-editor/src/runtime/moving-solids.cjs",
-      "sha256": "280ad5e56e387adfb09e7e1e11b2aa1c5180157e586e1d7cbf157013983d0902",
+      "sha256": "802d3d6c0c4ec78bbfe4eaa43c9fb6e22b534664e7ce6785490a64b44530c58a",
       "encoding": "utf8-lf"
     },
     {
@@ -1707,7 +1712,7 @@
     },
     {
       "path": "room-editor/tests/mixed-groups-desktop-smoke.cjs",
-      "sha256": "6e72ea10cb75c32c2d8f5307a383e46a425c565049801a05a26dccc60fe01307",
+      "sha256": "d243904b0c2b34c0c5e73175ac2caaee7fe5e489f92d669467ff336eb222a063",
       "encoding": "utf8-lf"
     },
     {
@@ -1717,7 +1722,7 @@
     },
     {
       "path": "room-editor/tests/moving-solid.test.cjs",
-      "sha256": "cec2223bd5b1c4ef909af1b0873f8205f1d8a65e12488e517e1dfa8723820221",
+      "sha256": "47c6da1fb6fbf6dcf825b729fa1e38a10280610017cac9475f930ae5a1712193",
       "encoding": "utf8-lf"
     },
     {

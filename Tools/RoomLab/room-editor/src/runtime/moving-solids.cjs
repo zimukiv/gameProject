@@ -72,7 +72,8 @@ function transport(player, before, after, lethal = () => false, hazardMotion = [
   const movingHazards = hazardMotion.filter(
     (m) => m.before.x !== m.after.x || m.before.y !== m.after.y,
   );
-  if (!moving.length && !movingHazards.length) return true;
+  const restored = after.filter((b) => b.kind === 'movable' && !old.has(b.id));
+  if (!moving.length && !movingHazards.length && !restored.length) return true;
   const ids = new Set(moving.map((b) => b.id));
   const steps = Math.max(
     1,
@@ -84,6 +85,9 @@ function transport(player, before, after, lethal = () => false, hazardMotion = [
     ),
   );
   const p = { ...player };
+  // A brick finishing a ghost movement may reappear around the actor. Resolve
+  // ordinary contact at the endpoint; disappearance/reappearance is not a push.
+  if (restored.some((b) => overlap(p, b))) separate(p, after, Infinity);
   const at = (b, t) => ({
     ...b,
     x: old.get(b.id).x + (b.x - old.get(b.id).x) * t,

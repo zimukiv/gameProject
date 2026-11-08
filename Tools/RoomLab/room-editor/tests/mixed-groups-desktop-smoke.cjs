@@ -48,8 +48,27 @@ const { _electron } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     await page.keyboard.up('Shift');
     await page.locator('#group-mixed').click();
     assert.equal((await room()).objects[0].attachmentTo, 'group-brick');
+    assert.equal(await page.locator('#brick-moving-collision').isChecked(), true);
+    await page.locator('#brick-moving-collision').uncheck();
+    assert.equal((await room()).movables[0].movingCollision, false);
+    const runtimeCollision = await app.evaluate(({ app }, project) => {
+      const root = app.getAppPath(), req = process.getBuiltinModule('module').createRequire(root + '/package.json');
+      const { Engine } = req(root + '/src/runtime/engine.cjs');
+      const g = new Engine(project, 'calculus'), brick = g.room.movables[0], state = g.movableStates.get(brick.id);
+      const present = () => g.colliders().some((b) => b.id === brick.id);
+      const idle = present(); state.anim = { kind: 'path', to: 0.45 };
+      const moving = present(); state.pathTime = 0.45; state.anim = null;
+      const stopped = present(); brick.collision = false;
+      return { idle, moving, stopped, permanentlyOff: present() };
+    }, (await snap()).project);
+    assert.deepEqual(runtimeCollision, { idle: true, moving: false, stopped: true, permanentlyOff: false });
+    await page.locator('#undo').click();
+    assert.equal(await page.locator('#brick-moving-collision').isChecked(), true);
+    await page.locator('#brick-moving-collision').uncheck();
     assert.equal(await page.locator('#brick-node-save').isVisible(), false);
-    await page.screenshot({ path: path.resolve(__dirname, '../test-output/mixed-group-build16.png') });
+    await page.screenshot({
+      path: path.resolve(__dirname, '../test-output/mixed-group-build16.png'),
+    });
     await page.locator('[data-time-delta="1"]').click();
     assert.equal((await room()).movables[0].motionPath[0].seconds, 1.45);
     await page.locator('[data-time-delta="-0.5"]').click();

@@ -208,3 +208,46 @@ test('an upward rider grazing a wall beside them is not squeezed along the motio
   assert.equal(p.y, 68);
   assert.equal(p.x, 106);
 });
+
+test('moving collision defaults on, disabled movement passes through and restores at rest', () => {
+  const g = scene({ x: 1, y: 5 }, { x: 20, y: 5 }, {});
+  const brick = g.room.movables[0];
+  assert.ok(g.colliders().some((b) => b.id === brick.id));
+  brick.movingCollision = false;
+  assert.ok(!g.colliders().some((b) => b.id === brick.id));
+  for (let i = 0; i < 8; i++) g.update(1 / 120, {});
+  assert.equal(g.player.x, 160, 'moving brick must not push player');
+  for (let i = 0; i < 50; i++) g.update(1 / 120, {});
+  assert.equal(g.deaths, 0);
+  assert.equal(g.movableStates.get(brick.id).anim, null);
+  assert.ok(g.colliders().some((b) => b.id === brick.id));
+  brick.collision = false;
+  assert.ok(
+    !g.colliders().some((b) => b.id === brick.id),
+    'permanent collision toggle takes precedence',
+  );
+});
+
+test('a stationary path segment keeps collision until actual movement starts', () => {
+  const Motion = require('../src/project/brick-motion.cjs');
+  const b = {
+    x: 5,
+    y: 5,
+    motionPath: [
+      { x: 5, y: 5, seconds: 1, mode: 'linear' },
+      { x: 7, y: 5, seconds: 1, mode: 'smooth' },
+    ],
+  };
+  assert.equal(Motion.isMoving(b, { pathTime: 0.5, anim: { kind: 'path', to: 2 } }), false);
+  assert.equal(Motion.isMoving(b, { pathTime: 1.5, anim: { kind: 'path', to: 2 } }), true);
+  assert.equal(Motion.isMoving(b, { pathTime: 2, anim: null }), false);
+  assert.equal(Motion.isMoving(b, { pathTime: 1.5, anim: { kind: 'path', to: 0 } }), true);
+});
+
+test('restoring a ghost brick at its endpoint separates ordinary contact without crush death', () => {
+  const { transport } = require('../src/runtime/moving-solids.cjs');
+  const b = { id: 'restored', kind: 'movable', x: 100, y: 100, w: 32, h: 32 };
+  const p = { x: 106, y: 80, w: 24, h: 28, vx: 0, vy: 0 };
+  assert.equal(transport(p, [], [b]), true);
+  assert.equal(overlap(p, b), false);
+});

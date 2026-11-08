@@ -868,6 +868,7 @@ function inspector(app, r, setTool) {
     o = ref && D.findItem(r, ref);
   if (ref && Native.kinds.includes(ref.kind) && app.state.multiSelection.length <= 1) {
     NativePanel.entity(app, r, ref, host, setTool);
+    require('../moving-collision-control.cjs').install(app, r, ref, o, host);
     installGroupControls(app, r, o, host);
     require('../live-fields.cjs').install(host);
     return;
@@ -888,6 +889,7 @@ function inspector(app, r, setTool) {
     NativePanel.rulesPanel(app, r, o, host);
   } else NativePanel.room(app, r, host);
   installGroupControls(app, r, o, host);
+  require('../moving-collision-control.cjs').install(app, r, ref, o, host);
   if (o) require('../live-fields.cjs').install(host);
 }
 function installGroupControls(app, r, o, host) {

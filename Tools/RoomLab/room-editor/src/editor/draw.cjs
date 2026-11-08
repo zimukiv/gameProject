@@ -236,7 +236,7 @@ function drawRoom(
     ctx.strokeStyle = !game && targets ? Motion.colorFor(r, b.padId) : '#b9c7d5';
     ctx.strokeRect(rect.x, rect.y, T, T);
     text(ctx, '□', rect.x + 16, rect.y + 23, 16, '#d4e2ec', 'center');
-    if (!Collision.enabled(b, 'movables')) ghostBorder(ctx, rect);
+    if (!Collision.enabled(b, 'movables') || (game && !rect.active)) ghostBorder(ctx, rect);
   }
   for (const source of r.objects) {
     const o = game?.worldObject?.(source) || source;
