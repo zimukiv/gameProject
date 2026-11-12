@@ -157,25 +157,31 @@ function seeds({ allThemes = false } = {}) {
     'physics.thermal': { cold: 'seed-thermal-cold', hot: 'seed-thermal-hot' },
     'physics.rail': { idle: 'seed-rail-idle', active: 'seed-rail-active' },
   };
+  const themeBindings = {
+    physics: bindings,
+    calculus: {
+      'common.solid': { idle: 'seed-metal' },
+      'calculus.integral': { idle: 'seed-calculus-integral', active: 'seed-calculus-integral' },
+      'calculus.derivative': {
+        idle: 'seed-calculus-derivative',
+        active: 'seed-calculus-derivative',
+      },
+    },
+    slacker: {
+      'common.solid': { idle: 'seed-metal' },
+      'slacker.checkin': { idle: 'seed-slacker-checkin', active: 'seed-slacker-checkin' },
+      'slacker.awake': { idle: 'seed-slacker-awake', active: 'seed-slacker-awake' },
+    },
+  };
   return {
     assets,
     files,
     bindings,
-    themeBindings: {
-      physics: bindings,
-      calculus: {
-        'common.solid': { idle: 'seed-metal' },
-        'calculus.integral': { idle: 'seed-calculus-integral', active: 'seed-calculus-integral' },
-        'calculus.derivative': {
-          idle: 'seed-calculus-derivative',
-          active: 'seed-calculus-derivative',
-        },
-      },
-      slacker: {
-        'common.solid': { idle: 'seed-metal' },
-        'slacker.checkin': { idle: 'seed-slacker-checkin', active: 'seed-slacker-checkin' },
-        'slacker.awake': { idle: 'seed-slacker-awake', active: 'seed-slacker-awake' },
-      },
+    themeBindings,
+    allBindings: {
+      ...themeBindings.physics,
+      ...themeBindings.calculus,
+      ...themeBindings.slacker,
     },
   };
 }

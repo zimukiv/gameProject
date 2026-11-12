@@ -348,7 +348,7 @@ app.whenReady().then(() => {
     minHeight: 650,
     show: !testing,
     backgroundColor: '#0e1521',
-    title: 'Room Lab · 三主题大关编辑器 v3.0.0',
+    title: 'Room Lab · 三主题大关编辑器 v3.1.0',
     autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),

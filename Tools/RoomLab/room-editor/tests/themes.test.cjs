@@ -56,25 +56,42 @@ test('opening an old physics project never appends or rewrites courses', () => {
   assert.deepEqual(M.validate(p).errors, []);
 });
 
-test('theme tools are exclusive while shared common tools stay available', () => {
+const ALL_MECHANISMS = [
+  'physics.jet',
+  'physics.ice',
+  'physics.thermal',
+  'physics.rail',
+  'calculus.integral',
+  'calculus.derivative',
+  'slacker.checkin',
+  'slacker.awake',
+];
+
+test('all themed courses expose every mechanism while legacy stays isolated', () => {
   const typeList = (kind) => Registry.list(kind).map((d) => d.type),
-    physics = typeList('physics'),
-    calculus = typeList('calculus'),
-    slacker = typeList('slacker'),
     legacy = typeList('legacy');
-  assert.ok(!physics.some((t) => t.startsWith('calculus.') || t.startsWith('slacker.')));
-  assert.ok(!calculus.some((t) => t.startsWith('physics.') || t.startsWith('slacker.')));
-  assert.ok(!slacker.some((t) => t.startsWith('physics.') || t.startsWith('calculus.')));
-  for (const type of ['calculus.integral', 'calculus.derivative'])
-    assert.ok(calculus.includes(type));
-  for (const type of ['slacker.checkin', 'slacker.awake']) assert.ok(slacker.includes(type));
-  for (const common of ['common.coin', 'common.checkpoint', 'common.aiStart', 'common.portalIn']) {
-    assert.ok(physics.includes(common), common);
-    assert.ok(calculus.includes(common), common);
-    assert.ok(slacker.includes(common), common);
+  for (const kind of ['physics', 'calculus', 'slacker']) {
+    const tools = typeList(kind);
+    for (const type of ALL_MECHANISMS) assert.ok(tools.includes(type), kind + ' / ' + type);
+    for (const common of ['common.coin', 'common.checkpoint', 'common.aiStart', 'common.portalIn'])
+      assert.ok(tools.includes(common), kind + ' / ' + common);
   }
   assert.ok(legacy.includes('legacy.integral'));
   assert.ok(!legacy.includes('calculus.integral'));
+  assert.ok(!legacy.includes('physics.jet'));
+});
+
+test('every themed course can instantiate every mechanism without changing its kind', () => {
+  const p = M.themedExample();
+  for (const kind of ['physics', 'calculus', 'slacker']) {
+    const course = p.courses.find((c) => c.kind === kind);
+    for (const type of ALL_MECHANISMS) {
+      const object = Registry.instantiate(p, type, 'mixed-' + kind + '-' + type, 2, 2, course);
+      assert.equal(object.type, type);
+      assert.deepEqual(Registry.validateObject(p, object), []);
+    }
+    assert.equal(course.kind, kind);
+  }
 });
 
 test('calculus mechanisms aggregate and expand through the group-displacement context', () => {
@@ -186,19 +203,22 @@ test('new courses carry a theme starter room and preserve existing courses', () 
   assert.throws(() => Courses.add(p, 'physics'), /12/);
 });
 
-test('seeded theme artwork binds to all three starter courses and stays theme-scoped', () => {
+test('seeded theme artwork is available to every starter course', () => {
   const s = Seeds.seeds({ allThemes: true }),
     p = M.themedExample();
   p.assets = s.assets;
+  for (const course of p.courses) course.artBindings = { ...s.allBindings, ...course.artBindings };
+  for (const [type, binding] of Object.entries(s.allBindings)) {
+    assert.ok(type);
+    for (const id of Object.values(binding))
+      assert.ok(
+        s.assets.some((a) => a.id === id),
+        'missing seed ' + id,
+      );
+  }
   for (const course of p.courses)
-    course.artBindings = { ...(s.themeBindings[course.kind] || {}), ...course.artBindings };
-  for (const kind of ['calculus', 'slacker'])
-    for (const binding of Object.values(s.themeBindings[kind]))
-      for (const id of Object.values(binding))
-        assert.ok(
-          s.assets.some((a) => a.id === id),
-          'missing seed ' + id,
-        );
+    for (const type of ALL_MECHANISMS)
+      assert.ok(Catalog.available(p, course.id, type).length > 0, course.kind + ' / ' + type);
   assert.deepEqual(M.validate(p).errors, []);
   assert.deepEqual(
     M.validate(p).warnings.filter((w) => w.includes('缺失')),

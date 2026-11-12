@@ -85,22 +85,28 @@ const assert = require('node:assert/strict'),
     assert.deepEqual(projects.slice(0, 3), before);
     await leavePlay();
 
-    // Each theme starter room exposes only its own tools and is actually playable.
+    // Every theme starter room exposes the unified mechanism palette and remains playable.
+    const unifiedTools = [
+      'physics.jet',
+      'physics.ice',
+      'physics.thermal',
+      'physics.rail',
+      'calculus.integral',
+      'calculus.derivative',
+      'slacker.checkin',
+      'slacker.awake',
+    ];
     const expectations = {
-      physics: {
-        tools: ['physics.jet'],
-        absent: ['calculus.integral', 'slacker.checkin'],
-        events: [],
-      },
+      physics: { tools: unifiedTools, absent: [], events: [] },
       calculus: {
-        tools: ['calculus.integral', 'calculus.derivative'],
-        absent: ['physics.jet', 'slacker.checkin'],
+        tools: unifiedTools,
+        absent: [],
         events: ['calculus-integral', 'calculus-derivative'],
         won: true,
       },
       slacker: {
-        tools: ['slacker.checkin', 'slacker.awake'],
-        absent: ['physics.jet', 'calculus.integral'],
+        tools: unifiedTools,
+        absent: [],
         events: ['checkin', 'awake'],
         won: true,
       },
@@ -110,10 +116,18 @@ const assert = require('node:assert/strict'),
       await page.locator(`[data-course="${kind}"] [data-enter]`).click();
       await page.getByRole('button', { name: '房间列表', exact: true }).click();
       await page.getByRole('button', { name: '编辑房间', exact: true }).first().click();
-      for (const type of want.tools)
+      for (const type of want.tools) {
         assert.equal(await page.locator(`[data-block-type="${type}"]`).count(), 1, kind + ' tool');
+        assert.equal(
+          await page.locator(`[data-block-type="${type}"] img`).count(),
+          1,
+          kind + ' artwork / ' + type,
+        );
+      }
       for (const type of want.absent)
         assert.equal(await page.locator(`[data-block-type="${type}"]`).count(), 0, kind + ' leak');
+      assert.equal(await page.locator('[data-tool="movable"]').count(), 1, kind + ' movable');
+      assert.equal(await page.locator('[data-tool="zone"]').count(), 1, kind + ' thermal zone');
       await page.locator('#play-room').click();
       await page.keyboard.down('KeyD');
       await page.waitForFunction(

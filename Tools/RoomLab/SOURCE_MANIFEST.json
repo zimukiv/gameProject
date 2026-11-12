@@ -1,9 +1,9 @@
 {
   "repository": "zimukiv/gameProject",
-  "version": "3.0.0",
-  "releaseTag": "roomlab-editor-v3.0.0-build19",
-  "createdAt": "2026-11-08",
-  "programSHA256": "4bb02ce42d6cc7238f535ca9429221f2ba0e2c328e4d604332a0f20566b40839",
+  "version": "3.1.0",
+  "releaseTag": "roomlab-editor-v3.1.0",
+  "createdAt": "2026-11-12",
+  "programSHA256": "2a122016a7234ad6385cf903bc5377c5d0881982a1fb139ef587ac679d6efbaf",
   "files": [
     {
       "path": "room-cloud/.gitignore",
@@ -687,7 +687,7 @@
     },
     {
       "path": "room-editor/ARCHITECTURE.md",
-      "sha256": "94e88939c29f1898c481fb842dd63c39e6c83e28b2760ab0d4532e3e45f44a48",
+      "sha256": "9939b900368824ba674d6312f9e2e2a1d941deb990cf2e1bd5f643535f2abe2f",
       "encoding": "utf8-lf"
     },
     {
@@ -702,7 +702,7 @@
     },
     {
       "path": "room-editor/docs/CHANGELOG.md",
-      "sha256": "e296b495eb640ad783edfa991a1c13530f38b098593ff7dbecfe6e41bbaea9a9",
+      "sha256": "16c14eada49726c3232b914099cfe1d155fd90b04ce5a503392c2c31c241180f",
       "encoding": "utf8-lf"
     },
     {
@@ -801,6 +801,11 @@
       "encoding": "utf8-lf"
     },
     {
+      "path": "room-editor/docs/RELEASE_NOTES_3.1.0.md",
+      "sha256": "62e60b724d383db92d1e8b91cb231b8209c33d925bde51fe7b195fec223c1a34",
+      "encoding": "utf8-lf"
+    },
+    {
       "path": "room-editor/docs/TESTING.md",
       "sha256": "ede88d0fac50041445d30ec4e23275a49e5472bf2ecca236abf12fccfcc08612",
       "encoding": "utf8-lf"
@@ -867,7 +872,7 @@
     },
     {
       "path": "room-editor/package.json",
-      "sha256": "6d71dbacd5d8f9afd1c6fb98862356e659396d34dc4dcd2656c8ecbb06021484",
+      "sha256": "de2ec8073afb72fc953d7acaf84520460d987bb1c807b11a6ae51033fd4b794f",
       "encoding": "utf8-lf"
     },
     {
@@ -882,7 +887,7 @@
     },
     {
       "path": "room-editor/README.md",
-      "sha256": "d0190727c6a97f8be3980bce8d894842ed774ee97cb61aab7148dfe30250ff02",
+      "sha256": "b3efa38da36c5c7b0f89b5b9d174da83e67399f4e284000235fdf81947c702d9",
       "encoding": "utf8-lf"
     },
     {
@@ -947,7 +952,7 @@
     },
     {
       "path": "room-editor/src/assets/catalog.cjs",
-      "sha256": "872b0b7697cb9230c031187df24c15e96afefd9caa8752baae347b7fd401a021",
+      "sha256": "8c4db0a2855aefae6207e15b18786b921e1ea170e46bc8bccb31907a76d5675c",
       "encoding": "utf8-lf"
     },
     {
@@ -957,7 +962,7 @@
     },
     {
       "path": "room-editor/src/assets/seeds.cjs",
-      "sha256": "9bfa034f60372090ad5e9a26ba132705555e8932499d6c27437e682ab5bf3a7c",
+      "sha256": "2c4b9547c08a0ca36559859cbc03c58c4384ff1c68812745fc01ad48531e06b2",
       "encoding": "utf8-lf"
     },
     {
@@ -1002,7 +1007,7 @@
     },
     {
       "path": "room-editor/src/desktop/main.cjs",
-      "sha256": "40bf9a9e232f66dbcc46aafdaa7552ad68319b96a09c431883087f9fba40ab91",
+      "sha256": "eba148f574403fe1ce0abd9b5c243cf689b60d44e4cbd1cc0c1a015bf54a233c",
       "encoding": "utf8-lf"
     },
     {
@@ -1067,7 +1072,7 @@
     },
     {
       "path": "room-editor/src/editor/index.html",
-      "sha256": "8a9374dc8a0b69f740e21d6acc0f6b079629ba23de883b6a8faba139b4a9a7cc",
+      "sha256": "54f41adb4baafd7e617f583f173507331ed9c1bc14145f63c967999da17869cd",
       "encoding": "utf8-lf"
     },
     {
@@ -1137,7 +1142,7 @@
     },
     {
       "path": "room-editor/src/editor/palette.cjs",
-      "sha256": "e593a623c12dfc70e5678989804105a5dd5deda3a26263a53ddcf075450a11d0",
+      "sha256": "3ccc039b99e0373941457aa6000e2ecbf713a831a18337f85d442f499c85d254",
       "encoding": "utf8-lf"
     },
     {
@@ -1177,7 +1182,7 @@
     },
     {
       "path": "room-editor/src/editor/store.cjs",
-      "sha256": "e0b3dc02a328c3bcf985051808c745cae6261eaedd7908730d7d19ed3b360902",
+      "sha256": "d55d4ad4ff73c99212f0ad900e1b6970166350b8aa2a63ef5b1844f643cc5bca",
       "encoding": "utf8-lf"
     },
     {
@@ -1247,7 +1252,7 @@
     },
     {
       "path": "room-editor/src/plugins/registry.cjs",
-      "sha256": "4eeaac60a9aeb1ed3bd88c435153224c65881186126c6e82503fbc60d0592180",
+      "sha256": "833b7d417b195e45e74463b2ee69924e83ed20863d424f0aaccd4ec1279e6cb8",
       "encoding": "utf8-lf"
     },
     {
@@ -1867,12 +1872,12 @@
     },
     {
       "path": "room-editor/tests/themes-ui-smoke.cjs",
-      "sha256": "3c078e3cf6a844c62a7cb37310dc604ab2ea8899a3c8685c30c0401634594119",
+      "sha256": "292e99662f90f8ebac0712a5e0932f188b49c07be8331f3f4221b861609b7bc9",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/tests/themes.test.cjs",
-      "sha256": "e5e75e7644e2d16e1315da1330aa25e6d605fb79eb8a57b32954a3ba03f7e35e",
+      "sha256": "34654858a7d7a2aeb26b410eef7b68d81b799795b856f413786bca0e45b37687",
       "encoding": "utf8-lf"
     },
     {

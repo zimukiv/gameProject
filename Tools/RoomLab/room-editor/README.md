@@ -1,6 +1,8 @@
-# Room Lab 3.0.0 · 三主题大关编辑器
+# Room Lab 3.1.0 · 三主题大关编辑器
 
 源码与程序包发布至 [GitHub](https://github.com/zimukiv/gameProject/tree/main/Tools/RoomLab)。每次修改前先执行 `node scripts/check-upstream.cjs` 核对远端最新源码，详见 [协作与发布规则](docs/GITHUB_WORKFLOW.md)。
+
+3.1 起物理、高数、水课三个大关不再限制机关类型：每个大关的每个房间都可使用三套主题机关、机关砖和温控区域；三套内置素材默认可用，自定义素材仍按大关隔离。详见 [3.1 使用说明](docs/RELEASE_NOTES_3.1.0.md)。
 
 3.0.0 build12 新增测试版关卡数据与编辑兼容，支持扩展平台、巡逻、标记、清醒分层、跨房信号及条件门；兼容最新互动过门版与原作者物理关隔离规则。内置试玩不执行这些 Unity 扩展，须导出到游戏验证。见 [测试版兼容说明](docs/NATIVE_COMPAT.md)。
 

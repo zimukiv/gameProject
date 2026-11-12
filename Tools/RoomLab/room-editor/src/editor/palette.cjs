@@ -1,6 +1,5 @@
 'use strict';
 const Registry = require('../plugins/registry.cjs');
-const Themes = require('../project/themes.cjs');
 const { esc } = require('./dom.cjs');
 
 function card(app, course, { tool, type, label, glyph, hint }) {
@@ -30,27 +29,22 @@ function card(app, course, { tool, type, label, glyph, hint }) {
   return `<button class="block-card" ${type ? `data-block-type="${esc(type)}"` : `data-tool="${tool}"`} aria-label="${esc(tool === 'tile' ? '▦ 地形' : label)}" title="${esc(hint || label)}" aria-pressed="false"><span class="block-icon">${url ? `<img src="${esc(url)}" alt="">` : esc(glyph)}</span><span>${esc(short)}</span></button>`;
 }
 function render(app, course) {
-  const theme = Themes.theme(course.kind);
   const defs = Registry.list(course.kind);
-  // Tools from another theme are never listed: the registry already filters by
-  // course.kind, and the theme group only keeps non-common mechanisms.
-  const themeDefs = defs.filter((d) => !d.type.startsWith('common.'));
+  // Every authored course shares one mechanism palette. Theme metadata still
+  // controls the course card, colour and starter content, but not tool access.
+  const mechanismDefs = defs.filter((d) => !d.type.startsWith('common.'));
   const groups = [
     ['地形', [{ tool: 'tile', label: '地形', glyph: '▦', hint: '拖动画地形，Shift 画矩形' }]],
     [
-      theme.label + '机关',
+      '机关',
       [
-        ...(course.kind === 'calculus'
-          ? [
-              {
-                tool: 'movable',
-                label: '机关砖',
-                glyph: '▣',
-                hint: '在节点图设置运动，选中积分或求导板可快捷绑定',
-              },
-            ]
-          : []),
-        ...themeDefs.flatMap((d) => [
+        {
+          tool: 'movable',
+          label: '机关砖',
+          glyph: '▣',
+          hint: '在节点图设置运动，并可被积分或求导板绑定',
+        },
+        ...mechanismDefs.flatMap((d) => [
           { type: d.type, label: d.name, glyph: d.glyph },
           ...(d.type === 'physics.thermal'
             ? [

@@ -74,7 +74,8 @@ function inCourse(a, course) {
   if (!course) return false;
   if (a.courseId === course.id) return true;
   const seed = a.id?.startsWith('seed-') && a.hash === a.id;
-  return seed && (a.id === 'seed-metal' || a.courseId === course.kind);
+  // Built-in artwork is shared by every course so cross-theme mechanisms work.
+  return seed;
 }
 function available(project, courseId, type) {
   const group = groupForType(type),

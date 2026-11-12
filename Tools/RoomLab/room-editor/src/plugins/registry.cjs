@@ -27,7 +27,11 @@ function get(type) {
   );
 }
 function list(kind = 'physics') {
-  return modules.filter((d) => !d.hidden && (d.courses.includes(kind) || d.courses.includes('*')));
+  return modules.filter((d) => {
+    if (d.hidden) return false;
+    if (kind === 'legacy') return d.courses.includes('legacy') || d.courses.includes('*');
+    return !d.courses.includes('legacy');
+  });
 }
 function params(project, object) {
   const explicit = { ...project.blockDefaults?.[object.type]?.params, ...object.params };
