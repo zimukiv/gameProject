@@ -65,6 +65,7 @@ const ALL_MECHANISMS = [
   'calculus.derivative',
   'slacker.checkin',
   'slacker.awake',
+  'slacker.teacher',
 ];
 
 test('all themed courses expose every mechanism while legacy stays isolated', () => {
@@ -94,7 +95,7 @@ test('every themed course can instantiate every mechanism without changing its k
   }
 });
 
-test('calculus mechanisms aggregate and expand through the group-displacement context', () => {
+test('calculus mechanisms require a calculator and aggregate through the group-displacement context', () => {
   const p = M.themedExample(),
     c = p.courses.find((course) => course.kind === 'calculus'),
     engine = new Engine(p, c.id, c.rooms[0].id),
@@ -102,6 +103,7 @@ test('calculus mechanisms aggregate and expand through the group-displacement co
     integral = room.objects.find((o) => o.type === 'calculus.integral'),
     derivative = room.objects.find((o) => o.type === 'calculus.derivative');
   assert.ok(integral && derivative);
+  engine.items['item.calculator'] = 1;
   assert.equal(typeof integral.params.once, 'boolean');
   engine.fire(integral);
   assert.ok(engine.events.some((e) => e.type === 'calculus-integral'));
@@ -112,6 +114,25 @@ test('calculus mechanisms aggregate and expand through the group-displacement co
   assert.ok(engine.events.some((e) => e.type === 'calculus-derivative'));
   assert.ok(engine.movableStates.get(room.id + '-gate-1').anim);
   assert.equal(engine.snapshot().objects[derivative.id].fired, true);
+});
+
+test('calculus mechanisms do nothing without a calculator and preserve their state', () => {
+  const p = M.themedExample(),
+    c = p.courses.find((course) => course.kind === 'calculus'),
+    room = c.rooms[0],
+    source = room.objects.find((o) => o.type === 'calculus.integral'),
+    engine = new Engine(p, c.id, room.id),
+    integral = engine.room.objects.find((o) => o.id === source.id),
+    state = engine.objectStates.get(integral.id);
+  assert.equal(engine.fire(integral), false);
+  assert.equal(state.used, false);
+  assert.equal(state.cooldown, 0);
+  assert.equal(state.fired, undefined);
+  assert.ok(engine.events.some((e) => e.type === 'item-required' && e.item === 'item.calculator'));
+  engine.items['item.calculator'] = 1;
+  assert.equal(engine.fire(integral), true);
+  assert.equal(state.used, true);
+  assert.equal(state.fired, true);
 });
 
 test('explicit calculus bindings drive timed segments beyond the old range and reverse on retrigger', () => {
@@ -129,6 +150,7 @@ test('explicit calculus bindings drive timed segments beyond the old range and r
   ]);
   const engine = new Engine(project, course.id, room.id),
     livePad = engine.room.objects.find((o) => o.id === pad.id);
+  engine.items['item.calculator'] = 1;
   engine.fire(livePad);
   for (let i = 0; i < 6; i++) engine.update(1 / 60);
   assert.ok(Math.abs(engine.movableRect(brick).x / 32 - (brick.x + 1)) < 1e-8);
@@ -143,23 +165,130 @@ test('explicit calculus bindings drive timed segments beyond the old range and r
   assert.ok(M.resizeRoom(room, 13, 17).out.some((item) => item.id === brick.id));
 });
 
-test('slacker check-in records visits and wakefulness grants a measurable speed gain', () => {
+test('slacker check-in does nothing without a phone and preserves its state', () => {
+  const p = M.themedExample(),
+    c = p.courses.find((course) => course.kind === 'slacker'),
+    room = c.rooms[0],
+    source = room.objects.find((o) => o.type === 'slacker.checkin'),
+    engine = new Engine(p, c.id, room.id),
+    checkin = engine.room.objects.find((o) => o.id === source.id),
+    state = engine.objectStates.get(checkin.id);
+  assert.equal(engine.fire(checkin), false);
+  assert.equal(state.used, false);
+  assert.equal(state.signIns, 0);
+  assert.ok(engine.events.some((e) => e.type === 'item-required' && e.item === 'item.phone'));
+  engine.items['item.phone'] = 1;
+  assert.equal(engine.fire(checkin), true);
+  assert.equal(state.signIns, 1);
+});
+
+test('slacker check-in records visits and awake accelerates in the entry direction without collision', () => {
   const p = M.themedExample(),
     c = p.courses.find((course) => course.kind === 'slacker'),
     engine = new Engine(p, c.id, c.rooms[0].id),
     room = c.rooms[0],
     checkin = room.objects.find((o) => o.type === 'slacker.checkin'),
-    awake = room.objects.find((o) => o.type === 'slacker.awake');
+    awake = room.objects.find((o) => o.type === 'slacker.awake'),
+    placed = Registry.instantiate(p, 'slacker.awake', 'new-awake', 3, 3, c);
+  engine.items['item.phone'] = 1;
+  engine.items['item.coffee'] = 1;
+  assert.equal(placed.collision, true);
+  assert.equal(placed.trigger.mode, 'region');
+  assert.ok(!engine.colliders().some((item) => item.id === awake.id));
   engine.fire(checkin);
   assert.equal(engine.snapshot().objects[checkin.id].signIns, 1);
   assert.equal(engine.visualState(checkin), 'active');
   assert.ok(engine.events.some((e) => e.type === 'checkin' && e.count === 1));
-  engine.player.vx = 0;
-  engine.fire(awake);
-  assert.ok(Math.abs(engine.player.vx) >= awake.params.speed);
-  assert.equal(engine.snapshot().objects[awake.id].boosts, 1);
-  assert.ok(engine.events.some((e) => e.type === 'awake' && e.speed === awake.params.speed));
+  const cases = [
+    { vx: 320, vy: 0, want: { x: 1, y: 0 } },
+    { vx: -320, vy: 0, want: { x: -1, y: 0 } },
+    { vx: 0, vy: -300, want: { x: 0, y: -1 } },
+    { vx: 0, vy: 300, want: { x: 0, y: 1 } },
+  ];
+  for (const item of cases) {
+    const state = engine.objectStates.get(awake.id);
+    Object.assign(state, { cooldown: 0, used: false, firedDuringContact: false });
+    Object.assign(engine.player, { vx: item.vx, vy: item.vy, launched: false });
+    engine.fire(awake);
+    assert.equal(engine.player.vx, item.want.x * awake.params.speed);
+    assert.equal(engine.player.vy, item.want.y * awake.params.speed);
+  }
+  assert.equal(engine.snapshot().objects[awake.id].boosts, 4);
+  assert.ok(
+    engine.events.some(
+      (e) =>
+        e.type === 'awake' &&
+        e.speed === awake.params.speed &&
+        e.direction?.x === 0 &&
+        e.direction?.y === 1,
+    ),
+  );
   assert.equal(engine.visualState(awake), 'active');
+
+  const blocked = new Engine(p, c.id, c.rooms[0].id),
+    blockedAwake = blocked.room.objects.find((o) => o.type === 'slacker.awake');
+  blockedAwake.collision = false;
+  assert.ok(blocked.colliders().some((item) => item.id === blockedAwake.id));
+  assert.equal(blocked.fire(blockedAwake), false);
+  assert.equal(blocked.objectStates.get(blockedAwake.id).boosts, 0);
+  assert.ok(!blocked.events.some((e) => e.type === 'item-required'));
+
+  const passed = new Engine(p, c.id, c.rooms[0].id),
+    liveAwake = passed.room.objects.find((o) => o.type === 'slacker.awake');
+  passed.items['item.coffee'] = 1;
+  assert.ok(!passed.colliders().some((item) => item.id === liveAwake.id));
+  Object.assign(passed.player, {
+    x: liveAwake.x * 32 + 4,
+    y: liveAwake.y * 32 + 4,
+    vx: 0,
+    vy: 0,
+  });
+  passed.update(1 / 120, { right: true });
+  assert.equal(passed.player.vx, liveAwake.params.speed);
+  assert.equal(passed.player.vy, 0);
+  assert.ok(
+    passed.events.some(
+      (e) => e.type === 'awake' && e.direction?.x === 1 && e.direction?.y === 0,
+    ),
+  );
+});
+
+test('awake 1.0 and 1.1 projects migrate to solid defaults and preserve later overrides', () => {
+  const p = M.themedExample(),
+    awake = p.courses
+      .find((course) => course.kind === 'slacker')
+      .rooms[0].objects.find((o) => o.type === 'slacker.awake');
+  p.pluginManifest['slacker.awake'] = '1.0.0';
+  awake.collision = true;
+  awake.y = 12;
+  awake.trigger = { ...awake.trigger, mode: 'foot' };
+  const migrated = M.migrate(p),
+    migratedAwake = migrated.courses
+      .find((course) => course.kind === 'slacker')
+      .rooms[0].objects.find((o) => o.type === 'slacker.awake');
+  assert.equal(migratedAwake.collision, true);
+  assert.equal(migratedAwake.trigger.mode, 'region');
+  assert.equal(migratedAwake.y, 11);
+  assert.equal(migrated.pluginManifest['slacker.awake'], '1.2.0');
+  migratedAwake.collision = false;
+  const reopened = M.migrate(migrated),
+    reopenedAwake = reopened.courses
+      .find((course) => course.kind === 'slacker')
+      .rooms[0].objects.find((o) => o.type === 'slacker.awake');
+  assert.equal(reopenedAwake.collision, false);
+
+  const prior = M.themedExample(),
+    priorAwake = prior.courses
+      .find((course) => course.kind === 'slacker')
+      .rooms[0].objects.find((o) => o.type === 'slacker.awake');
+  prior.pluginManifest['slacker.awake'] = '1.1.0';
+  priorAwake.collision = false;
+  const migratedPrior = M.migrate(prior),
+    migratedPriorAwake = migratedPrior.courses
+      .find((course) => course.kind === 'slacker')
+      .rooms[0].objects.find((o) => o.type === 'slacker.awake');
+  assert.equal(migratedPriorAwake.collision, true);
+  assert.equal(migratedPrior.pluginManifest['slacker.awake'], '1.2.0');
 });
 
 test('both theme example routes cross all three rooms without retries', () => {

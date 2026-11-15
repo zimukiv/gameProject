@@ -14,9 +14,9 @@ function rearmAI(ctx, o, state) {
     Object.assign(state, { used: false, cooldown: 0, firedDuringContact: false, waitingAI: false });
 }
 module.exports = [
-  { ...base, type: 'common.coin', name: '大 token', glyph: 'T' },
-  { ...base, type: 'common.small', name: '小 token', glyph: '+' },
-  { ...base, type: 'common.collectible', name: '收藏品', glyph: '★' },
+  { ...base, type: 'common.coin', name: '大 token', glyph: 'T', collectible: true },
+  { ...base, type: 'common.small', name: '小 token', glyph: '+', collectible: true },
+  { ...base, type: 'common.collectible', name: '收藏品', glyph: '★', collectible: true },
   { ...base, type: 'common.spike', name: '尖刺', glyph: '^' },
   {
     ...base,

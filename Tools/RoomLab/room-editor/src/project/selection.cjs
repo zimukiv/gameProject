@@ -64,6 +64,7 @@ function move(room, refs, dx, dy) {
   );
   if ([...selected].some((t) => stationary.has(t.x + dx + ',' + (t.y + dy)))) return false;
   for (const { ref, item } of members) {
+    if (require('./teacher-links.cjs').isTeacher(item)) require('./teacher-links.cjs').move(item, dx);
     if (Native.kinds.includes(ref.kind)) Native.move(ref.kind, item, dx, dy);
     else if (item.type === 'physics.rail') Nodes.moveOwner(item, item.x + dx, item.y + dy);
     else if (ref.kind === 'movables') Motion.moveOwner(item, item.x + dx, item.y + dy);
@@ -108,5 +109,6 @@ function remove(course, room, refs) {
     if (gone.has(o.params?.unlockPadId)) o.params.unlockPadId = '';
     if (gone.has(o.params?.zoneId)) o.params.zoneId = '';
   }
+  require('./teacher-links.cjs').cleanup(room);
 }
 module.exports = { key, get, box, combine, move, remove };

@@ -4,7 +4,7 @@
 
 ## 定义与钩子
 
-定义必须包含 type（稳定命名空间）、version、name、glyph、category、courses、slots、defaults、schema。collider 为 pad/tile 或省略，trigger 为 foot/region/none。schema 支持 number（min/max）、boolean、select（values）、zone、path、text。模块版本写入项目 pluginManifest，主版本不兼容时拒绝试玩。
+定义必须包含 type（稳定命名空间）、version、name、glyph、category、courses、slots、defaults、schema。collider 为 pad/tile 或省略，trigger 为 foot/region/none；可选 defaultCollision=false 让新放置实例初始无碰撞，仍可在对象属性中覆盖；collectible=true 使对象可被接触拾取，item=true 会把拾取结果计入试玩背包；requiresItem 可指定使用时必须持有的道具类型；isSolid(ctx,o,state) 可动态切换对象当前是否具有实体；dynamicSolidity=true 时该结果优先于实例碰撞开关；runtimePosition(o,state) 可提供运行时绘制与碰撞位置，onPlayerContact(ctx,o,state) 处理玩家接触并返回 retry 表示触发死亡回退。schema 支持 number（min/max）、boolean、select（values）、zone、path、text。模块版本写入项目 pluginManifest，主版本不兼容时拒绝试玩。
 
 ```javascript
 module.exports = {

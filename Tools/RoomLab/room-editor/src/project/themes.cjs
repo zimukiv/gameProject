@@ -34,8 +34,13 @@ const THEMES = [
 const PLUGIN_VERSIONS = {
   'calculus.integral': '1.0.0',
   'calculus.derivative': '1.0.0',
-  'slacker.checkin': '1.0.0',
-  'slacker.awake': '1.0.0',
+  'slacker.checkin': '1.1.0',
+  'slacker.awake': '1.2.0',
+  'item.coffee': '1.0.0',
+  'item.calculator': '1.0.0',
+  'item.phone': '1.0.0',
+  'item.icedTea': '1.0.0',
+  'slacker.teacher': '1.0.0',
 };
 function theme(kind) {
   return THEMES.find((t) => t.kind === kind) || { ...THEMES[0], kind, label: kind };
@@ -73,6 +78,7 @@ function buildRoom(kind, id) {
       movable(id + '-gate-2', 18, 12, 18, 8, id + '-derivative'),
     ];
     r.objects = [
+      M.object(id + '-calculator', 'item.calculator', 2, 13),
       M.object(id + '-integral', 'calculus.integral', 5, 14, {
         once: true,
         cooldown: 1,
@@ -96,8 +102,10 @@ function buildRoom(kind, id) {
     r.graph = { x: 30, y: 470 };
     M.floor(r, 0, 25, 12);
     r.objects = [
+      M.object(id + '-phone', 'item.phone', 2, 11),
       M.object(id + '-checkin', 'slacker.checkin', 5, 12, { cooldown: 1 }),
-      M.object(id + '-awake', 'slacker.awake', 12, 12, { speed: 520, lift: 140, cooldown: 3 }),
+      M.object(id + '-awake', 'slacker.awake', 12, 11, { speed: 520, cooldown: 3 }),
+      M.object(id + '-coffee', 'item.coffee', 7, 11),
       M.object(id + '-coin', 'common.coin', 16, 11),
     ];
     r.exits = [
@@ -203,15 +211,13 @@ function demonstrationRooms(course, stem = course.id) {
       M.object(practice.id + '-checkin-2', 'slacker.checkin', 16, 12),
     ];
 
-    challenge.name = '03 清醒练习 · 加速跨空档';
-    challenge.notes = '踩清醒板后保持向右，利用上抛和冲量跨过地面空档。';
+    challenge.name = '03 清醒练习 · 四向加速';
+    challenge.notes = '从上下左右任一方向进入清醒板，都会沿进入方向获得加速；横向穿过可快速抵达出口。';
     challenge.tiles = [];
-    M.floor(challenge, 0, 10, 12);
-    M.floor(challenge, 14, challenge.cols - 1, 12);
+    M.floor(challenge, 0, challenge.cols - 1, 12);
     challenge.objects = [
-      M.object(challenge.id + '-awake', 'slacker.awake', 10, 12, {
+      M.object(challenge.id + '-awake', 'slacker.awake', 10, 11, {
         speed: 690,
-        lift: 260,
         cooldown: 3,
       }),
       M.object(challenge.id + '-coin', 'common.coin', 17, 11),

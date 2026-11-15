@@ -8,6 +8,7 @@ const Palette = require('../palette.cjs');
 const TraceManager = require('../trace-manager.cjs');
 const CameraPanel = require('../room-camera-panel.cjs');
 const Collision = require('../../project/collision.cjs');
+const TeacherLinks = require('../../project/teacher-links.cjs');
 const Temperature = require('../../project/temperature.cjs');
 const Limits = require('../../project/room-limits.cjs');
 const Select = require('../../project/selection.cjs');
@@ -198,7 +199,7 @@ function render(app) {
     if (!['select', 'marquee'].includes(value)) s.multiSelection = [];
     $('tool-label').textContent =
       value === 'brick-bind'
-        ? '点击机关砖绑定或解绑 · Z 结束'
+        ? '点击机关砖或签到板绑定/解绑 · Z 结束'
         : ['brick-path', 'native-target'].includes(value)
           ? '点击格子添加一个节点 · 添加后返回原工具'
           : value === 'path'
@@ -230,6 +231,7 @@ function render(app) {
       .forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tool === value)));
     canvas.style.cursor = value === 'select' ? 'default' : 'crosshair';
     $('quick-bind-bricks')?.setAttribute('aria-pressed', String(value === 'brick-bind'));
+    $('quick-bind-checkins')?.setAttribute('aria-pressed', String(value === 'brick-bind'));
   };
   $('app')
     .querySelectorAll('[data-tool]')
@@ -340,6 +342,15 @@ function render(app) {
   }
   function paint(pos, tool = s.tool) {
     if (tool === 'brick-bind') {
+      const owner = tileItem(s.selection);
+      if (TeacherLinks.isTeacher(owner)) {
+        const checkins = Select.box(r, pos, pos)
+          .filter((ref) => ref.kind === 'objects')
+          .map((ref) => Select.get(r, ref))
+          .filter((o) => o?.type === TeacherLinks.CHECKIN);
+        TeacherLinks.toggle(r, owner, checkins);
+        return;
+      }
       if (Native.active(app.store.project, c) && Motion.isPad(tileItem(s.selection))) {
         const p = tileItem(s.selection),
           bricks = Select.box(r, pos, pos)
@@ -523,15 +534,17 @@ function render(app) {
       rightAction =
         e.button === 2 &&
         !e.shiftKey &&
-        (Motion.isPad(owner)
-          ? Native.active(app.store.project, c)
-            ? 'native-bind'
-            : 'bind'
-          : owner?.type === 'physics.rail'
+        (TeacherLinks.isTeacher(owner)
+          ? 'teacher-bind'
+          : Motion.isPad(owner)
+            ? Native.active(app.store.project, c)
+              ? 'native-bind'
+              : 'bind'
+            : owner?.type === 'physics.rail'
             ? 'path'
             : owner && s.selection.kind === 'platforms'
               ? 'native-target'
-              : c.kind === 'calculus' && owner && s.selection.kind === 'movables'
+                : c.kind === 'calculus' && owner && s.selection.kind === 'movables'
                 ? 'brick-path'
                 : null);
     if (
@@ -774,7 +787,15 @@ function render(app) {
       const { rightAction, before, start, moved } = stroke;
       if (event.type === 'pointerup') {
         const end = cell(event);
-        if (rightAction === 'native-bind') {
+        if (rightAction === 'teacher-bind') {
+          const refs = Select.box(r, start, moved ? end : start).filter(
+              (ref) => ref.kind === 'objects',
+            ),
+            checkins = refs
+              .map((ref) => Select.get(r, ref))
+              .filter((o) => o?.type === TeacherLinks.CHECKIN);
+          TeacherLinks.toggle(r, tileItem(s.selection), checkins);
+        } else if (rightAction === 'native-bind') {
           const bricks = Select.box(r, start, moved ? end : start)
             .filter((ref) => ref.kind === 'platforms')
             .map((ref) => Select.get(r, ref));
@@ -1072,6 +1093,15 @@ function baseInspector(app, r, setTool) {
         else for (const brick of brickGroup) delete brick.brickGroup;
       });
   }
+  if (TeacherLinks.isTeacher(o)) {
+    const count = TeacherLinks.checkins(r, o).length;
+    body.insertAdjacentHTML(
+      'beforebegin',
+      `<button id="quick-bind-checkins" class="apply" style="border-color:#e7b867" aria-pressed="${s.tool === 'brick-bind'}">快捷绑定签到 · ${count} 块</button>`,
+    );
+    $('quick-bind-checkins').onclick = () =>
+      setTool(s.tool === 'brick-bind' ? 'select' : 'brick-bind');
+  }
   if (Motion.isPad(o)) {
     const color = Motion.colorFor(r, o.id),
       count = r.movables.filter((b) => b.padId === o.id).length;
@@ -1136,6 +1166,8 @@ function baseInspector(app, r, setTool) {
         else if (ref.kind === 'movables')
           Motion.moveOwner(o, Number($('object-x').value), Number($('object-y').value));
         else {
+          const dx = Number($('object-x').value) - o.x;
+          if (TeacherLinks.isTeacher(o)) TeacherLinks.move(o, dx);
           o.x = Number($('object-x').value);
           o.y = Number($('object-y').value);
         }
@@ -1172,6 +1204,7 @@ function baseInspector(app, r, setTool) {
           else r[ref.kind] = r[ref.kind].filter((v) => v.id !== o.id);
           if (ref.kind === 'objects') {
             for (const brick of r.movables) if (brick.padId === o.id) brick.padId = '';
+            TeacherLinks.cleanup(r);
           }
           app.course().connections = app.course().connections.filter((v) => !linked.includes(v));
           s.selection = null;
@@ -1317,6 +1350,31 @@ function baseInspector(app, r, setTool) {
         }
         app.store.change(() => Object.assign(o, { targetX: x, targetY: y, padId }));
       };
+    } else if (ref.kind === 'objects' && TeacherLinks.isTeacher(o)) {
+      const bound = new Set(TeacherLinks.ids(o)),
+        checkins = r.objects.filter((item) => item.type === TeacherLinks.CHECKIN);
+      body.innerHTML =
+        '<p class="hint">勾选本房签到方块；全部激活后巡查老师消失。也可选中老师后使用「快捷绑定签到」，在画布点击或框选签到板。</p>' +
+        (checkins.length
+          ? checkins
+              .map((item, index) =>
+                check(
+                  (item.name || '签到板') + ' · ' + item.x + ', ' + item.y,
+                  'teacher-checkin-' + index,
+                  bound.has(item.id),
+                ),
+              )
+              .join('')
+          : '<p class="muted">本房还没有签到方块。</p>');
+      body.querySelectorAll('[id^="teacher-checkin-"]').forEach((input, index) => {
+        input.dataset.teacherCheckin = checkins[index].id;
+        input.onchange = () => {
+          const ids = [...body.querySelectorAll('[data-teacher-checkin]')]
+            .filter((item) => item.checked)
+            .map((item) => item.dataset.teacherCheckin);
+          app.store.change(() => TeacherLinks.set(o, ids));
+        };
+      });
     } else if (ref.kind === 'objects') {
       body.innerHTML =
         field('对应 AI ID（空白继承大关）', 'object-ai', o.aiId || '') +

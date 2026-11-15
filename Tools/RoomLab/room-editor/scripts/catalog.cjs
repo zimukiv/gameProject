@@ -20,7 +20,8 @@ function generate() {
         '；触发：' +
         d.trigger +
         '；素材状态：' +
-        d.slots.join(' / '),
+        d.slots.join(' / ') +
+        (d.requiresItem ? '；需要道具：' + Registry.get(d.requiresItem).name : ''),
       '',
       '| 参数 | 说明 | 类型 | 默认值 | 范围/选项 |',
       '| --- | --- | --- | --- | --- |',

@@ -79,13 +79,14 @@ const assert = require('node:assert/strict'),
       'rail-room',
     );
     await page.getByRole('button', { name: '试玩此房', exact: true }).click();
+    assert.equal(await page.locator('#play-paid').textContent(), '需冰红茶');
     await page.keyboard.down('KeyW');
     await page.keyboard.press('ShiftLeft');
     await page.keyboard.up('KeyW');
     await page.waitForFunction(() =>
       window.__ROOM_LAB__.snapshot().game.events.some((e) => e.type === 'dash' && e.free),
     );
-    assert.equal((await snap()).charges, 3);
+    assert.equal((await snap()).charges, 0);
     await page.locator('#play-edit').click();
     await page.getByRole('button', { name: '不保存并退出', exact: true }).click();
     assert.deepEqual(errors, []);

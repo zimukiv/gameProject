@@ -18,7 +18,7 @@ function groupForType(type) {
     ['common.aiStart', 'common.aiStartHollow', 'common.portalIn', 'common.portalOut'].includes(type)
   )
     return 'mechanism';
-  if (type.startsWith('common.')) return 'item';
+  if (type.startsWith('item.') || type.startsWith('common.')) return 'item';
   return type === 'background' ? 'scene' : 'unsorted';
 }
 function children(group, kind) {

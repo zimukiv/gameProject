@@ -1,7 +1,7 @@
 'use strict';
 // Slacker mechanisms stay small and observable: check-in records a visible
-// count/feedback, wakefulness grants a short speed burst through the existing
-// launchPlayer context (no extra persistent runtime state is introduced).
+// count/feedback, wakefulness grants a directional speed burst through the
+// existing launchPlayer context (no extra persistent runtime state is introduced).
 const base = {
   version: '1.0.0',
   category: '水课',
@@ -10,11 +10,21 @@ const base = {
   collider: 'pad',
   trigger: 'foot',
 };
+function entryDirection(player) {
+  const x = Number(player?.vx) || 0,
+    y = Number(player?.vy) || 0;
+  if (Math.abs(x) < 1 && Math.abs(y) < 1)
+    return { x: player?.face === -1 ? -1 : 1, y: 0 };
+  if (Math.abs(x) >= Math.abs(y)) return { x: x < 0 ? -1 : 1, y: 0 };
+  return { x: 0, y: y < 0 ? -1 : 1 };
+}
 module.exports = [
   {
     ...base,
+    version: '1.1.0',
     type: 'slacker.checkin',
     name: '签到板',
+    requiresItem: 'item.phone',
     glyph: '✓',
     defaults: { cooldown: 1 },
     schema: [
@@ -30,21 +40,29 @@ module.exports = [
   },
   {
     ...base,
+    version: '1.2.0',
     type: 'slacker.awake',
     name: '清醒板',
     glyph: '☕',
-    defaults: { speed: 520, lift: 140, cooldown: 3 },
+    collider: 'tile',
+    requiresItem: 'item.coffee',
+    silentWithoutItem: true,
+    dynamicSolidity: true,
+    trigger: 'region',
+    isSolid(ctx) {
+      return !ctx.hasItem('item.coffee');
+    },
+    defaults: { speed: 520, cooldown: 3 },
     schema: [
-      { key: 'speed', label: '清醒加速速度', kind: 'number', min: 100, max: 1200 },
-      { key: 'lift', label: '附加上抛速度', kind: 'number', min: 0, max: 600 },
+      { key: 'speed', label: '通过方向加速速度', kind: 'number', min: 100, max: 1200 },
       { key: 'cooldown', label: '冷却（秒）', kind: 'number', min: 0.1, max: 30 },
     ],
     createState: () => ({ boosts: 0 }),
     onTrigger(ctx, o, s) {
-      const direction = ctx.player.face || 1;
-      ctx.launchPlayer(direction * o.params.speed, -o.params.lift);
+      const direction = entryDirection(ctx.player);
+      ctx.launchPlayer(direction.x * o.params.speed, direction.y * o.params.speed);
       s.boosts = (s.boosts || 0) + 1;
-      ctx.say('清醒：短暂加速');
+      ctx.say('清醒：沿进入方向加速');
       ctx.emit('awake', { id: o.id, speed: o.params.speed, direction, count: s.boosts });
     },
     visual: (ctx, o, s) => (s.cooldown > 0 ? 'active' : 'idle'),

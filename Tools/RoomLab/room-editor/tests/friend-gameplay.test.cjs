@@ -35,7 +35,7 @@ test('checkpoint records respawn, resources and room state without changing the 
   assert.equal(g.player.x, 260);
   assert.equal(g.player.y, 324);
   assert.equal(g.tokens, 17);
-  assert.equal(g.charges, 2);
+  assert.equal(g.charges, 1);
   assert.equal(g.score, 125);
   assert.equal(g.roomEnvironment, 'cold');
   assert.equal(g.player.freeDash, true);

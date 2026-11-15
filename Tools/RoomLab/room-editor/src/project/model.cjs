@@ -3,6 +3,7 @@ const { clone, uid, rotate } = require('../shared/utils.cjs');
 const RailNodes = require('./rail-nodes.cjs');
 const Traces = require('./play-traces.cjs');
 const Collision = require('./collision.cjs');
+const TeacherLinks = require('./teacher-links.cjs');
 const Limits = require('./room-limits.cjs');
 const VERSION = 2,
   TILE = 32;
@@ -114,7 +115,7 @@ function example() {
     id: 'physics-project',
     name: '第一大关 · 物理 DDL',
     notes: '物理主题示例：速度、材料与温控。',
-    settings: { tileSize: TILE, maxDashes: 3, paidStockCap: 3, freeDashOnLand: true },
+    settings: { tileSize: TILE, maxDashes: 3, paidStockCap: 1, freeDashOnLand: true },
     courses: [
       {
         id: 'physics',
@@ -329,6 +330,32 @@ function validate(p, { play = false } = {}) {
           !r.zones.some((z) => z.id === o.params.zoneId)
         )
           (play ? errors : warnings).push('温控区域关联缺失：' + o.id);
+        if (TeacherLinks.isTeacher(o)) {
+          const min = o.params?.patrolMinX,
+            max = o.params?.patrolMaxX;
+          if (
+            !Number.isInteger(min) ||
+            !Number.isInteger(max) ||
+            min < 0 ||
+            max < 0 ||
+            min >= r.cols ||
+            max >= r.cols
+          )
+            (play ? errors : warnings).push('巡查平台范围无效：' + o.id);
+          if (o.params?.checkinIds !== undefined && !Array.isArray(o.params.checkinIds))
+            errors.push('巡查老师签到绑定必须是数组：' + o.id);
+          else {
+            const ids = TeacherLinks.ids(o);
+            if (
+              Array.isArray(o.params?.checkinIds) &&
+              ids.length !== o.params.checkinIds.length
+            )
+              (play ? errors : warnings).push('巡查老师签到绑定有重复或无效 ID：' + o.id);
+            for (const id of ids)
+              if (!r.objects.some((item) => item.id === id && item.type === TeacherLinks.CHECKIN))
+                (play ? errors : warnings).push('巡查老师绑定的签到方块缺失：' + o.id);
+          }
+        }
         if (o.params?.path)
           for (const n of o.params.path) {
             if (n.id) checkId(n.id, '轨道子节点');
@@ -423,9 +450,15 @@ function resizeRoom(r, cols, rows) {
       )
     )
       out.push({ kind: 'target', id: b.id });
-  for (const o of next.objects)
+  for (const o of next.objects) {
     for (const n of o.params?.path || [])
       if (n.x > cols || n.y > rows) out.push({ kind: 'path', id: o.id });
+    if (
+      TeacherLinks.isTeacher(o) &&
+      Math.max(o.params?.patrolMinX ?? 0, o.params?.patrolMaxX ?? 0) >= cols
+    )
+      out.push({ kind: 'teacher-range', id: o.id });
+  }
   out.push(...require('./native-compat.cjs').outOfBounds(next, cols, rows));
   return { room: next, out };
 }
@@ -445,6 +478,7 @@ function duplicateRoom(course, sourceId) {
   }
   for (const o of r.objects) {
     RailNodes.ensure(o, { newIds: true });
+    TeacherLinks.remap(o, map);
     if (o.params.zoneId) o.params.zoneId = map.get(o.params.zoneId) || o.params.zoneId;
     if (o.params.unlockPadId)
       o.params.unlockPadId = map.get(o.params.unlockPadId) || o.params.unlockPadId;

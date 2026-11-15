@@ -16,7 +16,8 @@ const assert = require('node:assert/strict'),
     await page.locator('#start-new').click();
     await page.locator('[data-menu-trigger]', { hasText: '工具' }).click();
     await page.getByRole('button', { name: '素材库', exact: true }).click();
-    assert.equal((await snap()).project.assets.length, 13);
+    const initialAssets = (await snap()).project.assets.length;
+    assert.ok(initialAssets >= 17);
     await page.locator('[data-asset-group="mechanism"]').click();
     await page.locator('[data-asset-sub="physics.jet"]').click();
     const bytes = Buffer.from(
@@ -25,7 +26,10 @@ const assert = require('node:assert/strict'),
     await page
       .locator('#asset-files')
       .setInputFiles({ name: '测试素材.svg', mimeType: 'image/svg+xml', buffer: bytes });
-    await page.waitForFunction(() => window.__ROOM_LAB__.snapshot().project.assets.length === 14);
+    await page.waitForFunction(
+      (count) => window.__ROOM_LAB__.snapshot().project.assets.length === count,
+      initialAssets + 1,
+    );
     const imported = (await snap()).project.assets.at(-1);
     assert.equal(imported.width, 64);
     await page.getByRole('button', { name: '项目', exact: true }).click();
@@ -83,9 +87,10 @@ const assert = require('node:assert/strict'),
     await page.waitForFunction(() => window.__ROOM_LAB__.snapshot().project.courses.length === 4);
     await page.locator('#project-file').setInputFiles(zipPath);
     await page.waitForFunction(
-      () =>
-        window.__ROOM_LAB__.snapshot().project.assets.length === 14 &&
+      (count) =>
+        window.__ROOM_LAB__.snapshot().project.assets.length === count &&
         window.__ROOM_LAB__.snapshot().project.courses.length === 3,
+      initialAssets + 1,
     );
     assert.equal((await snap()).project.courses[0].artBindings['physics.jet'].idle, imported.id);
     await page.locator('[data-menu-trigger]', { hasText: '工具' }).click();

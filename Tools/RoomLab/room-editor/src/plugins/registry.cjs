@@ -8,6 +8,8 @@ const modules = [
   require('./physics/rail.cjs'),
   require('./calculus.cjs'),
   require('./slacker.cjs'),
+  require('./items.cjs'),
+  require('./teacher.cjs'),
   require('./common.cjs'),
   require('./legacy.cjs'),
 ].flat();
@@ -62,12 +64,20 @@ function courseDefaults(project, course, type) {
 }
 function instantiate(project, type, id, x, y, course) {
   const d = get(type);
+  project.pluginManifest ||= {};
+  if (!project.pluginManifest[type]) project.pluginManifest[type] = d.version;
   const config = courseDefaults(project, course, type);
   const values = clone(
     course?.blockDefaults?.[type]
       ? params(project, { type, params: config.params })
       : { ...d.defaults, ...config.params },
   );
+  if (type === 'slacker.teacher') {
+    const configured = config.params || {};
+    if (!Object.hasOwn(configured, 'patrolMinX')) values.patrolMinX = x;
+    if (!Object.hasOwn(configured, 'patrolMaxX'))
+      values.patrolMaxX = Math.min((course?.defaultSize?.cols || x + 4) - 1, x + 4);
+  }
   if (type === 'physics.rail') {
     if (!values.path?.length) values.path = clone(d.defaults.path);
     const first = values.path[0],
@@ -89,7 +99,7 @@ function instantiate(project, type, id, x, y, course) {
     y,
     w: 1,
     h: 1,
-    collision: true,
+    collision: d.defaultCollision !== false,
     params: values,
     trigger: {
       mode: d.trigger || 'foot',

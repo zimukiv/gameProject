@@ -119,18 +119,62 @@ function seeds({ allThemes = false } = {}) {
         '<path d="M24 14h22v26a11 11 0 01-22 0z" fill="none" stroke="#ffe08a" stroke-width="4"/><path d="M24 22h-6M46 22h6M34 10l4-6 4 6" stroke="#ffe08a" stroke-width="4" fill="none"/><path d="M34 30v12M28 36h12" stroke="#ffb571" stroke-width="4"/>',
       ),
     ],
+    [
+      'slacker-teacher',
+      '巡查 · 老师',
+      svg(
+        '#4a3b2a',
+        '<circle cx="32" cy="19" r="10" fill="#e9c39b" stroke="#fff0cf" stroke-width="3"/><path d="M20 15c2-7 22-9 25 2-8 2-18 2-25-2z" fill="#37475a"/><path d="M18 56V34c0-7 7-11 14-11s14 4 14 11v22z" fill="#6d8e73" stroke="#d5ead5" stroke-width="3"/><path d="M24 31h16M26 31v15M38 31v15" stroke="#f3f7e7" stroke-width="2"/><rect x="23" y="16" width="7" height="5" rx="1" fill="none" stroke="#223041"/><rect x="34" y="16" width="7" height="5" rx="1" fill="none" stroke="#223041"/><path d="M30 18h4M23 18h-3M41 18h3" stroke="#223041"/>',
+      ),
+    ],
+    [
+      'coffee',
+      '咖啡',
+      svg(
+        '#4a3529',
+        '<path d="M14 20h29v22a11 11 0 01-11 11H25a11 11 0 01-11-11z" fill="#d9a269" stroke="#ffe0ae" stroke-width="3"/><path d="M43 24h5a8 8 0 010 16h-5M20 12c4-4 0-7 4-10M30 12c4-4 0-7 4-10M40 12c4-4 0-7 4-10" fill="none" stroke="#f6e8cf" stroke-width="3"/>',
+      ),
+    ],
+    [
+      'calculator',
+      '计算器',
+      svg(
+        '#34485e',
+        '<rect x="13" y="7" width="38" height="50" rx="4" fill="#dbe8f0" stroke="#9fd8ea" stroke-width="3"/><rect x="19" y="13" width="26" height="10" fill="#213546"/><g fill="#3d5c73"><rect x="18" y="29" width="7" height="6"/><rect x="29" y="29" width="7" height="6"/><rect x="40" y="29" width="7" height="6"/><rect x="18" y="40" width="7" height="6"/><rect x="29" y="40" width="7" height="6"/><rect x="40" y="40" width="7" height="6"/><rect x="18" y="49" width="18" height="5"/><rect x="40" y="49" width="7" height="5"/></g>',
+      ),
+    ],
+    [
+      'phone',
+      '手机',
+      svg(
+        '#2c3b56',
+        '<rect x="18" y="5" width="28" height="54" rx="6" fill="#dce9f5" stroke="#9ebcf2" stroke-width="3"/><rect x="22" y="12" width="20" height="36" fill="#365475"/><circle cx="32" cy="53" r="3" fill="#6c86a3"/><path d="M26 6h12" stroke="#7891ad" stroke-width="2"/>',
+      ),
+    ],
+    [
+      'iced-tea',
+      '冰红茶',
+      svg(
+        '#4b3025',
+        '<path d="M17 17h30l-4 39H21z" fill="#c96f42" stroke="#ffd0a6" stroke-width="3"/><path d="M34 6L43 17M32 15L37 6" stroke="#8ee5f2" stroke-width="4"/><path d="M21 34h22" stroke="#f2a466" stroke-width="3"/><g fill="#d9f7ff" opacity=".9"><rect x="25" y="23" width="8" height="8" transform="rotate(12 29 27)"/><rect x="36" y="31" width="7" height="7" transform="rotate(-15 39 34)"/></g>',
+      ),
+    ],
   ];
+  const itemIds = new Set(['coffee', 'calculator', 'phone', 'iced-tea']);
   const files = new Map(),
     assets = items
       .filter(([id]) => allThemes || !/^(calculus|slacker)-/.test(id))
       .map(([id, name, data]) => {
         const path = 'assets/seed-' + id + '.svg';
         files.set(path, strToU8(data));
-        const theme = id.startsWith('calculus-')
-            ? 'calculus'
-            : id.startsWith('slacker-')
-              ? 'slacker'
-              : 'physics',
+        const isItem = itemIds.has(id),
+          theme = isItem
+            ? 'common'
+            : id.startsWith('calculus-')
+              ? 'calculus'
+              : id.startsWith('slacker-')
+                ? 'slacker'
+                : 'physics',
           head = id.split('-')[0],
           tail = id.slice(id.indexOf('-') + 1);
         return {
@@ -140,10 +184,13 @@ function seeds({ allThemes = false } = {}) {
           mime: 'image/svg+xml',
           width: 64,
           height: 64,
-          courseId: id === 'metal' ? 'common' : theme,
-          category: id === 'metal' ? 'terrain' : 'mechanism',
-          subcategory:
-            id === 'metal' ? 'common.solid' : theme + '.' + (theme === 'physics' ? head : tail),
+          courseId: id === 'metal' || isItem ? 'common' : theme,
+          category: isItem ? 'item' : id === 'metal' ? 'terrain' : 'mechanism',
+          subcategory: isItem
+            ? 'item.' + (id === 'iced-tea' ? 'icedTea' : id)
+            : id === 'metal'
+              ? 'common.solid'
+              : theme + '.' + (theme === 'physics' ? head : tail),
           frameWidth: 0,
           frameHeight: 0,
           fps: 6,
@@ -156,6 +203,12 @@ function seeds({ allThemes = false } = {}) {
     'physics.jet': { idle: 'seed-jet-idle', active: 'seed-jet-active' },
     'physics.thermal': { cold: 'seed-thermal-cold', hot: 'seed-thermal-hot' },
     'physics.rail': { idle: 'seed-rail-idle', active: 'seed-rail-active' },
+  };
+  const itemBindings = {
+    'item.coffee': { idle: 'seed-coffee' },
+    'item.calculator': { idle: 'seed-calculator' },
+    'item.phone': { idle: 'seed-phone' },
+    'item.icedTea': { idle: 'seed-iced-tea' },
   };
   const themeBindings = {
     physics: bindings,
@@ -171,6 +224,7 @@ function seeds({ allThemes = false } = {}) {
       'common.solid': { idle: 'seed-metal' },
       'slacker.checkin': { idle: 'seed-slacker-checkin', active: 'seed-slacker-checkin' },
       'slacker.awake': { idle: 'seed-slacker-awake', active: 'seed-slacker-awake' },
+      'slacker.teacher': { idle: 'seed-slacker-teacher', active: 'seed-slacker-teacher' },
     },
   };
   return {
@@ -182,6 +236,7 @@ function seeds({ allThemes = false } = {}) {
       ...themeBindings.physics,
       ...themeBindings.calculus,
       ...themeBindings.slacker,
+      ...itemBindings,
     },
   };
 }

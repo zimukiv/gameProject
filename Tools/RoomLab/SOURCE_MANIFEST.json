@@ -1,9 +1,9 @@
 {
   "repository": "zimukiv/gameProject",
-  "version": "3.1.0",
-  "releaseTag": "roomlab-editor-v3.1.0",
-  "createdAt": "2026-11-12",
-  "programSHA256": "2a122016a7234ad6385cf903bc5377c5d0881982a1fb139ef587ac679d6efbaf",
+  "version": "4.0.0",
+  "releaseTag": "roomlab-editor-v4.0.0",
+  "createdAt": "2026-11-15",
+  "programSHA256": "5afb02b5b4b3cfc298b1a4cb67a29510097d497ff79c17e67a5dd556ae5ce08f",
   "files": [
     {
       "path": "room-cloud/.gitignore",
@@ -687,22 +687,22 @@
     },
     {
       "path": "room-editor/ARCHITECTURE.md",
-      "sha256": "9939b900368824ba674d6312f9e2e2a1d941deb990cf2e1bd5f643535f2abe2f",
+      "sha256": "2151d0b073c043ee9acf7987e0423cacd1574f1e392fdab3b30ca0e1da797a29",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/docs/BLOCK_CATALOG.md",
-      "sha256": "a11d1b91a335634be379b845020630ed6e8372a1eef7743959b18ea553f88d21",
+      "sha256": "c9749098ffab196a30b38af5d3764c0e5e7e72bd63c7f1b8f198b53c63473e71",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/docs/BLOCK_PLUGIN_API.md",
-      "sha256": "1425ab65fe4b98b4d61c48fa44fff29ccbd8e6956fe5aad8db3b6ab75f6e1f98",
+      "sha256": "db4a75d4306c1c201917ccf21e473d391c0178dc3df501ae1777ef64bad6992f",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/docs/CHANGELOG.md",
-      "sha256": "16c14eada49726c3232b914099cfe1d155fd90b04ce5a503392c2c31c241180f",
+      "sha256": "19163ec8de98b4ee7fa144d6274141889ef888d9bdae688cf6a2c90d9c91bb25",
       "encoding": "utf8-lf"
     },
     {
@@ -806,6 +806,11 @@
       "encoding": "utf8-lf"
     },
     {
+      "path": "room-editor/docs/RELEASE_NOTES_4.0.0.md",
+      "sha256": "62fe59a5e093dcc2f0b5a6882b15e8ec5fde9815c394d6a700aec98399d0401f",
+      "encoding": "utf8-lf"
+    },
+    {
       "path": "room-editor/docs/TESTING.md",
       "sha256": "ede88d0fac50041445d30ec4e23275a49e5472bf2ecca236abf12fccfcc08612",
       "encoding": "utf8-lf"
@@ -872,7 +877,7 @@
     },
     {
       "path": "room-editor/package.json",
-      "sha256": "de2ec8073afb72fc953d7acaf84520460d987bb1c807b11a6ae51033fd4b794f",
+      "sha256": "c8e3f63cfaf1b56be2b29f5bcb099b1ed84f12419b76dfe342f731c694265a5f",
       "encoding": "utf8-lf"
     },
     {
@@ -887,7 +892,7 @@
     },
     {
       "path": "room-editor/README.md",
-      "sha256": "b3efa38da36c5c7b0f89b5b9d174da83e67399f4e284000235fdf81947c702d9",
+      "sha256": "612e12ce864f5460f7877c60a8b7e80d5813a9345e76b8c32755d00cf6c1576f",
       "encoding": "utf8-lf"
     },
     {
@@ -897,7 +902,7 @@
     },
     {
       "path": "room-editor/scripts/catalog.cjs",
-      "sha256": "a9be609a5c41302e4dc73cc08feeb76c75068e27bbc9cf1061ce12ff962d4a42",
+      "sha256": "964c6af59509d2acc3e2a4aa46a86429ee1e5750f5727fbd1ed38af8b390d88e",
       "encoding": "utf8-lf"
     },
     {
@@ -952,7 +957,7 @@
     },
     {
       "path": "room-editor/src/assets/catalog.cjs",
-      "sha256": "8c4db0a2855aefae6207e15b18786b921e1ea170e46bc8bccb31907a76d5675c",
+      "sha256": "21d391af02f1c8c2ddc58dd0c46eefb204d00267a3e64bf4f919035f6a715671",
       "encoding": "utf8-lf"
     },
     {
@@ -962,7 +967,7 @@
     },
     {
       "path": "room-editor/src/assets/seeds.cjs",
-      "sha256": "2c4b9547c08a0ca36559859cbc03c58c4384ff1c68812745fc01ad48531e06b2",
+      "sha256": "30f4db270b8d1bab7f5d59907e2a4b4a02596b8f43917b4ecb3f6e6c74ef61cf",
       "encoding": "utf8-lf"
     },
     {
@@ -1007,7 +1012,7 @@
     },
     {
       "path": "room-editor/src/desktop/main.cjs",
-      "sha256": "eba148f574403fe1ce0abd9b5c243cf689b60d44e4cbd1cc0c1a015bf54a233c",
+      "sha256": "1584846982c9ec736a851a47e8a9594268a6616f3e5082df2399cc5617c28f11",
       "encoding": "utf8-lf"
     },
     {
@@ -1057,7 +1062,7 @@
     },
     {
       "path": "room-editor/src/editor/draw.cjs",
-      "sha256": "51392e8031ea9bb1f0e4b2ddb7aa4f6a14de92edd1c0ab2f86d8aa43d59be362",
+      "sha256": "44af2fe9e3fd06d0137c7df2f21e2332e87e79da77a9c8671b5f448a354e6fcc",
       "encoding": "utf8-lf"
     },
     {
@@ -1072,7 +1077,7 @@
     },
     {
       "path": "room-editor/src/editor/index.html",
-      "sha256": "54f41adb4baafd7e617f583f173507331ed9c1bc14145f63c967999da17869cd",
+      "sha256": "099ca9bbbe3e0bcdc76e593122e0c139d9e28813e58714b6c0459f6335b30080",
       "encoding": "utf8-lf"
     },
     {
@@ -1132,17 +1137,17 @@
     },
     {
       "path": "room-editor/src/editor/pages/play.cjs",
-      "sha256": "204cfb4ca34607a80218a6235d07372308df97e249c92f3c1c1f8da3f8d5dc3f",
+      "sha256": "10cf2de14090a43d79af204c30a3f5995292e29c690f83bb94f3f0149f18c275",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/src/editor/pages/room.cjs",
-      "sha256": "e01f73a8db4d9d36068c9c759ec6286056a436fa31ee2596faf0f2a9ec7b925b",
+      "sha256": "381dc91cac55f686f37aed84d85edd7a016573bde7f7340ea65d6092ff02b33e",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/src/editor/palette.cjs",
-      "sha256": "3ccc039b99e0373941457aa6000e2ecbf713a831a18337f85d442f499c85d254",
+      "sha256": "d1436e50ec80cebc05499a2cff18ea7467e6cbbc0a338bc036e26d3d3dac5db5",
       "encoding": "utf8-lf"
     },
     {
@@ -1217,12 +1222,17 @@
     },
     {
       "path": "room-editor/src/plugins/calculus.cjs",
-      "sha256": "d13f5d7583f1bb07dd33e00fc104dbe24377e3d8b49477e636283e85ea5e2334",
+      "sha256": "92d36f04ab7f95d97bc6d87b33e0ed52acd1f00a838cac396f3be62baa487985",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/src/plugins/common.cjs",
-      "sha256": "227554fee30ee481a4c4586f2a0e8bd7d1247b1fad29ea82ad448ec227b6b170",
+      "sha256": "872f27377dc45e3c357c2756cd7a6748a4f1d1e54be8a32aec5afe2f7bfc359f",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/plugins/items.cjs",
+      "sha256": "d7c2c4fa49deb94e56e9279c5bd6be62a515361809d83d4ddb7346a454235c1e",
       "encoding": "utf8-lf"
     },
     {
@@ -1252,12 +1262,17 @@
     },
     {
       "path": "room-editor/src/plugins/registry.cjs",
-      "sha256": "833b7d417b195e45e74463b2ee69924e83ed20863d424f0aaccd4ec1279e6cb8",
+      "sha256": "b91061e7dfd9c15b4066051dfa8c2b5a970e083d81d180a235878517e80738bd",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/src/plugins/slacker.cjs",
-      "sha256": "32ae092c208243a38731f1018ecb20ab483f36e5cd0cc5fa3b1bd3c065420adb",
+      "sha256": "da3f7627da2d3811173ca0a80bacbcc6470bcf9b1102e3f2851e22cc89603cdf",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/plugins/teacher.cjs",
+      "sha256": "37c0c00ed8ef4d451effc34b50b2ff7f29fbb325ce81393316b6c4d23dabef04",
       "encoding": "utf8-lf"
     },
     {
@@ -1282,7 +1297,7 @@
     },
     {
       "path": "room-editor/src/project/compatibility.cjs",
-      "sha256": "b0aad61fdf4e95ef0597621d3618c3b6d3660fa928975999e6913698666915ed",
+      "sha256": "020b2c68ae26f8709319b3d3bdc70572c59401d3bff1e7345ca06b280974cbdd",
       "encoding": "utf8-lf"
     },
     {
@@ -1302,7 +1317,7 @@
     },
     {
       "path": "room-editor/src/project/model.cjs",
-      "sha256": "8c42a0d3f404aea5749f3c27df662d2c185e15723c44b354354d44f81b4e839e",
+      "sha256": "12912010770928f0c3b916fb2da588a394bbb6efb1c5c24dcebb154284b98986",
       "encoding": "utf8-lf"
     },
     {
@@ -1377,7 +1392,12 @@
     },
     {
       "path": "room-editor/src/project/selection.cjs",
-      "sha256": "1a45e762e3f32005fd054eb3851d5c1daf62e9e1c13da54450d5088052a83543",
+      "sha256": "0ba576f8ea307f28f21431a69936dc24c17680ebc246540208ef6cacadda3ef2",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/project/teacher-links.cjs",
+      "sha256": "e45945d879933bff93a53441a748160fb605e8b620c1aea80927ab6c25c00f32",
       "encoding": "utf8-lf"
     },
     {
@@ -1387,7 +1407,7 @@
     },
     {
       "path": "room-editor/src/project/themes.cjs",
-      "sha256": "e9d297581c8d07e872765327a52b5aba302d7189e709e80e59439dba5664cd5c",
+      "sha256": "98dd5b2dac0128693aaa55b76a7f094c7bab0ccfa20f216b5e67827e061408d4",
       "encoding": "utf8-lf"
     },
     {
@@ -1397,7 +1417,7 @@
     },
     {
       "path": "room-editor/src/runtime/engine.cjs",
-      "sha256": "a78998f5ed2fc947900dc3d840a73c1bd310f9655b6de4ab217c923d9df0867b",
+      "sha256": "94456266ddef88ffec238612056403e77568a9ee98e8ac4c4e20a26a6e57ce26",
       "encoding": "utf8-lf"
     },
     {
@@ -1432,12 +1452,12 @@
     },
     {
       "path": "room-editor/tests/assets-ui-smoke.cjs",
-      "sha256": "ae0b3e117a3dd760f58e243a0279cc37ecf4d4f383a90a14463d2b2556232543",
+      "sha256": "785399e1b0ec5a75b7486cd703525acfa231e2aa58c225e5d4eefef4c87e67aa",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/tests/assets.test.cjs",
-      "sha256": "429f09d1dafe012e4f60629229d540abe18d7ba4f072c9aee95d21c7750cef0b",
+      "sha256": "f0fed8659995897c7b0cdbc2b9261355b5254fc6ab41fc3550b3d98477f7a504",
       "encoding": "utf8-lf"
     },
     {
@@ -1532,7 +1552,7 @@
     },
     {
       "path": "room-editor/tests/cloud.test.cjs",
-      "sha256": "a3daa606b7789cbcac8633568b92bcadacb5574d0e51b8796c948f19de04e298",
+      "sha256": "2b8cf9748c23b8d342cb9f71b795cec855e24c44ed375ab4b68f107f53be3312",
       "encoding": "utf8-lf"
     },
     {
@@ -1567,12 +1587,12 @@
     },
     {
       "path": "room-editor/tests/default-collision.test.cjs",
-      "sha256": "e9b874b8d989ec2b9a48caf02d786037100c055c90fe0cd318b036a42d905d9c",
+      "sha256": "9dde63271446a48b2795a37f62754ddbb02d3f52af31f90c42c619d2e64680af",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/tests/desktop-smoke.cjs",
-      "sha256": "26a8a81903b0164bef883f87de2888b40f04d63a480c6e5fa837aa85c9fbd148",
+      "sha256": "1581f4fd72b9b50d4f89c647d822298b167e3ae93a8f862f8482fac72a2fdb0d",
       "encoding": "utf8-lf"
     },
     {
@@ -1592,7 +1612,7 @@
     },
     {
       "path": "room-editor/tests/engine.test.cjs",
-      "sha256": "2e92dd3c3da96ae9c6b31bc3ddb9cd965a46e01b0d069d43bf6ad246565c1ced",
+      "sha256": "c876f58cf84d26ef7717c7ca927f2759f2dc7bf86510d39d050561fda6dabd6e",
       "encoding": "utf8-lf"
     },
     {
@@ -1602,7 +1622,7 @@
     },
     {
       "path": "room-editor/tests/files.test.cjs",
-      "sha256": "43e6050534be3d641f0f0e650fbe1bcc44617116d93b974d4af87200c1011cca",
+      "sha256": "fc8470359dacd98bf1f6f93e392d2b41aa5276d24302216c6d19926fb833398e",
       "encoding": "utf8-lf"
     },
     {
@@ -1697,7 +1717,7 @@
     },
     {
       "path": "room-editor/tests/friend-gameplay.test.cjs",
-      "sha256": "45fc650ec65f7bb739cd24907c9137e260f8b1243511021a53d69f82372fe7d1",
+      "sha256": "554df2240870923806d28fa30ed9915b64442f1330e23736c0fb69fc66808134",
       "encoding": "utf8-lf"
     },
     {
@@ -1713,6 +1733,11 @@
     {
       "path": "room-editor/tests/import-compat-ui-smoke.cjs",
       "sha256": "0cd355e41a48cae722d6cb91b2071db6bdd935086ada02c8c2870fc2e47fb6fb",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/items.test.cjs",
+      "sha256": "f60a3ac2ba54d933a79e2e29859b6305c996b52f87f80bdb8e461c6b1b116e09",
       "encoding": "utf8-lf"
     },
     {
@@ -1802,7 +1827,7 @@
     },
     {
       "path": "room-editor/tests/play-ui-smoke.cjs",
-      "sha256": "2247a58b48d680da96d9a94a22da11111f88573b3d39d04b9cb167796e2c931d",
+      "sha256": "162330a1ca129ce1731b37d7e9603fdc46e288ded3bab298a92427c4fc9d5f71",
       "encoding": "utf8-lf"
     },
     {
@@ -1871,13 +1896,23 @@
       "encoding": "utf8-lf"
     },
     {
+      "path": "room-editor/tests/teacher-ui-smoke.cjs",
+      "sha256": "1bd2a43144209a9c2ee327de141a73a3aef6e3fe4dbab616292f8f1d36e0474d",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/teacher.test.cjs",
+      "sha256": "e225fb1a5f0477ebfa6625be9b2b8dd2b59034eefaf771fc1f6d3dba5d44d328",
+      "encoding": "utf8-lf"
+    },
+    {
       "path": "room-editor/tests/themes-ui-smoke.cjs",
-      "sha256": "292e99662f90f8ebac0712a5e0932f188b49c07be8331f3f4221b861609b7bc9",
+      "sha256": "a4a1ccaebe8297aa47090fc2eebb28a8c151d277e49b9c317e053e27e5de4997",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/tests/themes.test.cjs",
-      "sha256": "34654858a7d7a2aeb26b410eef7b68d81b799795b856f413786bca0e45b37687",
+      "sha256": "33b936148d3878b189be05bd9533afb6fa47e507557841d078058601f9bf7acb",
       "encoding": "utf8-lf"
     },
     {

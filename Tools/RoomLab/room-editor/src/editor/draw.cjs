@@ -7,6 +7,7 @@ const Registry = require('../plugins/registry.cjs'),
 const GraphLayout = require('./graph-layout.cjs');
 const Temperature = require('../project/temperature.cjs');
 const Collision = require('../project/collision.cjs');
+const TeacherLinks = require('../project/teacher-links.cjs');
 function ghostBorder(ctx, rect) {
   ctx.save();
   ctx.lineWidth = 3;
@@ -264,11 +265,8 @@ function drawRoom(
       w: (o.w || 1) * T,
       h: (o.h || 1) * T,
     };
-    if (
-      ['common.coin', 'common.small', 'common.collectible'].includes(o.type) &&
-      game?.credited?.has(r.id + '/' + o.id)
-    )
-      continue;
+    if (d.collectible && game?.credited?.has(r.id + '/' + o.id)) continue;
+    if (game && state.removed) continue;
     const checkpoint = o.type === 'common.checkpoint',
       glyph =
         o.type === 'physics.jet'
@@ -331,7 +329,14 @@ function drawRoom(
       ctx.fillRect(rect.x - 2, rect.y + rect.h / 2 - 7, 3, 14);
       ctx.fillRect(rect.x + rect.w - 1, rect.y + rect.h / 2 - 7, 3, 14);
     }
-    if (!Collision.inherited(r, o, 'objects', d, game?.movableStates)) ghostBorder(ctx, rect);
+    const solid =
+      game && d.dynamicSolidity && d.isSolid
+        ? d.isSolid(game.context(o), o, state)
+        : game
+          ? Collision.inherited(r, o, 'objects', d, game.movableStates) &&
+            (!d.isSolid || d.isSolid(game.context(o), o, state))
+          : Collision.inherited(r, o, 'objects', d, game?.movableStates);
+    if (!solid) ghostBorder(ctx, rect);
     if (o.type === 'physics.ice' && game)
       text(
         ctx,
@@ -370,6 +375,43 @@ function drawRoom(
       });
     }
   }
+  if (!game)
+    for (const teacher of r.objects.filter(TeacherLinks.isTeacher)) {
+      const selected = [selection, ...selections].some(
+          (s) => s?.kind === 'objects' && s.id === teacher.id,
+        ),
+        showBindings = targets || selected,
+        min = Math.min(teacher.params?.patrolMinX ?? teacher.x, teacher.params?.patrolMaxX ?? teacher.x),
+        max = Math.max(teacher.params?.patrolMinX ?? teacher.x, teacher.params?.patrolMaxX ?? teacher.x);
+      ctx.save();
+      ctx.strokeStyle = selected ? '#ffd37a' : '#d6a95d99';
+      ctx.lineWidth = 2 / v.scale;
+      ctx.setLineDash([6, 4]);
+      line(
+        ctx,
+        (min + 0.1) * T,
+        teacher.y * T + T * 0.75,
+        (max + 0.9) * T,
+        teacher.y * T + T * 0.75,
+        ctx.strokeStyle,
+      );
+      ctx.setLineDash([]);
+      if (showBindings)
+        for (const checkin of TeacherLinks.checkins(r, teacher)) {
+          ctx.strokeStyle = '#e7b86788';
+          ctx.setLineDash([4, 4]);
+          line(
+            ctx,
+            (teacher.x + 0.5) * T,
+            (teacher.y + 0.5) * T,
+            (checkin.x + 0.5) * T,
+            (checkin.y + 0.5) * T,
+            ctx.strokeStyle,
+          );
+          ctx.setLineDash([]);
+        }
+      ctx.restore();
+    }
   for (const [index, trace] of (traces || r.playTraces || []).entries())
     if (trace.visible !== false && Array.isArray(trace.points) && trace.points.length) {
       const color = /^#[0-9a-f]{6}$/i.test(trace.color) ? trace.color : '#70cff4';

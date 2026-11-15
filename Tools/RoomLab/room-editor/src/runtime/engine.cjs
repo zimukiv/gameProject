@@ -19,6 +19,7 @@ class Engine {
     const errors = M.validate(project, { play: true }).errors;
     if (errors.length) throw new Error(errors[0]);
     this.config = Performance.resolve(project.settings);
+    this.paidStockCap = 1;
     this.project = clone(project);
     this.course = this.project.courses.find((c) => c.id === courseId) || this.project.courses[0];
     for (const r of this.course.rooms)
@@ -33,6 +34,7 @@ class Engine {
     this.steals = 0;
     this.events = [];
     this.credited = new Set();
+    this.items = {};
     this.roomCaches = new Map();
     this.lifeBaselines = new Map();
     this.courseState = {
@@ -44,7 +46,7 @@ class Engine {
     };
     this.loadRoom(roomId || this.course.rooms[0].id, entryId, {
       tokens: 0,
-      charges: 3,
+      charges: 0,
       recharge: 0,
       freeDash: true,
       dashCount: 0,
@@ -58,6 +60,15 @@ class Engine {
     this.message = message;
     this.messageTime = time;
   }
+  hasItem(type) {
+    return (this.items?.[type] || 0) > 0;
+  }
+  takeHalfTokens() {
+    const before = this.tokens,
+      lost = Math.ceil(before / 2);
+    this.tokens = Math.max(0, before - lost);
+    return { before, lost, remaining: this.tokens };
+  }
   attachmentOffset(o) {
     const owner = o.attachmentTo && this.room.movables.find((b) => b.id === o.attachmentTo);
     if (!owner || !this.movableStates?.has(owner.id)) return { x: 0, y: 0 };
@@ -65,6 +76,11 @@ class Engine {
     return { x: rect.x - owner.x * T, y: rect.y - owner.y * T };
   }
   worldObject(o) {
+    const runtime = Registry.get(o.type).runtimePosition?.(
+      o,
+      this.objectStates?.get(o.id),
+    );
+    if (runtime) return { ...o, x: runtime.x, y: runtime.y };
     const d = this.attachmentOffset(o);
     if (!d.x && !d.y) return o;
     return {
@@ -80,11 +96,11 @@ class Engine {
     };
   }
   objectRect(o) {
-    const d = this.attachmentOffset(o);
+    const world = this.worldObject(o);
     return {
       id: o.id,
-      x: o.x * T + d.x,
-      y: o.y * T + d.y,
+      x: world.x * T,
+      y: world.y * T,
       w: (o.w || 1) * T,
       h: (o.h || 1) * T,
       kind: o.attachmentTo ? 'movable' : 'object',
@@ -110,6 +126,10 @@ class Engine {
         if (zoneId) this.zoneStates.set(zoneId, value);
         else this.roomEnvironment = value;
       },
+      hasItem: (type) => this.hasItem(type),
+      objectState: (id) => this.objectStates.get(id),
+      takeHalfTokens: () => this.takeHalfTokens(),
+      retry: (reason) => this.retry(reason),
       actorOverlaps: (target) =>
         overlap(this.player, this.objectRect(target)) ||
         (this.ai.active &&
@@ -175,7 +195,7 @@ class Engine {
           };
     Object.assign(this, {
       tokens: resources.tokens,
-      charges: resources.charges,
+      charges: Math.min(this.paidStockCap, Math.max(0, resources.charges || 0)),
       recharge: resources.recharge,
     });
     this.player = {
@@ -245,6 +265,7 @@ class Engine {
       },
       score: this.score,
       credited: [...this.credited],
+      items: clone(this.items),
       course: clone(this.courseState),
       state: this.serializeRoom(),
       spawn: clone(spawn),
@@ -274,6 +295,7 @@ class Engine {
       respawn = cp.spawn;
     this.score = cp.score;
     this.credited = new Set(cp.credited);
+    this.items = clone(cp.items || {});
     this.courseState = cp.course;
     this.courseState.life++;
     const baseline = this.lifeBaselines.get(roomId);
@@ -359,15 +381,18 @@ class Engine {
     for (const o of this.room.objects) {
       const def = Registry.get(o.type),
         s = this.objectStates.get(o.id);
-      const shape = Collision.inherited(this.room, o, 'objects', def, this.movableStates)
-        ? def.collider || 'tile'
-        : false;
-      if (!shape || (def.isSolid && !def.isSolid(this.context(o), o, s))) continue;
-      if (
-        ['common.coin', 'common.small', 'common.collectible'].includes(o.type) &&
-        this.credited.has(this.room.id + '/' + o.id)
-      )
-        continue;
+      const dynamicSolid =
+          def.dynamicSolidity && def.isSolid ? def.isSolid(this.context(o), o, s) : null,
+        shape =
+          dynamicSolid === null
+            ? Collision.inherited(this.room, o, 'objects', def, this.movableStates)
+              ? def.collider || 'tile'
+              : false
+            : dynamicSolid
+              ? def.collider || 'tile'
+              : false;
+      if (!shape) continue;
+      if (def.collectible && this.credited.has(this.room.id + '/' + o.id)) continue;
       const rect = this.objectRect(o);
       if (shape === 'pad') rect.h = 8;
       rect.priority = shape === 'tile' ? 2 : 1;
@@ -528,11 +553,19 @@ class Engine {
   fire(o) {
     const s = this.objectStates.get(o.id),
       def = Registry.get(o.type);
-    if (s.cooldown > 0 || ((o.trigger?.once || o.params.once) && s.used)) return;
+    if (def.requiresItem && !this.hasItem(def.requiresItem)) {
+      if (!def.silentWithoutItem) {
+        this.say('需要' + Registry.get(def.requiresItem).name + '才能使用' + (o.name || def.name));
+        this.emit('item-required', { id: o.id, item: def.requiresItem });
+      }
+      return false;
+    }
+    if (s.cooldown > 0 || ((o.trigger?.once || o.params.once) && s.used)) return false;
     s.used = true;
     s.cooldown = o.params.cooldown || o.trigger?.cooldown || 1;
     def.onTrigger?.(this.context(o), o, s);
     this.emit('trigger', { id: o.id, type: o.type });
+    return true;
   }
   triggerObjects(oldBottom) {
     const p = this.player;
@@ -592,6 +625,7 @@ class Engine {
       },
       score: this.score,
       credited: [...this.credited],
+      items: clone(this.items),
       course: clone(this.courseState),
       state: this.serializeRoom(),
       spawn: {
@@ -609,21 +643,27 @@ class Engine {
     this.emit('checkpoint', { id: o.id });
   }
   collect(o) {
-    const key = this.room.id + '/' + o.id;
+    const key = this.room.id + '/' + o.id,
+      def = Registry.get(o.type);
     if (this.credited.has(key)) return;
     this.credited.add(key);
-    if (o.type === 'common.collectible') this.score += 10000;
+    if (def.item) {
+      this.items[o.type] = (this.items[o.type] || 0) + 1;
+      this.emit('item-collect', { id: o.id, itemType: o.type, count: this.items[o.type] });
+    } else if (o.type === 'common.collectible') this.score += 10000;
     else {
       const n = o.type === 'common.small' ? 1 : 10;
       this.tokens += n;
-      this.recharge += n;
       this.score += n === 1 ? 100 : 1000;
-      while (this.recharge >= 10) {
-        this.recharge -= 10;
-        this.charges = Math.min(3, this.charges + 1);
+      if (this.hasItem('item.icedTea')) {
+        this.recharge += n;
+        while (this.recharge >= 10) {
+          this.recharge -= 10;
+          this.charges = Math.min(this.paidStockCap, this.charges + 1);
+        }
       }
     }
-    this.emit('collect', { id: o.id });
+    this.emit('collect', { id: o.id, objectType: o.type });
   }
   catchPlayer() {
     const a = this.ai,
@@ -818,7 +858,7 @@ class Engine {
     if (
       input.dashPressed &&
       p.dashCount < 3 &&
-      (p.freeDash || this.charges > 0) &&
+      (p.freeDash || (this.hasItem('item.icedTea') && this.charges > 0)) &&
       (!p.rail || p.rail.allowExit)
     ) {
       const d = direction(input, p.face),
@@ -944,11 +984,24 @@ class Engine {
         return;
       }
       if (
-        ['common.coin', 'common.small', 'common.collectible'].includes(o.type) &&
+        Registry.get(o.type).collectible &&
         (!o.params.unlockPadId || this.objectStates.get(o.params.unlockPadId)?.hitAI) &&
         (solidContact || overlap(p, { x: rect.x + 5, y: rect.y + 5, w: 22, h: 22 }))
       )
         this.collect(o);
+    }
+    for (const o of this.room.objects) {
+      const def = Registry.get(o.type),
+        state = this.objectStates.get(o.id);
+      if (!def.onPlayerContact || state.removed) continue;
+      const contact = overlap(p, this.objectRect(o));
+      if (!contact) {
+        state.playerContact = false;
+        continue;
+      }
+      if (state.playerContact) continue;
+      state.playerContact = true;
+      if (def.onPlayerContact(this.context(o), o, state) === 'retry') return;
     }
     this.triggerObjects(oldBottom);
     this.updateAI(dt, this.colliders());
@@ -1009,7 +1062,9 @@ class Engine {
       tokens: this.tokens,
       charges: this.charges,
       recharge: this.recharge,
+      paidStockCap: this.paidStockCap,
       score: this.score,
+      items: clone(this.items),
       deaths: this.deaths,
       steals: this.steals,
       elapsed: this.elapsed,

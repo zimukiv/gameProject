@@ -21,7 +21,7 @@ test('native folder save/reopen preserves artwork and data on Chinese space path
   );
   const read = F.readProject(file);
   assert.deepEqual(read.project, p);
-  assert.equal(read.files.length, 9);
+  assert.equal(read.files.length, seed.assets.length);
   p.notes = '第二次保存';
   F.writeProject(file, p, read.files);
   assert.ok(fs.readdirSync(path.join(root, '.project-backups')).length);

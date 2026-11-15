@@ -3,12 +3,13 @@ const Draw = require('../draw.cjs'),
   { esc, $, modal } = require('../dom.cjs');
 const TraceManager = require('../trace-manager.cjs');
 const Camera = require('../../project/play-camera.cjs');
+const Registry = require('../../plugins/registry.cjs');
 function render(app) {
   const g = app.game,
     s = app.state,
     hidden = s.playInspectorHidden !== false;
   $('app').innerHTML =
-    `<div class="play-shell"><div class="room-title"><div><h1 id="play-title">${esc(g.room.name)}</h1><span id="play-room-size" class="room-size-tag">${g.room.cols} × ${g.room.rows} 格</span></div><div class="actions"><button id="play-traces">保存 / 显示路径</button><button id="play-help">⌨ 按键说明</button><button id="play-inspector">${hidden ? '显示状态' : '收起状态'}</button><button id="play-pause">暂停 / 继续</button><button id="play-retry">重试本房</button><button id="play-edit" class="primary">回到编辑</button></div></div><div class="room-workspace ${hidden ? 'inspector-hidden' : ''}"><section class="panel canvas-panel play-canvas-panel"><div class="play-hud"><span>token <b id="play-tokens"></b></span><span>免费首冲 <b id="play-free"></b></span><span>付费库存 <b id="play-paid"></b></span><span>周期 <b id="play-count"></b>/3</span><span>积分 <b id="play-score"></b></span><span>重试 <b id="play-deaths"></b></span><span>存档 <b id="play-checkpoint"></b></span></div><div class="canvas-wrap"><canvas id="play-canvas" width="1000" height="560" tabindex="0" aria-label="试玩画布"></canvas><div id="play-overlay" class="play-overlay" hidden><div><h2 id="play-overlay-title"></h2><p id="play-overlay-text"></p><button id="play-resume" class="primary">继续试玩</button><button id="overlay-retry">重试本房</button><button id="overlay-edit">回到编辑</button></div></div></div><div class="canvas-footer" id="play-note"></div></section><aside class="panel inspector form"><h2>试玩状态</h2><p id="play-ai" class="hint"></p><div id="play-environment" class="hint"></div><h3>AI 距离条件测试</h3><select id="test-object">${g.room.objects
+    `<div class="play-shell"><div class="room-title"><div><h1 id="play-title">${esc(g.room.name)}</h1><span id="play-room-size" class="room-size-tag">${g.room.cols} × ${g.room.rows} 格</span></div><div class="actions"><button id="play-traces">保存 / 显示路径</button><button id="play-help">⌨ 按键说明</button><button id="play-inspector">${hidden ? '显示状态' : '收起状态'}</button><button id="play-pause">暂停 / 继续</button><button id="play-retry">重试本房</button><button id="play-edit" class="primary">回到编辑</button></div></div><div class="room-workspace ${hidden ? 'inspector-hidden' : ''}"><section class="panel canvas-panel play-canvas-panel"><div class="play-hud"><span>token <b id="play-tokens"></b></span><span>免费首冲 <b id="play-free"></b></span><span>付费库存 <b id="play-paid"></b></span><span>周期 <b id="play-count"></b>/3</span><span>积分 <b id="play-score"></b></span><span>重试 <b id="play-deaths"></b></span><span>存档 <b id="play-checkpoint"></b></span><span>道具 <b id="play-items"></b></span></div><div class="canvas-wrap"><canvas id="play-canvas" width="1000" height="560" tabindex="0" aria-label="试玩画布"></canvas><div id="play-overlay" class="play-overlay" hidden><div><h2 id="play-overlay-title"></h2><p id="play-overlay-text"></p><button id="play-resume" class="primary">继续试玩</button><button id="overlay-retry">重试本房</button><button id="overlay-edit">回到编辑</button></div></div></div><div class="canvas-footer" id="play-note"></div></section><aside class="panel inspector form"><h2>试玩状态</h2><p id="play-ai" class="hint"></p><div id="play-environment" class="hint"></div><h3>AI 距离条件测试</h3><select id="test-object">${g.room.objects
       .filter((o) => o.trigger?.requiresAI)
       .map((o) => `<option value="${esc(o.id)}">${esc(o.name || o.id)}</option>`)
       .join(
@@ -22,7 +23,7 @@ function render(app) {
   $('play-help').onclick = () =>
     modal(
       '试玩按键说明',
-      '<table class="table"><tr><td>A/D 或 ←/→</td><td>左右移动</td></tr><tr><td>空格 / W / ↑</td><td>跳跃</td></tr><tr><td>S / ↓</td><td>蹲下 / 向下冲刺方向</td></tr><tr><td>方向 + Shift</td><td>冲刺</td></tr><tr><td>R / Esc</td><td>重试本房 / 暂停继续</td></tr></table><p>实心 AI 板踩上触发；空心 AI 板经过触发。经过存档点后会更新复活位置，重试时从最近存档点继续。每次实际落地刷新一次免费首冲，计入三次上限。</p>',
+      '<table class="table"><tr><td>A/D 或 ←/→</td><td>左右移动</td></tr><tr><td>空格 / W / ↑</td><td>跳跃</td></tr><tr><td>S / ↓</td><td>蹲下 / 向下冲刺方向</td></tr><tr><td>方向 + Shift</td><td>冲刺</td></tr><tr><td>R / Esc</td><td>重试本房 / 暂停继续</td></tr></table><p>实心 AI 板踩上触发；空心 AI 板经过触发。经过存档点后会更新复活位置，重试时从最近存档点继续。每次实际落地刷新一次免费首冲，计入三次上限。持有冰红茶时，token 每满 10 点充能一次付费库存，库存上限 1 次；没有冰红茶时不能进行二段冲刺。</p>',
       [{ label: '知道了' }],
     );
   const canvas = $('play-canvas'),
@@ -86,13 +87,19 @@ function refresh(app) {
   $('play-room-size').textContent = g.room.cols + ' × ' + g.room.rows + ' 格';
   $('play-tokens').textContent = g.tokens;
   $('play-free').textContent = g.player.freeDash ? '●' : '○';
-  $('play-paid').textContent = '●'.repeat(g.charges) + '○'.repeat(3 - g.charges);
+  $('play-paid').textContent = g.hasItem('item.icedTea')
+    ? '●'.repeat(g.charges) + '○'.repeat(g.paidStockCap - g.charges)
+    : '需冰红茶';
   $('play-count').textContent = g.player.dashCount;
   $('play-score').textContent = g.score;
   $('play-deaths').textContent = g.deaths;
   $('play-checkpoint').textContent = g.checkpoint?.spawn?.objectId ? '存档点' : '房间入口';
+  $('play-items').textContent =
+    Object.entries(g.items || {})
+      .map(([type, count]) => Registry.get(type).name + ' ' + count)
+      .join(' · ') || '—';
   $('play-note').textContent =
-    g.messageTime > 0 ? g.message : '踩板触发；出口按照接线板切换。免费首冲计入三次上限。';
+    g.messageTime > 0 ? g.message : '踩板触发；免费首冲计入三次上限。冰红茶可让 token 为二段冲刺充能。';
   $('play-ai').textContent =
     'AI ID：' + g.ai.id + ' / ' + (g.ai.active ? '已启动（跨房继承）' : '未启动');
   $('play-environment').textContent =

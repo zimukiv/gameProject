@@ -15,7 +15,25 @@ function normalize(project) {
       if (o.type === 'physics.rail') o.params = { ...o.params, sideTrigger: true };
     }
   }
+  if (project.settings) project.settings.paidStockCap = 1;
   project.pluginManifest = { ...project.pluginManifest };
+  const awakeVersion = project.pluginManifest['slacker.awake'];
+  if (
+    objects.some((o) => o.type === 'slacker.awake') &&
+    (!awakeVersion || ['1.0.0', '1.1.0'].includes(awakeVersion))
+  ) {
+    for (const course of project.courses || [])
+      for (const room of course.rooms || []) {
+        const occupied = new Set((room.tiles || []).map((tile) => tile.x + ',' + tile.y));
+        for (const o of room.objects || [])
+          if (o.type === 'slacker.awake') {
+            if (o.y > 0 && occupied.has(o.x + ',' + o.y)) o.y -= 1;
+            o.collision = true;
+            o.trigger = { ...o.trigger, mode: 'region' };
+          }
+      }
+    project.pluginManifest['slacker.awake'] = '1.2.0';
+  }
   if (
     objects.some((o) => o.type === 'common.checkpoint') &&
     !project.pluginManifest['common.checkpoint']

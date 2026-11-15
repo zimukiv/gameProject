@@ -23,6 +23,7 @@ function card(app, course, { tool, type, label, glyph, hint }) {
       'calculus.derivative': '求导展开',
       'slacker.checkin': '签到记录',
       'slacker.awake': '清醒加速',
+      'slacker.teacher': '巡查老师',
       'common.aiStart': 'AI 启动板',
       'common.aiStartHollow': 'AI 空心',
     }[type] || label;
@@ -32,7 +33,10 @@ function render(app, course) {
   const defs = Registry.list(course.kind);
   // Every authored course shares one mechanism palette. Theme metadata still
   // controls the course card, colour and starter content, but not tool access.
-  const mechanismDefs = defs.filter((d) => !d.type.startsWith('common.'));
+  const mechanismDefs = defs.filter(
+    (d) => !d.type.startsWith('common.') && !d.type.startsWith('item.'),
+  );
+  const itemDefs = defs.filter((d) => d.type.startsWith('item.'));
   const groups = [
     ['地形', [{ tool: 'tile', label: '地形', glyph: '▦', hint: '拖动画地形，Shift 画矩形' }]],
     [
@@ -58,6 +62,10 @@ function render(app, course) {
             : []),
         ]),
       ],
+    ],
+    [
+      '道具',
+      itemDefs.map((d) => ({ type: d.type, label: d.name, glyph: d.glyph })),
     ],
     [
       '收集与危险',

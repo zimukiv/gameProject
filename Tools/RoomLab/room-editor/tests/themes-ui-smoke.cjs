@@ -95,19 +95,24 @@ const assert = require('node:assert/strict'),
       'calculus.derivative',
       'slacker.checkin',
       'slacker.awake',
+      'slacker.teacher',
     ];
+    const itemTools = ['item.coffee', 'item.calculator', 'item.phone', 'item.icedTea'];
     const expectations = {
       physics: { tools: unifiedTools, absent: [], events: [] },
       calculus: {
         tools: unifiedTools,
         absent: [],
         events: ['calculus-integral', 'calculus-derivative'],
+        item: ['item.calculator', 1],
         won: true,
       },
       slacker: {
         tools: unifiedTools,
         absent: [],
         events: ['checkin', 'awake'],
+        item: ['item.coffee', 1],
+        phone: true,
         won: true,
       },
     };
@@ -122,6 +127,14 @@ const assert = require('node:assert/strict'),
           await page.locator(`[data-block-type="${type}"] img`).count(),
           1,
           kind + ' artwork / ' + type,
+        );
+      }
+      for (const type of itemTools) {
+        assert.equal(await page.locator(`[data-block-type="${type}"]`).count(), 1, kind + ' item');
+        assert.equal(
+          await page.locator(`[data-block-type="${type}"] img`).count(),
+          1,
+          kind + ' item artwork / ' + type,
         );
       }
       for (const type of want.absent)
@@ -147,6 +160,17 @@ const assert = require('node:assert/strict'),
           game.events.some((e) => e.type === event),
           kind + ' missing event ' + event,
         );
+      if (want.item) {
+        assert.ok((game.items[want.item[0]] || 0) >= want.item[1], kind + ' inventory');
+        if (want.phone)
+          assert.ok((game.items['item.phone'] || 0) >= 1, kind + ' phone inventory');
+        const label = { 'item.coffee': '咖啡', 'item.calculator': '计算器' }[want.item[0]];
+        assert.ok(
+          (await page.locator('#play-items').textContent()).includes(
+            label + ' ' + game.items[want.item[0]],
+          ),
+        );
+      }
       await leavePlay();
     }
 

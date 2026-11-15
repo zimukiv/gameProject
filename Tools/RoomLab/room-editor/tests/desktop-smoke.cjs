@@ -41,7 +41,7 @@ const { _electron } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       file,
     );
     assert.deepEqual(opened.project, snap);
-    assert.equal(opened.files.length, 13);
+    assert.equal(opened.files.length, snap.assets.length);
     const updated = { ...snap, notes: '直接保存到打开的文件' };
     const overwritten = await page.evaluate(
       ({ project, session }) =>

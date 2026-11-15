@@ -53,7 +53,7 @@
 
 ## 积分聚合板 · calculus.integral
 
-版本：1.0.0；大关：calculus；触发：foot；素材状态：idle / active
+版本：1.0.0；大关：calculus；触发：foot；素材状态：idle / active；需要道具：计算器
 
 | 参数 | 说明 | 类型 | 默认值 | 范围/选项 |
 | --- | --- | --- | --- | --- |
@@ -62,7 +62,7 @@
 
 ## 求导展开板 · calculus.derivative
 
-版本：1.0.0；大关：calculus；触发：foot；素材状态：idle / active
+版本：1.0.0；大关：calculus；触发：foot；素材状态：idle / active；需要道具：计算器
 
 | 参数 | 说明 | 类型 | 默认值 | 范围/选项 |
 | --- | --- | --- | --- | --- |
@@ -71,7 +71,7 @@
 
 ## 签到板 · slacker.checkin
 
-版本：1.0.0；大关：slacker；触发：foot；素材状态：idle / active
+版本：1.1.0；大关：slacker；触发：foot；素材状态：idle / active；需要道具：手机
 
 | 参数 | 说明 | 类型 | 默认值 | 范围/选项 |
 | --- | --- | --- | --- | --- |
@@ -79,13 +79,50 @@
 
 ## 清醒板 · slacker.awake
 
-版本：1.0.0；大关：slacker；触发：foot；素材状态：idle / active
+版本：1.2.0；大关：slacker；触发：region；素材状态：idle / active；需要道具：咖啡
 
 | 参数 | 说明 | 类型 | 默认值 | 范围/选项 |
 | --- | --- | --- | --- | --- |
-| speed | 清醒加速速度 | number | `520` | 100–1200 |
-| lift | 附加上抛速度 | number | `140` | 0–600 |
+| speed | 通过方向加速速度 | number | `520` | 100–1200 |
 | cooldown | 冷却（秒） | number | `3` | 0.1–30 |
+
+## 咖啡 · item.coffee
+
+版本：1.0.0；大关：*；触发：region；素材状态：idle
+
+| 参数 | 说明 | 类型 | 默认值 | 范围/选项 |
+| --- | --- | --- | --- | --- |
+
+## 计算器 · item.calculator
+
+版本：1.0.0；大关：*；触发：region；素材状态：idle
+
+| 参数 | 说明 | 类型 | 默认值 | 范围/选项 |
+| --- | --- | --- | --- | --- |
+
+## 手机 · item.phone
+
+版本：1.0.0；大关：*；触发：region；素材状态：idle
+
+| 参数 | 说明 | 类型 | 默认值 | 范围/选项 |
+| --- | --- | --- | --- | --- |
+
+## 冰红茶 · item.icedTea
+
+版本：1.0.0；大关：*；触发：region；素材状态：idle
+
+| 参数 | 说明 | 类型 | 默认值 | 范围/选项 |
+| --- | --- | --- | --- | --- |
+
+## 巡查老师 · slacker.teacher
+
+版本：1.0.0；大关：slacker；触发：none；素材状态：idle / active
+
+| 参数 | 说明 | 类型 | 默认值 | 范围/选项 |
+| --- | --- | --- | --- | --- |
+| patrolMinX | 平台左边界（列） | number | `0` | 0–255 |
+| patrolMaxX | 平台右边界（列） | number | `4` | 0–255 |
+| speed | 巡查速度（格/秒） | number | `1.5` | 0.1–20 |
 
 ## 大 token · common.coin
 
