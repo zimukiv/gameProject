@@ -1,9 +1,9 @@
 {
   "repository": "zimukiv/gameProject",
-  "version": "4.0.0",
-  "releaseTag": "roomlab-editor-v4.0.0",
-  "createdAt": "2026-11-15",
-  "programSHA256": "5afb02b5b4b3cfc298b1a4cb67a29510097d497ff79c17e67a5dd556ae5ce08f",
+  "version": "4.1.0",
+  "releaseTag": "roomlab-editor-v4.1.0",
+  "createdAt": "2026-11-16",
+  "programSHA256": "13d0837d59f91cb321b479e8e019bbcdb6163eb884c0048794561f4c638c6b0f",
   "files": [
     {
       "path": "room-cloud/.gitignore",
@@ -687,7 +687,7 @@
     },
     {
       "path": "room-editor/ARCHITECTURE.md",
-      "sha256": "2151d0b073c043ee9acf7987e0423cacd1574f1e392fdab3b30ca0e1da797a29",
+      "sha256": "d7c15e0991cd74c07c0747466e29fa0380795f6c680c081a8a2cdc0d65bcabdd",
       "encoding": "utf8-lf"
     },
     {
@@ -702,7 +702,7 @@
     },
     {
       "path": "room-editor/docs/CHANGELOG.md",
-      "sha256": "19163ec8de98b4ee7fa144d6274141889ef888d9bdae688cf6a2c90d9c91bb25",
+      "sha256": "aeb06f7247ec34849eae9183f4f02b27334b9ba213a5648dc21c9d057075a7fa",
       "encoding": "utf8-lf"
     },
     {
@@ -712,7 +712,7 @@
     },
     {
       "path": "room-editor/docs/EDITOR_GUIDE.md",
-      "sha256": "352725dd9aeebff6616354691200a6b5ce01b20bc3cb8e0c5707fca0168be67a",
+      "sha256": "080f83adcd642e236f52c5755503f29008099e02b66547acfdac06b47694584a",
       "encoding": "utf8-lf"
     },
     {
@@ -732,7 +732,7 @@
     },
     {
       "path": "room-editor/docs/PROJECT_FORMAT.md",
-      "sha256": "3c34a09f65289912418a21f53a255ef8beb440f9afaaf3dd08600cb06a469abf",
+      "sha256": "97f7aa5d4cd7ad129804a5e91fa8c7c20e3a7d5eb754e3b79f85875277668a1c",
       "encoding": "utf8-lf"
     },
     {
@@ -812,12 +812,12 @@
     },
     {
       "path": "room-editor/docs/TESTING.md",
-      "sha256": "ede88d0fac50041445d30ec4e23275a49e5472bf2ecca236abf12fccfcc08612",
+      "sha256": "64d42269e6df7b1b8dec52409aa7767de1b1a5bd577ccb2e24500b51caa197e9",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/examples/physics-project.zip",
-      "sha256": "d92a0bd34bcca8afc2ce6d441148f68ab743839706b9626906c414c2dbcb1e2b",
+      "sha256": "452194e54f5e220210d5bf29c77afd850fafc559dca26c7fa02592d942212ef3",
       "encoding": "binary"
     },
     {
@@ -867,17 +867,17 @@
     },
     {
       "path": "room-editor/examples/physics/project.json",
-      "sha256": "aa3e214b53ae8aabb3d2882818af1d5e930834848e8a68a91fdd2a485e59e101",
+      "sha256": "dee9f533b3170fd0369553b685c90451ace933536d829db2ab60627cc87164ca",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/examples/three-themes-project.zip",
-      "sha256": "d189692b18a822fa99b5c92fbbe5e56b7359a55915d9622cff055eeed892d522",
+      "sha256": "6069afab482de689b0e879069372f8ad5573ede228d95cd50c66a7818c15b67c",
       "encoding": "binary"
     },
     {
       "path": "room-editor/package.json",
-      "sha256": "c8e3f63cfaf1b56be2b29f5bcb099b1ed84f12419b76dfe342f731c694265a5f",
+      "sha256": "7dbcd0cabd6a173bc867b9eeff7b90b1863d42875328370fec3ec5aa0ff0311e",
       "encoding": "utf8-lf"
     },
     {
@@ -892,7 +892,7 @@
     },
     {
       "path": "room-editor/README.md",
-      "sha256": "612e12ce864f5460f7877c60a8b7e80d5813a9345e76b8c32755d00cf6c1576f",
+      "sha256": "4c3edcfd2046e7d6a175b41bf4f836743f7dac1efd2af106a2bfc2c7573ca887",
       "encoding": "utf8-lf"
     },
     {
@@ -1012,7 +1012,7 @@
     },
     {
       "path": "room-editor/src/desktop/main.cjs",
-      "sha256": "1584846982c9ec736a851a47e8a9594268a6616f3e5082df2399cc5617c28f11",
+      "sha256": "0ae38ea7fe36e22d7c2ed3604314061bd4a1fd575ae8fbe84bd18f5792171973",
       "encoding": "utf8-lf"
     },
     {
@@ -1027,7 +1027,7 @@
     },
     {
       "path": "room-editor/src/editor/app.cjs",
-      "sha256": "c550be17fd0f71c304d32a34eb54ac68285273e1dcb89638d521c1c753b6a527",
+      "sha256": "d84c319c6a0ced947d509b84a8869aa2b9a5d4bfba849d4f60c75f6c0438464a",
       "encoding": "utf8-lf"
     },
     {
@@ -1077,7 +1077,7 @@
     },
     {
       "path": "room-editor/src/editor/index.html",
-      "sha256": "099ca9bbbe3e0bcdc76e593122e0c139d9e28813e58714b6c0459f6335b30080",
+      "sha256": "bf93c642bfd0f06a37aa5eade2995a5d814132524d766cd03775af171a69fd11",
       "encoding": "utf8-lf"
     },
     {
@@ -1122,7 +1122,7 @@
     },
     {
       "path": "room-editor/src/editor/pages/course.cjs",
-      "sha256": "1fed432a920c19b1003a7c33820a79c52770dbefc65782399cb7df5621617577",
+      "sha256": "53dc301d384ca56e78615fec1bc5561cb682f7fbb5b292bc20c88c33c8f309d5",
       "encoding": "utf8-lf"
     },
     {
@@ -1142,7 +1142,7 @@
     },
     {
       "path": "room-editor/src/editor/pages/room.cjs",
-      "sha256": "381dc91cac55f686f37aed84d85edd7a016573bde7f7340ea65d6092ff02b33e",
+      "sha256": "ffcfd291ae5af15f83744b58fccdc7e4b64915a10d41234123af0c1bebd3cc54",
       "encoding": "utf8-lf"
     },
     {
@@ -1172,7 +1172,7 @@
     },
     {
       "path": "room-editor/src/editor/room-keys.cjs",
-      "sha256": "9259a0122ee5fe4b668f10917772e9fe54fbd0018dda8e72b97670c08a2eb7ee",
+      "sha256": "909a06d88fc4f069f15de2617cafdd12c714b5649db3a30366a8484b1eae935c",
       "encoding": "utf8-lf"
     },
     {
@@ -1417,7 +1417,7 @@
     },
     {
       "path": "room-editor/src/runtime/engine.cjs",
-      "sha256": "94456266ddef88ffec238612056403e77568a9ee98e8ac4c4e20a26a6e57ce26",
+      "sha256": "581cd7894b0aa4dc1f0d42552d194779e4cfe2d0d87ca4710f40098ee0665e34",
       "encoding": "utf8-lf"
     },
     {
@@ -1612,7 +1612,7 @@
     },
     {
       "path": "room-editor/tests/engine.test.cjs",
-      "sha256": "c876f58cf84d26ef7717c7ca927f2759f2dc7bf86510d39d050561fda6dabd6e",
+      "sha256": "6943b241aaf119d886f357887d01da0ade0629258b2b6e1d3f1b1f4f27a8d29f",
       "encoding": "utf8-lf"
     },
     {
@@ -1827,7 +1827,7 @@
     },
     {
       "path": "room-editor/tests/play-ui-smoke.cjs",
-      "sha256": "162330a1ca129ce1731b37d7e9603fdc46e288ded3bab298a92427c4fc9d5f71",
+      "sha256": "7c44b93d0e44d77f708d360cbe8741c83510298ba4ede82cdcdcfdeeab9e60a5",
       "encoding": "utf8-lf"
     },
     {
@@ -1978,6 +1978,41 @@
     {
       "path": "room-editor/tests/zone-bounds-repair.test.cjs",
       "sha256": "cb7042037cccf68c45660e3634d5f4d873e28e6f78fb55bc31118af47efe4d28",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/RELEASE_NOTES_4.1.0.md",
+      "sha256": "891473e342924a99776cddcaecf5363884a99c28e53ebf2c96a4ec4b78676a8e",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/examples/physics/assets/seed-calculator.svg",
+      "sha256": "1bc42a6bb626f8683788aa38190280fa32d474cc3eff4b3093854f3bdd93a4e2",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/examples/physics/assets/seed-coffee.svg",
+      "sha256": "e341b921db0e6830aff2b1e683b69228fbd56ca0adf986152aa9741a96314cb8",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/examples/physics/assets/seed-iced-tea.svg",
+      "sha256": "17075870281e80133e99919d4d2c90cdfbe159f4fc5f3a7d6365fea710c69ce1",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/examples/physics/assets/seed-phone.svg",
+      "sha256": "e6c2cba9c69328e5254f2c2d3a57f496fd02c54397ffbee73bd44357576cb2f5",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/src/editor/room-clipboard.cjs",
+      "sha256": "74c024abeb4978d1bb862639b4024048cad23a4e4d7232642472fd921c813251",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/room-clipboard-ui-smoke.cjs",
+      "sha256": "96337f3407f88903214b0afa49c83049fa6bc051daa61c2f66287d60acd494bc",
       "encoding": "utf8-lf"
     }
   ]
