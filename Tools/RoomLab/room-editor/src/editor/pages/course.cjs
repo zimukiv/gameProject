@@ -40,7 +40,7 @@ function render(app) {
     }
   }
   $('app').innerHTML =
-    `<div class="page-title"><div><h1>${esc(c.name)}</h1><p class="muted">${esc(c.notes)} · AI ID：${esc(c.aiId || '未指定')}</p></div><div class="actions"><button id="add-room">新建房间</button><button id="test-course" class="primary">从首房试玩</button></div></div><div class="tabs">${[
+    `<div class="page-title"><div><h1>${esc(c.name)}</h1><p class="muted">${esc(c.notes)} · AI ID：${esc(c.aiId || '未指定')}</p></div><div class="actions"><button id="add-room">新建房间</button><button data-room-clipboard-paste disabled>粘贴整房</button><button id="test-course" class="primary">从首房试玩</button></div></div><div class="tabs">${[
       ['graph', '缩略接线板'],
       ['rooms', '房间列表'],
       ['settings', '大关规则'],
@@ -344,7 +344,7 @@ function renderGraphInspector(app, c) {
   if (s.kind === 'room') {
     const r = c.rooms.find((r) => r.id === s.id);
     if (!r) return;
-    host.innerHTML = `<h2>房间节点</h2>${field('名称', 'graph-name', r.name)}${area('备注', 'graph-notes', r.notes)}<p class="hint">${r.cols}×${r.rows} · 节点位置不改变房间内部坐标。</p><div class="actions"><button id="graph-rename">保存说明</button><button id="graph-edit" class="primary">编辑房间</button><button id="graph-copy">复制房间</button><button id="graph-delete" class="danger">删除房间</button></div>`;
+    host.innerHTML = `<h2>房间节点</h2>${field('名称', 'graph-name', r.name)}${area('备注', 'graph-notes', r.notes)}<p class="hint">${r.cols}×${r.rows} · 节点位置不改变房间内部坐标。</p><div class="actions"><button id="graph-rename">保存说明</button><button id="graph-edit" class="primary">编辑房间</button><button data-room-clipboard-copy disabled>复制整房</button><button data-room-clipboard-paste disabled>粘贴整房</button><button id="graph-copy">原位复制</button><button id="graph-delete" class="danger">删除房间</button></div>`;
     $('graph-rename').onclick = () =>
       app.store.change(() => {
         r.name = $('graph-name').value.trim() || r.name;

@@ -19,8 +19,11 @@ pnpm build
 pnpm test:ui
 pnpm test:assets
 pnpm test:play
+pnpm test:room-clipboard
 pnpm test:desktop
 ```
+
+`test:room-clipboard` 使用真实键盘 `Ctrl+C` / `Ctrl+V` 从物理大关复制房间到高数大关，检查独立 ID、内部引用、素材解析、外部接线不复制、可重复粘贴和页面无错误。
 
 布局预览检查：`node tests/layout-ui-smoke.cjs`。验证顶部房间栏、窗口自适应画布、收起属性、连续图标放置、帮助弹窗、三级素材分类与候选过滤、接线板缩放平移后接线/选线及窄窗口布局。核心的 layout-assets.test.cjs 检查素材范围与旧分类兼容、端口真实坐标投影。
 

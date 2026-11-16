@@ -16,6 +16,10 @@ room：id/name/notes/cols/rows/graph/phase/aiId/aiPolicy/environment/tiles/entri
 
 入口：id/name/notes/x/y/face（1或-1）；出口：id/name/notes/x/y/w/h。每房至少一个入口。connection：id、from={roomId,exitId}、to={roomId,entryId}、velocity=reset/keep。接线属于大关，不跨大关。
 
+跨大关整房复制使用内存剪贴板，不新增持久化字段。粘贴时先生成单房间导出快照，再按独立房间导入规则重映射内部 ID、素材和引用；只保留两端都在该房间内的 connection，跨房 connection 由玩家重新接线。
+
+运行时过门后会记住本次到达的入口和来源出口。玩家离开后重新进入该入口时反向返回来源出口；该出口在玩家离开前保持休眠，避免立即再次过门。反向关系只存在于当前试玩会话和回退检查点，不写入项目或 connection。
+
 ## 功能对象
 
 object：id/type/name/notes/x/y/w/h/params/trigger/aiId/assetOverrides/resetPolicy。参数默认来自注册表 → 项目默认定义 → 实例覆盖。所有功能块 x,y 表示左上格子，贴图占 w×h 格；pad 的碰撞顶面在 y 行，以顶面脚底接触触发。zone 为 id/name/x/y/w/h/initial。轨道 path 的坐标可以是小数，表示世界格子点。新实例的参数数组独立克隆，轨道不能共用引用。

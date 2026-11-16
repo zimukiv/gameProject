@@ -1,6 +1,6 @@
 {
   "name": "ddl-room-editor",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "private": true,
   "description": "Three-theme (physics / calculus / slacker) room-based course level editor",
   "main": "src/desktop/main.cjs",
@@ -20,6 +20,7 @@
     "test:ui": "node tests/ui-smoke.cjs",
     "test:assets": "node tests/assets-ui-smoke.cjs",
     "test:play": "node tests/play-ui-smoke.cjs",
+    "test:room-clipboard": "node tests/room-clipboard-ui-smoke.cjs",
     "test:layout": "node tests/layout-ui-smoke.cjs",
     "test:fixes": "node --test tests/editor-fixes-ui-smoke.cjs",
     "test:nodes": "node --test tests/rail-edit-ui-smoke.cjs",

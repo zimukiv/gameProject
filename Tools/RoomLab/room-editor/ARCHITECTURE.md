@@ -1,5 +1,9 @@
 # Room Lab 架构
 
+4.1.0：`runtime/engine.cjs` 记录每次正向过门的来源房间、出口和目标入口。玩家离开目标入口后重新进入时，运行时反向加载来源房间并落在对应出口；该出口先休眠到玩家离开，避免重复过门。返回关系同时写入当前回退检查点，但不改变项目 v2、接线或云同步格式。
+
+4.1.0：整房剪贴板位于 `editor/room-clipboard.cjs`：`project/room-export` 生成含素材文件的单房间快照，`project/room-import-batch` 在目标大关按独立房间重映射内部引用并合并素材。剪贴板仅存在当前 App 内存；跨房 connection 不属于房间快照，粘贴后需要重新接线。
+
 4.0.0：新增 `plugins/items.cjs` 四种可拾取道具和试玩背包；`requiresItem` 将计算器、手机、咖啡与积分/求导、签到、清醒板联动，`assets/seeds` 增加道具与巡查老师内置素材。`plugins/teacher.cjs` 提供移动、签到绑定、接触扣 token/死亡规则；`project/teacher-links.cjs` 统一绑定、删除清理和房间复制重映射；`runtime/engine.cjs` 增加运行时位置、玩家接触、背包和动态 token 操作。项目格式仍为 v2。
 
 3.1.0：`plugins/registry.list` 对 physics/calculus/slacker 三类普通大关返回统一机关库，legacy 继续隔离。`editor/palette` 在全部普通大关提供机关砖和温控区域；`assets/seeds` 提供三主题合并绑定，`assets/catalog` 只共享 `seed-*` 内置素材，用户自定义素材仍按大关隔离。`editor/store` 为旧项目和新大关补齐内置素材及缺失绑定，但保留已有绑定优先。项目格式、房间结构、试玩和云同步协议不变。

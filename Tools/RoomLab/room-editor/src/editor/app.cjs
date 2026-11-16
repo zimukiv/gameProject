@@ -36,6 +36,7 @@ class App {
     }
     this.currentDraw = null;
     this.assetURLs = new Map();
+    this.roomClipboard = null;
     this.game = null;
     this.keys = new Set();
     this.edges = {};
@@ -192,6 +193,14 @@ class App {
       } else if ((e.ctrlKey || e.metaKey) && e.code === 'KeyS') {
         e.preventDefault();
         $('save-project').click();
+      } else if ((e.ctrlKey || e.metaKey) && e.code === 'KeyC') {
+        if (require('./room-clipboard.cjs').copySelection(this)) e.preventDefault();
+      } else if ((e.ctrlKey || e.metaKey) && e.code === 'KeyV') {
+        const clipboard = require('./room-clipboard.cjs');
+        if (clipboard.canPaste(this)) {
+          e.preventDefault();
+          clipboard.paste(this);
+        }
       } else if (this.state.route === 'room') {
         const tools = require('./room-keys.cjs').tools;
         const tool = Object.keys(tools).find((name) => e.code === 'Key' + tools[name]);
@@ -245,6 +254,7 @@ class App {
     else if (this.state.route === 'assets') AssetPage.render(this);
     else if (this.state.route === 'definitions') DefinitionPage.render(this);
     this.updateRoomExport();
+    require('./room-clipboard.cjs').sync(this);
     if ($('back-home')) $('back-home').onclick = () => this.go('home');
     const v = M.validate(p);
     this.message(

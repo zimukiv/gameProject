@@ -179,6 +179,62 @@ test('entering a named port uses its position and face rather than a global spaw
   assert.equal(g.player.y, 228);
   assert.equal(g.player.face, -1);
 });
+test('re-entering an arrival entry returns to the source room exit', () => {
+  const g = new Engine(M.example(), 'physics'),
+    source = g.room,
+    exit = source.exits[0];
+  Object.assign(g.player, { x: exit.x * 32 + 4, y: exit.y * 32 + 4, vx: 0, vy: 0 });
+  g.exitCooldown = 0;
+  step(g);
+  assert.equal(g.room.id, 'ice-room');
+  assert.deepEqual(g.entryReturn, {
+    roomId: 'jet-room',
+    exitId: 'jet-exit',
+    entryId: 'ice-room-entry',
+  });
+
+  const entry = g.room.entries[0];
+  step(g, {}, 4);
+  assert.equal(g.room.id, 'ice-room', 'spawning on the entry must not immediately backtrack');
+  Object.assign(g.player, {
+    x: (entry.x + 2) * 32 + 4,
+    y: entry.y * 32 + 4,
+    vx: 0,
+    vy: 0,
+  });
+  step(g);
+  Object.assign(g.player, { x: entry.x * 32 + 4, y: entry.y * 32 + 4, vx: 0, vy: 0 });
+  step(g);
+
+  assert.equal(g.room.id, 'jet-room');
+  assert.equal(g.entryReturn, null);
+  assert.ok(g.player.x >= exit.x * 32 && g.player.x < (exit.x + 1) * 32);
+  assert.equal(g.player.face, -1);
+  assert.ok(
+    g.events.some(
+      (e) =>
+        e.type === 'room-backtrack' && e.entryId === 'ice-room-entry' && e.exitId === 'jet-exit',
+    ),
+  );
+
+  step(g, {}, 90);
+  assert.equal(
+    g.room.id,
+    'jet-room',
+    'the restored exit must be disarmed until the player leaves it',
+  );
+  Object.assign(g.player, {
+    x: (exit.x - 2) * 32 + 4,
+    y: exit.y * 32 + 4,
+    vx: 0,
+    vy: 0,
+  });
+  step(g);
+  Object.assign(g.player, { x: exit.x * 32 + 4, y: exit.y * 32 + 4, vx: 0, vy: 0 });
+  g.exitCooldown = 0;
+  step(g);
+  assert.equal(g.room.id, 'ice-room');
+});
 test('rail starts at zero, accelerates and can be detached by a free dash', () => {
   const g = new Engine(M.example(), 'physics', 'rail-room'),
     o = g.room.objects.find((o) => o.type === 'physics.rail');

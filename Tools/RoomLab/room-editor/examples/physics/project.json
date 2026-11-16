@@ -9,7 +9,7 @@
   "settings": {
     "tileSize": 32,
     "maxDashes": 3,
-    "paidStockCap": 3,
+    "paidStockCap": 1,
     "freeDashOnLand": true
   },
   "courses": [
@@ -2013,13 +2013,13 @@
                   {
                     "x": 6.5,
                     "y": 15,
-                    "id": "rail-node-mw7froem-eyfkm9",
+                    "id": "rail-node-mwizd19g-znh868",
                     "parentId": "rail-c"
                   },
                   {
                     "x": 17.5,
                     "y": 15,
-                    "id": "rail-node-mw7froem-ra2hwp",
+                    "id": "rail-node-mwizd19g-jrv9b3",
                     "parentId": "rail-c"
                   }
                 ],
@@ -2236,6 +2236,66 @@
       "frameHeight": 0,
       "fps": 6,
       "hash": "seed-rail-active"
+    },
+    {
+      "id": "seed-coffee",
+      "name": "咖啡",
+      "path": "assets/seed-coffee.svg",
+      "mime": "image/svg+xml",
+      "width": 64,
+      "height": 64,
+      "courseId": "common",
+      "category": "item",
+      "subcategory": "item.coffee",
+      "frameWidth": 0,
+      "frameHeight": 0,
+      "fps": 6,
+      "hash": "seed-coffee"
+    },
+    {
+      "id": "seed-calculator",
+      "name": "计算器",
+      "path": "assets/seed-calculator.svg",
+      "mime": "image/svg+xml",
+      "width": 64,
+      "height": 64,
+      "courseId": "common",
+      "category": "item",
+      "subcategory": "item.calculator",
+      "frameWidth": 0,
+      "frameHeight": 0,
+      "fps": 6,
+      "hash": "seed-calculator"
+    },
+    {
+      "id": "seed-phone",
+      "name": "手机",
+      "path": "assets/seed-phone.svg",
+      "mime": "image/svg+xml",
+      "width": 64,
+      "height": 64,
+      "courseId": "common",
+      "category": "item",
+      "subcategory": "item.phone",
+      "frameWidth": 0,
+      "frameHeight": 0,
+      "fps": 6,
+      "hash": "seed-phone"
+    },
+    {
+      "id": "seed-iced-tea",
+      "name": "冰红茶",
+      "path": "assets/seed-iced-tea.svg",
+      "mime": "image/svg+xml",
+      "width": 64,
+      "height": 64,
+      "courseId": "common",
+      "category": "item",
+      "subcategory": "item.icedTea",
+      "frameWidth": 0,
+      "frameHeight": 0,
+      "fps": 6,
+      "hash": "seed-iced-tea"
     }
   ],
   "blockDefaults": {},

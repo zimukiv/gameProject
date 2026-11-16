@@ -76,10 +76,7 @@ class Engine {
     return { x: rect.x - owner.x * T, y: rect.y - owner.y * T };
   }
   worldObject(o) {
-    const runtime = Registry.get(o.type).runtimePosition?.(
-      o,
-      this.objectStates?.get(o.id),
-    );
+    const runtime = Registry.get(o.type).runtimePosition?.(o, this.objectStates?.get(o.id));
     if (runtime) return { ...o, x: runtime.x, y: runtime.y };
     const d = this.attachmentOffset(o);
     if (!d.x && !d.y) return o;
@@ -178,7 +175,7 @@ class Engine {
       this.movableStates = new Map(Object.entries(clone(cache.movables)));
     }
   }
-  loadRoom(id, entryId, resources, carry = null, respawn = null) {
+  loadRoom(id, entryId, resources, carry = null, respawn = null, returnLink = null) {
     if (this.room) this.roomCaches.set(this.room.id, this.serializeRoom());
     this.room = this.course.rooms.find((r) => r.id === id);
     if (!this.room) throw new Error('目标房间不存在');
@@ -221,6 +218,11 @@ class Engine {
       crouching: false,
       support: null,
     };
+    this.entryReturn =
+      returnLink && returnLink.entryId === this.entry.id ? clone(returnLink) : null;
+    this.entryTriggerArmed = false;
+    this.exitTriggerArmed = !spawn.exitId;
+    this.suppressedExitId = spawn.exitId || null;
     if (carry && (Math.abs(carry.vx) > 1 || Math.abs(carry.vy) > 1)) {
       this.player.launched = true;
       this.player.launchX = carry.vx;
@@ -269,6 +271,7 @@ class Engine {
       course: clone(this.courseState),
       state: this.serializeRoom(),
       spawn: clone(spawn),
+      returnLink: this.entryReturn ? clone(this.entryReturn) : null,
     };
     this.emit('room-enter', { entryId: this.entry.id });
   }
@@ -292,7 +295,8 @@ class Engine {
     const cp = clone(this.checkpoint),
       roomId = this.room.id,
       entryId = this.entry.id,
-      respawn = cp.spawn;
+      respawn = cp.spawn,
+      returnLink = cp.returnLink;
     this.score = cp.score;
     this.credited = new Set(cp.credited);
     this.items = clone(cp.items || {});
@@ -307,7 +311,7 @@ class Engine {
     this.roomCaches.set(roomId, cp.state);
     this.lifeBaselines.clear();
     this.room = null;
-    this.loadRoom(roomId, entryId, cp.resources, null, respawn);
+    this.loadRoom(roomId, entryId, cp.resources, null, respawn, returnLink);
     for (const o of this.room.objects) {
       if (preserved.has(o.id)) this.objectStates.set(o.id, preserved.get(o.id));
       else if (o.resetPolicy === 'initial') {
@@ -328,6 +332,55 @@ class Engine {
     this.player.freeDash = true;
     this.player.dashCount = 0;
     this.say(reason + '。已恢复最近存档点。');
+  }
+  reentryPort(p) {
+    if (this.suppressedExitId) {
+      const exit = this.room.exits.find((item) => item.id === this.suppressedExitId);
+      if (!exit || !overlap(p, { x: exit.x * T, y: exit.y * T, w: exit.w * T, h: exit.h * T })) {
+        this.exitTriggerArmed = true;
+        this.suppressedExitId = null;
+      }
+    }
+    if (!this.entryReturn) return false;
+    const entry = this.room.entries.find((item) => item.id === this.entryReturn.entryId);
+    if (!entry) return false;
+    const inside = overlap(p, { x: entry.x * T, y: entry.y * T, w: T, h: T });
+    if (!inside) {
+      this.entryTriggerArmed = true;
+      return false;
+    }
+    if (!this.entryTriggerArmed) return false;
+    const source = this.course.rooms.find((room) => room.id === this.entryReturn.roomId),
+      exit = source?.exits.find((item) => item.id === this.entryReturn.exitId);
+    if (!source || !exit) {
+      this.entryReturn = null;
+      return false;
+    }
+    const from = this.room.id,
+      entryId = entry.id,
+      spawn = {
+        roomId: source.id,
+        exitId: exit.id,
+        x: exit.x * T + Math.max(2, (exit.w * T - 24) / 2),
+        y: (exit.y + exit.h) * T - 30,
+        face: exit.x <= 1 ? 1 : exit.x + exit.w >= source.cols - 1 ? -1 : 1,
+      };
+    this.loadRoom(
+      source.id,
+      source.entries[0]?.id,
+      {
+        tokens: this.tokens,
+        charges: this.charges,
+        recharge: this.recharge,
+        freeDash: this.player.freeDash,
+        dashCount: this.player.dashCount,
+      },
+      null,
+      spawn,
+    );
+    this.emit('room-change', { from, to: source.id, via: 'entry' });
+    this.emit('room-backtrack', { from, to: source.id, entryId, exitId: exit.id });
+    return true;
   }
   togglePause() {
     if (this.mode === 'playing') this.mode = 'paused';
@@ -638,6 +691,7 @@ class Engine {
           : o.y * T + 4,
         face: this.player.face,
       },
+      returnLink: this.entryReturn ? clone(this.entryReturn) : null,
     };
     this.say('已记录存档点：' + (o.name || '存档点'), 2);
     this.emit('checkpoint', { id: o.id });
@@ -1006,8 +1060,10 @@ class Engine {
     this.triggerObjects(oldBottom);
     this.updateAI(dt, this.colliders());
     if (this.player !== p) return;
+    if (this.reentryPort(p)) return;
     for (const exit of this.room.exits)
       if (
+        this.exitTriggerArmed &&
         this.exitCooldown === 0 &&
         overlap(p, { x: exit.x * T, y: exit.y * T, w: exit.w * T, h: exit.h * T })
       ) {
@@ -1015,7 +1071,8 @@ class Engine {
           (w) => w.from.roomId === this.room.id && w.from.exitId === exit.id,
         );
         if (edge) {
-          const from = this.room.id;
+          const from = this.room.id,
+            returnLink = { roomId: from, exitId: exit.id, entryId: edge.to.entryId };
           this.loadRoom(
             edge.to.roomId,
             edge.to.entryId,
@@ -1027,6 +1084,8 @@ class Engine {
               dashCount: p.dashCount,
             },
             edge.velocity === 'keep' ? { vx: p.vx, vy: p.vy } : null,
+            null,
+            returnLink,
           );
           this.emit('room-change', { from, to: edge.to.roomId });
         } else {
