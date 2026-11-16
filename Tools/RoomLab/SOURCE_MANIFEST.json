@@ -1,9 +1,9 @@
 {
   "repository": "zimukiv/gameProject",
-  "version": "4.1.0",
-  "releaseTag": "roomlab-editor-v4.1.0",
+  "version": "4.1.1",
+  "releaseTag": "roomlab-editor-v4.1.1",
   "createdAt": "2026-11-16",
-  "programSHA256": "13d0837d59f91cb321b479e8e019bbcdb6163eb884c0048794561f4c638c6b0f",
+  "programSHA256": "2aebc88b4d687a12f85ba6f4ba728a9b603d4172a4ba3d33335e411ea6dff5c9",
   "files": [
     {
       "path": "room-cloud/.gitignore",
@@ -687,7 +687,7 @@
     },
     {
       "path": "room-editor/ARCHITECTURE.md",
-      "sha256": "d7c15e0991cd74c07c0747466e29fa0380795f6c680c081a8a2cdc0d65bcabdd",
+      "sha256": "5da257e0bafe22518f6e41a8e7c72b6f0b970cea5eac7ab948f408a0fb3f4953",
       "encoding": "utf8-lf"
     },
     {
@@ -702,7 +702,7 @@
     },
     {
       "path": "room-editor/docs/CHANGELOG.md",
-      "sha256": "aeb06f7247ec34849eae9183f4f02b27334b9ba213a5648dc21c9d057075a7fa",
+      "sha256": "54cd607c0eb6a8444b6f38146228a446a613bdf383f56bab71b5ffc4e605e8ec",
       "encoding": "utf8-lf"
     },
     {
@@ -817,7 +817,7 @@
     },
     {
       "path": "room-editor/examples/physics-project.zip",
-      "sha256": "452194e54f5e220210d5bf29c77afd850fafc559dca26c7fa02592d942212ef3",
+      "sha256": "b3e11040b72e3e9098acbb8568e1342bbada7857e3d2eb38ef13c9b1df598cf0",
       "encoding": "binary"
     },
     {
@@ -867,17 +867,17 @@
     },
     {
       "path": "room-editor/examples/physics/project.json",
-      "sha256": "dee9f533b3170fd0369553b685c90451ace933536d829db2ab60627cc87164ca",
+      "sha256": "653067de0ab16b8079788ce48e13af6977de4709e63f07c020edfdb089d4d958",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/examples/three-themes-project.zip",
-      "sha256": "6069afab482de689b0e879069372f8ad5573ede228d95cd50c66a7818c15b67c",
+      "sha256": "cf1649a6438eb2d33a80eded4325f251b7c5aa9d143784803702f3a7c27202e1",
       "encoding": "binary"
     },
     {
       "path": "room-editor/package.json",
-      "sha256": "7dbcd0cabd6a173bc867b9eeff7b90b1863d42875328370fec3ec5aa0ff0311e",
+      "sha256": "a8aa13c9e2ee5c5b2e57aed3d1923dde4ab322b5b6b91928876d1dbbfa6ac893",
       "encoding": "utf8-lf"
     },
     {
@@ -892,7 +892,7 @@
     },
     {
       "path": "room-editor/README.md",
-      "sha256": "4c3edcfd2046e7d6a175b41bf4f836743f7dac1efd2af106a2bfc2c7573ca887",
+      "sha256": "74ffcc1650c52991b34d227e650ee3c2a97c2794958252bd7a66ecb6361e9f7b",
       "encoding": "utf8-lf"
     },
     {
@@ -1012,7 +1012,7 @@
     },
     {
       "path": "room-editor/src/desktop/main.cjs",
-      "sha256": "0ae38ea7fe36e22d7c2ed3604314061bd4a1fd575ae8fbe84bd18f5792171973",
+      "sha256": "6097987411aaa083748b61e05484d9960f25a38565acf1d492bd4ff4b56b1d74",
       "encoding": "utf8-lf"
     },
     {
@@ -1077,7 +1077,7 @@
     },
     {
       "path": "room-editor/src/editor/index.html",
-      "sha256": "bf93c642bfd0f06a37aa5eade2995a5d814132524d766cd03775af171a69fd11",
+      "sha256": "20a543ec93932b77fae34873c61e670add005c6b06555ff875f702415acc0967",
       "encoding": "utf8-lf"
     },
     {
@@ -1242,7 +1242,7 @@
     },
     {
       "path": "room-editor/src/plugins/physics/ice.cjs",
-      "sha256": "a28284126a656c1f9ce2aa8a001d7131a6ff35712f856decc1660a8ebd7c2e76",
+      "sha256": "6e56a2091b5e5c14673d1b0b301577592e275c6cd496865773b2de85c769e845",
       "encoding": "utf8-lf"
     },
     {
@@ -1612,7 +1612,7 @@
     },
     {
       "path": "room-editor/tests/engine.test.cjs",
-      "sha256": "6943b241aaf119d886f357887d01da0ade0629258b2b6e1d3f1b1f4f27a8d29f",
+      "sha256": "0e39617349c6e1be849e86030c8787d86e036d2841bbe3c73981f0d9e921320b",
       "encoding": "utf8-lf"
     },
     {
@@ -2013,6 +2013,11 @@
     {
       "path": "room-editor/tests/room-clipboard-ui-smoke.cjs",
       "sha256": "96337f3407f88903214b0afa49c83049fa6bc051daa61c2f66287d60acd494bc",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/docs/RELEASE_NOTES_4.1.1.md",
+      "sha256": "c87498d7a7255f250633444b6a8b442be8b2620ec14f2459c68e5076ce8c1c2b",
       "encoding": "utf8-lf"
     }
   ]

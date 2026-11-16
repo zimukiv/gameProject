@@ -1,5 +1,7 @@
 # Room Lab 架构
 
+4.1.1：`plugins/physics/ice.cjs` 声明 `dynamicSolidity: true`，使 `runtime/engine.cjs` 的碰撞生成优先读取冰块 `isSolid()` 状态。冰块融化或热区切换为 `solid: false` 时不再生成隐形 collider，冷态再生成后恢复碰撞。
+
 4.1.0：`runtime/engine.cjs` 记录每次正向过门的来源房间、出口和目标入口。玩家离开目标入口后重新进入时，运行时反向加载来源房间并落在对应出口；该出口先休眠到玩家离开，避免重复过门。返回关系同时写入当前回退检查点，但不改变项目 v2、接线或云同步格式。
 
 4.1.0：整房剪贴板位于 `editor/room-clipboard.cjs`：`project/room-export` 生成含素材文件的单房间快照，`project/room-import-batch` 在目标大关按独立房间重映射内部引用并合并素材。剪贴板仅存在当前 App 内存；跨房 connection 不属于房间快照，粘贴后需要重新接线。

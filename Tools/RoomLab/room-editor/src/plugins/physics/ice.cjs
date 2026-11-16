@@ -8,6 +8,7 @@ module.exports = {
   courses: ['physics'],
   slots: ['solid', 'cracked', 'melted'],
   collider: 'tile',
+  dynamicSolidity: true,
   trigger: 'none',
   defaults: { meltAfter: 5, respawnDelay: 1, friction: 1.4 },
   schema: [

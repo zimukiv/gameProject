@@ -135,6 +135,24 @@ test('ice material retains sliding velocity instead of instantly stopping', () =
   step(g, {}, 20);
   assert.ok(g.player.vx > 80 && g.player.vx < 220);
 });
+test('melted ice state removes its collider and restores it when the ice regenerates', () => {
+  const g = new Engine(M.example(), 'physics', 'ice-room'),
+    ice = g.room.objects.find((o) => o.id === 'ice-5'),
+    state = g.objectStates.get(ice.id);
+  cold(g);
+  assert.equal(state.solid, true);
+  ice.params.respawnDelay = 0;
+  g.zoneStates.set('cold-zone', 'hot');
+  step(g);
+  assert.equal(state.solid, false);
+  assert.ok(g.events.some((e) => e.type === 'ice-melt' && e.id === ice.id && e.reason === 'heat'));
+  assert.equal(g.colliders().some((c) => c.id === ice.id), false);
+  g.zoneStates.set('cold-zone', 'cold');
+  Object.assign(g.player, { x: 600, y: 100, vx: 0, vy: 0 });
+  step(g);
+  assert.equal(state.solid, true);
+  assert.equal(g.colliders().some((c) => c.id === ice.id), true);
+});
 test('AI distance is measured to the device and a player already waiting can trigger it', () => {
   const p = M.example(),
     o = p.courses[0].rooms[0].objects[0];
