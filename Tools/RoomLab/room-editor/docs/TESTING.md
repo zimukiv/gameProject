@@ -22,6 +22,9 @@ pnpm test:play
 pnpm test:room-clipboard
 pnpm test:mirror
 pnpm test:brick-nodes
+pnpm test:assignment-submit
+pnpm test:developer-mode
+pnpm test:entry-return
 pnpm test:graph-positions
 pnpm test:desktop
 ```
@@ -33,6 +36,12 @@ pnpm test:desktop
 布局预览检查：`node tests/layout-ui-smoke.cjs`。验证顶部房间栏、窗口自适应画布、收起属性、连续图标放置、帮助弹窗、三级素材分类与候选过滤、接线板缩放平移后接线/选线及窄窗口布局。核心的 layout-assets.test.cjs 检查素材范围与旧分类兼容、端口真实坐标投影。
 
 2.2 回归检查：`pnpm test:fixes`。检查实际画布绘制位置、空格命中、功能块擦除及撤销、拖动连放、两种 AI 板选择，以及试玩画布像素尺寸与窗口滚动。ai-blocks.test.cjs 验证实体/空心板实际碰撞与启动，以及电磁炮轨道实例独立性。
+
+`test:assignment-submit` 在编辑器中放置「提交作业」并检查 AI 触发后的 50000 分、AI 停止和一次性行为；设置 `EDITOR_EXE` 后对实际 `RoomLab.exe` 复验。
+
+`test:developer-mode` 验证房间编辑器试玩自动携带全部道具并显示开发模式，同时确认大关总览试玩背包为空。
+
+`test:entry-return` 验证入口返回开关默认开启、页面保存取消状态，并确认引擎不会从关闭返回的入口反向过门。
 
 `test:graph-positions` 在接线板拖动房间形成重叠排布，刷新页面后检查 `room.graph` 坐标完全保留；原生文件测试同时验证 JSON 保存/读取不会丢失房间坐标。
 

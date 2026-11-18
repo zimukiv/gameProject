@@ -128,6 +128,14 @@ function seeds({ allThemes = false } = {}) {
       ),
     ],
     [
+      'submit-assignment',
+      '提交作业',
+      svg(
+        '#3d365f',
+        '<path d="M13 9h38v46H13z" fill="#dce8f5" stroke="#b8c9ff" stroke-width="3"/><path d="M20 20h24M20 28h24M20 36h15" stroke="#506b8c" stroke-width="4"/><circle cx="45" cy="46" r="11" fill="#5ac7a0" stroke="#b8ffe3" stroke-width="3"/><path d="M39 46l4 4 8-9" fill="none" stroke="#173d32" stroke-width="4"/>',
+      ),
+    ],
+    [
       'coffee',
       '咖啡',
       svg(
@@ -160,7 +168,8 @@ function seeds({ allThemes = false } = {}) {
       ),
     ],
   ];
-  const itemIds = new Set(['coffee', 'calculator', 'phone', 'iced-tea']);
+  const itemIds = new Set(['coffee', 'calculator', 'phone', 'iced-tea']),
+    commonIds = new Set(['metal', 'submit-assignment']);
   const files = new Map(),
     assets = items
       .filter(([id]) => allThemes || !/^(calculus|slacker)-/.test(id))
@@ -168,7 +177,8 @@ function seeds({ allThemes = false } = {}) {
         const path = 'assets/seed-' + id + '.svg';
         files.set(path, strToU8(data));
         const isItem = itemIds.has(id),
-          theme = isItem
+          isCommon = commonIds.has(id),
+          theme = isCommon
             ? 'common'
             : id.startsWith('calculus-')
               ? 'calculus'
@@ -184,13 +194,15 @@ function seeds({ allThemes = false } = {}) {
           mime: 'image/svg+xml',
           width: 64,
           height: 64,
-          courseId: id === 'metal' || isItem ? 'common' : theme,
+          courseId: isCommon ? 'common' : theme,
           category: isItem ? 'item' : id === 'metal' ? 'terrain' : 'mechanism',
           subcategory: isItem
             ? 'item.' + (id === 'iced-tea' ? 'icedTea' : id)
             : id === 'metal'
               ? 'common.solid'
-              : theme + '.' + (theme === 'physics' ? head : tail),
+              : id === 'submit-assignment'
+                ? 'common.assignmentSubmit'
+                : theme + '.' + (theme === 'physics' ? head : tail),
           frameWidth: 0,
           frameHeight: 0,
           fps: 6,
@@ -203,6 +215,9 @@ function seeds({ allThemes = false } = {}) {
     'physics.jet': { idle: 'seed-jet-idle', active: 'seed-jet-active' },
     'physics.thermal': { cold: 'seed-thermal-cold', hot: 'seed-thermal-hot' },
     'physics.rail': { idle: 'seed-rail-idle', active: 'seed-rail-active' },
+  };
+  const deviceBindings = {
+    'common.assignmentSubmit': { idle: 'seed-submit-assignment', active: 'seed-submit-assignment' },
   };
   const itemBindings = {
     'item.coffee': { idle: 'seed-coffee' },
@@ -237,6 +252,7 @@ function seeds({ allThemes = false } = {}) {
       ...themeBindings.calculus,
       ...themeBindings.slacker,
       ...itemBindings,
+      ...deviceBindings,
     },
   };
 }

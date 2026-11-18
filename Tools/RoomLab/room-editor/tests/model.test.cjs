@@ -87,3 +87,13 @@ test('bad links, image paths and buried entrance reject unsafe play data', () =>
   r.tiles.push({ ...r.entries[0] });
   assert.ok(M.validate(a, { play: true }).errors.length);
 });
+test('entry return permission defaults on and survives explicit opt-out migration', () => {
+  const project = M.example(),
+    room = project.courses[0].rooms[0],
+    raw = M.clone(project);
+  assert.equal(room.entries[0].allowReturn, true);
+  delete raw.courses[0].rooms[0].entries[0].allowReturn;
+  assert.equal(M.migrate(raw).courses[0].rooms[0].entries[0].allowReturn, undefined);
+  room.entries[0].allowReturn = false;
+  assert.equal(M.migrate(project).courses[0].rooms[0].entries[0].allowReturn, false);
+});

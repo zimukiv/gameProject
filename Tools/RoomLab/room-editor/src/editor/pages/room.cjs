@@ -89,7 +89,7 @@ function render(app) {
     app.render();
   };
   $('back-course').onclick = () => app.go('course');
-  $('play-room').onclick = () => app.startPlay(r.id);
+  $('play-room').onclick = () => app.startPlay(r.id, undefined, { developerMode: true });
   $('room-traces').onclick = () => TraceManager.open(app, r.id);
   $('undo').onclick = () => app.store.undo();
   $('redo').onclick = () => app.store.redo();
@@ -444,6 +444,7 @@ function render(app) {
         notes: '',
         ...pos,
         face: 1,
+        allowReturn: true,
       };
       r.entries.push(entry);
       s.selection = { kind: 'entries', id: entry.id };
@@ -1405,12 +1406,15 @@ function baseInspector(app, r, setTool) {
           [1, '向右'],
           [-1, '向左'],
         ]) +
+        check('允许从此入口返回连接的出口', 'entry-allow-return', o.allowReturn !== false) +
+        '<p class="hint">关闭后，正向进入仍正常，但离开并再次触碰该入口不会返回来源出口。</p>' +
         '<button id="save-entry" class="apply">应用入口</button><button id="play-entry" class="apply">从此入口试玩</button>';
       $('save-entry').onclick = () =>
         app.store.change(() => {
           o.face = Number($('entry-face').value);
+          o.allowReturn = $('entry-allow-return').checked;
         });
-      $('play-entry').onclick = () => app.startPlay(r.id, o.id);
+      $('play-entry').onclick = () => app.startPlay(r.id, o.id, { developerMode: true });
     } else body.innerHTML = '<p class="hint">此对象没有额外关联。</p>';
   } else app.renderObjectArt(o, d, body);
 }

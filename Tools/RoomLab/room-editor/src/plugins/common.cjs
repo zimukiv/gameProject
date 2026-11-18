@@ -65,6 +65,30 @@ module.exports = [
   },
   {
     ...base,
+    type: 'common.assignmentSubmit',
+    version: '1.0.0',
+    name: '提交作业',
+    glyph: '交',
+    category: '流程',
+    slots: ['idle', 'active'],
+    collider: 'pad',
+    trigger: 'foot',
+    defaults: { once: true, cooldown: 1 },
+    canTrigger(ctx) {
+      return ctx.ai.active;
+    },
+    onTrigger(ctx, o, state) {
+      ctx.stopAI();
+      ctx.addScore(50000, '提交作业');
+      ctx.say('提交作业：AI 已消失，积分 +50000');
+      ctx.emit('assignment-submit', { id: o.id, score: 50000 });
+    },
+    visual(ctx, o, state) {
+      return state.used ? 'active' : 'idle';
+    },
+  },
+  {
+    ...base,
     type: 'common.portalIn',
     name: 'AI 传送入口',
     glyph: 'AI↓',

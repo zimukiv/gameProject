@@ -15,7 +15,7 @@ function direction(input, face) {
   return { x: x / len, y: y / len };
 }
 class Engine {
-  constructor(project, courseId, roomId, entryId) {
+  constructor(project, courseId, roomId, entryId, options = {}) {
     const errors = M.validate(project, { play: true }).errors;
     if (errors.length) throw new Error(errors[0]);
     this.config = Performance.resolve(project.settings);
@@ -34,7 +34,10 @@ class Engine {
     this.steals = 0;
     this.events = [];
     this.credited = new Set();
+    this.developerMode = options.developerMode === true;
     this.items = {};
+    if (this.developerMode)
+      for (const definition of Registry.all()) if (definition.item) this.items[definition.type] = 1;
     this.roomCaches = new Map();
     this.lifeBaselines = new Map();
     this.courseState = {
@@ -135,6 +138,8 @@ class Engine {
       launchAI: (target, range, x, y) => this.launchAI(target, range, x, y),
       startRail: (target) => this.startRail(target),
       activateAI: (target) => this.activateAI(target),
+      stopAI: () => this.stopAI(),
+      addScore: (points, reason) => this.addScore(points, reason),
       setCheckpoint: (target) => this.setCheckpoint(target),
       transformGroup: (target, kind) => this.transformGroup(target, kind),
       emit: (type, data) => this.emit(type, data),
@@ -343,7 +348,7 @@ class Engine {
     }
     if (!this.entryReturn) return false;
     const entry = this.room.entries.find((item) => item.id === this.entryReturn.entryId);
-    if (!entry) return false;
+    if (!entry || entry.allowReturn === false) return false;
     const inside = overlap(p, { x: entry.x * T, y: entry.y * T, w: T, h: T });
     if (!inside) {
       this.entryTriggerArmed = true;
@@ -550,6 +555,28 @@ class Engine {
     });
     this.emit('ai-start', { investment, tier, resumed });
   }
+  stopAI() {
+    const wasActive = this.ai.active;
+    this.courseState.aiActive = false;
+    Object.assign(this.ai, {
+      active: false,
+      flight: false,
+      vx: 0,
+      vy: 0,
+      warning: null,
+      trail: [],
+    });
+    this.aiTrail = [];
+    if (wasActive) this.emit('ai-stop', { id: this.ai.id });
+    return wasActive;
+  }
+  addScore(points, reason = '') {
+    const amount = Number(points);
+    if (!Number.isFinite(amount) || amount === 0) return 0;
+    this.score += amount;
+    this.emit('score', { amount, total: this.score, reason });
+    return amount;
+  }
   startRail(o) {
     const points = this.worldObject(o).params.path.map((p) => ({ x: p.x * T, y: p.y * T }));
     if (points.length < 2) {
@@ -614,9 +641,11 @@ class Engine {
       return false;
     }
     if (s.cooldown > 0 || ((o.trigger?.once || o.params.once) && s.used)) return false;
+    const context = this.context(o);
+    if (def.canTrigger && !def.canTrigger(context, o, s)) return false;
     s.used = true;
     s.cooldown = o.params.cooldown || o.trigger?.cooldown || 1;
-    def.onTrigger?.(this.context(o), o, s);
+    def.onTrigger?.(context, o, s);
     this.emit('trigger', { id: o.id, type: o.type });
     return true;
   }
@@ -651,10 +680,7 @@ class Engine {
           this.ai.id === aiId &&
           Math.hypot(this.ai.x - rect.x - rect.w / 2, this.ai.y - rect.y) <= distance * T);
       s.waitingAI = occupied && !ready;
-      if (ready && !s.firedDuringContact) {
-        this.fire(o);
-        s.firedDuringContact = true;
-      }
+      if (ready && !s.firedDuringContact && this.fire(o)) s.firedDuringContact = true;
     }
   }
   setCheckpoint(o) {
@@ -1123,6 +1149,7 @@ class Engine {
       recharge: this.recharge,
       paidStockCap: this.paidStockCap,
       score: this.score,
+      developerMode: this.developerMode,
       items: clone(this.items),
       deaths: this.deaths,
       steals: this.steals,

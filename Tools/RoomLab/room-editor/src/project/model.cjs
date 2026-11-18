@@ -24,7 +24,17 @@ function room(id, name, cols = 30, rows = 17) {
     environment: 'cold',
     graph: { x: 0, y: 0 },
     tiles: [],
-    entries: [{ id: id + '-entry', name: '默认入口', notes: '', x: 1, y: rows - 4, face: 1 }],
+    entries: [
+      {
+        id: id + '-entry',
+        name: '默认入口',
+        notes: '',
+        x: 1,
+        y: rows - 4,
+        face: 1,
+        allowReturn: true,
+      },
+    ],
     exits: [],
     objects: [],
     movables: [],
@@ -157,6 +167,7 @@ function example() {
 function themedExample() {
   return require('./themes.cjs').starter();
 }
+
 function migrate(data) {
   if (data?.version === 2)
     return require('./compatibility.cjs').normalize(
@@ -346,10 +357,7 @@ function validate(p, { play = false } = {}) {
             errors.push('巡查老师签到绑定必须是数组：' + o.id);
           else {
             const ids = TeacherLinks.ids(o);
-            if (
-              Array.isArray(o.params?.checkinIds) &&
-              ids.length !== o.params.checkinIds.length
-            )
+            if (Array.isArray(o.params?.checkinIds) && ids.length !== o.params.checkinIds.length)
               (play ? errors : warnings).push('巡查老师签到绑定有重复或无效 ID：' + o.id);
             for (const id of ids)
               if (!r.objects.some((item) => item.id === id && item.type === TeacherLinks.CHECKIN))

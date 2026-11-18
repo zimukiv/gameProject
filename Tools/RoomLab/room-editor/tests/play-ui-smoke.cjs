@@ -106,7 +106,9 @@ const assert = require('node:assert/strict'),
       'rail-room',
     );
     await page.getByRole('button', { name: '试玩此房', exact: true }).click();
-    assert.equal(await page.locator('#play-paid').textContent(), '需冰红茶');
+    await page.waitForFunction(() => window.__ROOM_LAB__.snapshot().game?.developerMode === true);
+    assert.equal(await page.locator('#play-paid').textContent(), '○');
+    assert.equal(await page.locator('.developer-mode').count(), 1);
     await page.keyboard.down('KeyW');
     await page.keyboard.press('ShiftLeft');
     await page.keyboard.up('KeyW');

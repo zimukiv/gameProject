@@ -51,9 +51,7 @@ test('items are collected by passing through and persist across rooms', () => {
   assert.equal(g.items['item.coffee'], 1);
   assert.equal(g.snapshot().items['item.coffee'], 1);
   assert.ok(g.credited.has(room.id + '/coffee-test'));
-  assert.ok(
-    g.events.some((e) => e.type === 'item-collect' && e.itemType === 'item.coffee'),
-  );
+  assert.ok(g.events.some((e) => e.type === 'item-collect' && e.itemType === 'item.coffee'));
   g.loadRoom('ice-room', 'ice-room-entry', {
     tokens: g.tokens,
     charges: g.charges,
@@ -80,4 +78,19 @@ test('item inventory follows checkpoint rollback rules', () => {
   assert.equal(g.items['item.calculator'], 1);
   g.retry();
   assert.deepEqual(g.items, { 'item.coffee': 1 });
+});
+test('developer mode starts with every item while normal overview play starts empty', () => {
+  const all = Registry.all()
+      .filter((definition) => definition.item)
+      .map((definition) => definition.type)
+      .sort(),
+    developer = new Engine(M.example(), 'physics', undefined, undefined, {
+      developerMode: true,
+    }),
+    normal = new Engine(M.example(), 'physics');
+  assert.deepEqual(Object.keys(developer.items).sort(), all);
+  assert.deepEqual(ITEMS.slice().sort(), all);
+  assert.equal(developer.snapshot().developerMode, true);
+  assert.equal(normal.snapshot().developerMode, false);
+  assert.deepEqual(normal.items, {});
 });

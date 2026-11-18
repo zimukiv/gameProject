@@ -15,7 +15,13 @@ function groupForType(type) {
     type.startsWith('calculus.') ||
     type.startsWith('slacker.') ||
     type.startsWith('legacy.') ||
-    ['common.aiStart', 'common.aiStartHollow', 'common.portalIn', 'common.portalOut'].includes(type)
+    [
+      'common.aiStart',
+      'common.aiStartHollow',
+      'common.assignmentSubmit',
+      'common.portalIn',
+      'common.portalOut',
+    ].includes(type)
   )
     return 'mechanism';
   if (type.startsWith('item.') || type.startsWith('common.')) return 'item';

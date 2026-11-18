@@ -146,12 +146,18 @@ test('melted ice state removes its collider and restores it when the ice regener
   step(g);
   assert.equal(state.solid, false);
   assert.ok(g.events.some((e) => e.type === 'ice-melt' && e.id === ice.id && e.reason === 'heat'));
-  assert.equal(g.colliders().some((c) => c.id === ice.id), false);
+  assert.equal(
+    g.colliders().some((c) => c.id === ice.id),
+    false,
+  );
   g.zoneStates.set('cold-zone', 'cold');
   Object.assign(g.player, { x: 600, y: 100, vx: 0, vy: 0 });
   step(g);
   assert.equal(state.solid, true);
-  assert.equal(g.colliders().some((c) => c.id === ice.id), true);
+  assert.equal(
+    g.colliders().some((c) => c.id === ice.id),
+    true,
+  );
 });
 test('AI distance is measured to the device and a player already waiting can trigger it', () => {
   const p = M.example(),
@@ -310,4 +316,32 @@ test('preserve thermal policy retains its temperature effect after death', () =>
   g.retry();
   assert.equal(g.objectStates.get('thermal-b').used, true);
   assert.equal(g.zoneStates.get('cold-zone'), 'cold');
+});
+test('an entry can opt out of returning to the connected source exit', () => {
+  const p = M.example();
+  p.courses[0].rooms[1].entries[0].allowReturn = false;
+  const g = new Engine(p, 'physics'),
+    source = g.room,
+    exit = source.exits[0];
+  Object.assign(g.player, { x: exit.x * 32 + 4, y: exit.y * 32 + 4, vx: 0, vy: 0 });
+  g.exitCooldown = 0;
+  step(g);
+  assert.equal(g.room.id, 'ice-room');
+  assert.ok(g.entryReturn);
+  const entry = g.room.entries[0];
+  step(g, {}, 4);
+  Object.assign(g.player, {
+    x: (entry.x + 2) * 32 + 4,
+    y: entry.y * 32 + 4,
+    vx: 0,
+    vy: 0,
+  });
+  step(g);
+  Object.assign(g.player, { x: entry.x * 32 + 4, y: entry.y * 32 + 4, vx: 0, vy: 0 });
+  step(g);
+  assert.equal(g.room.id, 'ice-room');
+  assert.equal(
+    g.events.some((event) => event.type === 'room-backtrack'),
+    false,
+  );
 });

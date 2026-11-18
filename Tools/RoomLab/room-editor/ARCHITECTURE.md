@@ -1,5 +1,11 @@
 # Room Lab 架构
 
+4.2.0：入口 `allowReturn` 缺省为 true；`runtime/engine.cjs` 的 `reentryPort` 仅在该字段显式为 false 时禁止反向返回，正向 connection 和入口本身保持可用。旧入口缺失字段时按 true 解释，不自动改写旧项目。
+
+4.2.0：`runtime/engine.cjs` 接受 `developerMode`。房间编辑器的「试玩此房」和入口试玩传入该选项，启动时按 Registry 的 `item` 定义注入全部道具；大关总览试玩不传选项，保持空背包。
+
+4.2.0：`plugins/common.cjs` 的 `common.assignmentSubmit` 使用 `canTrigger` 等待 AI 追逐，再用 `stopAI()` 清除当前 AI、跨房 `aiActive` 和追踪轨迹，并用 `addScore(50000)` 计分。插件默认一次性，避免重复得分。
+
 4.1.1：`editor/graph-layout.cjs` 的 `ensurePositions` 只补齐缺失的 `room.graph`，不再自动覆盖有效坐标；接线板拖动仍写入项目历史并随草稿、JSON/ZIP 与云同步保存。手动「整理排布」仍调用 `arrange`。
 
 4.1.1：`project/room-mirror.cjs` 提供整房 horizontal/vertical 镜像。矩形对象按 `cols - x - w` / `rows - y - h` 翻转，路径中心点按 `cols - x` / `rows - y` 翻转，机关砖和轨迹节点按格翻转；入口朝向、喷气方向、速度向量、巡查左右边界、旋转角和轨道出射角同步按轴变换。对象 ID、项目格式和跨房 connection 不变，镜像操作作为一次撤销事务。
