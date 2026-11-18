@@ -93,3 +93,19 @@ test('new controller creates a valid local binding and editing target preserves 
   assert.equal(p.foldOnReturnAfterSwitch, 'alpha');
   assert.throws(() => B.setTarget(p, { x: r.cols, y: 0 }, r), /越界/);
 });
+test('saved room positions are preserved and only missing coordinates are initialized', () => {
+  const rooms = [
+      { id: 'a', cols: 30, rows: 17, graph: { x: 120, y: 40 } },
+      { id: 'b', cols: 30, rows: 17, graph: { x: 120, y: 40 } },
+      { id: 'c', cols: 30, rows: 17 },
+    ],
+    before = JSON.stringify(rooms),
+    positions = G.ensurePositions(rooms);
+  assert.equal(JSON.stringify(rooms), before);
+  assert.deepEqual(Object.keys(positions), ['c']);
+  assert.ok(Number.isFinite(positions.c.x) && Number.isFinite(positions.c.y));
+  const initialized = rooms.map((room) =>
+    positions[room.id] ? { ...room, graph: positions[room.id] } : room,
+  );
+  assert.deepEqual(G.ensurePositions(initialized), {});
+});

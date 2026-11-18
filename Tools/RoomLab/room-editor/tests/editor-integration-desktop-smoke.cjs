@@ -45,8 +45,10 @@ const { _electron } = require(process.env.PLAYWRIGHT_MODULE || 'playwright'),
       () => window.__ROOM_LAB__.snapshot().project.nativeCampaign?.unknown?.preserve === 17,
     );
     await page.locator('[data-enter="' + c.id + '"]').click();
-    assert.equal(G.overlaps((await course()).rooms), false);
+    assert.equal(G.overlaps((await course()).rooms), true);
     assert.deepEqual((await course()).connections, c.connections);
+    await page.locator('#graph-arrange').click();
+    assert.equal(G.overlaps((await course()).rooms), false);
     await page.locator('#graph-undo').click();
     assert.equal(G.overlaps((await course()).rooms), true);
     await page.locator('#graph-redo').click();

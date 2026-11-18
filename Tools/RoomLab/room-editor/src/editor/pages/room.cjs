@@ -11,6 +11,7 @@ const Collision = require('../../project/collision.cjs');
 const TeacherLinks = require('../../project/teacher-links.cjs');
 const Temperature = require('../../project/temperature.cjs');
 const Limits = require('../../project/room-limits.cjs');
+const Mirror = require('../../project/room-mirror.cjs');
 const Select = require('../../project/selection.cjs');
 const Groups = require('../../project/block-groups.cjs');
 const Nodes = require('../../project/rail-nodes.cjs'),
@@ -544,7 +545,7 @@ function render(app) {
               ? 'path'
               : owner && s.selection.kind === 'platforms'
                 ? 'native-target'
-                : c.kind === 'calculus' && owner && s.selection.kind === 'movables'
+                : owner && s.selection.kind === 'movables'
                   ? 'brick-path'
                   : null);
     if (
@@ -940,8 +941,7 @@ function baseInspector(app, r, setTool) {
     tab = s.inspectorTab || 'base';
   if (s.multiSelection.length > 1) {
     const bricks = s.multiSelection.map((item) => item.kind === 'movables' && Select.get(r, item)),
-      canGroup =
-        app.course().kind === 'calculus' && bricks.every((brick) => brick && !brick.brickGroup),
+      canGroup = bricks.every((brick) => brick && !brick.brickGroup),
       samePad = canGroup && bricks.every((brick) => brick.padId === bricks[0].padId),
       pads = r.objects.filter(Motion.isPad);
     host.innerHTML = `<h2>已选中 ${s.multiSelection.length} 项</h2>
@@ -1011,7 +1011,19 @@ function baseInspector(app, r, setTool) {
       ['inherit', '继承大关状态'],
       ['off', '本房关闭'],
       ['start', '本房立即启动'],
-    ])}${field('AI ID 覆盖（空白继承大关）', 'room-ai-id', r.aiId || '')}${['calculus', 'slacker'].includes(app.course().kind) ? '' : select('默认温度', 'room-env', r.environment, ['cold', 'hot'])}${CameraPanel.render(r)}<button class="apply primary" id="apply-room">应用房间设置</button><p class="hint">缩小时保留越界对象，不自动裁剪。试玩视角独立保存于本房间。</p>`;
+    ])}${field('AI ID 覆盖（空白继承大关）', 'room-ai-id', r.aiId || '')}${['calculus', 'slacker'].includes(app.course().kind) ? '' : select('默认温度', 'room-env', r.environment, ['cold', 'hot'])}${CameraPanel.render(r)}<div class="row mirror-actions"><button class="apply" id="mirror-horizontal" title="整房左右镜像，保留对象 ID 与接线">↔ 左右镜像</button><button class="apply" id="mirror-vertical" title="整房上下镜像，保留对象 ID 与接线">↕ 上下镜像</button></div><button class="apply primary" id="apply-room">应用房间设置</button><p class="hint">缩小时保留越界对象，不自动裁剪。镜像会同步翻转布局、路径和方向，可撤销。试玩视角独立保存于本房间。</p>`;
+    const mirror = (axis, label) => {
+      const next = Mirror.mirrorRoom(r, axis);
+      app.store.change(() => {
+        Object.assign(r, next);
+        s.selection = null;
+        s.multiSelection = [];
+        s.railNodeId = null;
+      });
+      app.message(label + '完成；对象 ID 与接线已保留，可使用撤销恢复。');
+    };
+    $('mirror-horizontal').onclick = () => mirror('horizontal', '左右镜像');
+    $('mirror-vertical').onclick = () => mirror('vertical', '上下镜像');
     CameraPanel.bind();
     $('apply-room').onclick = () => {
       const cols = Number($('room-cols').value),
@@ -1058,7 +1070,7 @@ function baseInspector(app, r, setTool) {
     return;
   }
   const d = ref.kind === 'objects' ? Registry.get(o.type) : null,
-    brickMotion = ref.kind === 'movables' && app.course().kind === 'calculus',
+    brickMotion = ref.kind === 'movables',
     hasNodes = d?.type === 'physics.rail' || brickMotion;
   host.innerHTML = `<h2>${esc(d?.name || { entries: '入口', exits: '出口', zones: '温控区域', movables: '机关砖', tiles: '固定砖' }[ref.kind])}</h2><div class="inspector-tabs ${hasNodes ? 'with-nodes' : ''}">${[
     ['base', '基础'],

@@ -14,6 +14,8 @@ test('native folder save/reopen preserves artwork and data on Chinese space path
     seed = seeds();
   p.assets = seed.assets;
   p.courses[0].artBindings = seed.bindings;
+  p.courses[0].rooms[0].graph = { x: 321, y: -54 };
+  p.courses[0].rooms[1].graph = { x: 321, y: -54 };
   F.writeProject(
     file,
     p,
@@ -21,6 +23,8 @@ test('native folder save/reopen preserves artwork and data on Chinese space path
   );
   const read = F.readProject(file);
   assert.deepEqual(read.project, p);
+  assert.deepEqual(read.project.courses[0].rooms[0].graph, { x: 321, y: -54 });
+  assert.deepEqual(read.project.courses[0].rooms[1].graph, { x: 321, y: -54 });
   assert.equal(read.files.length, seed.assets.length);
   p.notes = '第二次保存';
   F.writeProject(file, p, read.files);

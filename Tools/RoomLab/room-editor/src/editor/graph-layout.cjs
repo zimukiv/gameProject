@@ -77,6 +77,19 @@ function arrange(course) {
   });
   return positions;
 }
+function hasPosition(room) {
+  return Number.isFinite(room?.graph?.x) && Number.isFinite(room?.graph?.y);
+}
+function ensurePositions(rooms) {
+  const positions = {},
+    placed = rooms.filter(hasPosition).map((room) => ({ ...room, graph: { ...room.graph } }));
+  for (const room of rooms.filter((item) => !hasPosition(item))) {
+    const graph = vacant(room, placed);
+    positions[room.id] = graph;
+    placed.push({ ...room, graph: { ...graph } });
+  }
+  return positions;
+}
 function vacant(room, rooms) {
   const placed = rooms.map((r) => ({ ...r, graph: { ...r.graph } })),
     size = card(room),
@@ -125,4 +138,15 @@ function fit(rooms, width, height, scale) {
     y: height / 2 - (b.minY + h / 2) * scale,
   };
 }
-module.exports = { CELL_SIZE, PADDING, TITLE_HEIGHT, card, overlaps, arrange, vacant, bounds, fit };
+module.exports = {
+  CELL_SIZE,
+  PADDING,
+  TITLE_HEIGHT,
+  card,
+  overlaps,
+  arrange,
+  vacant,
+  ensurePositions,
+  bounds,
+  fit,
+};

@@ -20,14 +20,23 @@ pnpm test:ui
 pnpm test:assets
 pnpm test:play
 pnpm test:room-clipboard
+pnpm test:mirror
+pnpm test:brick-nodes
+pnpm test:graph-positions
 pnpm test:desktop
 ```
 
 `test:room-clipboard` 使用真实键盘 `Ctrl+C` / `Ctrl+V` 从物理大关复制房间到高数大关，检查独立 ID、内部引用、素材解析、外部接线不复制、可重复粘贴和页面无错误。
 
+`test:mirror` 检查整房左右/上下镜像的坐标、方向、路径、原生扩展对象和连续镜像恢复；设置 `EDITOR_EXE` 后通过实际 `RoomLab.exe` 验证房间属性按钮、接线不变与撤销恢复。
+
 布局预览检查：`node tests/layout-ui-smoke.cjs`。验证顶部房间栏、窗口自适应画布、收起属性、连续图标放置、帮助弹窗、三级素材分类与候选过滤、接线板缩放平移后接线/选线及窄窗口布局。核心的 layout-assets.test.cjs 检查素材范围与旧分类兼容、端口真实坐标投影。
 
 2.2 回归检查：`pnpm test:fixes`。检查实际画布绘制位置、空格命中、功能块擦除及撤销、拖动连放、两种 AI 板选择，以及试玩画布像素尺寸与窗口滚动。ai-blocks.test.cjs 验证实体/空心板实际碰撞与启动，以及电磁炮轨道实例独立性。
+
+`test:graph-positions` 在接线板拖动房间形成重叠排布，刷新页面后检查 `room.graph` 坐标完全保留；原生文件测试同时验证 JSON 保存/读取不会丢失房间坐标。
+
+`test:brick-nodes` 在物理和水课大关实际放置机关砖，验证「节点图」页签、按钮添加节点、右键添加节点和 `motionPath` 持久化；设置 `EDITOR_EXE` 后对实际 `RoomLab.exe` 复验。
 
 2.3.1 检查：`pnpm test:nodes` 覆盖节点图、精确坐标、排序、罗马数字、缩放后拖动、父级带动、提示开关、区域角点与温控初始状态。`pnpm test:traces` 覆盖轨迹录制、项目持久化、不同颜色同时绘制、勾选和 JSON 往返；桌面检查包含原生路径文件读写。
 
@@ -71,4 +80,3 @@ AI 死亡回归：ai-retry.test.cjs 覆盖实体/空心、三条命、快照无�
 `tests/friend-gameplay.test.cjs` 检查空心/实心存档点复活、资源和机关快照、轨道侧面触发可选及喷气碰撞独立；`friend-compatibility.test.cjs` 检查一次迁移、原数据不变、普通旧关卡不套用、导出依赖与未知模块版本保留；`zone-bounds-repair.test.cjs` 检查显式裁剪的空间交集和无交集拒绝。
 
 `tests/friend-255-ui-smoke.cjs` 通过 FRIEND_ARCHIVE 指定升级后的实际 11 房 ZIP，验证逐房启动、7 存档点和12侧触轨道保留，再用独立测试房真实按键经过存档点/重试及修改侧触开关。没有上传生产云端或修改原存档。发布后必须设置 EDITOR_EXE 对实际 RoomLab.exe 复验；保存/命名/排序/回放沿用 features-2.5.4-ui-smoke.cjs，并回归云同步/认证和旧15房存档。
-

@@ -1,5 +1,11 @@
 # Room Lab 架构
 
+4.1.1：`editor/graph-layout.cjs` 的 `ensurePositions` 只补齐缺失的 `room.graph`，不再自动覆盖有效坐标；接线板拖动仍写入项目历史并随草稿、JSON/ZIP 与云同步保存。手动「整理排布」仍调用 `arrange`。
+
+4.1.1：`project/room-mirror.cjs` 提供整房 horizontal/vertical 镜像。矩形对象按 `cols - x - w` / `rows - y - h` 翻转，路径中心点按 `cols - x` / `rows - y` 翻转，机关砖和轨迹节点按格翻转；入口朝向、喷气方向、速度向量、巡查左右边界、旋转角和轨道出射角同步按轴变换。对象 ID、项目格式和跨房 connection 不变，镜像操作作为一次撤销事务。
+
+4.1.1：`editor/pages/room.cjs` 对 movables 统一提供「节点图」页签、画布 `brick-path` 工具、右键加点和多选编组，不再按 `course.kind === calculus` 过滤。机关砖路径数据仍由 `project/brick-motion.cjs` 管理，项目格式不变。
+
 4.1.1：`plugins/physics/ice.cjs` 声明 `dynamicSolidity: true`，使 `runtime/engine.cjs` 的碰撞生成优先读取冰块 `isSolid()` 状态。冰块融化或热区切换为 `solid: false` 时不再生成隐形 collider，冷态再生成后恢复碰撞。
 
 4.1.0：`runtime/engine.cjs` 记录每次正向过门的来源房间、出口和目标入口。玩家离开目标入口后重新进入时，运行时反向加载来源房间并落在对应出口；该出口先休眠到玩家离开，避免重复过门。返回关系同时写入当前回退检查点，但不改变项目 v2、接线或云同步格式。

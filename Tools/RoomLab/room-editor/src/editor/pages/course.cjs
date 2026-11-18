@@ -27,15 +27,15 @@ function render(app) {
   app.state.graphChecked ||= new Set();
   if (tab === 'graph' && !app.state.graphChecked.has(key)) {
     app.state.graphChecked.add(key);
-    if (GraphLayout.overlaps(c.rooms)) {
-      const positions = GraphLayout.arrange(c);
+    const positions = GraphLayout.ensurePositions(c.rooms);
+    if (Object.keys(positions).length) {
       app.state.graphNeedsFit = true;
       app.store.change(() =>
         c.rooms.forEach((r) => {
-          r.graph = positions[r.id];
+          if (positions[r.id]) r.graph = positions[r.id];
         }),
       );
-      app.message('已按房间实际尺寸整理重叠卡片，可撤销；房间内容和连接未改变。');
+      app.message('已补齐缺失的房间位置；已有排布保持原样，可撤销。');
       return;
     }
   }
