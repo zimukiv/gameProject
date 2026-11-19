@@ -56,10 +56,28 @@ const { format, newWorkspaceKey } = require('../src/cloud/connection.cjs'),
       page.on('pageerror', (e) => errors.push(e.message));
       await page.waitForFunction(() => !!window.__ROOM_LAB__);
       await page.locator('#project-file').setInputFiles(file);
+      assert.equal(await page.locator('#advanced-tools, #open-course-tools').count(), 0);
+      if (i === 0) {
+        await page.waitForFunction(() => !!window.__ROOM_LAB__.snapshot().state.graphView);
+        const scale = await page.evaluate(
+          () => window.__ROOM_LAB__.snapshot().state.graphView.scale,
+        );
+        await page.locator('#room-picker > summary').click();
+        await page.waitForFunction(() => !document.querySelector('#room-picker').open);
+        assert.equal(
+          await page.evaluate(() => window.__ROOM_LAB__.snapshot().state.graphView.scale),
+          scale,
+        );
+        await page.reload();
+        await page.waitForFunction(() => !!window.__ROOM_LAB__);
+        assert.equal(await page.locator('#room-picker').getAttribute('open'), null);
+      }
       await api(page, 'connect', { key });
-      await page.locator('[data-enter="physics"]').click();
-      await page.locator('[data-tab="rooms"]').click();
+      await page.locator('#planning-tab-library').click();
       await page.locator('[data-room]').first().click();
+      // The initial local recovery draft is debounced; finish it before checking
+      // that opening/uploading cloud rooms does not change the active worktree.
+      await page.waitForFunction(async () => !!(await window.desktopAPI.cloud('status')).current);
     }
     const a = await apps[0].firstWindow(),
       b = await apps[1].firstWindow(),
@@ -68,7 +86,6 @@ const { format, newWorkspaceKey } = require('../src/cloud/connection.cjs'),
       beforeB = await snap(b),
       statusA = await api(a, 'status');
     const open = async (p) => {
-      await p.locator('[aria-controls="menu-project"]').click();
       await p.locator('#cloud-room-library').click();
       await p.locator('#room-cloud-refresh:not([disabled])').waitFor();
     };
@@ -84,8 +101,10 @@ const { format, newWorkspaceKey } = require('../src/cloud/connection.cjs'),
     assert.equal(after.current, statusA.current);
     assert.equal(after.history.length, statusA.history.length);
     await open(b);
+    await b.locator('[data-library-room][data-preview="ready"]').waitFor();
     await b.locator('[data-library-room]').click();
     await b.locator('#room-cloud-import').waitFor();
+    await b.locator('[data-library-room][data-preview="ready"]').waitFor();
     await b.screenshot({
       path: path.resolve(__dirname, '../test-output/room-library-build19.png'),
     });
@@ -97,6 +116,14 @@ const { format, newWorkspaceKey } = require('../src/cloud/connection.cjs'),
     await b.locator('#room-cloud-import').click();
     await b.locator('[data-room-import-mode]').selectOption('independent');
     await b.getByRole('button', { name: '导入到大关', exact: true }).click();
+    await b.waitForFunction(
+      () =>
+        !document.querySelector('#dialog').open ||
+        !document.querySelector('#room-import-confirm')?.hidden ||
+        document.querySelector('#room-import-feedback')?.textContent,
+    );
+    if (await b.locator('#room-import-confirm-yes').isVisible())
+      await b.locator('#room-import-confirm-yes').click();
     await b.waitForFunction(
       (n) => window.__ROOM_LAB__.snapshot().project.courses[0].rooms.length === n,
       beforeB.project.courses[0].rooms.length + 1,

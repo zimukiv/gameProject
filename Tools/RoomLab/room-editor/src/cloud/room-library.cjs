@@ -22,6 +22,12 @@ async function action(service, name, p) {
   if (!/^[a-f0-9]{64}$/.test(p.id || '')) throw Error('云端房间编号无效');
   const record = await remote.request('rooms/' + p.id);
   if (record.info?.id !== p.id || record.revision?.id !== p.id) throw Error('云端房间编号不匹配');
+  if (name === 'roomLibraryPreview') {
+    const result = await remote.readProjectManifest(record.revision, p.id);
+    if (result.project.courses.length !== 1 || result.project.courses[0].rooms.length !== 1)
+      throw Error('云端内容不是单个房间');
+    return { project: result.project };
+  }
   const data = await remote.downloadManifest(record.revision, p.id);
   const result = C.decode(data.snapshot.bytes);
   if (result.project.courses.length !== 1 || result.project.courses[0].rooms.length !== 1)

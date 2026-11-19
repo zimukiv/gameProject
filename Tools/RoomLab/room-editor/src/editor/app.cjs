@@ -33,6 +33,10 @@ class App {
       roomFilter: 'all',
       roomMulti: [],
     };
+    try {
+      this.state.roomPickerCollapsed =
+        localStorage.getItem('roomlab-room-picker-collapsed') === 'true';
+    } catch {}
     const preview = new URL(window.location.href).searchParams;
     if (['room', 'course', 'assets'].includes(preview.get('preview'))) {
       this.store.hasProject = true;
@@ -164,8 +168,6 @@ class App {
       this.go('definitions', { definitionCourse: this.course().id });
     // Legacy course/file management is hidden in the Tools menu, not on the
     // room-first planning surface.
-    if ($('open-course-tools'))
-      $('open-course-tools').onclick = () => require('./planning-nav.cjs').courseTools(this);
     $('asset-files').onchange = async (e) => {
       const files = [...e.target.files];
       e.target.value = '';

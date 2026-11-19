@@ -132,7 +132,11 @@ class Service {
     return { status: this.status() };
   }
   async action(name, p = {}) {
-    if (['roomLibraryList', 'roomLibraryUpload', 'roomLibraryRead'].includes(name))
+    if (
+      ['roomLibraryList', 'roomLibraryUpload', 'roomLibraryRead', 'roomLibraryPreview'].includes(
+        name,
+      )
+    )
       return this.run(() => require('./room-library.cjs').action(this, name, p));
     if (name === 'inspectRevision') {
       if (!/^[a-f0-9]{64}$/.test(p.id || '')) throw new Error('版本 ID 无效');

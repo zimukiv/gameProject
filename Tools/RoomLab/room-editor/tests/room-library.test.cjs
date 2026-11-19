@@ -32,6 +32,29 @@ test('flat cloud rooms roundtrip with assets, isolation and no tree mutation', a
     const listing = await service.action('roomLibraryList');
     assert.equal(listing.rooms.length, 1);
     assert.equal(listing.rooms[0].id, uploaded.room.id);
+    const requestedChunks = [];
+    const previewRemote = new Remote(config, (url, options) => {
+      if (url.includes('/chunks/')) requestedChunks.push(url.split('/chunks/')[1]);
+      return handle(new Request(url, options), env);
+    });
+    service.options.remote = previewRemote;
+    const preview = await service.action('roomLibraryPreview', { id: uploaded.room.id });
+    assert.equal(preview.project.courses[0].rooms[0].name, room.name);
+    assert.equal(preview.files, undefined);
+    const recordForPreview = await remote.request('rooms/' + uploaded.room.id);
+    const projectChunks = recordForPreview.revision.files
+      .find((f) => f.path === 'project.json')
+      .chunks.map((c) => c.hash);
+    assert.deepEqual([...new Set(requestedChunks)], projectChunks);
+    await assert.rejects(
+      () =>
+        previewRemote.readProjectManifest(
+          { ...recordForPreview.revision, parent: 'tampered' },
+          uploaded.room.id,
+        ),
+      /校验失败/,
+    );
+    service.options.remote = remote;
     const loaded = await service.action('roomLibraryRead', { id: uploaded.room.id });
     assert.equal(loaded.project.courses[0].rooms.length, 1);
     assert.equal(loaded.project.courses[0].rooms[0].name, room.name);

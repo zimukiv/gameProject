@@ -234,9 +234,11 @@ class Remote {
     return bytes;
   }
   async readProject(id) {
+    return this.readProjectManifest(await this.request('revisions/' + id), id);
+  }
+  async readProjectManifest(revision, id = revision?.id) {
     const C = require('./codec.cjs'),
       M = require('../project/model.cjs'),
-      revision = await this.request('revisions/' + id),
       unsigned = { ...revision };
     delete unsigned.id;
     if (

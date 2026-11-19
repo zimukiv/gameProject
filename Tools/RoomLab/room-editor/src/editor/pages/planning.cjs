@@ -19,8 +19,7 @@ function render(app) {
     `<div class="planning-head"><div class="planning-title"><h1>${esc(project.name)}</h1><p class="muted">${rooms.length} 间房${org.favorites.length ? ' · ★ ' + org.favorites.length : ''}${org.groups.length ? ' · ' + org.groups.length + ' 个分组' : ''}</p></div><details class="planning-help"><summary title="使用说明与快捷操作">？ 说明</summary><div class="help-body"><p>单击房间缩略图：选中并在路线图上定位；双击或 ✎：进入房间。☆ 收藏房间；分组只用于整理，可跨大关，不改变房间归属。</p><p>路线图：滚轮缩放 · 中键/空白拖动平移 · 拖动房间排布 · 双击进入 · 从出口拖到同一大关的入口接线。收藏房间在地图与缩略图上以金色★标出。</p></div></details></div>` +
     `<div class="planning-bar">${Nav.tabs(tab)}${Nav.tools(app)}</div>` +
     Nav.filters(app) +
-    Nav.strip(app) +
-    Nav.advanced(app) +
+    `<details id="room-picker" class="room-picker" ${app.state.roomPickerCollapsed ? '' : 'open'}><summary>房间选择 <small>${rooms.length}</small></summary>${Nav.strip(app)}</details>` +
     Nav.contextMenu() +
     '<div id="planning-content"></div>';
   Nav.bind(app);

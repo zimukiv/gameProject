@@ -60,7 +60,7 @@ function addTarget(app) {
 function tools(app) {
   const target = addTarget(app),
     label = `在「${esc(target.course.name)}」新建房间`,
-    hint = `${target.fromSelection ? '沿用所选房间' : '沿用当前大关'}「${esc(target.course.name)}」（高级设置可改大关）`;
+    hint = `${target.fromSelection ? '沿用所选房间' : '沿用当前项目'}的默认规则`;
   return `<div class="actions planning-tools"><button id="add-room" title="${esc(label + '；' + hint)}">新建房间</button><button id="test-course" title="从当前大关首房试玩">试玩</button><button id="project-settings" title="项目名称与备注">项目</button></div>`;
 }
 function filters(app) {
@@ -212,6 +212,27 @@ function deleteCourse(app) {
   $('dialog-actions').lastElementChild.classList.add('danger');
 }
 function bind(app) {
+  const picker = $('room-picker');
+  if (picker) {
+    const setCollapsed = (collapsed) => {
+      if (collapsed === !!app.state.roomPickerCollapsed) return;
+      app.state.roomPickerCollapsed = collapsed;
+      try {
+        localStorage.setItem('roomlab-room-picker-collapsed', String(collapsed));
+      } catch {}
+      // Re-measure the canvas after releasing/occupying the preview strip's space.
+      // The view transform stays in app.state, so folding never resets map zoom.
+      app.render();
+    };
+    // Persist the user's action before the native asynchronous toggle event;
+    // an immediate page reload must not lose the newly folded state.
+    picker.querySelector('summary').onclick = (event) => {
+      event.preventDefault();
+      setCollapsed(picker.open);
+      $('room-picker')?.querySelector('summary')?.focus({ preventScroll: true });
+    };
+    picker.ontoggle = () => setCollapsed(!picker.open);
+  }
   for (const button of $('app').querySelectorAll('[data-planning-tab]'))
     button.onclick = () => {
       app.state.planningTab = button.dataset.planningTab;

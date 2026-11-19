@@ -47,15 +47,10 @@ test('project and tools menus keep legacy management reachable', () => {
     'export-room',
     'import-room',
   ]);
-  assert.deepEqual(menuIds('menu-tools'), [
-    'open-assets',
-    'open-definitions',
-    'export-project',
-    'open-course-tools',
-  ]);
+  assert.deepEqual(menuIds('menu-tools'), ['open-assets', 'open-definitions', 'export-project']);
   assert.match(html, /<button id="save-project" class="primary">保存项目<\/button/);
   assert.match(html, /id="cloud-room-library"[^>]*class="primary"/);
-  assert.match(appSource, /open-course-tools/);
+  assert.equal(html.includes('id="open-course-tools"'), false);
 });
 
 test('the planning strip is room-first: every room, no course chips or legend', () => {
@@ -102,21 +97,12 @@ test('新建房间 targets the selected room owner, else the active course', () 
   const tools = Nav.tools(app);
   assert.match(tools, /id="add-room"/);
   assert.match(tools, new RegExp(app.store.project.courses[0].name));
-  assert.match(tools, /title="[^"]*沿用当前大关/);
+  assert.match(tools, /title="[^"]*沿用当前项目/);
 });
 
-test('legacy course management lives in the collapsed advanced panel', () => {
-  const advanced = Nav.advanced(fakeApp());
-  assert.match(advanced, /<details class="advanced-tools"/);
-  for (const id of [
-    'enter-course',
-    'course-settings',
-    'course-bindings',
-    'add-course',
-    'rename-course',
-    'delete-course',
-  ])
-    assert.ok(advanced.includes(`id="${id}"`), `${id} stays reachable`);
+test('advanced course entry is removed from planning and menus', () => {
+  assert.equal(read('src/editor/pages/planning.cjs').includes('Nav.advanced(app)'), false);
+  assert.equal(html.includes('open-course-tools'), false);
 });
 
 test('organisation filters are 全部 / 收藏 / user groups', () => {

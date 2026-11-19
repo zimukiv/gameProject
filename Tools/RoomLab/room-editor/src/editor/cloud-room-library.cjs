@@ -20,7 +20,7 @@ function open(app) {
   if ($('dialog').open) $('dialog').close();
   modal(
     '云端房间库',
-    `<div id="room-cloud-library"><p class="hint">同一连接密钥共享房间。节点互相独立，不创建工作树或改变当前云端分支。</p><div class="button-row"><button id="room-cloud-upload" ${current ? '' : 'disabled'}>上传${current ? '「' + esc(current.name) + '」' : '当前房间'}</button><button id="room-cloud-refresh">刷新</button><button id="room-cloud-fit">适应全部</button><button id="room-cloud-more" hidden>加载更多</button></div><p id="room-cloud-status" role="status">正在读取云端房间…</p><div class="cloud-graph-layout"><div id="room-cloud-graph" class="room-cloud-graph" aria-label="独立房间节点图"></div><aside id="room-cloud-details" class="room-cloud-details">选中房间节点查看详情和导入。</aside></div></div>`,
+    `<div id="room-cloud-library"><div class="button-row"><button id="room-cloud-upload" ${current ? '' : 'disabled'}>上传${current ? '「' + esc(current.name) + '」' : '当前房间'}</button><button id="room-cloud-refresh">刷新</button><button id="room-cloud-fit" title="Ctrl + 滚轮调整缩略图大小">重置预览</button><button id="room-cloud-more" hidden>加载更多</button></div><p id="room-cloud-status" role="status">正在读取云端房间…</p><div class="cloud-graph-layout"><div id="room-cloud-graph" class="room-cloud-graph" aria-label="云端房间缩略预览"></div><aside id="room-cloud-details" class="room-cloud-details">点选房间预览和导入。</aside></div></div>`,
     [{ label: '关闭' }],
   );
   const root = $('room-cloud-library'),
@@ -32,9 +32,13 @@ function open(app) {
     cursor = null,
     selected = null,
     busy = false,
-    readToken = 0,
-    view = { x: 16, y: 16, scale: 1 },
-    drag = null;
+    readToken = 0;
+  const cards = require('./cloud-room-cards.cjs').create({
+    graph,
+    api,
+    alive,
+    choose: (id) => inspect(id),
+  });
   const status = (s, error = false) => {
     if (alive()) {
       const e = $('room-cloud-status');
@@ -45,32 +49,19 @@ function open(app) {
   const releaseURLs = () => {
     urls.splice(0).forEach((u) => URL.revokeObjectURL(u));
   };
-  $('dialog').addEventListener('close', releaseURLs, { once: true });
+  $('dialog').addEventListener(
+    'close',
+    () => {
+      releaseURLs();
+      cards.dispose();
+    },
+    { once: true },
+  );
   function draw() {
-    graph.innerHTML = `<svg width="100%" height="100%" role="img" aria-label="云端房间，无父子关系"><g transform="translate(${view.x},${view.y}) scale(${view.scale})">${rooms.map((r, i) => `<g data-library-room="${esc(r.id)}" tabindex="0" role="button" aria-label="${esc(r.name)}" transform="translate(${(i % 3) * 246},${Math.floor(i / 3) * 126})"><rect width="226" height="106" rx="9" fill="${r.id === selected ? '#1c474d' : '#182c3b'}" stroke="${r.id === selected ? '#80eee0' : '#476a80'}" stroke-width="${r.id === selected ? 3 : 1}"/><text x="14" y="29" fill="#e7f2fc" font-size="15">${esc(r.name.slice(0, 14))}</text><text x="14" y="54" fill="#8bd4dd" font-size="12">${esc({ physics: '物理', calculus: '高数', slacker: '水课' }[r.kind] || r.kind)} · ${r.cols} × ${r.rows} 格</text><text x="14" y="80" fill="#9bb5c7" font-size="11">${esc(new Date(r.uploadedAt).toLocaleString())}</text></g>`).join('')}</g></svg>`;
-    graph.querySelectorAll('[data-library-room]').forEach((el) => {
-      const choose = () => inspect(el.dataset.libraryRoom);
-      el.onclick = choose;
-      el.onkeydown = (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          choose();
-        }
-      };
-    });
+    cards.render(rooms, selected);
   }
   function fit() {
-    const width = Math.min(3, Math.max(rooms.length, 1)) * 246,
-      height = Math.max(1, Math.ceil(rooms.length / 3)) * 126;
-    view = {
-      x: 16,
-      y: 16,
-      scale: Math.max(
-        0.08,
-        Math.min(1, (graph.clientWidth - 32) / width, (graph.clientHeight - 32) / height),
-      ),
-    };
-    draw();
+    cards.reset(rooms, selected);
   }
   async function inspect(id) {
     selected = id;
@@ -86,6 +77,7 @@ function open(app) {
         room = course.rooms[0],
         files = new Map(data.files),
         assetURLs = new Map();
+      cards.remember(id, data.project);
       for (const asset of data.project.assets) {
         const bytes = files.get(asset.path);
         if (bytes) {
@@ -100,7 +92,7 @@ function open(app) {
         targets: false,
         assetURL: (id) => assetURLs.get(id),
       });
-      $('room-cloud-import').onclick = () => Import.open(app, data);
+      $('room-cloud-import').onclick = () => Import.open(app, { ...data, files });
       await Promise.all(
         [...assetURLs.values()].map(async (url) => {
           const image = new Image();
@@ -180,37 +172,7 @@ function open(app) {
   $('room-cloud-refresh').onclick = () => refresh();
   $('room-cloud-more').onclick = () => refresh(true);
   $('room-cloud-fit').onclick = fit;
-  graph.onwheel = (e) => {
-    e.preventDefault();
-    const b = graph.getBoundingClientRect(),
-      x = e.clientX - b.left,
-      y = e.clientY - b.top,
-      s = Math.max(0.08, Math.min(3, view.scale * Math.exp(-e.deltaY * 0.0015)));
-    view = {
-      x: x - ((x - view.x) * s) / view.scale,
-      y: y - ((y - view.y) * s) / view.scale,
-      scale: s,
-    };
-    draw();
-  };
-  graph.onpointerdown = (e) => {
-    if (e.button !== 0 || e.target.closest('[data-library-room]')) return;
-    drag = { x: e.clientX, y: e.clientY, view: { ...view } };
-    graph.setPointerCapture(e.pointerId);
-  };
-  graph.onpointermove = (e) => {
-    if (drag) {
-      view = {
-        ...drag.view,
-        x: drag.view.x + e.clientX - drag.x,
-        y: drag.view.y + e.clientY - drag.y,
-      };
-      draw();
-    }
-  };
-  graph.onpointerup = graph.onpointercancel = () => {
-    drag = null;
-  };
+
   refresh();
 }
 module.exports = { open };

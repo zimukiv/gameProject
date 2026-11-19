@@ -2375,3 +2375,72 @@ body.planning main {
   flex-wrap: wrap;
   gap: 6px;
 }
+#room-cloud-library #room-cloud-graph {
+  overflow: auto;
+  touch-action: pan-y;
+}
+.cloud-room-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--cloud-card-width, 190px)), 1fr));
+  gap: 10px;
+  padding: 12px;
+  align-content: start;
+}
+.cloud-room-preview-card {
+  min-width: 0;
+  padding: 7px;
+  text-align: left;
+  background: #101e2a;
+  border: 1px solid #304d60;
+}
+.cloud-room-preview-card.selected {
+  border-color: #80eee0;
+  background: #173a40;
+  box-shadow: 0 0 0 1px #80eee0;
+}
+.cloud-room-thumb {
+  display: block;
+  position: relative;
+  background: #091620;
+  aspect-ratio: 5 / 3;
+}
+.cloud-room-thumb canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.cloud-thumb-state {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #8ca6ba;
+  font-size: 12px;
+}
+.cloud-thumb-state[hidden] {
+  display: none;
+}
+.cloud-room-name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 7px;
+  font-weight: 600;
+}
+.cloud-room-preview-card small {
+  color: #8faabd;
+}
+.room-picker {
+  margin: 4px 0 10px;
+}
+.room-picker > summary {
+  cursor: pointer;
+  color: #99c9d3;
+  padding: 5px 2px;
+  font-size: 12px;
+}
+.room-picker > summary small {
+  opacity: 0.7;
+  margin-left: 5px;
+}
