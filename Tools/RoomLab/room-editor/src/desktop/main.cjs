@@ -403,7 +403,7 @@ app.whenReady().then(() => {
     minHeight: 650,
     show: !testing,
     backgroundColor: '#0e1521',
-    title: 'Room Lab · 三主题大关编辑器 v4.2.0',
+    title: 'Room Lab · 房间关卡编辑器 v4.2.0',
     autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),

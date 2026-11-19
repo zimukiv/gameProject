@@ -79,6 +79,12 @@ class App {
       this.stopPlay(() => this.go(route, values));
       return;
     }
+    if (
+      route === 'room' &&
+      !['room', 'play'].includes(this.state.route) &&
+      !Object.hasOwn(values, 'roomGroupId')
+    )
+      values = { ...values, roomGroupId: undefined };
     this.state = { ...this.state, ...values, route };
     this.state.selection = null;
     this.state.multiSelection = [];
@@ -270,6 +276,12 @@ class App {
       (this.state.route === 'room' ? ` / <span>${esc(this.room().name)}</span>` : '');
     $('crumb-project').onclick = () => this.go('home');
     if ($('crumb-course')) $('crumb-course').onclick = () => this.go('home');
+    if (this.state.route === 'room') {
+      const navigation = require('./room-navigation.cjs');
+      $('breadcrumbs').innerHTML = navigation.breadcrumbs(this);
+      $('crumb-project').onclick = () => this.go('home');
+      navigation.bindBreadcrumbs(this);
+    }
     if (this.state.route === 'home') Planning.render(this);
     else if (this.state.route === 'course') Course.render(this);
     else if (this.state.route === 'room') Room.render(this);

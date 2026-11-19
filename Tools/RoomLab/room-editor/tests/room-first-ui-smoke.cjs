@@ -77,6 +77,25 @@ const root = path.resolve(__dirname, '..'),
     // 3. Double click opens the room editor; the strip edit icon works too.
     await page.locator(`[data-strip-room="${first.id}"]`).dblclick();
     await page.locator('#room-canvas').waitFor();
+    assert.equal(
+      await page.locator('.room-tabs').count(),
+      0,
+      'ungrouped rooms have no old course tabs',
+    );
+    assert.equal(await page.locator('#crumb-course').count(), 0);
+    assert.equal(await page.locator('#room-nav-current option').count(), rooms.length);
+    const beforeHelp = await project();
+    await page.locator('#block-help').click();
+    await page.locator('#block-guide-search').fill('温控');
+    assert.ok((await page.locator('.block-guide-card').count()) >= 2);
+    await page.locator('#block-guide-search').fill('计算器');
+    assert.ok((await page.locator('#block-guide-list').textContent()).includes('需要：计算器'));
+    await page.locator('#dialog-actions button').click();
+    assert.deepEqual(await project(), beforeHelp, 'guide is read only');
+    const otherOwner = (await project()).courses[1];
+    await page.locator('#room-nav-current').selectOption(otherOwner.rooms[0].id);
+    assert.equal((await snap()).state.courseId, otherOwner.id);
+    assert.equal((await snap()).state.roomId, otherOwner.rooms[0].id);
     await page.locator('#crumb-project').click();
     await page.locator('[data-strip-edit]').nth(1).click();
     await page.locator('#room-canvas').waitFor();
@@ -123,6 +142,35 @@ const root = path.resolve(__dirname, '..'),
       1,
       'cards expose group membership',
     );
+
+    await page.locator(`[data-room-card="${first.id}"]`).dblclick();
+    await page.locator('#room-canvas').waitFor();
+    assert.equal(await page.locator('[data-nav-room]').count(), 2);
+    assert.equal(await page.locator('#room-nav-scope').inputValue(), grouped.groups[0].id);
+    await page.locator(`[data-nav-room="${crossCourse.id}"]`).click();
+    assert.equal((await snap()).state.courseId, (await project()).courses[1].id);
+    assert.equal((await snap()).state.roomId, crossCourse.id);
+    await page.locator('#room-nav-scope').selectOption('');
+    assert.equal(await page.locator('.room-tabs').count(), 0);
+    assert.equal(await page.locator('#room-nav-current option').count(), rooms.length);
+    await page.locator('#room-nav-scope').selectOption(grouped.groups[0].id);
+    assert.equal(await page.locator('[data-nav-room]').count(), 2);
+    const groupOrderBefore = (await org()).groups[0].roomIds;
+    const ownerArrays = (await project()).courses.map((c) => c.rooms.map((r) => r.id));
+    const from = await page.locator('[data-nav-room]').first().boundingBox();
+    const to = await page.locator('[data-nav-room]').last().boundingBox();
+    await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(to.x + to.width - 3, to.y + to.height / 2, { steps: 10 });
+    await page.mouse.up();
+    assert.deepEqual((await org()).groups[0].roomIds, [...groupOrderBefore].reverse());
+    assert.deepEqual(
+      (await project()).courses.map((c) => c.rooms.map((r) => r.id)),
+      ownerArrays,
+    );
+    await page.screenshot({ path: path.join(root, 'test-output/room-navigation-groups.png') });
+    await page.locator('#back-course').click();
+    assert.equal((await snap()).state.planningTab, 'map');
 
     // 6. Organisation survives a reload (local draft round trip), and the map
     // still shows every room with favourites highlighted rather than filtered.
