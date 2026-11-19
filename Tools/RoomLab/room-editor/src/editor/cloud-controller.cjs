@@ -58,14 +58,23 @@ class CloudController {
     }, 1000);
     this.api.onClosing?.(() => {
       const finish = async () => {
+        const autosave = app.autosave;
+        // Stop *new* minute saves first so no write races the closing backup,
+        // but keep the controller resumable: a cancelled/failed close leaves the
+        // editor open and autosave must continue, not stay permanently off.
+        autosave?.suspend();
         try {
+          // Let a write that was already in flight settle before backing up.
+          await autosave?.whenIdle();
           await this.tail;
           await this.backup();
+          autosave?.dispose();
           clearInterval(this.interval);
           clearTimeout(this.timer);
           this.api.closeReady();
         } catch (e) {
-          app.message('退出前草稿备份失败：' + e.message, true);
+          autosave?.resume();
+          app.message('退出前草稿备份失败：' + e.message + '（自动保存继续）', true);
           this.api.closeFailed();
         }
       };
@@ -142,24 +151,6 @@ class CloudController {
         this.status = await this.api.cloud('status');
         this.updateBadge();
       }
-    });
-  }
-  currentCloudTree(projectId) {
-    return (
-      this.status?.configured &&
-      this.status.trees.find(
-        (tree) => tree.id === this.status.current && tree.projectId === projectId && tree.base,
-      )
-    );
-  }
-  saveCurrent(capture = this.capture()) {
-    return this.enqueue(async () => {
-      const saved = await this.api.cloud('draft', capture);
-      this.status = await this.api.cloud('saveCurrent', { treeId: saved.savedTreeId });
-      const current = this.status.trees.find((tree) => tree.id === this.status.current);
-      this.graphSelected = current?.readRevision || null;
-      this.updateBadge();
-      return this.status;
     });
   }
   async apply(data, live = false) {

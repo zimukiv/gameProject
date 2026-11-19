@@ -1,57 +1,28 @@
 'use strict';
+// Legacy course workspace (rules / art bindings). The route map and the room
+// list are the same shared components the planning screen uses, so both routes
+// agree on geometry, room cards and actions. The map itself is always global;
+// this page only preselects the course tab and locks the library filter.
 const Limits = require('../../project/room-limits.cjs');
-const D = require('../draw.cjs'),
-  M = require('../../project/model.cjs'),
-  { esc, $, field, area, select, modal } = require('../dom.cjs');
-const { clamp } = require('../../shared/utils.cjs');
-const GraphLayout = require('../graph-layout.cjs');
-function addRoom(app, c) {
-  app.store.change(() => {
-    const r = M.room(
-      M.uid('room'),
-      '新房间 ' + (c.rooms.length + 1),
-      c.defaultSize.cols,
-      c.defaultSize.rows,
-    );
-    r.graph = GraphLayout.vacant(r, c.rooms);
-    app.state.graphNeedsFit = true;
-    if (require('../../project/native-compat.cjs').active(app.store.project, c))
-      require('../../project/native-compat.cjs').initRoom(r);
-    c.rooms.push(r);
-  });
-}
+const { esc, $, field, area } = require('../dom.cjs');
+const Board = require('../graph-board.cjs'),
+  Library = require('../room-library-panel.cjs');
+const TABS = [
+  ['graph', '全局路线图'],
+  ['rooms', '房间列表'],
+  ['settings', '大关规则'],
+  ['bindings', '本关美术绑定'],
+];
 function render(app) {
   const c = app.course(),
     tab = app.state.courseTab || 'graph';
-  const key = app.store.project.id + ':' + c.id;
-  app.state.graphChecked ||= new Set();
-  if (tab === 'graph' && !app.state.graphChecked.has(key)) {
-    app.state.graphChecked.add(key);
-    const positions = GraphLayout.ensurePositions(c.rooms);
-    if (Object.keys(positions).length) {
-      app.state.graphNeedsFit = true;
-      app.store.change(() =>
-        c.rooms.forEach((r) => {
-          if (positions[r.id]) r.graph = positions[r.id];
-        }),
-      );
-      app.message('已补齐缺失的房间位置；已有排布保持原样，可撤销。');
-      return;
-    }
-  }
+  if (tab === 'graph' && Board.ensureProjectLayout(app)) return;
   $('app').innerHTML =
-    `<div class="page-title"><div><h1>${esc(c.name)}</h1><p class="muted">${esc(c.notes)} · AI ID：${esc(c.aiId || '未指定')}</p></div><div class="actions"><button id="add-room">新建房间</button><button data-room-clipboard-paste disabled>粘贴整房</button><button id="test-course" class="primary">从首房试玩</button></div></div><div class="tabs">${[
-      ['graph', '缩略接线板'],
-      ['rooms', '房间列表'],
-      ['settings', '大关规则'],
-      ['bindings', '本关美术绑定'],
-    ]
-      .map(
-        ([id, name]) =>
-          `<button data-tab="${id}" class="${tab === id ? 'active' : ''}">${name}</button>`,
-      )
-      .join('')}</div><div id="course-content"></div>`;
-  $('add-room').onclick = () => addRoom(app, c);
+    `<div class="page-title"><div><h1>${esc(c.name)}</h1><p class="muted">${esc(c.notes)} · AI ID：${esc(c.aiId || '未指定')} · 路线图显示全部大关</p></div><div class="actions"><button id="add-room">新建房间</button><button id="test-course" class="primary">从首房试玩</button></div></div><div class="tabs">${TABS.map(
+      ([id, name]) =>
+        `<button data-tab="${id}" class="${tab === id ? 'active' : ''}">${name}</button>`,
+    ).join('')}</div><div id="course-content"></div>`;
+  $('add-room').onclick = () => Library.addRoom(app, c);
   $('test-course').onclick = () => app.startPlay(c.rooms[0].id);
   $('app')
     .querySelectorAll('[data-tab]')
@@ -62,29 +33,12 @@ function render(app) {
           app.render();
         }),
     );
-  if (tab === 'graph') graph(app, c);
-  else if (tab === 'rooms') rooms(app, c);
+  if (tab === 'graph') {
+    $('course-content').innerHTML = Board.markup(app);
+    Board.mount(app);
+  } else if (tab === 'rooms') Library.render(app, $('course-content'), { courseId: c.id });
   else if (tab === 'settings') settings(app, c);
   else app.renderBindings(c, $('course-content'));
-}
-function rooms(app, c) {
-  $('course-content').innerHTML =
-    `<div class="cards">${c.rooms.map((r) => `<article class="card room-card"><canvas width="270" height="150" data-mini="${esc(r.id)}"></canvas><h2>${esc(r.name)}</h2><p>${r.cols}×${r.rows} · ${esc(r.phase)} · ${r.entries.length} 个入口 / ${r.exits.length} 个出口</p><p>${esc(r.notes || '无备注')}</p><button data-room="${esc(r.id)}">编辑房间</button></article>`).join('')}</div>`;
-  $('app')
-    .querySelectorAll('[data-mini]')
-    .forEach((canvas) =>
-      D.miniature(
-        canvas.getContext('2d'),
-        c.rooms.find((r) => r.id === canvas.dataset.mini),
-        0,
-        0,
-        270,
-        150,
-      ),
-    );
-  $('app')
-    .querySelectorAll('[data-room]')
-    .forEach((b) => (b.onclick = () => app.go('room', { roomId: b.dataset.room })));
 }
 function settings(app, c) {
   $('course-content').innerHTML =
@@ -104,359 +58,5 @@ function settings(app, c) {
       c.defaultSize = { cols, rows };
     });
   };
-}
-function graph(app, c) {
-  const selected = app.state.graphSelection;
-  $('course-content').innerHTML =
-    `<div class="graph-layout"><div class="panel graph-panel"><div class="graph-controls"><span>缩略接线板</span><div class="actions"><span id="graph-zoom"></span><button id="graph-fit">查看全部</button><button id="graph-reset">100%</button></div></div><canvas id="graph" width="1120" height="650"></canvas><div class="graph-help">滚轮缩放 · 中键平移 · 双击进入房间。绿色为入口、橙色为出口，位置对应缩略图里的实际位置；悬停查看名称，从出口拉线到入口。</div></div><aside class="panel form" id="graph-inspector"></aside></div>`;
-  const canvas = $('graph'),
-    ctx = canvas.getContext('2d');
-  canvas.width = Math.max(320, Math.round(canvas.getBoundingClientRect().width));
-  canvas.height = Math.max(280, window.innerHeight - canvas.getBoundingClientRect().top - 65);
-  const actions = $('graph-fit').parentElement;
-  for (const [id, label, fn] of [
-    [
-      'graph-arrange',
-      '整理排布',
-      () => {
-        const positions = GraphLayout.arrange(c);
-        app.state.graphNeedsFit = true;
-        app.store.change(() =>
-          c.rooms.forEach((r) => {
-            r.graph = positions[r.id];
-          }),
-        );
-      },
-    ],
-    ['graph-undo', '撤销', () => app.store.undo()],
-    ['graph-redo', '重做', () => app.store.redo()],
-  ]) {
-    const button = document.createElement('button');
-    button.id = id;
-    button.textContent = label;
-    button.onclick = fn;
-    actions.append(button);
-  }
-  if (app.state.graphViewCourse !== c.id) {
-    app.state.graphViews ||= {};
-    if (app.state.graphViewCourse)
-      app.state.graphViews[app.state.graphViewCourse] = app.state.graphView;
-    app.state.graphView =
-      app.state.graphViews[c.id] || GraphLayout.fit(c.rooms, canvas.width, canvas.height);
-    app.state.graphViewCourse = c.id;
-  }
-  const view = app.state.graphView;
-  if (app.state.graphNeedsFit) {
-    Object.assign(view, GraphLayout.fit(c.rooms, canvas.width, canvas.height));
-    app.state.graphNeedsFit = false;
-  }
-  let drag = null,
-    wire = null,
-    pan = null;
-  const pixel = (e) => {
-    const rect = canvas.getBoundingClientRect();
-    return {
-      x: ((e.clientX - rect.left) * canvas.width) / rect.width,
-      y: ((e.clientY - rect.top) * canvas.height) / rect.height,
-    };
-  };
-  const point = (e) => {
-    const p = pixel(e);
-    return { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
-  };
-  const port = (p, kind) => {
-    for (const r of c.rooms)
-      for (const node of D.graphPorts(r)[kind])
-        if (Math.hypot(node.x - p.x, node.y - p.y) < 9 / view.scale) return node;
-    return null;
-  };
-  const node = (p) =>
-    c.rooms
-      .slice()
-      .reverse()
-      .find(
-        (r) =>
-          p.x > r.graph.x &&
-          p.x < r.graph.x + GraphLayout.card(r).width &&
-          p.y > r.graph.y &&
-          p.y < r.graph.y + GraphLayout.card(r).height,
-      );
-  const draw = () => {
-    D.drawGraph(ctx, app.store.project, c, app.state.graphSelection, wire, view);
-    $('graph-zoom').textContent = Math.round(view.scale * 100) + '%';
-  };
-  $('graph-reset').onclick = () => {
-    Object.assign(view, GraphLayout.fit(c.rooms, canvas.width, canvas.height, 1));
-    draw();
-  };
-  $('graph-fit').onclick = () => {
-    Object.assign(view, GraphLayout.fit(c.rooms, canvas.width, canvas.height));
-    draw();
-  };
-  canvas.onwheel = (e) => {
-    e.preventDefault();
-    const p = pixel(e),
-      world = point(e);
-    view.scale = clamp(view.scale * Math.exp(-e.deltaY * 0.0015), 0.001, 4);
-    view.x = p.x - world.x * view.scale;
-    view.y = p.y - world.y * view.scale;
-    draw();
-  };
-  draw();
-  renderGraphInspector(app, c);
-  canvas.onpointerdown = (e) => {
-    if (![0, 1].includes(e.button)) return;
-    e.preventDefault();
-    if (e.button === 1) {
-      pan = { point: pixel(e), x: view.x, y: view.y };
-      canvas.setPointerCapture(e.pointerId);
-      canvas.style.cursor = 'grabbing';
-      return;
-    }
-    const p = point(e),
-      out = port(p, 'exits');
-    canvas.setPointerCapture(e.pointerId);
-    if (out) {
-      wire = { roomId: out.roomId, exitId: out.id, x: out.x, y: out.y, to: p };
-      return;
-    }
-    const r = node(p);
-    const selectNode = () => {
-      app.state.graphSelection = { kind: 'room', id: r.id };
-      drag = { r, start: p, origin: { ...r.graph }, before: app.store.snapshot() };
-      draw();
-      renderGraphInspector(app, c);
-    };
-    if (r && p.y < r.graph.y + GraphLayout.TITLE_HEIGHT) {
-      selectNode();
-      return;
-    }
-    for (const edge of c.connections) {
-      const a = c.rooms.find((r) => r.id === edge.from.roomId),
-        b = c.rooms.find((r) => r.id === edge.to.roomId),
-        from = D.graphPorts(a).exits.find((v) => v.id === edge.from.exitId),
-        to = D.graphPorts(b).entries.find((v) => v.id === edge.to.entryId);
-      if (!from || !to) continue;
-      const curve = D.graphCurve(c, from, to);
-      for (let n = 0; n <= 30; n++) {
-        const t = n / 30,
-          u = 1 - t,
-          x =
-            u * u * u * from.x +
-            3 * u * u * t * curve.c1.x +
-            3 * u * t * t * curve.c2.x +
-            t * t * t * to.x,
-          y =
-            u * u * u * from.y +
-            3 * u * u * t * curve.c1.y +
-            3 * u * t * t * curve.c2.y +
-            t * t * t * to.y;
-        if (Math.hypot(x - p.x, y - p.y) < 10) {
-          app.state.graphSelection = { kind: 'wire', id: edge.id };
-          draw();
-          renderGraphInspector(app, c);
-          return;
-        }
-      }
-    }
-    if (r) {
-      selectNode();
-      return;
-    }
-    app.state.graphSelection = null;
-    pan = { point: pixel(e), x: view.x, y: view.y };
-    canvas.style.cursor = 'grabbing';
-    draw();
-    renderGraphInspector(app, c);
-  };
-  canvas.onpointermove = (e) => {
-    if (pan) {
-      const p = pixel(e);
-      view.x = pan.x + p.x - pan.point.x;
-      view.y = pan.y + p.y - pan.point.y;
-      draw();
-      return;
-    }
-    const p = point(e);
-    const hovered = port(p, 'exits') || port(p, 'entries');
-    canvas.title = hovered ? hovered.label : '';
-    if (wire) {
-      wire.to = p;
-      draw();
-    }
-    if (drag) {
-      drag.r.graph = {
-        x: drag.origin.x + p.x - drag.start.x,
-        y: drag.origin.y + p.y - drag.start.y,
-      };
-      draw();
-    }
-  };
-  canvas.onpointerup = (e) => {
-    if (pan) {
-      pan = null;
-      canvas.style.cursor = 'default';
-      return;
-    }
-    if (wire) {
-      const input = port(point(e), 'entries');
-      if (input) {
-        const before = app.store.snapshot();
-        M.connect(c, wire.roomId, wire.exitId, input.roomId, input.id);
-        wire = null;
-        app.store.commit(before);
-        app.message('房间端口已连接，可撤销。');
-      } else {
-        wire = null;
-        draw();
-      }
-    }
-    if (drag) {
-      const before = drag.before;
-      drag = null;
-      app.store.commit(before);
-    }
-  };
-  canvas.onpointercancel = canvas.onlostpointercapture = () => {
-    wire = null;
-    pan = null;
-    canvas.style.cursor = 'default';
-    if (drag) {
-      const before = drag.before;
-      drag = null;
-      app.store.commit(before);
-    } else draw();
-  };
-  canvas.ondblclick = (e) => {
-    const r = node(point(e));
-    if (r) app.go('room', { roomId: r.id });
-  };
-}
-function renderGraphInspector(app, c) {
-  app.updateRoomExport();
-  const host = $('graph-inspector'),
-    s = app.state.graphSelection;
-  if (!s) {
-    host.innerHTML =
-      '<h2>房间通行关系</h2><p class="hint">点击缩略节点查看名称和备注。每个出口接一个入口；循环路线与多个出口共用入口均可设计。</p>';
-    return;
-  }
-  if (s.kind === 'room') {
-    const r = c.rooms.find((r) => r.id === s.id);
-    if (!r) return;
-    host.innerHTML = `<h2>房间节点</h2>${field('名称', 'graph-name', r.name)}${area('备注', 'graph-notes', r.notes)}<p class="hint">${r.cols}×${r.rows} · 节点位置不改变房间内部坐标。</p><div class="actions"><button id="graph-rename">保存说明</button><button id="graph-edit" class="primary">编辑房间</button><button data-room-clipboard-copy disabled>复制整房</button><button data-room-clipboard-paste disabled>粘贴整房</button><button id="graph-copy">原位复制</button><button id="graph-delete" class="danger">删除房间</button></div>`;
-    $('graph-rename').onclick = () =>
-      app.store.change(() => {
-        r.name = $('graph-name').value.trim() || r.name;
-        r.notes = $('graph-notes').value;
-      });
-    $('graph-edit').onclick = () => app.go('room', { roomId: r.id });
-    const exportButton = document.createElement('button');
-    exportButton.id = 'graph-export-room';
-    exportButton.textContent = '导出此房间（含素材）';
-    exportButton.onclick = () => app.exportRoom(c.id, r.id);
-    $('graph-edit').after(exportButton);
-    $('graph-copy').onclick = () => {
-      const N = require('../../project/native-compat.cjs');
-      const copy = (independent = false) =>
-        app.store.change(() => {
-          const next = M.duplicateRoom(c, r.id);
-          if (independent) {
-            const occupied = new Set(c.nativeCampaign.signals),
-              map = {};
-            for (const rule of N.rules(next))
-              for (const name of [
-                rule.signal,
-                rule.visibleSignal,
-                ...Object.keys(rule.signals || {}),
-              ].filter(Boolean))
-                if (!map[name]) {
-                  let candidate = name.slice(0, 36) + '-副本',
-                    i = 2;
-                  while (occupied.has(candidate)) candidate = name.slice(0, 36) + '-副本' + i++;
-                  map[name] = candidate;
-                  occupied.add(candidate);
-                }
-            for (const rule of N.rules(next)) {
-              for (const key of ['signal', 'visibleSignal'])
-                if (map[rule[key]]) rule[key] = map[rule[key]];
-              if (rule.signals)
-                rule.signals = Object.fromEntries(
-                  Object.entries(rule.signals).map(([k, v]) => [map[k] || k, v]),
-                );
-            }
-            if (c.nativeCampaign.signals.length + Object.keys(map).length > 32) {
-              app.message('独立信号将超过32项，请先调整已有信号，或选择复用原信号。', true);
-              return;
-            }
-            c.nativeCampaign.signals.push(...Object.values(map));
-          }
-          next.graph = GraphLayout.vacant(next, c.rooms);
-          app.state.graphNeedsFit = true;
-          c.rooms.push(next);
-        });
-      if (
-        N.active(app.store.project, c) &&
-        N.rules(r).some((x) => x.signal || x.visibleSignal || Object.keys(x.signals || {}).length)
-      )
-        modal(
-          '复制房间 · 跨房信号',
-          '<p>复用会继续控制原房间；独立会创建新信号，外部控制来源需要重新绑定。两种操作均可撤销。</p>',
-          [
-            { label: '取消' },
-            { label: '复用原信号', action: () => copy() },
-            { label: '创建独立信号', action: () => copy(true) },
-          ],
-        );
-      else copy();
-    };
-    $('graph-delete').onclick = () => {
-      if (c.rooms.length === 1) {
-        app.message('至少保留一个房间。', true);
-        return;
-      }
-      const affected = c.connections.filter((w) => w.from.roomId === r.id || w.to.roomId === r.id);
-      modal(
-        '删除房间',
-        `将删除 ${esc(r.name)}，并移除 ${affected.length} 条关联连线。操作可撤销。`,
-        [
-          { label: '取消' },
-          {
-            label: '删除并移除连线',
-            primary: true,
-            action: () =>
-              app.store.change(() => {
-                c.rooms = c.rooms.filter((v) => v.id !== r.id);
-                c.connections = c.connections.filter(
-                  (w) => w.from.roomId !== r.id && w.to.roomId !== r.id,
-                );
-                app.state.graphSelection = null;
-              }),
-          },
-        ],
-      );
-    };
-  } else {
-    const edge = c.connections.find((w) => w.id === s.id);
-    if (!edge) return;
-    host.innerHTML = `<h2>连接设置</h2><p>${esc(edge.from.roomId)} → ${esc(edge.to.roomId)}</p>${select(
-      '抵达入口时速度',
-      'wire-velocity',
-      edge.velocity,
-      [
-        ['reset', '归零'],
-        ['keep', '保留速度'],
-      ],
-    )}<p class="hint">入口位置决定抵达点。名称变化不会断开连接。</p><div class="actions"><button id="wire-save">应用</button><button id="wire-delete" class="danger">删除连线</button></div>`;
-    $('wire-save').onclick = () =>
-      app.store.change(() => {
-        edge.velocity = $('wire-velocity').value;
-      });
-    $('wire-delete').onclick = () =>
-      app.store.change(() => {
-        c.connections = c.connections.filter((v) => v.id !== edge.id);
-        app.state.graphSelection = null;
-      });
-  }
 }
 module.exports = { render };

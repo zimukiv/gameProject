@@ -63,7 +63,10 @@ const { _electron } = require(process.env.PLAYWRIGHT_MODULE || 'playwright'),
     const state = await snap(),
       v = state.state.graphView,
       card = (await course()).rooms[0],
-      center = { x: card.graph.x + 30, y: card.graph.y + 15 };
+      // The route map is global: a room is painted at authored room.graph plus
+      // its course offset, so the hit point must use the same global geometry.
+      offset = (state.state.courseOffsets || {})[c.id] || { x: 0, y: 0 },
+      center = { x: offset.x + card.graph.x + 30, y: offset.y + card.graph.y + 15 };
     const attrs = await page.locator('#graph').evaluate((e) => ({ w: e.width, h: e.height }));
     const pos = (x, y) => [
       graph.x + ((x * v.scale + v.x) * graph.width) / attrs.w,

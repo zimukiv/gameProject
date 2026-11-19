@@ -23,6 +23,8 @@
     "test:room-clipboard": "node tests/room-clipboard-ui-smoke.cjs",
     "test:mirror": "node --test tests/room-mirror.test.cjs && node tests/room-mirror-ui-smoke.cjs",
     "test:graph-positions": "node tests/graph-position-persistence-ui-smoke.cjs",
+    "test:planning": "node tests/planning-redesign-ui-smoke.cjs",
+    "test:room-first": "node tests/room-first-ui-smoke.cjs",
     "test:layout": "node tests/layout-ui-smoke.cjs",
     "test:fixes": "node --test tests/editor-fixes-ui-smoke.cjs",
     "test:nodes": "node --test tests/rail-edit-ui-smoke.cjs",

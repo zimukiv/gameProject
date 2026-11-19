@@ -56,7 +56,7 @@ const assert = require('node:assert/strict'),
     await page.keyboard.press('Enter');
     assert.equal(await page.locator('#open-project').isVisible(), true);
     await page.keyboard.press('ArrowDown');
-    assert.equal(await page.evaluate(() => document.activeElement?.id), 'new-project');
+    assert.equal(await page.evaluate(() => document.activeElement?.id), 'open-project');
     await page.keyboard.press('Escape');
     assert.equal(await page.locator('#open-project').isVisible(), false);
     assert.equal(
@@ -76,7 +76,7 @@ const assert = require('node:assert/strict'),
 
     // New courses can be created per theme without touching the existing ones.
     const before = (await snap()).project.courses;
-    await page.locator('#add-course').click();
+    await page.evaluate(() => window.__ROOM_LAB__.newCourse());
     assert.equal(await page.locator('[data-new-course-kind]').count(), 3);
     await page.locator('[data-new-course-kind="slacker"]').click();
     await page.waitForFunction(() => window.__ROOM_LAB__.snapshot().project.courses.length === 4);
@@ -162,8 +162,7 @@ const assert = require('node:assert/strict'),
         );
       if (want.item) {
         assert.ok((game.items[want.item[0]] || 0) >= want.item[1], kind + ' inventory');
-        if (want.phone)
-          assert.ok((game.items['item.phone'] || 0) >= 1, kind + ' phone inventory');
+        if (want.phone) assert.ok((game.items['item.phone'] || 0) >= 1, kind + ' phone inventory');
         const label = { 'item.coffee': '咖啡', 'item.calculator': '计算器' }[want.item[0]];
         assert.ok(
           (await page.locator('#play-items').textContent()).includes(
@@ -202,7 +201,7 @@ const assert = require('node:assert/strict'),
     await page.setViewportSize({ width: 700, height: 900 });
     await page.locator('#home').click();
     await menu('项目').click();
-    assert.equal(await page.locator('#new-project').isVisible(), true);
+    assert.equal(await page.locator('#open-project').isVisible(), true);
     const box = await page.locator('#menu-project').boundingBox();
     assert.ok(box.x >= 0 && box.x + box.width <= 701, 'menu panel inside viewport');
     assert.equal(

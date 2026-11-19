@@ -95,7 +95,7 @@ const { _electron } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       traceFile,
     );
     assert.equal(loadedTraces.text, traceText);
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
+    await page.evaluate(() => window.__ROOM_LAB__.openCourseWorkspace());
     await page.getByRole('button', { name: '房间列表', exact: true }).click();
     await page.getByRole('button', { name: '编辑房间', exact: true }).first().click();
     assert.equal(await page.locator('.room-tabs [data-nav-room]').count(), 3);
@@ -104,7 +104,7 @@ const { _electron } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     assert.equal(await page.locator('#room-hints').count(), 1);
     assert.equal(await page.locator('#room-traces').count(), 1);
     await page.locator('#back-course').click();
-    await page.getByRole('button', { name: '缩略接线板', exact: true }).click();
+    await page.getByRole('button', { name: '全局路线图', exact: true }).click();
     assert.equal(await page.locator('#graph-fit').count(), 1);
     const data = await app.evaluate(async ({ BrowserWindow }) =>
       (

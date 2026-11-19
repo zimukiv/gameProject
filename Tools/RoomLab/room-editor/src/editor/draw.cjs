@@ -381,8 +381,14 @@ function drawRoom(
           (s) => s?.kind === 'objects' && s.id === teacher.id,
         ),
         showBindings = targets || selected,
-        min = Math.min(teacher.params?.patrolMinX ?? teacher.x, teacher.params?.patrolMaxX ?? teacher.x),
-        max = Math.max(teacher.params?.patrolMinX ?? teacher.x, teacher.params?.patrolMaxX ?? teacher.x);
+        min = Math.min(
+          teacher.params?.patrolMinX ?? teacher.x,
+          teacher.params?.patrolMaxX ?? teacher.x,
+        ),
+        max = Math.max(
+          teacher.params?.patrolMinX ?? teacher.x,
+          teacher.params?.patrolMaxX ?? teacher.x,
+        );
       ctx.save();
       ctx.strokeStyle = selected ? '#ffd37a' : '#d6a95d99';
       ctx.lineWidth = 2 / v.scale;
@@ -556,41 +562,55 @@ function findItem(r, selection) {
     return r.tiles.find((t) => t.x === selection.x && t.y === selection.y);
   return Native.get(r, selection);
 }
-function graphPorts(r) {
-  const x = r.graph?.x || 0,
-    y = r.graph?.y || 0;
-  const thumb = GraphLayout.card(r).thumb,
-    view = fit(r, thumb.width, thumb.height, 0);
-  const projected = (e) => ({
-    roomId: r.id,
-    id: e.id,
-    x: x + thumb.x + view.x + (e.x + 0.5) * T * view.scale,
-    y: y + thumb.y + view.y + (e.y + (e.h || 1) / 2) * T * view.scale,
-    label: e.name,
-  });
-  return {
-    entries: r.entries.map(projected),
-    exits: r.exits.map(projected),
-  };
+function graphPorts(r, x, y) {
+  return GraphLayout.ports(r, x, y);
 }
 function graphCurve(c, p, q) {
   const bend = Math.min(100, Math.abs(q.x - p.x) * 0.45),
     direction = Math.sign(q.x - p.x) || 1;
   return { c1: { x: p.x + bend * direction, y: p.y }, c2: { x: q.x - bend * direction, y: q.y } };
 }
-function graphNotes(ctx, value, x, y, width) {
-  let remaining = Array.from(String(value || '无备注'));
-  for (let row = 0; row < 3 && remaining.length; row++) {
-    if (row === 2) {
-      text(ctx, shortText(ctx, remaining.join(''), width, 12), x, y + row * 16, 12, '#b0c2d2');
-      break;
-    }
-    ctx.font = '12px Consolas,"Microsoft YaHei",sans-serif';
-    let line = '';
-    while (remaining.length && ctx.measureText(line + remaining[0]).width <= width)
-      line += remaining.shift();
-    text(ctx, line, x, y + row * 16, 12, '#b0c2d2');
+// Screen-constant label above a room body: name in its course colour, no notes.
+function graphLabel(ctx, room, x, y, layout, scale, color) {
+  const font = Math.min(30, Math.max(10, 11 / Math.max(scale, 0.001))),
+    value = shortText(ctx, room.name, layout.width, font);
+  ctx.font = font + 'px "Microsoft YaHei",sans-serif';
+  const width = Math.min(layout.width, ctx.measureText(value).width + 8),
+    top = y + Math.max(0, layout.labelHeight - font - 1);
+  ctx.fillStyle = '#0b1622dd';
+  ctx.fillRect(x, top, width, font + 2);
+  text(ctx, value, x + 3, top + font, font, color || '#d8e8f3');
+}
+// World-space grid whose step keeps a constant on-screen density; the smallest
+// step is one room cell so positions read against the same units as rooms.
+function graphGrid(ctx, view) {
+  const width = ctx.canvas.width,
+    height = ctx.canvas.height,
+    left = -view.x / view.scale,
+    top = -view.y / view.scale,
+    right = left + width / view.scale,
+    bottom = top + height / view.scale;
+  let step = GraphLayout.CELL_SIZE;
+  while (step * view.scale < 9) step *= 2;
+  ctx.strokeStyle = '#1c2f42';
+  ctx.lineWidth = 1 / view.scale;
+  ctx.beginPath();
+  for (let x = Math.floor(left / step) * step; x <= right; x += step) {
+    ctx.moveTo(x, top);
+    ctx.lineTo(x, bottom);
   }
+  for (let y = Math.floor(top / step) * step; y <= bottom; y += step) {
+    ctx.moveTo(left, y);
+    ctx.lineTo(right, y);
+  }
+  ctx.stroke();
+  ctx.strokeStyle = '#2b4a63';
+  ctx.beginPath();
+  ctx.moveTo(0, top);
+  ctx.lineTo(0, bottom);
+  ctx.moveTo(left, 0);
+  ctx.lineTo(right, 0);
+  ctx.stroke();
 }
 function graphPortMarker(ctx, p, entry, scale) {
   const color = entry ? '#70ebbe' : '#ffb55d',
@@ -626,50 +646,82 @@ function graphPortMarker(ctx, p, entry, scale) {
   ctx.fillRect(x, y, width, 18 / scale);
   text(ctx, label, x + 5, y + 12 / scale, font, color);
 }
-function drawGraph(ctx, project, c, selected, wire, view = { x: 0, y: 0, scale: 1 }) {
+// Global route map paint pass. `places` and `wires` come from graph-layout.cjs
+// (same helper as hit testing and fit), so drawing can never disagree with the
+// interactive geometry. Every course paints at once; the active course keeps a
+// slightly brighter outline while the others stay fully visible.
+function drawGraph(
+  ctx,
+  places,
+  wires,
+  selected,
+  wire,
+  view = { x: 0, y: 0, scale: 1 },
+  activeCourseId = null,
+  favorites = null,
+) {
   ctx.fillStyle = '#0c1622';
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  for (let x = 0; x < ctx.canvas.width; x += 30)
-    for (let y = 0; y < ctx.canvas.height; y += 30) {
-      ctx.fillStyle = '#284053';
-      ctx.fillRect(x, y, 1, 1);
-    }
   ctx.save();
   ctx.translate(view.x, view.y);
   ctx.scale(view.scale, view.scale);
-  ctx.lineWidth = 1;
-  for (const r of c.rooms) {
-    const x = r.graph?.x || 0,
-      y = r.graph?.y || 0,
-      layout = GraphLayout.card(r),
-      height = layout.height;
-    ctx.fillStyle = '#1b2b3b';
-    ctx.fillRect(x, y, layout.width, height);
-    ctx.strokeStyle = selected?.kind === 'room' && selected.id === r.id ? '#e4c392' : '#466079';
-    ctx.strokeRect(x, y, layout.width, height);
-    text(ctx, shortText(ctx, r.name, layout.width - 16, 17), x + 8, y + 23, 17, '#dbeaf4');
-    const thumb = layout.thumb;
-    miniature(ctx, r, x + thumb.x, y + thumb.y, thumb.width, thumb.height, 0);
-    graphNotes(ctx, r.notes, x + 8, y + layout.notesY + 12, layout.width - 16);
+  graphGrid(ctx, view);
+  for (const place of places) {
+    const body = place.layout.body,
+      active = selected?.kind === 'room' && selected.id === place.room.id,
+      favorite = !!favorites && favorites.has(place.room.id);
+    // The room itself is the thumbnail: no card shell, no note block.
+    ctx.save();
+    if (activeCourseId && place.courseId !== activeCourseId && !active) ctx.globalAlpha = 0.82;
+    if (favorite) {
+      // Obvious favourite highlight, distinct from the current selection ring:
+      // a soft gold glow plus a gold star at the card's top-right corner.
+      ctx.save();
+      ctx.shadowColor = 'rgba(255, 197, 77, 0.95)';
+      ctx.shadowBlur = 14 / Math.max(0.05, view.scale);
+      ctx.strokeStyle = '#ffc54d';
+      ctx.lineWidth = 3 / view.scale;
+      ctx.strokeRect(
+        place.x + body.x - 2 / view.scale,
+        place.y + body.y - 2 / view.scale,
+        body.width + 4 / view.scale,
+        body.height + 4 / view.scale,
+      );
+      ctx.restore();
+    }
+    miniature(ctx, place.room, place.x + body.x, place.y + body.y, body.width, body.height, 0);
+    const focused = active || place.courseId === activeCourseId;
+    ctx.strokeStyle = active ? '#ffe8a7' : favorite ? '#ffc54d' : place.color;
+    ctx.lineWidth = (focused ? 2 : favorite ? 2.5 : 1) / view.scale;
+    ctx.strokeRect(place.x + body.x, place.y + body.y, body.width, body.height);
+    graphLabel(ctx, place.room, place.x, place.y, place.layout, view.scale, place.color);
+    if (favorite) {
+      const size = Math.max(9, 12 / view.scale);
+      ctx.fillStyle = '#ffc54d';
+      ctx.font = size + 'px system-ui, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'top';
+      ctx.fillText(
+        '★',
+        place.x + body.x + body.width - 2 / view.scale,
+        place.y + body.y - size * 0.35,
+      );
+    }
+    ctx.restore();
   }
-  // Paint wires over cards, then endpoints on top: connections stay visible through a thumbnail.
-  for (const edge of c.connections) {
-    const a = c.rooms.find((r) => r.id === edge.from.roomId),
-      b = c.rooms.find((r) => r.id === edge.to.roomId);
-    if (!a || !b) continue;
-    const p = graphPorts(a).exits.find((p) => p.id === edge.from.exitId),
-      q = graphPorts(b).entries.find((p) => p.id === edge.to.entryId);
-    if (!p || !q) continue;
-    const curve = graphCurve(c, p, q);
-    ctx.strokeStyle = selected?.kind === 'wire' && selected.id === edge.id ? '#ffe8a7' : '#79c5be';
-    ctx.lineWidth = 2;
+  // Paint wires over rooms, then endpoints on top: connections stay visible through a thumbnail.
+  for (const edge of wires) {
+    const curve = graphCurve(edge, edge.from, edge.to),
+      focused = selected?.kind === 'wire' && selected.id === edge.id;
+    ctx.strokeStyle = focused ? '#ffe8a7' : edge.color || '#79c5be';
+    ctx.lineWidth = focused ? 2.5 : 2;
     ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-    ctx.bezierCurveTo(curve.c1.x, curve.c1.y, curve.c2.x, curve.c2.y, q.x, q.y);
+    ctx.moveTo(edge.from.x, edge.from.y);
+    ctx.bezierCurveTo(curve.c1.x, curve.c1.y, curve.c2.x, curve.c2.y, edge.to.x, edge.to.y);
     ctx.stroke();
   }
   if (wire) {
-    const curve = graphCurve(c, wire, wire.to);
+    const curve = graphCurve(wire, wire, wire.to);
     ctx.strokeStyle = '#f5d39b';
     ctx.setLineDash([5, 4]);
     ctx.beginPath();
@@ -678,10 +730,9 @@ function drawGraph(ctx, project, c, selected, wire, view = { x: 0, y: 0, scale: 
     ctx.stroke();
     ctx.setLineDash([]);
   }
-  for (const r of c.rooms) {
-    const ports = graphPorts(r);
-    for (const p of ports.entries) graphPortMarker(ctx, p, true, view.scale);
-    for (const p of ports.exits) graphPortMarker(ctx, p, false, view.scale);
+  for (const place of places) {
+    for (const p of place.ports.entries) graphPortMarker(ctx, p, true, view.scale);
+    for (const p of place.ports.exits) graphPortMarker(ctx, p, false, view.scale);
   }
   ctx.restore();
 }

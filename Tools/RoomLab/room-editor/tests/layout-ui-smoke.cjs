@@ -84,7 +84,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright'),
       .locator('select[data-bind-type="physics.ice"][data-slot="solid"] option')
       .evaluateAll((list) => list.map((o) => o.value));
     assert.deepEqual(eligible, ['', 'seed-ice-solid', 'seed-ice-cracked']);
-    await page.getByRole('button', { name: '缩略接线板', exact: true }).click();
+    await page.getByRole('button', { name: '全局路线图', exact: true }).click();
     const graph = await page.locator('#graph').boundingBox(),
       state = await snap(),
       c = state.project.courses[0],

@@ -1,22 +1,83 @@
 'use strict';
-// One geometry source for drawing, hit testing, fit-to-all and port projection.
+// One geometry source for drawing, hit testing, fit-to-all, port projection and
+// the project-wide route map.
+//
+// Every room is laid out with the same world cell size (CELL_SIZE) so a room's
+// map footprint always equals cols×rows; card width is never normalized away.
+// The room body is the content thumbnail itself; only a compact label band sits
+// above it. Notes and details live in the inspector/tooltip instead of a card.
+//
+// Authored per-course coordinates stay in room.graph. The global route map adds
+// an optional project-level course offset (project.layout.courseOffsets) so all
+// courses can be shown at once without rewriting authored coordinates; a room's
+// global position is always room.graph + its course offset.
+const { theme } = require('../project/themes.cjs');
 const CELL_SIZE = 10.5,
-  PADDING = 8,
-  TITLE_HEIGHT = 32;
+  LABEL_HEIGHT = 16,
+  GRID_SIZE = CELL_SIZE,
+  TITLE_HEIGHT = LABEL_HEIGHT,
+  PADDING = 0,
+  WORLD_TILE = 32,
+  COURSE_GAP = 140;
 function card(room) {
-  const thumb = {
-    x: PADDING,
-    y: TITLE_HEIGHT,
-    width: room.cols * CELL_SIZE,
-    height: room.rows * CELL_SIZE,
-  };
+  const width = Math.max(1, Number(room?.cols) || 1) * CELL_SIZE,
+    height = Math.max(1, Number(room?.rows) || 1) * CELL_SIZE,
+    body = { x: 0, y: LABEL_HEIGHT, width, height };
   return {
-    width: thumb.width + PADDING * 2,
-    height: thumb.y + thumb.height + 7 + 48 + PADDING,
-    titleHeight: TITLE_HEIGHT,
-    thumb,
-    notesY: thumb.y + thumb.height + 7,
+    width,
+    height: LABEL_HEIGHT + height,
+    labelHeight: LABEL_HEIGHT,
+    body,
+    // Kept as an alias: ports and drawing both project through this same thumb.
+    thumb: body,
+    notesY: body.y + body.height,
   };
+}
+function inside(room, point) {
+  if (!room || !Number.isFinite(point?.x) || !Number.isFinite(point?.y)) return false;
+  const x = Number(room.graph?.x) || 0,
+    y = Number(room.graph?.y) || 0,
+    box = card(room);
+  return point.x > x && point.x < x + box.width && point.y > y && point.y < y + box.height;
+}
+// Topmost room under a world point: later rooms paint above earlier ones.
+function hit(rooms, point) {
+  return (
+    rooms
+      .slice()
+      .reverse()
+      .find((room) => inside(room, point)) || null
+  );
+}
+// Port positions are projected through the same uniform cell size as the
+// thumbnail, so the marker sits on the actual entry/exit cell of the room. The
+// label band above the body offsets the thumbnail, exactly like drawing does.
+function portAt(room, originX, originY) {
+  const body = card(room).body,
+    project = (cell) => ({
+      roomId: room.id,
+      id: cell.id,
+      x: originX + body.x + (cell.x + 0.5) * CELL_SIZE,
+      y: originY + body.y + (cell.y + (cell.h || 1) / 2) * CELL_SIZE,
+      label: cell.name,
+    });
+  return {
+    entries: (room.entries || []).map(project),
+    exits: (room.exits || []).map(project),
+  };
+}
+function ports(room, originX, originY) {
+  return portAt(
+    room,
+    Number.isFinite(originX) ? originX : Number(room.graph?.x) || 0,
+    Number.isFinite(originY) ? originY : Number(room.graph?.y) || 0,
+  );
+}
+function snap(value, enabled = true, step = GRID_SIZE) {
+  return enabled ? Math.round(value / step) * step : value;
+}
+function snapGraph(room, x, y, enabled = true) {
+  return { x: snap(x, enabled), y: snap(y, enabled) };
 }
 function overlaps(rooms, gap = 16) {
   return rooms.some(
@@ -138,15 +199,195 @@ function fit(rooms, width, height, scale) {
     y: height / 2 - (b.minY + h / 2) * scale,
   };
 }
+
+// ---- Project-wide route map -------------------------------------------------
+// Global position = authored room.graph + course offset. The offset is derived
+// once (first global view) only where course coordinate spaces would overlap,
+// and is then persisted, so authored coordinates are never rewritten by layout.
+function placeKey(courseId, roomId) {
+  return courseId + '/' + roomId;
+}
+function offsetOf(offsets, course) {
+  const value = offsets?.[course?.id];
+  return Number.isFinite(value?.x) && Number.isFinite(value?.y)
+    ? { x: value.x, y: value.y }
+    : { x: 0, y: 0 };
+}
+function localRect(room) {
+  const box = card(room);
+  return {
+    x: Number(room.graph?.x) || 0,
+    y: Number(room.graph?.y) || 0,
+    width: box.width,
+    height: box.height,
+  };
+}
+function shiftRect(rect, offset) {
+  return {
+    x: rect.x + offset.x,
+    y: rect.y + offset.y,
+    width: rect.width,
+    height: rect.height,
+  };
+}
+function intersects(a, b, gap = 0) {
+  return (
+    a.x < b.x + b.width + gap &&
+    a.x + a.width + gap > b.x &&
+    a.y < b.y + b.height + gap &&
+    a.y + a.height + gap > b.y
+  );
+}
+function courseBounds(course) {
+  const rooms = course?.rooms?.length ? course.rooms : [];
+  if (!rooms.length) return null;
+  const rects = rooms.map(localRect),
+    minX = Math.min(...rects.map((r) => r.x)),
+    minY = Math.min(...rects.map((r) => r.y)),
+    maxX = Math.max(...rects.map((r) => r.x + r.width)),
+    maxY = Math.max(...rects.map((r) => r.y + r.height));
+  return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
+}
+// Derive/persist course offsets. Stored offsets win; missing ones start at 0,0
+// and are pushed to the right of everything already placed only when needed.
+function ensureOffsets(project) {
+  const stored = project?.layout?.courseOffsets || {},
+    offsets = {},
+    placed = [];
+  let changed = false;
+  for (const course of project?.courses || []) {
+    const box = courseBounds(course),
+      saved = stored[course.id];
+    let offset;
+    if (Number.isFinite(saved?.x) && Number.isFinite(saved?.y)) offset = { x: saved.x, y: saved.y };
+    else {
+      offset = { x: 0, y: 0 };
+      if (box && placed.some((rect) => intersects(shiftRect(box, offset), rect, COURSE_GAP / 2)))
+        offset = {
+          x: Math.max(...placed.map((rect) => rect.x + rect.width)) + COURSE_GAP - box.x,
+          y: 0,
+        };
+      changed = true;
+    }
+    offsets[course.id] = offset;
+    if (box) placed.push(shiftRect(box, offset));
+  }
+  return { offsets, changed };
+}
+// One placement per room of every course: x/y are global top-left coordinates.
+function placements(project, offsets, activeCourseId = null) {
+  const list = [];
+  for (const course of project?.courses || []) {
+    const offset = offsetOf(offsets, course),
+      color = theme(course.kind).color,
+      active = course.id === activeCourseId;
+    for (const room of course.rooms || []) {
+      const box = card(room),
+        x = (Number(room.graph?.x) || 0) + offset.x,
+        y = (Number(room.graph?.y) || 0) + offset.y;
+      list.push({
+        key: placeKey(course.id, room.id),
+        courseId: course.id,
+        course,
+        room,
+        color,
+        active,
+        offset,
+        x,
+        y,
+        width: box.width,
+        height: box.height,
+        layout: box,
+        ports: ports(room, x, y),
+      });
+    }
+  }
+  return list;
+}
+function hitPlace(list, point) {
+  for (let i = list.length - 1; i >= 0; i--)
+    if (
+      point.x > list[i].x &&
+      point.x < list[i].x + list[i].width &&
+      point.y > list[i].y &&
+      point.y < list[i].y + list[i].height
+    )
+      return list[i];
+  return null;
+}
+function placeBounds(list) {
+  if (!list.length) return { x: 0, y: 0, width: 1, height: 1 };
+  const minX = Math.min(...list.map((p) => p.x)),
+    minY = Math.min(...list.map((p) => p.y)),
+    maxX = Math.max(...list.map((p) => p.x + p.width)),
+    maxY = Math.max(...list.map((p) => p.y + p.height));
+  return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
+}
+function fitPlaces(list, width, height, scale) {
+  const b = placeBounds(list);
+  scale = scale ?? Math.min(1.2, (width - 60) / (b.width + 40), (height - 60) / (b.height + 40));
+  scale = Math.max(0.001, scale);
+  return {
+    scale,
+    x: width / 2 - (b.x + b.width / 2) * scale,
+    y: height / 2 - (b.y + b.height / 2) * scale,
+  };
+}
+// Convert a global drag position back into the owner course's authored space.
+function toLocal(entry, x, y) {
+  return { x: x - entry.offset.x, y: y - entry.offset.y };
+}
+function locate(project, roomId) {
+  for (const course of project?.courses || [])
+    for (const room of course.rooms || []) if (room.id === roomId) return { course, room };
+  return null;
+}
+function courseOf(project, courseId) {
+  return (project?.courses || []).find((course) => course.id === courseId) || null;
+}
+// Project wiring uses the existing per-course connection model: a wire may only
+// join two ports of rooms that belong to the same course.
+function canConnect(project, from, to) {
+  if (!from || !to || from.courseId !== to.courseId) return false;
+  const course = courseOf(project, from.courseId);
+  if (!course) return false;
+  const a = course.rooms.find((room) => room.id === from.roomId),
+    b = course.rooms.find((room) => room.id === to.roomId);
+  return !!(a && b);
+}
 module.exports = {
   CELL_SIZE,
+  LABEL_HEIGHT,
+  GRID_SIZE,
   PADDING,
   TITLE_HEIGHT,
+  WORLD_TILE,
+  COURSE_GAP,
   card,
+  inside,
+  hit,
+  portAt,
+  ports,
+  snap,
+  snapGraph,
   overlaps,
   arrange,
   vacant,
+  hasPosition,
   ensurePositions,
   bounds,
   fit,
+  placeKey,
+  offsetOf,
+  localRect,
+  courseBounds,
+  ensureOffsets,
+  placements,
+  hitPlace,
+  placeBounds,
+  fitPlaces,
+  toLocal,
+  locate,
+  courseOf,
+  canConnect,
 };

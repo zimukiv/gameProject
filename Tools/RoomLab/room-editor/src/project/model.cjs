@@ -169,10 +169,18 @@ function themedExample() {
 }
 
 function migrate(data) {
-  if (data?.version === 2)
-    return require('./compatibility.cjs').normalize(
+  if (data?.version === 2) {
+    const project = require('./compatibility.cjs').normalize(
       Collision.normalize(RailNodes.normalize(clone(data))),
     );
+    // Optional additive organisation metadata: keep it only when present and
+    // drop stale room IDs / malformed groups. Unknown root fields stay as-is.
+    if (project.roomOrganization !== undefined) {
+      const Org = require('./room-organization.cjs');
+      project.roomOrganization = Org.sanitize(project.roomOrganization, Org.roomIdList(project));
+    }
+    return project;
+  }
   if (data?.version !== 1 || !Array.isArray(data.rooms)) throw new Error('不支持的项目版本。');
   const p = example();
   p.id = uid('project');

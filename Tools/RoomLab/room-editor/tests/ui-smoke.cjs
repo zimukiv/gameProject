@@ -37,12 +37,19 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     await page.goto(
       'file:///' + path.resolve(__dirname, '../build/index.html').replace(/\\/g, '/'),
     );
-    assert.equal((await snap()).project.courses.length, 1);
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
-    const rect = await page.locator('#graph').boundingBox();
+    await page.locator('#start-new').click();
+    assert.equal((await snap()).project.courses.length, 3);
+    await page.evaluate(() => window.__ROOM_LAB__.openCourseWorkspace());
+    const rect = await page.locator('#graph').boundingBox(),
+      dims = await page.locator('#graph').evaluate((node) => ({
+        w: node.width,
+        h: node.height,
+      })),
+      // World → screen through the shared global route-map view.
+      view = (await snap()).state.graphView;
     const point = (x, y) => ({
-      x: rect.x + (x / 1120) * rect.width,
-      y: rect.y + (y / 650) * rect.height,
+      x: rect.x + ((x * view.scale + view.x) * rect.width) / dims.w,
+      y: rect.y + ((y * view.scale + view.y) * rect.height) / dims.h,
     });
     let a = point(100, 110),
       b = point(135, 135);
@@ -104,7 +111,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     const reopened = await snap();
     assert.equal(reopened.project.courses[0].rooms[0].name, '喷气测试房');
     assert.equal(reopened.project.courses[0].rooms[0].cols, 34);
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
+    await page.evaluate(() => window.__ROOM_LAB__.openCourseWorkspace());
     await page.screenshot({
       path: path.resolve(__dirname, '../test-output/phase2.png'),
       fullPage: true,

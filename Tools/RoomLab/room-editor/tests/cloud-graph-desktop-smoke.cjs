@@ -101,7 +101,7 @@ const call = (p, name, data) =>
       path: path.resolve(__dirname, '../test-output/cloud-graph-editor.png'),
     });
     await page.getByRole('button', { name: '关闭', exact: true }).click();
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
+    await page.evaluate(() => window.__ROOM_LAB__.openCourseWorkspace());
     await page.getByRole('button', { name: '房间列表', exact: true }).click();
     await page.getByRole('button', { name: '编辑房间', exact: true }).first().click();
     assert.equal(await page.locator('#export-room').isEnabled(), true);
@@ -118,7 +118,7 @@ const call = (p, name, data) =>
     assert.equal(exported.project.courses[0].rooms.length, 1);
     assert.equal(exported.project.courses[0].rooms[0].id, 'jet-room');
     await page.locator('#back-course').click();
-    await page.getByRole('button', { name: '缩略接线板', exact: true }).click();
+    await page.getByRole('button', { name: '全局路线图', exact: true }).click();
     // Select a room node through the same hit testing used by the designer.
     await page.locator('#graph-fit').click();
     const snap = await page.evaluate(() => window.__ROOM_LAB__.snapshot()),

@@ -134,6 +134,30 @@ nav button {
   color: #ffb3a5;
   background: #2e2023;
 }
+/* Minute autosave state: separate from the cloud badge and from #status so a
+   routine render or validation message never hides the last save time. */
+.autosave-status {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+  max-width: 340px;
+  white-space: normal;
+}
+.autosave-status[hidden] {
+  display: none;
+}
+.autosave-status.ok {
+  color: #8fe0b0;
+}
+.autosave-status.saving {
+  color: #9fc7ff;
+}
+.autosave-status.warn {
+  color: #ffd28a;
+}
+.autosave-status.error {
+  color: #ffb3a5;
+}
 main {
   padding: 20px 22px;
 }
@@ -1771,4 +1795,583 @@ body.room-editing main {
   max-width: 100%;
   overflow-wrap: anywhere;
   margin: 6px 0;
+}
+
+/* Planning screen: route map first, room library as the room-editing entry. */
+body.planning main {
+  padding: 14px 18px;
+}
+.planning-heading {
+  margin-bottom: 12px;
+}
+.planning-heading h1 {
+  font-size: 21px;
+}
+.planning-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.planning-tabs {
+  margin: 0;
+  padding-bottom: 8px;
+  flex: 0 1 auto;
+}
+.planning-tabs button {
+  min-width: 92px;
+}
+.planning-tools {
+  padding-bottom: 8px;
+}
+.course-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px 8px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 12px;
+}
+.course-chip-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  min-width: 190px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--theme-color, var(--cyan));
+  border-radius: 7px;
+}
+.course-chip-wrap.active {
+  background: #16283a;
+  border-color: var(--cyan);
+  border-left-color: var(--theme-color, var(--cyan));
+}
+.course-chip {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+  padding: 8px 12px 4px;
+  background: transparent;
+  border: 0;
+  min-width: 0;
+}
+.course-chip h2 {
+  margin: 0;
+  font-size: 13px;
+}
+.course-chip small {
+  color: var(--muted);
+  font-size: 10px;
+}
+.course-chip .theme-badge {
+  margin: 0;
+  color: var(--theme-color, var(--cyan));
+}
+.course-chip.active {
+  color: #e9f4fb;
+}
+.course-chip-actions {
+  display: flex;
+  gap: 4px;
+  padding: 0 8px 7px;
+}
+.course-chip-actions button {
+  font-size: 11px;
+  padding: 3px 6px;
+  background: transparent;
+}
+.course-chip-enter {
+  flex: 1 1 auto;
+  color: var(--theme-color, var(--cyan));
+  border: 1px solid var(--theme-color, var(--line));
+}
+.course-chip-menu {
+  flex: 0 0 auto;
+  min-width: 0;
+  background: #101d2a;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+.course-chip-menu:hover {
+  color: #e9f4fb;
+  border-color: var(--theme-color, var(--cyan));
+}
+.course-add {
+  flex: 0 0 auto;
+  align-self: center;
+}
+.graph-canvas-wrap {
+  line-height: 0;
+}
+.planning-map .graph-panel canvas,
+.graph-canvas-wrap canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  touch-action: none;
+  background: #0c1622;
+}
+.planning-map .graph-help {
+  border-top: 1px solid var(--line);
+}
+.room-library-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.room-library-toolbar .hint {
+  margin: 0;
+  max-width: 560px;
+}
+.room-library-grid {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+.room-card {
+  cursor: pointer;
+}
+.room-card:hover {
+  border-color: var(--cyan);
+}
+.room-card.selected {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 1px var(--cyan) inset;
+}
+.room-card h3 {
+  margin-bottom: 6px;
+}
+.room-notes {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+@media (max-width: 850px) {
+  .planning-bar {
+    align-items: stretch;
+  }
+  .course-chip {
+    min-width: 150px;
+  }
+}
+
+/* Global route map: every course at once, colour-coded per course. */
+.graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  padding: 7px 14px;
+  border-top: 1px solid var(--line);
+  background: #101c29;
+  font-size: 11px;
+  color: var(--muted);
+}
+.graph-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.graph-legend-item i,
+.graph-owner i,
+.library-course-heading i,
+.graph-inspector-courses i {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--theme-color, var(--cyan));
+}
+.graph-legend-item small {
+  color: #7f95a8;
+}
+.graph-legend-item.active {
+  color: #e9f4fb;
+  font-weight: 700;
+}
+.graph-owner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--theme-color, var(--cyan));
+}
+.graph-inspector-courses {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 7px;
+}
+.graph-inspector-courses li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+}
+.graph-inspector-courses .muted {
+  margin-left: auto;
+  font-size: 11px;
+}
+
+/* Room library: thumbnails are the room body, notes stay on the card. */
+.library-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 0;
+}
+.library-filter button.active {
+  color: #08222a;
+  background: var(--cyan);
+  border-color: var(--cyan);
+  font-weight: 700;
+}
+.room-library-sections {
+  display: grid;
+  gap: 18px;
+}
+.library-course-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  font-size: 14px;
+  border-left: 3px solid var(--theme-color, var(--cyan));
+  padding-left: 8px;
+}
+.library-course-heading small {
+  margin-left: auto;
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 11px;
+}
+.room-card .room-thumb {
+  position: relative;
+  border: 2px solid var(--theme-color, var(--line));
+  border-radius: 5px;
+  overflow: hidden;
+  line-height: 0;
+  margin-bottom: 9px;
+  background: #0c1622;
+}
+.room-card .room-thumb canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.room-card.selected .room-thumb {
+  box-shadow: 0 0 0 2px var(--cyan);
+}
+.room-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+/* ---- 4.2.0 stage 3: room-first planning, favourites, groups, compact UI ---- */
+.planning-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 8px;
+}
+.planning-title h1 {
+  font-size: 18px;
+  margin: 0;
+}
+.planning-title p {
+  margin: 2px 0 0;
+  font-size: 11px;
+}
+.planning-help,
+.graph-help {
+  position: relative;
+  margin-left: auto;
+  font-size: 11px;
+}
+.planning-help > summary,
+.graph-help > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 3px 8px;
+  border: 1px solid #2b4a4a;
+  border-radius: 4px;
+  color: #8fb3b0;
+  white-space: nowrap;
+}
+.planning-help > summary::-webkit-details-marker,
+.graph-help > summary::-webkit-details-marker {
+  display: none;
+}
+.help-body {
+  position: absolute;
+  right: 0;
+  top: 26px;
+  z-index: 30;
+  width: min(420px, 72vw);
+  background: #0e2126;
+  border: 1px solid #2b4a4a;
+  border-radius: 6px;
+  padding: 8px 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+.help-body p {
+  margin: 0 0 6px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #a9c6c3;
+}
+.graph-help {
+  padding: 0;
+}
+.graph-help[open] .help-body {
+  width: 320px;
+}
+.room-filters {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin: 0 0 6px;
+}
+.room-filter {
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid #2b4a4a;
+  background: transparent;
+  color: #a9c6c3;
+}
+.room-filter.active {
+  background: #134e4a;
+  color: #e7fffb;
+  border-color: #3f8f88;
+}
+.room-filter small {
+  margin-left: 4px;
+  opacity: 0.75;
+}
+.room-filter-tools {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+.room-filter-tools button {
+  font-size: 11px;
+  padding: 3px 8px;
+}
+.room-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 2px 8px;
+  scrollbar-width: thin;
+}
+.room-strip-item {
+  position: relative;
+  flex: 0 0 auto;
+  width: 118px;
+  padding: 3px;
+  border: 1px solid #24413f;
+  border-radius: 6px;
+  background: #0d1f24;
+  cursor: pointer;
+}
+.room-strip-item:hover {
+  border-color: #3f8f88;
+}
+.room-strip-item.selected {
+  border-color: #9fd8cf;
+  box-shadow: 0 0 0 2px rgba(159, 216, 207, 0.35);
+}
+.room-strip-item.multi {
+  border-color: #7fc9c0;
+  box-shadow: 0 0 0 2px rgba(127, 201, 192, 0.25);
+}
+.room-strip-item.favorite {
+  border-color: #e0a83c;
+  box-shadow:
+    0 0 0 1px rgba(224, 168, 60, 0.55),
+    0 0 10px rgba(224, 168, 60, 0.25);
+}
+.room-strip-item .strip-thumb {
+  display: block;
+  border-radius: 4px;
+  background: #0c1622;
+}
+.strip-name {
+  display: block;
+  font-size: 10px;
+  color: #cfe6e2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 3px;
+}
+.strip-fav,
+.strip-edit {
+  position: absolute;
+  top: 1px;
+  font-size: 13px;
+  line-height: 1;
+  padding: 2px 3px;
+  background: rgba(10, 22, 26, 0.85);
+  border: 0;
+  border-radius: 4px;
+  opacity: 0;
+}
+.strip-fav {
+  right: 2px;
+  color: #e0a83c;
+}
+.strip-edit {
+  left: 2px;
+  font-size: 11px;
+  color: #9fd8cf;
+}
+.room-strip-item:hover .strip-fav,
+.room-strip-item.favorite .strip-fav,
+.room-strip-item:hover .strip-edit,
+.room-strip-item.selected .strip-edit {
+  opacity: 1;
+}
+.room-strip-item.favorite .strip-fav {
+  color: #ffc54d;
+}
+.room-strip-empty {
+  padding: 8px 2px;
+  font-size: 11px;
+}
+.room-card-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.room-card-title {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fav-toggle {
+  background: transparent;
+  border: 0;
+  color: #6d8d8a;
+  font-size: 14px;
+  padding: 0 4px;
+  cursor: pointer;
+}
+.fav-toggle.on {
+  color: #ffc54d;
+  text-shadow: 0 0 6px rgba(255, 197, 77, 0.6);
+}
+.room-card.favorite {
+  border-color: #e0a83c;
+}
+.room-card.multi {
+  border-color: #7fc9c0;
+}
+.group-control {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  font-size: 10px;
+  margin-top: 6px;
+}
+.group-control select {
+  font-size: 10px;
+  max-width: 100px;
+}
+.group-control button {
+  font-size: 10px;
+  padding: 2px 5px;
+}
+.group-chip {
+  border: 1px solid #3f8f88;
+  background: #10302f;
+  color: #cfe6e2;
+  border-radius: 999px;
+  font-size: 10px;
+  padding: 1px 6px;
+}
+.group-none {
+  color: #6d8d8a;
+}
+.inspector-empty {
+  font-size: 11px;
+  line-height: 1.5;
+  margin: 0;
+}
+#graph-inspector.compact {
+  width: 170px;
+}
+.inspector-fav-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 11px;
+}
+.inspector-groups {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  font-size: 10px;
+  margin: 6px 0;
+}
+.advanced-tools {
+  margin: 4px 0 8px;
+  font-size: 11px;
+}
+.advanced-tools > summary {
+  cursor: pointer;
+  color: #8fb3b0;
+  padding: 3px 0;
+  list-style: none;
+}
+.advanced-tools > summary::before {
+  content: '▸ ';
+}
+.advanced-tools[open] > summary::before {
+  content: '▾ ';
+}
+.advanced-body {
+  border: 1px solid #24413f;
+  border-radius: 6px;
+  padding: 6px 8px;
+  margin-top: 4px;
+}
+.advanced-body .hint {
+  margin: 0 0 6px;
+  font-size: 10px;
+}
+.group-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid #1d3437;
+  font-size: 11px;
+}
+.group-row .group-name {
+  flex: 1;
+  text-align: left;
+}
+.planning-bar {
+  flex-wrap: wrap;
+  gap: 6px;
 }

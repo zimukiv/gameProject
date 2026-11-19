@@ -14,8 +14,13 @@
     <header>
       <button id="home" class="brand">ROOM LAB <small>三主题大关 / v4.2.0</small></button>
       <nav id="breadcrumbs"></nav>
+      <span id="autosave-status" class="autosave-status" role="status" aria-live="polite" hidden
+        >尚未自动保存</span
+      >
       <div class="header-actions" id="editor-actions" hidden>
-        <button id="save-project">保存项目</button><button id="open-cloud">☁ 工作树</button>
+        <button id="save-project" class="primary">保存项目</button
+        ><button id="cloud-room-library" class="primary">☁ 云端房间库</button
+        ><button id="open-cloud">☁ 保存同步</button>
         <div class="menu" data-menu>
           <button
             class="menu-trigger"
@@ -26,13 +31,9 @@
             项目 ▾
           </button>
           <div class="menu-panel" id="menu-project" data-menu-panel role="group" hidden>
-            <button id="new-project">新建大关</button><button id="open-project">打开项目</button
-            ><button id="save-as">另存为</button><button id="export-project">导出项目包</button
+            <button id="open-project">打开项目</button><button id="save-as">另存为</button
             ><button id="export-room" disabled>导出房间</button
-            ><button data-room-clipboard-copy disabled>复制整房</button
-            ><button data-room-clipboard-paste disabled>粘贴整房</button
-            ><button id="import-room">导入房间</button
-            ><button id="cloud-room-library">云端房间库</button>
+            ><button id="import-room">导入房间</button>
           </div>
         </div>
         <div class="menu" data-menu>
@@ -45,7 +46,11 @@
             工具 ▾
           </button>
           <div class="menu-panel" id="menu-tools" data-menu-panel role="group" hidden>
-            <button id="open-assets">素材库</button><button id="open-definitions">功能块</button>
+            <button id="open-assets">素材库</button><button id="open-definitions">功能块</button
+            ><button id="export-project">导出项目包</button
+            ><button id="open-course-tools" title="大关规则、美术绑定、重命名 / 新建 / 删除大关">
+              大关与规则（高级）
+            </button>
           </div>
         </div>
       </div>

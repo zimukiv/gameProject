@@ -51,7 +51,7 @@ async function launch(run) {
     await p.locator('[data-course="calculus"]').waitFor();
     assert.match(await p.locator('[data-course="calculus"] h2').textContent(), /微积分作业/);
     assert.equal(await p.locator('#start-import').count(), 0);
-    await p.locator('#add-course').click();
+    await p.evaluate(() => window.__ROOM_LAB__.newCourse());
     await p.locator('[data-new-course-kind="calculus"]').click();
     const fourth = (await snap()).project.courses.at(-1);
     assert.equal(fourth.rooms.length, 3);
@@ -95,7 +95,7 @@ async function launch(run) {
     assert.equal(placed.params.cooldown, 2.2);
     assert.equal(placed.assetOverrides.idle, 'seed-calculus-integral');
     await p.locator('#home').click();
-    await p.locator('#add-course').click();
+    await p.evaluate(() => window.__ROOM_LAB__.newCourse());
     await p.locator('#course-with-examples').uncheck();
     await p.locator('[data-new-course-kind="slacker"]').click();
     assert.equal(await p.locator('#dialog').isVisible(), false);
@@ -114,7 +114,7 @@ async function launch(run) {
       project,
     );
     await p.reload();
-    await p.locator('#add-course').click();
+    await p.evaluate(() => window.__ROOM_LAB__.newCourse());
     await p.locator('[data-new-course-kind="calculus"]').click();
     assert.deepEqual(
       (await snap()).project.courses.map((c) => c.kind),

@@ -800,7 +800,8 @@
               "notes": "",
               "x": 1,
               "y": 13,
-              "face": 1
+              "face": 1,
+              "allowReturn": true
             }
           ],
           "exits": [
@@ -1146,7 +1147,8 @@
               "notes": "",
               "x": 1,
               "y": 13,
-              "face": 1
+              "face": 1,
+              "allowReturn": true
             }
           ],
           "exits": [
@@ -1986,7 +1988,8 @@
               "notes": "",
               "x": 1,
               "y": 14,
-              "face": 1
+              "face": 1,
+              "allowReturn": true
             }
           ],
           "exits": [
@@ -2013,13 +2016,13 @@
                   {
                     "x": 6.5,
                     "y": 15,
-                    "id": "rail-node-mwj0726l-hnzrct",
+                    "id": "rail-node-mwn3k58m-k46me5",
                     "parentId": "rail-c"
                   },
                   {
                     "x": 17.5,
                     "y": 15,
-                    "id": "rail-node-mwj0726l-u5jtdz",
+                    "id": "rail-node-mwn3k58m-7e82v7",
                     "parentId": "rail-c"
                   }
                 ],
@@ -2238,13 +2241,28 @@
       "hash": "seed-rail-active"
     },
     {
+      "id": "seed-submit-assignment",
+      "name": "提交作业",
+      "path": "assets/seed-submit-assignment.svg",
+      "mime": "image/svg+xml",
+      "width": 64,
+      "height": 64,
+      "courseId": "common",
+      "category": "mechanism",
+      "subcategory": "common.assignmentSubmit",
+      "frameWidth": 0,
+      "frameHeight": 0,
+      "fps": 6,
+      "hash": "seed-submit-assignment"
+    },
+    {
       "id": "seed-coffee",
       "name": "咖啡",
       "path": "assets/seed-coffee.svg",
       "mime": "image/svg+xml",
       "width": 64,
       "height": 64,
-      "courseId": "common",
+      "courseId": "physics",
       "category": "item",
       "subcategory": "item.coffee",
       "frameWidth": 0,
@@ -2259,7 +2277,7 @@
       "mime": "image/svg+xml",
       "width": 64,
       "height": 64,
-      "courseId": "common",
+      "courseId": "physics",
       "category": "item",
       "subcategory": "item.calculator",
       "frameWidth": 0,
@@ -2274,7 +2292,7 @@
       "mime": "image/svg+xml",
       "width": 64,
       "height": 64,
-      "courseId": "common",
+      "courseId": "physics",
       "category": "item",
       "subcategory": "item.phone",
       "frameWidth": 0,
@@ -2289,7 +2307,7 @@
       "mime": "image/svg+xml",
       "width": 64,
       "height": 64,
-      "courseId": "common",
+      "courseId": "physics",
       "category": "item",
       "subcategory": "item.icedTea",
       "frameWidth": 0,

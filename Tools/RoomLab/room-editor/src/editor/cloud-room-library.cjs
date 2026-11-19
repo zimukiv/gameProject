@@ -10,13 +10,13 @@ function open(app) {
   const roomId =
     app.state.route === 'room'
       ? app.state.roomId
-      : app.state.route === 'course' && app.state.graphSelection?.kind === 'room'
+      : app.state.graphSelection?.kind === 'room'
         ? app.state.graphSelection.id
         : null;
-  const courseId = app.state.courseId,
-    current = app.store.project.courses
-      .find((c) => c.id === courseId)
-      ?.rooms.find((r) => r.id === roomId);
+  // Resolve the owner course of the selected room, not the sticky active one.
+  const owner = (roomId && require('./graph-layout.cjs').locate(app.store.project, roomId)) || null,
+    courseId = owner?.course.id || app.state.courseId,
+    current = owner?.room;
   if ($('dialog').open) $('dialog').close();
   modal(
     '云端房间库',

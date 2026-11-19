@@ -6,19 +6,19 @@ const Export = require('../project/room-export.cjs'),
   { $, modal, esc } = require('./dom.cjs');
 
 function source(app) {
-  const course = app.course();
   const roomId =
     app.state.route === 'room'
       ? app.state.roomId
-      : app.state.route === 'course' && app.state.graphSelection?.kind === 'room'
+      : app.state.graphSelection?.kind === 'room'
         ? app.state.graphSelection.id
         : null;
-  const room = roomId && course.rooms.find((item) => item.id === roomId);
-  return room ? { course, room } : null;
+  // The selected room resolves to its owner course, so copying from the global
+  // route map or library never picks up a room from the wrong course.
+  return (roomId && require('./graph-layout.cjs').locate(app.store.project, roomId)) || null;
 }
 
 function canPaste(app) {
-  return !!app.roomClipboard && ['course', 'room'].includes(app.state.route);
+  return !!app.roomClipboard && ['course', 'room', 'home'].includes(app.state.route);
 }
 
 function sync(app) {
@@ -83,10 +83,10 @@ async function commit(app, plan, targetCourseId) {
   app.store.commit(before);
   const target = app.store.project.courses.find((course) => course.id === targetCourseId),
     room = plan.rooms[0];
-  app.go('course', {
+  app.go('home', {
     courseId: targetCourseId,
     roomId: room.id,
-    courseTab: 'graph',
+    planningTab: 'map',
     graphSelection: { kind: 'room', id: room.id },
   });
   app.message(

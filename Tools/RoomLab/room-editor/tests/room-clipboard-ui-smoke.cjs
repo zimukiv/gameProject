@@ -81,7 +81,8 @@ const assert = require('node:assert/strict'),
       'copied room art must resolve',
     );
 
-    await page.locator('.page-title [data-room-clipboard-paste]').click();
+    await page.locator('#planning-tab-library').click();
+    await page.locator('[data-room-clipboard-paste]').click();
     await page.waitForFunction((count) => {
       const calculus = window.__ROOM_LAB__
         .snapshot()

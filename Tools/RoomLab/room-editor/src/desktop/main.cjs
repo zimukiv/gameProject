@@ -14,6 +14,7 @@ const {
   path = require('node:path'),
   crypto = require('node:crypto');
 const Files = require('./project-files.cjs');
+const AutoSave = require('./project-autosave.cjs');
 const root = path.resolve(__dirname, '../..'),
   testing = process.env.ROOM_EDITOR_TEST === '1',
   sessions = new Map();
@@ -67,6 +68,34 @@ function recordFile(file, project, files) {
   );
   cloud.repo.linkFile(t.id, file, project);
   return cloud.status();
+}
+// Autosave may only touch the file the user opened/associated, and only while
+// its bytes still match the hash we read. Otherwise it writes a recovery
+// snapshot under the profile and leaves the good file alone.
+function autosaveCandidate(payload, project) {
+  return AutoSave.candidateFor({
+    payload,
+    project,
+    sessions,
+    current: cloud.repo.data.trees.find((t) => t.id === cloud.repo.data.current && !t.deletedAt),
+    forced: testPath(payload),
+  });
+}
+// Keep worktree file hashes in step with an autosave write so the next tick and
+// the manual-save conflict check compare against the bytes we just wrote.
+function updateLinkedHash(file, project) {
+  const lower = file.toLowerCase(),
+    hash = fileHash(file);
+  let changed = false;
+  for (const tree of cloud.repo.data.trees) {
+    if (tree.deletedAt || !tree.localFile) continue;
+    if (tree.localFile.path.toLowerCase() !== lower) continue;
+    if (tree.projectId && tree.projectId !== project.id) continue;
+    tree.localFile.hash = hash;
+    tree.localFile.linkedAt = Date.now();
+    changed = true;
+  }
+  if (changed) cloud.repo.save();
 }
 function register() {
   ipcMain.on('cloud:renderer-ready', (event) => {
@@ -294,6 +323,32 @@ function register() {
     const cloudStatus = recordFile(file, payload.project, complete.files);
     sessions.set(session, { file, projectId: payload.project.id, hash: fileHash(file) });
     return { ...result, session, cloudStatus };
+  });
+  ipcMain.handle('project:autosave', async (event, payload) => {
+    trusted(event);
+    const project = payload?.project;
+    if (!project || typeof project.id !== 'string')
+      throw new Error('自动保存请求无效：缺少项目数据。');
+    const files = Array.isArray(payload.files) ? payload.files : [],
+      candidate = autosaveCandidate(payload, project),
+      result = AutoSave.autosave({
+        project,
+        files,
+        candidate,
+        recoveryRoot: path.join(app.getPath('userData'), AutoSave.RECOVERY_FOLDER),
+      });
+    if (result.ok && result.mode === 'file') {
+      const session =
+        payload.session && sessions.has(payload.session) ? payload.session : crypto.randomUUID();
+      sessions.set(session, {
+        file: result.file,
+        projectId: project.id,
+        hash: fileHash(result.file),
+      });
+      updateLinkedHash(result.file, project);
+      return { ...result, session };
+    }
+    return result;
   });
   ipcMain.handle('assets:import', async (event, payload) => {
     trusted(event);

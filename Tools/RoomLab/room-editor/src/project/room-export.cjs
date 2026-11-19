@@ -27,6 +27,12 @@ function standalone(project, courseId, roomId) {
     .filter((w) => w.from.roomId === roomId && w.to.roomId === roomId)
     .map(clone);
   result.courses = [course];
+  // The exported package has its own coordinate space: project-level course
+  // offsets from the source project must not leak into it. Organisation metadata
+  // is project-wide, so a single-room package never carries other rooms' group
+  // or favourite references either.
+  delete result.layout;
+  delete result.roomOrganization;
   // Bindings and custom plugin settings may refer to assets at arbitrary nesting depths.
   const ids = new Set();
   function visit(v) {

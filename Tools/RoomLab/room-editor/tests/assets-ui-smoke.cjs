@@ -33,7 +33,7 @@ const assert = require('node:assert/strict'),
     const imported = (await snap()).project.assets.at(-1);
     assert.equal(imported.width, 64);
     await page.getByRole('button', { name: '项目', exact: true }).click();
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
+    await page.evaluate(() => window.__ROOM_LAB__.openCourseWorkspace());
     await page.getByRole('button', { name: '本关美术绑定', exact: true }).click();
     await page
       .locator('select[data-bind-type="physics.jet"][data-slot="idle"]')
@@ -76,13 +76,14 @@ const assert = require('node:assert/strict'),
     assert.equal(latest.project.assets.at(-1).id, imported.id);
     assert.equal(latest.project.courses[0].artBindings['physics.jet'].idle, imported.id);
     const downloadEvent = page.waitForEvent('download');
-    await page.locator('[data-menu-trigger]', { hasText: '项目' }).click();
+    await page.locator('[data-menu-trigger]', { hasText: '工具' }).click();
     await page.getByRole('button', { name: '导出项目包', exact: true }).click();
     const download = await downloadEvent,
       zipPath = path.resolve(__dirname, '../test-output/asset-project.zip');
     await download.saveAs(zipPath);
-    await page.locator('[data-menu-trigger]', { hasText: '项目' }).click();
-    await page.locator('#new-project').click();
+    // 新建大关 lives on the planning course strip; the project menu keeps four actions.
+    await page.locator('#home').click();
+    await page.evaluate(() => window.__ROOM_LAB__.newCourse());
     await page.locator('[data-new-course-kind="physics"]').click();
     await page.waitForFunction(() => window.__ROOM_LAB__.snapshot().project.courses.length === 4);
     await page.locator('#project-file').setInputFiles(zipPath);

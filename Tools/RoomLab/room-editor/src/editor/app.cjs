@@ -2,9 +2,10 @@
 const { Store } = require('./store.cjs'),
   M = require('../project/model.cjs'),
   { esc, $, download, modal, check } = require('./dom.cjs');
-const Home = require('./pages/home.cjs'),
+const Planning = require('./pages/planning.cjs'),
   Course = require('./pages/course.cjs'),
   Room = require('./pages/room.cjs');
+const GraphLayout = require('./graph-layout.cjs');
 const Assets = require('../assets/manager.cjs'),
   Archive = require('../project/archive.cjs'),
   AssetPage = require('./pages/assets.cjs'),
@@ -22,10 +23,15 @@ class App {
       courseId: this.store.project.courses[0].id,
       roomId: this.store.project.courses[0].rooms[0].id,
       courseTab: 'graph',
+      planningTab: 'map',
       tool: 'select',
       selection: null,
       inspectorTab: 'base',
       roomView: null,
+      // Room-first organisation state: current filter and multi-room selection
+      // used by group assignment. Never persisted in the project.
+      roomFilter: 'all',
+      roomMulti: [],
     };
     const preview = new URL(window.location.href).searchParams;
     if (['room', 'course', 'assets'].includes(preview.get('preview'))) {
@@ -46,6 +52,9 @@ class App {
     this.bind();
     this.cloud = new (require('./cloud-controller.cjs').CloudController)(this);
     $('open-cloud').onclick = () => this.cloud.show();
+    // Minute autosave runs beside the explicit save buttons: it only writes the
+    // current project file (or a local recovery snapshot) and never the cloud.
+    this.autosave = require('./autosave.cjs').attach(this);
     this.render();
     requestAnimationFrame(() => this.frame());
   }
@@ -54,6 +63,11 @@ class App {
   }
   room() {
     return this.store.room(this.state.courseId, this.state.roomId);
+  }
+  // Room IDs are unique across the project, so a selected room always resolves
+  // to its owning course regardless of the sticky active course.
+  roomOwner(roomId) {
+    return GraphLayout.locate(this.store.project, roomId);
   }
   go(route, values = {}) {
     if (!this.store.hasProject) return;
@@ -64,6 +78,7 @@ class App {
     this.state = { ...this.state, ...values, route };
     this.state.selection = null;
     this.state.multiSelection = [];
+    this.state.roomMulti = [];
     this.state.roomView = null;
     this.render();
   }
@@ -88,7 +103,6 @@ class App {
     require('./room-transfer.cjs').bind(this);
     require('./menus.cjs').install();
     $('home').onclick = () => this.go('home');
-    $('new-project').onclick = () => this.newCourse();
     $('open-project').onclick = () =>
       this.confirmUnsaved('打开项目', () => {
         if (window.desktopAPI) this.openNative();
@@ -119,12 +133,13 @@ class App {
     $('save-as').onclick = () => this.saveNative(true);
     $('export-room').onclick = () => {
       const id =
-        this.state.route === 'course'
-          ? this.state.graphSelection?.kind === 'room' && this.state.graphSelection.id
-          : this.state.route === 'room'
-            ? this.state.roomId
+        this.state.route === 'room'
+          ? this.state.roomId
+          : this.state.graphSelection?.kind === 'room'
+            ? this.state.graphSelection.id
             : null;
-      if (id) this.exportRoom(this.state.courseId, id);
+      const owner = id && this.roomOwner(id);
+      if (owner) this.exportRoom(owner.course.id, owner.room.id);
     };
     $('export-project').onclick = async () => {
       try {
@@ -147,6 +162,10 @@ class App {
       this.go('assets', { assetCourse: this.course().id, assetGroup: null, assetSub: null });
     $('open-definitions').onclick = () =>
       this.go('definitions', { definitionCourse: this.course().id });
+    // Legacy course/file management is hidden in the Tools menu, not on the
+    // room-first planning surface.
+    if ($('open-course-tools'))
+      $('open-course-tools').onclick = () => require('./planning-nav.cjs').courseTools(this);
     $('asset-files').onchange = async (e) => {
       const files = [...e.target.files];
       e.target.value = '';
@@ -224,11 +243,13 @@ class App {
   }
   render() {
     document.body.classList.toggle('room-editing', ['room', 'play'].includes(this.state.route));
+    document.body.classList.toggle('planning', this.state.route === 'home');
     $('app').style.height = '';
     this.currentDraw = null;
     this.setRoomTool = null;
     this.nodePanelRefresh = null;
     $('editor-actions').hidden = !this.store.hasProject;
+    this.autosave?.renderStatus();
     if (!this.store.hasProject) {
       $('breadcrumbs').replaceChildren();
       $('app').innerHTML =
@@ -246,8 +267,8 @@ class App {
       (this.state.route !== 'home' ? ` / <button id="crumb-course">${esc(c.name)}</button>` : '') +
       (this.state.route === 'room' ? ` / <span>${esc(this.room().name)}</span>` : '');
     $('crumb-project').onclick = () => this.go('home');
-    if ($('crumb-course')) $('crumb-course').onclick = () => this.go('course');
-    if (this.state.route === 'home') Home.render(this);
+    if ($('crumb-course')) $('crumb-course').onclick = () => this.go('home');
+    if (this.state.route === 'home') Planning.render(this);
     else if (this.state.route === 'course') Course.render(this);
     else if (this.state.route === 'room') Room.render(this);
     else if (this.state.route === 'play') PlayPage.render(this);
@@ -272,14 +293,16 @@ class App {
     const id =
       this.state.route === 'room'
         ? this.state.roomId
-        : this.state.route === 'course' && this.state.graphSelection?.kind === 'room'
+        : this.state.graphSelection?.kind === 'room'
           ? this.state.graphSelection.id
           : null;
-    const room = this.course().rooms.find((r) => r.id === id);
+    const owner = id && this.roomOwner(id),
+      room = owner?.room,
+      course = owner?.course;
     $('export-room').disabled = !room;
     $('export-room').title = room
-      ? '导出 ' + room.name + '（含素材）'
-      : '编辑房间或在接线板选择一个房间后导出';
+      ? '导出 ' + course.name + ' / ' + room.name + '（含素材）'
+      : '编辑房间或在地图上选择一个房间后导出';
   }
   async exportRoom(courseId, roomId) {
     try {
@@ -454,12 +477,21 @@ class App {
       this.message(e.message, true);
       return;
     }
-    this.go('course', { courseId: course.id, roomId: course.rooms[0].id });
+    this.go('home', { courseId: course.id, roomId: course.rooms[0].id, planningTab: 'map' });
     this.message(
       '已新建' + require('../project/themes.cjs').theme(kind).label + '大关，其他大关与房间保留。',
     );
   }
+  // A manual save and the minute autosave must never write at the same time.
   async saveNative(saveAs = false, complete = false) {
+    this.manualSave = true;
+    try {
+      return await this.saveNativeNow(saveAs, complete);
+    } finally {
+      this.manualSave = false;
+    }
+  }
+  async saveNativeNow(saveAs = false, complete = false) {
     this.store.persist();
     if (!window.desktopAPI) {
       if (complete) {
@@ -485,18 +517,13 @@ class App {
       return true;
     }
     try {
-      const current = this.cloud.currentCloudTree(this.store.project.id);
       const project = this.store.snapshot();
       const markSaved = () => {
         if (JSON.stringify(this.store.project) === JSON.stringify(project))
           this.store.dirty = false;
       };
-      if (!saveAs && !this.store.nativeSession && current && !current.localFile) {
-        const status = await this.cloud.saveCurrent();
-        markSaved();
-        this.message(status.message);
-        return true;
-      }
+      // Manual 保存项目 is local only. A cloud-only checkout has no associated
+      // local file yet, so the native save handler opens the path picker once.
       const files = this.store.project.assets
         .filter((a) => this.store.assetFiles.has(a.path))
         .map((a) => ({ path: a.path, bytes: this.store.assetFiles.get(a.path) }));
@@ -661,4 +688,22 @@ class App {
   }
 }
 const app = new App();
-window.__ROOM_LAB__ = { snapshot: () => app.snapshot() };
+window.__ROOM_LAB__ = {
+  snapshot: () => app.snapshot(),
+  // Test hooks: autosave is driven by a 60 s interval, so renderer/Electron
+  // acceptance can inspect its state and trigger one tick without waiting.
+  autosaveState: () => app.autosave?.state || null,
+  autosaveTick: () => app.autosave?.tick() || Promise.resolve(null),
+  // The planning screen no longer exposes course-first navigation. Legacy
+  // course workspaces/tools stay reachable from the Tools menu (and these hooks,
+  // used by older acceptance flows that still verify rules/art/room lists).
+  openCourseWorkspace: (tab = 'graph') =>
+    app.go('course', { courseId: app.state.courseId, courseTab: tab }),
+  openCourseTools: () => require('./planning-nav.cjs').courseTools(app),
+  newCourse: () => app.chooseCourse(),
+  organization: () => require('../project/room-organization.cjs').ensure(app.store.project),
+  roomFilter: (value) => {
+    app.state.roomFilter = value || 'all';
+    app.render();
+  },
+};
