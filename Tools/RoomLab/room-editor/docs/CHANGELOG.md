@@ -1,5 +1,12 @@
 # 更新与阶段验收
 
+## 2026-11-20 · 4.2.0 build7 · 房间缩略图栏可折叠（未打包）
+
+- 房间编辑页的缩略图选择栏（`.room-thumb-selector`，`src/editor/room-navigation.cjs`）新增折叠开关：默认展开；折叠只隐藏占高度的缩略图横栏，保留「房间选择 N / 展开收起」入口与紧凑筛选行，画布释放出缩略栏的高度；展开后重新绘制按 `devicePixelRatio` 缩放的高清缩略图。按钮为 `aria-expanded` / `aria-controls` 语义按钮（`#room-strip-toggle`），可键盘操作。
+- 折叠状态是本机编辑器偏好，使用独立 key `roomlab-room-strip-collapsed`：不写入项目、不进入撤销、不改云端协议，也不读写主页现有的 `roomlab-room-picker-collapsed`。切房、改属性（整页重绘）、筛选切换与重载都保留该状态；顶栏归属点击（`#crumb-owner`，含多分组 ⇄）会先自动展开缩略栏再筛选，避免“点了导航却没反馈”。
+- 折叠/展开不改 `roomView`（缩放、平移）、选择、筛选与项目数据；折叠期间跳过隐藏缩略图的绘制，展开时由同一次渲染重绘。
+- 新增 `tests/room-strip-collapse-ui-smoke.cjs`（`USE_ELECTRON=1` 或打包 `EDITOR_EXE`）：折叠后画布高度增大、`view/selection/project` 不变、展开后缩略图 CSS 尺寸与 DPR 后备存储正确、编辑重绘后仍折叠、切房与重载保留、顶栏归属点击自动展开、主页折叠 key 独立。本 worker 沙箱禁止 GUI（未启动 Electron/浏览器），该 UI 冒烟未实跑；已通过纯逻辑检查（折叠状态、key 隔离、顶栏展开）、`tests/room-navigation.test.cjs` 4 项与语法/格式检查。未打包、未发布、未改用户存档。
+
 ## 2026-11-20 · 4.2.0 build6 · 完整用户清单（主代理验收通过，待打包）
 
 主代理独立 build 并执行核心套件 **343 项通过**；`teacher-ui-smoke`、`unified-map-ui-smoke`、`room-first-ui-smoke` 三个 UI 验收在真实 Electron 中全部 **PASS**。功能完成，待打包。

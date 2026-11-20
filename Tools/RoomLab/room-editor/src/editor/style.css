@@ -2503,6 +2503,48 @@ body.planning main {
 .room-thumb-selector .room-filters {
   margin: 0;
 }
+/* Folding: the bar keeps a "房间选择 N / 展开收起" entry and the filter chips,
+   hides only the height-hungry thumbnail row so the canvas gains the space. */
+.room-strip-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 0;
+}
+.room-strip-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 2px 0;
+  border: 0;
+  background: none;
+  color: #99c9d3;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+.room-strip-toggle:hover {
+  color: #d6f4ff;
+}
+.room-strip-toggle:focus-visible {
+  outline: 1px solid #70d9dd;
+  outline-offset: 2px;
+}
+.room-strip-count {
+  font-weight: 600;
+}
+.room-strip-caret {
+  opacity: 0.8;
+}
+.room-thumb-selector.collapsed {
+  padding-bottom: 8px;
+}
+.room-thumb-selector.collapsed .room-thumb-strip {
+  display: none;
+}
+.room-thumb-selector.collapsed .room-filters {
+  margin-bottom: 0;
+}
 .room-thumb-strip {
   display: flex;
   gap: 8px;

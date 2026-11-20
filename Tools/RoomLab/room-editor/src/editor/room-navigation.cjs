@@ -19,6 +19,35 @@ const { esc } = require('./dom.cjs');
 const THUMB_WIDTH = 132,
   THUMB_HEIGHT = 74;
 const UNGROUPED = '未分组';
+// Folding the room thumbnail bar is a pure editor preference: it must never
+// touch the project, the cloud protocol or the home page's own picker key.
+// It is its own key so the two fold switches remember independent states.
+const COLLAPSE_KEY = 'roomlab-room-strip-collapsed';
+function stripCollapsed(app) {
+  if (app.state.roomStripCollapsed === undefined) {
+    try {
+      app.state.roomStripCollapsed = localStorage.getItem(COLLAPSE_KEY) === 'true';
+    } catch {
+      app.state.roomStripCollapsed = false;
+    }
+  }
+  return !!app.state.roomStripCollapsed;
+}
+function persistStripCollapsed(app, collapsed) {
+  app.state.roomStripCollapsed = !!collapsed;
+  try {
+    localStorage.setItem(COLLAPSE_KEY, String(!!collapsed));
+  } catch {}
+}
+// Expand without re-rendering: callers (top-bar ownership filter, group cycle)
+// are about to render once anyway. Keeps the canvas view untouched.
+function expandStrip(app) {
+  if (stripCollapsed(app)) persistStripCollapsed(app, false);
+}
+function toggleStrip(app) {
+  persistStripCollapsed(app, !stripCollapsed(app));
+  app.render();
+}
 
 function context(project, roomId, state = {}) {
   const all = project.courses.flatMap((course) => course.rooms.map((room) => ({ course, room })));
@@ -79,6 +108,9 @@ function applyOwnerFilter(app, roomId) {
   app.state.roomFilter = filterForRoom(app, roomId);
   app.state.graphSelection = null;
   app.state.roomMulti = [];
+  // A top-bar click re-filters the thumbnail bar; if it is folded, open it so
+  // the navigation change is visible instead of silently hidden.
+  expandStrip(app);
   app.render();
 }
 function cycleOwnerGroup(app) {
@@ -95,6 +127,7 @@ function cycleOwnerGroup(app) {
   app.state.roomFilter = 'group:' + next.id;
   app.state.graphSelection = null;
   app.state.roomMulti = [];
+  expandStrip(app);
   app.render();
 }
 // Top bar: project / owning group / room name. 项目 always returns to the route
@@ -102,7 +135,9 @@ function cycleOwnerGroup(app) {
 function breadcrumbs(app) {
   const current = locate(app.store.project, app.state.roomId);
   if (!current) return '<button id="crumb-project">项目</button>';
-  const memberships = ownerGroup(app) ? context(app.store.project, app.state.roomId, app.state).memberships : [],
+  const memberships = ownerGroup(app)
+      ? context(app.store.project, app.state.roomId, app.state).memberships
+      : [],
     cycle =
       memberships.length > 1
         ? `<button id="crumb-owner-next" class="crumb-owner-cycle" title="切换房间所在分组视图（共 ${memberships.length} 个）" aria-label="切换分组">⇄</button>`
@@ -123,7 +158,8 @@ function strip(app) {
     visible = app.store.project.courses.flatMap((course) =>
       course.rooms.filter((room) => ids.has(room.id)).map((room) => ({ course, room })),
     );
-  const org = Org.ensure(app.store.project),
+  const collapsed = stripCollapsed(app),
+    org = Org.ensure(app.store.project),
     cards = visible
       .map(({ course, room }) => {
         const active = room.id === app.state.roomId,
@@ -132,13 +168,17 @@ function strip(app) {
           title = room.name + (room.notes ? ' · ' + room.notes : ''),
           // Footer shows user grouping (multiple groups joined) instead of the
           // legacy course container.
-          owner = Org.groupsContaining(org, room.id)
-            .map((group) => group.name)
-            .join(' · ') || UNGROUPED;
+          owner =
+            Org.groupsContaining(org, room.id)
+              .map((group) => group.name)
+              .join(' · ') || UNGROUPED;
         return `<button class="room-thumb-card${active ? ' active' : ''}${favorite ? ' favorite' : ''}" data-nav-room="${esc(room.id)}" data-course="${esc(course.id)}" aria-current="${active ? 'page' : 'false'}" style="--group-color:${esc(color || '#2a4154')}" title="${esc(title)}"><canvas data-thumb="${esc(room.id)}"></canvas><span class="room-thumb-name">${esc(room.name)}</span><span class="room-thumb-owner" title="分组：${esc(owner)}">${esc(owner)}</span></button>`;
       })
       .join('');
-  return `<div class="room-thumb-selector" aria-label="房间缩略图选择栏">${OrgUI.filtersMarkup(app)}<div class="room-thumb-strip">${cards || '<p class="room-strip-empty muted">此筛选下没有房间。</p>'}</div></div>`;
+  // Only the space-hungry thumbnail row folds away; the "房间选择 N / 展开收起"
+  // entry and the compact filter chips stay reachable while folded, so room
+  // filtering never becomes a dead end.
+  return `<div class="room-thumb-selector${collapsed ? ' collapsed' : ''}" aria-label="房间缩略图选择栏"><div class="room-strip-head"><button id="room-strip-toggle" class="room-strip-toggle" aria-expanded="${!collapsed}" aria-controls="room-thumb-strip" title="${collapsed ? '展开房间缩略图栏' : '收起房间缩略图栏，释放画布高度'}"><span class="room-strip-count">房间选择 ${visible.length}</span><span class="room-strip-caret" aria-hidden="true">${collapsed ? '▸ 展开' : '▾ 收起'}</span></button></div>${OrgUI.filtersMarkup(app)}<div class="room-thumb-strip" id="room-thumb-strip">${cards || '<p class="room-strip-empty muted">此筛选下没有房间。</p>'}</div></div>`;
 }
 function paintThumbnails(app, host) {
   if (!host) return;
@@ -161,6 +201,8 @@ function paintThumbnails(app, host) {
 function bindStrip(app) {
   const host = document.querySelector('.room-thumb-selector');
   if (!host) return;
+  const toggle = host.querySelector('#room-strip-toggle');
+  if (toggle) toggle.onclick = () => toggleStrip(app);
   OrgUI.bindFilters(app, host);
   for (const button of host.querySelectorAll('[data-nav-room]'))
     button.onclick = () => {
@@ -183,7 +225,9 @@ function bindStrip(app) {
         move: (id, target, after) => moveInGroup(app.store.project, inGroup.id, id, target, after),
       });
   }
-  paintThumbnails(app, host);
+  // Folded thumbnails live inside display:none; skip painting that work and
+  // repaint on the expand render instead.
+  if (!stripCollapsed(app)) paintThumbnails(app, host);
 }
 // Kept as aliases: other pages and older tests call tabs()/bindTabs().
 const tabs = strip;
@@ -211,8 +255,12 @@ module.exports = {
   breadcrumbs,
   bindBreadcrumbs,
   strip,
+  stripCollapsed,
   bindStrip,
   paintThumbnails,
+  toggleStrip,
+  expandStrip,
+  COLLAPSE_KEY,
   tabs,
   bindTabs,
   moveInGroup,

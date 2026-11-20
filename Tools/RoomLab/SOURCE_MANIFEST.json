@@ -1,9 +1,9 @@
 {
   "repository": "zimukiv/gameProject",
   "version": "4.2.0",
-  "releaseTag": "roomlab-editor-v4.2.0-build6",
-  "createdAt": "2026-11-20T11:58:58.974Z",
-  "programSHA256": "b57d494caa9eafb533d4ef5b6ebca6c029ff28ee3cff65b884c52fd83bdde4b2",
+  "releaseTag": "roomlab-editor-v4.2.0-build7",
+  "createdAt": "2026-11-20T12:46:19.978Z",
+  "programSHA256": "0f163dd753cdafc5ffce3ed4787bb89aed0c6cac200a12acb6cb6198518df1f0",
   "files": [
     {
       "path": "room-cloud/.gitignore",
@@ -702,7 +702,7 @@
     },
     {
       "path": "room-editor/docs/CHANGELOG.md",
-      "sha256": "6e54e8fc95daad904501a98c4883b40050e47d7cb27b21a167c85da77c527215",
+      "sha256": "7bb7ecc8b0ad9ec8877e0a6bf47cf32e7c566329dc58ae704b2ee79bd7dccf12",
       "encoding": "utf8-lf"
     },
     {
@@ -842,7 +842,7 @@
     },
     {
       "path": "room-editor/examples/physics-project.zip",
-      "sha256": "07ec4c85f30195441b5aecbd8c34f04e2e6667b62e974567ac83a83302bf33d1",
+      "sha256": "793f7e63de6c1695cf1d2881cae083bb7c49611b7b83cbc62640e6e447ae1f61",
       "encoding": "binary"
     },
     {
@@ -917,12 +917,12 @@
     },
     {
       "path": "room-editor/examples/physics/project.json",
-      "sha256": "594a6427997197fa330de75b80bb37ca17baacc25197f37e3c7dbd687e4c86cb",
+      "sha256": "87d5c20b0d0acf20bb1629abf9fc833b18d4a705aa02d509d9220de6596695db",
       "encoding": "utf8-lf"
     },
     {
       "path": "room-editor/examples/three-themes-project.zip",
-      "sha256": "80ff51b040514087adc8b713932cbe4b266bb3bbaa2a5094954d7fa1156913e2",
+      "sha256": "43197b81a2c25a25d264ac31862fc0648f1a2e0f4a28946129f9f12fbdc9a251",
       "encoding": "binary"
     },
     {
@@ -1277,7 +1277,7 @@
     },
     {
       "path": "room-editor/src/editor/room-navigation.cjs",
-      "sha256": "bdd75f8fd98c2126538347c4e33546cac05d7520b79e432cc5344a279bbb01fa",
+      "sha256": "43218d76c052853abf672a735eb49f048d383f8b28732fa6ef5ef91995ca9fe3",
       "encoding": "utf8-lf"
     },
     {
@@ -1307,7 +1307,7 @@
     },
     {
       "path": "room-editor/src/editor/style.css",
-      "sha256": "a0caace9b73152e6a79483497dde335d709d0a191285f388272be2307eef2cdf",
+      "sha256": "4eb71e9936c89f4daef9f2b893faafe11eb432819c3c4b07a684895c278dc3a9",
       "encoding": "utf8-lf"
     },
     {
@@ -2168,6 +2168,11 @@
     {
       "path": "room-editor/tests/room-organization.test.cjs",
       "sha256": "baa7c169bec2b7672779cbd62b54e13904372f1ef391b499c1e9773395c119da",
+      "encoding": "utf8-lf"
+    },
+    {
+      "path": "room-editor/tests/room-strip-collapse-ui-smoke.cjs",
+      "sha256": "9f0f602392b383d7b5caefa413b5d09139b7a7110bbfc25ebb55a63af468947a",
       "encoding": "utf8-lf"
     },
     {
