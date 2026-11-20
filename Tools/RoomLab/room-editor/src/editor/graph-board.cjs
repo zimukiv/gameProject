@@ -7,14 +7,24 @@
 // project-level course offsets live in project.layout and are additive only.
 const D = require('./draw.cjs'),
   M = require('../project/model.cjs'),
+  MapCompat = require('../project/map-compat.cjs'),
   Org = require('../project/room-organization.cjs'),
   OrgUI = require('./room-org-ui.cjs'),
   GraphLayout = require('./graph-layout.cjs'),
+  CanvasDpr = require('./canvas-dpr.cjs'),
   Themes = require('../project/themes.cjs'),
   { esc, $, field, area, select, modal } = require('./dom.cjs');
 const { clamp } = require('../shared/utils.cjs');
 const ZOOM_MIN = 0.001,
   ZOOM_MAX = 4;
+// Unified map colouring: a room takes the user's own group colour, everything
+// else shares one neutral tone. The legacy per-course theme colour is gone so
+// the map never classifies rooms by big course again.
+const NEUTRAL_ROOM_COLOR = '#8496a8';
+function accentOf(project) {
+  const org = Org.ensure(project);
+  return (room) => Org.colorFor(org, room.id) || NEUTRAL_ROOM_COLOR;
+}
 // Fill missing authored positions (undoable) and persist derived course offsets
 // (not undoable: they only describe the global view, never authored data).
 function ensureProjectLayout(app) {
@@ -48,40 +58,66 @@ function ensureProjectLayout(app) {
   }
   return filled;
 }
+// Wires come from the unified map layer: explicit project.map connections and
+// legacy course.connections alike, so a wire crossing the old containers is
+// drawn exactly like an old one. Ports are projected by GraphLayout.
 function wires(project, places, activeCourseId) {
-  const byKey = new Map(places.map((place) => [place.key, place])),
+  const byRoom = new Map(places.map((place) => [place.room.id, place])),
     list = [];
-  for (const course of project.courses)
-    for (const edge of course.connections || []) {
-      const from = byKey.get(GraphLayout.placeKey(course.id, edge.from.roomId)),
-        to = byKey.get(GraphLayout.placeKey(course.id, edge.to.roomId));
-      if (!from || !to) continue;
-      const a = from.ports.exits.find((p) => p.id === edge.from.exitId),
-        b = to.ports.entries.find((p) => p.id === edge.to.entryId);
-      if (!a || !b) continue;
-      list.push({
-        id: edge.id,
-        courseId: course.id,
-        edge,
-        from: a,
-        to: b,
-        color: course.id === activeCourseId ? '#9fd8cf' : '#6aa9a3',
-      });
-    }
+  for (const edge of MapCompat.connections(project)) {
+    const from = byRoom.get(edge.from.roomId),
+      to = byRoom.get(edge.to.roomId);
+    if (!from || !to) continue;
+    const a = from.ports.exits.find((p) => p.id === edge.from.exitId),
+      b = to.ports.entries.find((p) => p.id === edge.to.entryId);
+    if (!a || !b) continue;
+    const crossCourse = from.courseId !== to.courseId;
+    list.push({
+      id: edge.id,
+      source: edge.source,
+      courseId: from.courseId,
+      edge,
+      from: a,
+      to: b,
+      crossCourse,
+      color: crossCourse ? '#e7b867' : from.courseId === activeCourseId ? '#9fd8cf' : '#6aa9a3',
+    });
+  }
   return list;
 }
 function markup(app) {
-  const course = app.course();
-  return `<div class="graph-layout planning-map"><div class="panel graph-panel"><div class="graph-controls"><span>全部房间</span><div class="actions"><span id="graph-zoom"></span><label class="check" title="拖动房间时对齐房间格网格"><input id="graph-snap" type="checkbox" checked>吸附</label><button id="graph-fit">全部</button><button id="graph-focus-course" title="缩放到当前大关「${esc(course.name)}」，其他房间仍然显示">当前大关</button><button id="graph-reset">100%</button><details class="graph-help"><summary title="操作说明">？</summary><div class="help-body">滚轮缩放 · 中键/空白拖动平移 · 拖动房间排布 · 双击进入 · 从出口拖到同一大关的入口接线。金色★为收藏房间。</div></details></div></div><div class="graph-canvas-wrap"><canvas id="graph" width="1120" height="650" aria-label="项目路线图：全部房间分布"></canvas></div></div><aside class="panel form" id="graph-inspector"></aside></div>`;
+  return `<div class="graph-layout planning-map"><div class="panel graph-panel"><div class="graph-controls"><span>全部房间</span><div class="actions"><span id="graph-zoom"></span><label class="check" title="拖动房间时对齐房间格网格"><input id="graph-snap" type="checkbox" checked>吸附</label><button id="graph-fit">全部</button><button id="graph-focus-selection" title="聚焦当前分组或所选房间，其他房间仍然显示">聚焦所选</button><button id="graph-reset">100%</button><details class="graph-help"><summary title="操作说明">？</summary><div class="help-body">滚轮缩放 · 中键/空白拖动平移 · 拖动房间排布 · 双击进入 · 从出口拖到任意房间的入口接线。金色★为收藏房间。</div></details></div></div><div class="graph-canvas-wrap"><canvas id="graph" width="1120" height="650" aria-label="项目路线图：全部房间分布"></canvas></div></div><aside class="panel form" id="graph-inspector"></aside></div>`;
 }
-function sizeCanvas(canvas) {
+// The view transform is expressed in CSS/layout pixels. Only the backing store
+// is multiplied by the device ratio; the canvas is pinned to the measured CSS
+// box so a later layout change can never silently stretch the bitmap (that
+// stretch used to offset every drawn port from its hook-reported coordinate).
+function measure(canvas) {
   const rect = canvas.getBoundingClientRect(),
-    width = Math.max(320, Math.round(rect.width || 1120)),
+    wrap = canvas.closest('.graph-canvas-wrap') || canvas.parentElement,
+    width = Math.max(320, Math.round(wrap?.getBoundingClientRect().width || rect.width || 1120)),
     top = rect.top || 0,
     height = Math.max(280, Math.round(window.innerHeight - top - 90));
-  if (canvas.width !== width) canvas.width = width;
-  if (canvas.height !== height) canvas.height = height;
   return { width, height };
+}
+function sizeCanvas(canvas, app) {
+  const { width, height } = measure(canvas),
+    prepared = CanvasDpr.prepare(canvas, width, height, window.devicePixelRatio || 1, {
+      fixed: false,
+    });
+  if (canvas.style) {
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+  }
+  const size = {
+    cssWidth: width,
+    cssHeight: height,
+    dpr: prepared.ratio,
+    backingWidth: canvas.width,
+    backingHeight: canvas.height,
+  };
+  if (app) app.state.graphCanvas = size;
+  return size;
 }
 function mount(app) {
   const canvas = $('graph');
@@ -89,7 +125,13 @@ function mount(app) {
   const ctx = canvas.getContext('2d'),
     project = app.store.project,
     activeCourseId = app.course().id;
-  sizeCanvas(canvas);
+  sizeCanvas(canvas, app);
+  const cssSize = () => ({
+    width:
+      Number(canvas.dataset.cssWidth) || Math.round(canvas.getBoundingClientRect().width) || 1120,
+    height:
+      Number(canvas.dataset.cssHeight) || Math.round(canvas.getBoundingClientRect().height) || 650,
+  });
   const actions = $('graph-fit').parentElement;
   for (const [id, label, fn] of [
     [
@@ -125,19 +167,24 @@ function mount(app) {
     app.message(app.state.graphSnap ? '拖动房间将吸附到网格。' : '已关闭网格吸附，可自由摆放。');
   };
   const offsets = app.state.courseOffsets || GraphLayout.ensureOffsets(project).offsets;
-  let places = GraphLayout.placements(project, offsets, activeCourseId),
+  let places = GraphLayout.placements(project, offsets, activeCourseId, accentOf(project)),
     links = wires(project, places, activeCourseId),
     favorites = new Set(Org.ensure(project).favorites);
   const view =
     app.state.graphView ||
-    (app.state.graphView = GraphLayout.fitPlaces(places, canvas.width, canvas.height));
+    (app.state.graphView = GraphLayout.fitPlaces(places, cssSize().width, cssSize().height));
   const rebuild = () => {
-    places = GraphLayout.placements(app.store.project, offsets, activeCourseId);
+    places = GraphLayout.placements(
+      app.store.project,
+      offsets,
+      activeCourseId,
+      accentOf(app.store.project),
+    );
     links = wires(app.store.project, places, activeCourseId);
     favorites = new Set(Org.ensure(app.store.project).favorites);
   };
   if (app.state.graphNeedsFit) {
-    Object.assign(view, GraphLayout.fitPlaces(places, canvas.width, canvas.height));
+    Object.assign(view, GraphLayout.fitPlaces(places, cssSize().width, cssSize().height));
     app.state.graphNeedsFit = false;
   }
   // A thumbnail click asks the map to locate that room without changing the
@@ -146,21 +193,16 @@ function mount(app) {
     const focus = places.find((place) => place.room.id === app.state.graphFocusRoomId);
     app.state.graphFocusRoomId = null;
     if (focus) {
+      const size = cssSize();
       view.scale = Math.max(0.08, view.scale);
-      view.x = canvas.width / 2 - (focus.x + focus.width / 2) * view.scale;
-      view.y = canvas.height / 2 - (focus.y + focus.height / 2) * view.scale;
+      view.x = size.width / 2 - (focus.x + focus.width / 2) * view.scale;
+      view.y = size.height / 2 - (focus.y + focus.height / 2) * view.scale;
     }
   }
   let drag = null,
     wire = null,
     pan = null;
-  const pixel = (e) => {
-    const rect = canvas.getBoundingClientRect();
-    return {
-      x: ((e.clientX - rect.left) * canvas.width) / rect.width,
-      y: ((e.clientY - rect.top) * canvas.height) / rect.height,
-    };
-  };
+  const pixel = (e) => CanvasDpr.pointer(canvas, e.clientX, e.clientY);
   const point = (e) => {
     const p = pixel(e);
     return { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
@@ -175,6 +217,9 @@ function mount(app) {
     return null;
   };
   const draw = () => {
+    // Leaving the map page tears the board down; a late resize/DPR callback must
+    // never touch nodes that no longer exist in the document.
+    if (!canvas.isConnected || document.getElementById('graph') !== canvas) return;
     rebuild();
     D.drawGraph(
       ctx,
@@ -186,21 +231,34 @@ function mount(app) {
       activeCourseId,
       favorites,
     );
-    $('graph-zoom').textContent = Math.round(view.scale * 100) + '%';
+    const zoom = $('graph-zoom');
+    if (zoom) zoom.textContent = Math.round(view.scale * 100) + '%';
   };
   $('graph-reset').onclick = () => {
-    Object.assign(view, GraphLayout.fitPlaces(places, canvas.width, canvas.height, 1));
+    Object.assign(view, GraphLayout.fitPlaces(places, cssSize().width, cssSize().height, 1));
     draw();
   };
   $('graph-fit').onclick = () => {
-    Object.assign(view, GraphLayout.fitPlaces(places, canvas.width, canvas.height));
+    Object.assign(view, GraphLayout.fitPlaces(places, cssSize().width, cssSize().height));
     draw();
   };
-  $('graph-focus-course').onclick = () => {
-    const own = places.filter((place) => place.courseId === activeCourseId);
+  $('graph-focus-selection').onclick = () => {
+    const selected =
+      app.state.graphSelection?.kind === 'room'
+        ? places.find((place) => place.room.id === app.state.graphSelection.id)
+        : null;
+    const groupId = /^group:(.+)$/.exec(app.state.roomFilter || '')?.[1];
+    const groupRoomIds = groupId
+      ? new Set(Org.ensure(project).groups.find((group) => group.id === groupId)?.roomIds || [])
+      : null;
+    const own = selected
+      ? [selected]
+      : groupRoomIds
+        ? places.filter((place) => groupRoomIds.has(place.room.id))
+        : places;
     Object.assign(
       view,
-      GraphLayout.fitPlaces(own.length ? own : places, canvas.width, canvas.height),
+      GraphLayout.fitPlaces(own.length ? own : places, cssSize().width, cssSize().height),
     );
     draw();
   };
@@ -215,6 +273,58 @@ function mount(app) {
   };
   draw();
   renderInspector(app);
+  // Real layout/DPR handling: the map used to read its size only once at mount,
+  // so resizing the window or moving to another DPR left the backing store and
+  // the view transform stale. The view stays CSS-space; re-preparing only
+  // updates the backing store and the pinned CSS box.
+  //
+  // prepare() always resets the backing store, which clears the bitmap. So the
+  // size is measured first: an unchanged size+dpr returns without touching the
+  // canvas, and every real re-prepare is followed by a full redraw.
+  const relayout = () => {
+    if (!canvas.isConnected || document.getElementById('graph') !== canvas) {
+      dispose(app);
+      return;
+    }
+    const next = measure(canvas),
+      ratio = CanvasDpr.ratioFor(next.width, next.height, window.devicePixelRatio || 1),
+      unchanged =
+        Number(canvas.dataset.cssWidth) === next.width &&
+        Number(canvas.dataset.cssHeight) === next.height &&
+        Number(canvas.dataset.dpr) === ratio;
+    // Nothing changed: no reset, no redraw (the canvas still holds its bitmap).
+    if (unchanged) return;
+    sizeCanvas(canvas, app);
+    draw();
+  };
+  if (app.state.graphResizeObserver) app.state.graphResizeObserver.disconnect();
+  if (typeof ResizeObserver === 'function') {
+    app.state.graphResizeObserver = new ResizeObserver(relayout);
+    app.state.graphResizeObserver.observe(canvas.parentElement || canvas);
+  }
+  if (app.state.graphResizeHandler)
+    window.removeEventListener('resize', app.state.graphResizeHandler);
+  app.state.graphResizeHandler = relayout;
+  window.addEventListener('resize', relayout);
+  const onDpr = () => {
+    if (!canvas.isConnected || document.getElementById('graph') !== canvas) {
+      dispose(app);
+      return;
+    }
+    sizeCanvas(canvas, app);
+    draw();
+    watchDpr();
+  };
+  function watchDpr() {
+    if (typeof window.matchMedia !== 'function') return;
+    if (app.state.graphDprMedia && app.state.graphDprMedia.removeEventListener)
+      app.state.graphDprMedia.removeEventListener('change', onDpr);
+    const media = window.matchMedia(`(resolution: ${window.devicePixelRatio || 1}dppx)`);
+    app.state.graphDprMedia = media;
+    app.state.graphDprHandler = onDpr;
+    if (media.addEventListener) media.addEventListener('change', onDpr, { once: true });
+  }
+  watchDpr();
   canvas.onpointerdown = (e) => {
     if (![0, 1].includes(e.button)) return;
     e.preventDefault();
@@ -325,17 +435,25 @@ function mount(app) {
       const started = wire;
       wire = null;
       if (input) {
-        const from = { courseId: started.courseId, roomId: started.roomId },
-          to = { courseId: input.place.courseId, roomId: input.place.room.id };
+        const from = { roomId: started.roomId, exitId: started.exitId },
+          to = { roomId: input.place.room.id, entryId: input.node.id },
+          before = app.store.snapshot();
         if (!GraphLayout.canConnect(project, from, to)) {
-          app.message('不能跨大关接线：出口只能连接到同一大关内的入口。', true);
+          app.message('不能连接：端口已不存在，请重新选择出口与入口。', true);
           draw();
-        } else {
-          const course = GraphLayout.courseOf(project, to.courseId),
-            before = app.store.snapshot();
-          M.connect(course, from.roomId, started.exitId, to.roomId, input.node.id);
+        } else if (started.courseId === input.place.courseId) {
+          // Same legacy container: keep writing the old course.connections so
+          // existing exports/runtime data stay canonical.
+          const course = GraphLayout.courseOf(project, input.place.courseId);
+          M.connect(course, from.roomId, from.exitId, to.roomId, to.entryId);
           app.store.commit(before);
           app.message('房间端口已连接，可撤销。');
+        } else {
+          // Cross-container wiring goes through the unified map layer.
+          app.store.change(() => {
+            MapCompat.connect(project, from, to);
+          });
+          app.message('已跨原课程连接房间端口（统一地图连接），可撤销。');
         }
       } else draw();
     }
@@ -360,6 +478,35 @@ function mount(app) {
     if (place) app.go('room', { courseId: place.courseId, roomId: place.room.id });
   };
 }
+// Leaving the map page must release everything the board attached outside its
+// own DOM node (ResizeObserver, window resize, matchMedia DPR watcher). Without
+// this, a resize/DPR event after navigating away reached draw() on a detached
+// canvas and threw "Cannot set properties of null (setting 'textContent')" from
+// the removed #graph-zoom element.
+function dispose(app) {
+  const state = app?.state;
+  if (!state) return;
+  if (state.graphResizeObserver) {
+    try {
+      state.graphResizeObserver.disconnect();
+    } catch {}
+    state.graphResizeObserver = null;
+  }
+  if (state.graphResizeHandler) {
+    window.removeEventListener('resize', state.graphResizeHandler);
+    state.graphResizeHandler = null;
+  }
+  const media = state.graphDprMedia,
+    handler = state.graphDprHandler;
+  if (media && handler && media.removeEventListener) {
+    try {
+      media.removeEventListener('change', handler);
+    } catch {}
+  }
+  state.graphDprMedia = null;
+  state.graphDprHandler = null;
+  state.graphCanvas = null;
+}
 function renderInspector(app) {
   app.updateRoomExport();
   const host = $('graph-inspector'),
@@ -370,7 +517,7 @@ function renderInspector(app) {
   if (!selection) {
     // No huge empty sidebar: a one-line prompt instead of a course breakdown.
     host.innerHTML =
-      '<p class="inspector-empty muted">点击房间查看说明与操作；☆ 收藏，分组用于整理，可与大关无关。</p>';
+      '<p class="inspector-empty muted">点击房间查看说明与操作；☆ 收藏，分组用于整理。</p>';
     return;
   }
   if (selection.kind === 'room') {
@@ -395,16 +542,20 @@ function renderInspector(app) {
     $('graph-delete').onclick = () => remove(app, course, room);
     require('./room-clipboard.cjs').sync(app);
   } else {
-    const course = GraphLayout.courseOf(project, selection.courseId),
-      edge = course?.connections.find((w) => w.id === selection.id);
-    if (!course || !edge) {
+    // Wire details come from the unified map layer, so a legacy course wire and a
+    // project-level cross-container wire are edited through the same controls.
+    const edge = MapCompat.find(project, selection.id);
+    if (!edge) {
       app.state.graphSelection = null;
       renderInspector(app);
       return;
     }
-    const from = course.rooms.find((r) => r.id === edge.from.roomId),
-      to = course.rooms.find((r) => r.id === edge.to.roomId);
-    host.innerHTML = `<h2>连接</h2><p class="hint">${esc(from?.name || edge.from.roomId)} → ${esc(to?.name || edge.to.roomId)}</p>${select(
+    const fromOwner = MapCompat.roomRef(project, edge.from.roomId),
+      toOwner = MapCompat.roomRef(project, edge.to.roomId),
+      from = fromOwner?.room,
+      to = toOwner?.room,
+      cross = !!fromOwner && !!toOwner && fromOwner.courseId !== toOwner.courseId;
+    host.innerHTML = `<h2>连接</h2><p class="hint">${esc(from?.name || edge.from.roomId)} → ${esc(to?.name || edge.to.roomId)}${cross ? ' <span class="badge">跨原课程</span>' : ''}</p>${select(
       '抵达速度',
       'wire-velocity',
       edge.velocity,
@@ -415,11 +566,11 @@ function renderInspector(app) {
     )}<div class="actions"><button id="wire-save">应用</button><button id="wire-delete" class="danger">删除连线</button></div>`;
     $('wire-save').onclick = () =>
       app.store.change(() => {
-        edge.velocity = $('wire-velocity').value;
+        MapCompat.updateVelocity(app.store.project, edge.id, $('wire-velocity').value);
       });
     $('wire-delete').onclick = () =>
       app.store.change(() => {
-        course.connections = course.connections.filter((v) => v.id !== edge.id);
+        MapCompat.disconnect(app.store.project, edge.id);
         app.state.graphSelection = null;
       });
   }
@@ -484,7 +635,9 @@ function remove(app, course, room) {
     app.message('至少保留一个房间。', true);
     return;
   }
-  const affected = course.connections.filter(
+  // Affected wires are counted across both stores: legacy course wires and
+  // project-level (possibly cross-container) wires.
+  const affected = MapCompat.connections(app.store.project).filter(
     (w) => w.from.roomId === room.id || w.to.roomId === room.id,
   );
   modal(
@@ -497,16 +650,13 @@ function remove(app, course, room) {
         primary: true,
         action: () =>
           app.store.change(() => {
+            const project = app.store.project;
             course.rooms = course.rooms.filter((v) => v.id !== room.id);
-            course.connections = course.connections.filter(
-              (w) => w.from.roomId !== room.id && w.to.roomId !== room.id,
-            );
+            // Both the legacy course store and the project-level map are cleaned.
+            MapCompat.forgetRoom(project, room.id);
             // Favourite/group references to a deleted room are dropped; groups
             // and other rooms are untouched.
-            app.store.project.roomOrganization = Org.forgetRoom(
-              app.store.project.roomOrganization,
-              room.id,
-            );
+            project.roomOrganization = Org.forgetRoom(project.roomOrganization, room.id);
             app.state.graphSelection = null;
             app.state.roomMulti = (app.state.roomMulti || []).filter((id) => id !== room.id);
           }),
@@ -517,6 +667,7 @@ function remove(app, course, room) {
 module.exports = {
   markup,
   mount,
+  dispose,
   renderInspector,
   ensureProjectLayout,
   duplicate,

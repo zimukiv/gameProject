@@ -40,7 +40,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright'),
     await page.waitForFunction(() => !!window.__ROOM_LAB__?.snapshot().state.roomView);
     await page.waitForTimeout(250);
     const canvas = await page.locator('#room-canvas').boundingBox(),
-      tabs = await page.locator('.room-tabs').boundingBox();
+      tabs = await page.locator('.room-thumb-selector').boundingBox();
     assert.ok(tabs.y + tabs.height < canvas.y);
     assert.ok(canvas.height > 500);
     assert.ok(canvas.width > 1200);

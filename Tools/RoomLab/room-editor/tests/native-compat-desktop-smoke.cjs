@@ -118,7 +118,7 @@ const { fixture } = require('./helpers/native-fixture.cjs');
         else assert.equal(await page.locator('#native-band').count(), 0);
         if (process.env.NATIVE_SCREENSHOT && course.kind === 'calculus')
           await page.screenshot({ path: process.env.NATIVE_SCREENSHOT });
-        await page.locator('#back-course').click();
+        await page.locator('#crumb-project').click();
         await page.locator('#crumb-project').click();
       }
     }

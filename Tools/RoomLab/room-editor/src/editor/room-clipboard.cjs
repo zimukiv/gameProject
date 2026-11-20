@@ -18,7 +18,9 @@ function source(app) {
 }
 
 function canPaste(app) {
-  return !!app.roomClipboard && ['course', 'room', 'home'].includes(app.state.route);
+  // Whole-room copy/paste lives on the home page only. Inside a room Ctrl+C/V is
+  // the selection clipboard, so the two shortcuts never fight over a paste.
+  return !!app.roomClipboard && ['course', 'home'].includes(app.state.route);
 }
 
 function sync(app) {

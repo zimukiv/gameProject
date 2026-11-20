@@ -55,6 +55,9 @@ class Store {
     const project = M.themedExample();
     const seed = seeds({ allThemes: true });
     project.id = M.uid('project');
+    // New room-first projects share one neutral default name. Saved projects and
+    // the author's example archives keep their own titles untouched.
+    project.name = '统一地图示例';
     project.assets = M.clone(seed.assets);
     for (const course of project.courses) course.artBindings = M.clone(seed.allBindings);
     for (const [path, bytes] of seed.files) this.assetFiles.set(path, bytes);
@@ -70,17 +73,19 @@ class Store {
   snapshot() {
     return M.clone(this.project);
   }
-  commit(before) {
-    if (this.history.commit(before, this.project)) {
+  commit(before, merge = null) {
+    if (this.history.commit(before, this.project, merge)) {
       this.dirty = true;
       this.persist();
     }
     this.notify();
   }
-  change(fn) {
+  // merge: { key, window } lets live inputs collapse a burst of edits into one
+  // undo step instead of one step per keystroke.
+  change(fn, merge = null) {
     const before = this.snapshot();
     fn(this.project);
-    this.commit(before);
+    this.commit(before, merge);
   }
   load(data) {
     const next = M.migrate(data),

@@ -33,6 +33,8 @@ pnpm test:desktop
 
 `test:room-clipboard` 使用真实键盘 `Ctrl+C` / `Ctrl+V` 从物理大关复制房间到高数大关，检查独立 ID、内部引用、素材解析、外部接线不复制、可重复粘贴和页面无错误。
 
+`node tests/clipboard-selection.test.cjs`（13 项）覆盖房间内框选复制的纯数据合同：相对坐标、objects/movables/zones/tiles、入口/出口与 native `platforms/patrols/signs` 的新 ID、组合/机关砖组/踏板/温控区/轨道节点内部重映射、选择集外引用清除、native 写入 `room.nativeCampaign` 而非顶层容器、组合含 native platform 时跟随、端口不复制 `course.connections`、越界在任何写入前原子拒绝。输入框获得焦点时 `app.cjs` 提前返回，系统剪贴板行为不变。
+
 `test:mirror` 检查整房左右/上下镜像的坐标、方向、路径、原生扩展对象和连续镜像恢复；设置 `EDITOR_EXE` 后通过实际 `RoomLab.exe` 验证房间属性按钮、接线不变与撤销恢复。
 
 布局预览检查：`node tests/layout-ui-smoke.cjs`。验证顶部房间栏、窗口自适应画布、收起属性、连续图标放置、帮助弹窗、三级素材分类与候选过滤、接线板缩放平移后接线/选线及窄窗口布局。核心的 layout-assets.test.cjs 检查素材范围与旧分类兼容、端口真实坐标投影。

@@ -1,5 +1,82 @@
 # 更新与阶段验收
 
+## 2026-11-20 · 4.2.0 build6 · 完整用户清单（主代理验收通过，待打包）
+
+主代理独立 build 并执行核心套件 **343 项通过**；`teacher-ui-smoke`、`unified-map-ui-smoke`、`room-first-ui-smoke` 三个 UI 验收在真实 Electron 中全部 **PASS**。功能完成，待打包。
+
+用户可见变化（4.2.0 全量）：
+
+- **统一地图规划**：主页面以路线图摆放全部房间，从出口拖到任意房间入口接线；跨原大关的房间可直接连线、试玩和导出。
+- **房间优先**：房间库负责编辑与收藏；编辑页用缩略图选择栏在全部/收藏/分组间切换，顶栏显示“项目 / 归属 / 房间名”。
+- **收藏与自定义分组**：金色星标收藏、可筛选；分组可自命名、改色、跨章节整理，地图房间色与分组色一致。
+- **编辑即时化**：房间属性、行为参数、机关参数、砖/教师/轨道节点、native 参数输入即生效，180ms 内连续输入合并为一次提交与一条撤销；同字段连续编辑合并为一步。
+- **输入草稿不再是边界**：保存、Ctrl+S（输入框内也生效）、试玩、云同步与两种导出在读取项目前都会先提交未落盘的输入，避免“刚改的值没保存”；输入框内 Ctrl+C / Ctrl+V 仍是系统文本剪贴板行为。
+- **撤销可靠**：Ctrl+Z / Ctrl+Y 后立即编辑同一字段会记录新的撤销步，不会把恢复的值吞并进上一次输入连击。
+- **框选复制粘贴**：房间内 Ctrl+C / Ctrl+V 复制所选对象（含入口/出口端口、native 平台/巡逻/标记），全部重映射新 ID 并保持相对位置，越界整体拒绝，一次粘贴一条撤销。
+- **教师节点路线**：右键加节点、画布整格拖动、逐段时间/运动方式/往返循环；移动老师整条路线跟随，复制房间时路径与签到 ID 正确重映射，无路径的旧老师保持原巡逻行为。
+- **清醒板咖啡**：无咖啡时给出受控提示且不刷屏；有咖啡支持上/侧触发、方向与持续时间，冷却与碰撞开关独立。
+- **功能块定义改为项目默认值**：定义页编辑项目的默认参数与素材，新放置的方块共用项目默认值，已有方块保持原参数；旧按大关保存的定义只作兼容继承读取，不会被回写或丢失。
+- **素材库**：固定“全部素材”视图，不再被迫先选大关；素材 ID 与相对路径不变。
+- **保存与云同步**：每分钟本地自动保存（未选文件时留本机恢复副本），本地保存不自动提交云端；手动保存与自动保存互斥，云备份与手动保存可恢复。
+- **界面精简**：顶部动作收进“项目/工具”菜单；移除可见的旧大关工作区、美术绑定等入口；地图坐标按 CSS 尺寸与 DPR 精确绘制，窗口/缩放变化自动重绘。
+- **兼容性**：项目格式仍为 v2，旧房间、机关、素材、接线与未知扩展字段原样保留；旧 `course.blockDefaults` / `course.artBindings`、旧存档容器只隐藏兼容，不删除不改写。
+
+本 worker 在发布前只补两处确定性窄改：`History` 在 undo/redo/clear 后重置合并窗口（`tests/history-merge-reset.test.cjs` 4 项），live-fields 草稿在保存/试玩/云同步/导出入口 flush 并防重入（`tests/live-fields.test.cjs` 3 项 + 输入框内 Ctrl+S 断言）；定义页文案去掉技术实现细节。未执行打包/发布，未改用户资料。
+
+## 2026-11-20 · 4.2.1 收尾窄修 · live-fields 连续输入 / 项目全局默认定义 / 素材全部视图（未发布）
+
+- `live-fields` 根因修复：原有每个字段 `change` 立即 `button.click()`，提交会整页重绘检查器，后续快速 `fill` 落到已卸载的 input（教师 min=6/max=14/speed=2.5 序列实测丢失 max）。改为共享 180ms 草稿队列：同一次快速跨字段输入先把所有草稿写回当前仍有效的 input，再只点一次表单动作按钮；`select/checkbox` 保持即时提交；`go()` 真实导航前调用 `flushAll()` 冲掉草稿。焦点/光标仍由 `captureFocus/restoreFocus` 保留，非法数字草稿不进入数据也不阻塞同批有效字段。覆盖教师行为参数、教师/轨道/机关砖节点、native 等全部既有 live 表单。
+- 新增 `tests/live-fields.test.cjs` 3 项：快速三段输入只提交一次且三值齐全、即时 flush 携带草稿、导航前 flush。**未执行** `tests/teacher-ui-smoke.cjs`：本机无 `playwright` 模块，Electron 又被 ACL/Mojo 拒绝（见 `test-output/electron-cdp.err`），需主代理在可跑 GUI 环境复跑真实全流程。
+- 功能块定义改为项目全局 `project.blockDefaults` 编辑：删除“选择大关”下拉与“保存本大关默认定义”按钮，保存只写项目全局，不再新建大关流程；旧 `course.blockDefaults` / `course.artBindings` 保持只读继承，`Registry.courseDefaults/instantiate` 以全局为基底、旧 local 覆盖，`assetOverrides` 与素材面板按同一优先级取素材，改全局默认不回写旧 course 对象。
+- 素材页固定“全部素材”视图并删除可见大关筛选下拉；内部 `asset.courseId` 继续读取用于归属/导入提示，不改写素材 ID 或相对路径，全部素材始终可见。
+- 新增 `tests/global-defaults.test.cjs` 3 项（全局参数生效、旧 local 继承覆盖且不回写、素材继承）。实测直接 `node <file>`：live-fields 3/3、global-defaults 3/3、teacher 10/10、assets 6/6、themes 13/13、model 10/10、compatibility 2/2、palette-zone 1/1。`node --test` 仍被沙箱 `spawn EPERM` 拒绝，未使用。
+- 框选复制补齐（`src/project/clipboard-selection.cjs`）：现支持入口/出口端口和 native `platforms/patrols/signs`。深拷贝后统一生成新 ID；入口/出口只复制纯数据，绝不复制任何 `course.connections` 外部接线；native 平台/巡逻/标记的 `x/y`、平台 `toX/toY`、巡逻 `nodes`、对象/机关砖节点路径、`assemblyId`、`attachmentTo`、`padId`、`zoneId`、`params.checkinIds` 和轨道节点 ID/parentId 均按选择集内部重映射，集合外引用删除而不误绑；native 直接写入 `room.nativeCampaign[kind]`，不会写入 `room.platforms` 之类的错误容器；完整组合（含 native platform）随组跟随新 assembly，部分组合去掉外部依附；越界在任何写入前整体拒绝。输入框内仍不拦截快捷键，系统剪贴板行为不变。`tests/clipboard-selection.test.cjs` 扩至 13 项并全部通过（新增 native 各 kind 新 ID/独立粘贴、组合含 native platform、端口不接旧线、native/端口越界原子拒绝）。本 worker 禁 GUI，`tests/teacher-ui-smoke.cjs` 的同格轮选与 `box/cssWidth` 坐标换算仅做代码修正，未运行真实 Electron/Chromium；`build/` 已用 esbuild 直接 CLI 重建（未走 `scripts/build.cjs` 的 Node 子进程），未发布。
+
+## 2026-11-20 · 4.2.1 收尾窄修 · 教师行为即时参数与删除端口统一清理（未发布）
+
+- 教师 `行为` tab 回归旧插件参数：`TeacherPanel` 只接管 `节点` tab；无新 `path` 的旧存档仍可在 `行为` tab 用 `#param-patrolMinX/#param-patrolMaxX/#param-speed` 即时调整（沿用 `live-fields` 隐藏“应用行为”、输入 450ms 防抖提交并恢复焦点），`节点` tab 的节点属性/秒数/模式/右键加点/拖动/移动/重载路径保持不变。
+- 新增 `MapCompat.portLinks / forgetPort / forgetPorts` 统一端口删除接口：同时清理 `project.map.connections` 与各 `course.connections`，被项目级边遮蔽的旧课程线也一并删除，避免“删端口后旧线复活”。
+- 房间检查器单删（`删除对象`）与批量删除（`removeSelection`）都改为先统计两套存储的关联线再统一清理；入口“至少保留一个”、模态确认与撤销行为保持不变。
+- 测试：新增 `tests/port-forget.test.cjs` 5 项（跨原大关显式边 + 旧课程线同时关联、删除出口/入口、批量端口、History 撤销恢复、无关连线与入口保护保留），删除后 `M.validate().errors === []` 无悬挂边。
+- 真实通过清单（本机直接 `node <file>` 运行，`node --test` 沙箱 spawn 被拒）：port-forget 5/5、map-compat 7/7、model 10/10、teacher 10/10。**未执行** teacher-ui-smoke / unified-map-ui-smoke 等 Playwright/Electron 冒烟，按指令禁 GUI/禁启动 UI；对应真实路径保留在 `tests/teacher-ui-smoke.cjs`（右键加点、拖动、秒数/模式即时、移动老师整条路线跟随、reload）与 `tests/unified-map-ui-smoke.cjs`，需主代理在可跑浏览器环境复核。未发布。
+
+## 2026-11-20 · 4.2.1 阶段 3 补修 · 地图 CSS 坐标/DPR 与清醒加速根因（未发布）
+
+- 地图画布改为 CSS 坐标唯一视图：`graph-board` 复用 `canvas-dpr`，CSS 盒固定、backing=CSS×ratio，指针与 fit 都用 CSS 尺寸；mount 后新增 `ResizeObserver` 与 `matchMedia` DPR 监听，窗口/DPR 变化会重新 prepare 并重绘。修复了 backing 1126 被 CSS 拉伸到 1140 导致端口坐标偏差约 7–11px 的问题。
+- `window.__ROOM_LAB__.wiringPorts()` 增加 `cssWidth/cssHeight/dpr/backingWidth/backingHeight`；`tests/unified-map-ui-smoke.cjs` 按 CSS 尺寸换算真实拖线坐标，并新增真实 resize/DPR 断言。
+- 地图“当前大关”按钮改为“聚焦所选”（当前选中房间 > 当前分组 > 当前课程），地图内帮助、空检查器、跨容器提示/徽标去掉可见“大关”字样。
+- 清醒板根因：水平 `launchPlayer` 被落地分支立即清除 `launched`，下一帧即被普通速度覆盖。新增 `player.launchHold`（水平发射保持 0.3 秒），垂直发射落地行为不变；`tests/awake-coffee-frames.test.cjs` 以真实引擎帧覆盖有/无咖啡、上/侧进入、冷却与碰撞开关，修复前 2 项失败、修复后 6 项通过。block-guide 文案同步。
+- 实测：esbuild 直接二进制生成 `build/`；核心相关 80 项通过（graph layout 2、map compat 7、teacher 6、awake 6、planning redesign 11、themes 13、items 5、collision 6、moving-solid 18、runtime binding 6）。**未执行** Playwright/Electron 真实 UI：本机无 `playwright` 模块，沙箱 ACL/Mojo 拒绝浏览器子进程。教师节点图（阶段 3 合同第 1 项）未开始，停点见 `test-output/redesign-stage3-acceptance.md`。未发布。
+
+## 2026-11-20 · 4.2.1 阶段 2 · 房间编辑即时化与统一缩略导航（未发布）
+
+- 房间编辑页删除「返回路线图」「复制整房」「粘贴整房」三个按钮；整房复制/粘贴只保留在主页（房间库/接线板），编辑页不再截获整房快捷键。返回主页走顶栏「项目」/归属名称。
+- 房间内 Ctrl+C/V 改为复制粘贴所选对象：新 `src/project/clipboard-selection.cjs` 保留相对位置、重映射全部新 ID、内部重连（组合、机关砖组、踏板 `padId`、温控区 `zoneId`、轨道节点 `parentId/id`），选择集外的引用清空而不误绑；入口/出口作为纯数据复制（新 ID、无外部接线）；native 平台/巡逻/标记在后续补齐中纳入同一复制路径；越界整体拒绝且不改数据；多次粘贴按 1、2、3… 格递增偏移；一次粘贴一条撤销记录。输入框内不拦截快捷键，系统复制粘贴照常。
+- 房间页文字标签/下拉切换改为与主页复用的缩略图选择栏（`room-navigation.strip`）：全部/收藏/分组筛选、当前房间高亮、跨原容器切换房间；顶栏显示 `项目 / 归属容器 / 房间名`，点归属回到全部房间缩略视图。颜色改由自定义分组提供（`Org.colorFor`，分组管理可改色），旧主题色仅作未分组房间的兼容回退。
+- 房间属性与机关参数即时生效：删除「应用房间设置」；名称/说明/尺寸/AI/试玩背包/视角在 `change` 时写入，文本再叠加 400ms 输入防抖；半输入或非法数字不写入；重绘后恢复焦点与光标，画布视角保持；同字段连续编辑合并为一条撤销。缩小房间保留越界数据并提示一次（不再每次弹窗）。
+- 清晰度：新增 `src/editor/canvas-dpr.cjs`，画布与缩略图按 `devicePixelRatio` 绘制并以像素预算（约 420 万像素）封顶；房间画布指针坐标回到 CSS 空间。缩略图复用原比例 `D.miniature`，不再拉伸低分辨率缓存。
+- 测试：新增 `tests/clipboard-selection.test.cjs`（初始 8 项，后续补齐 native/端口后共 13 项）、`tests/canvas-dpr.test.cjs`（4 项），`tests/room-navigation.test.cjs` 增加缩略栏/顶栏断言；旧 UI 冒烟测试改为新选择器（`#crumb-project`、`#room-navigation` 缩略卡、`change` 即时写入）。核心 62 个测试文件全部通过。
+- 兼容边界：`project.courses`、旧 `course.phase`、旧连接与未知字段原样保留；分组颜色是可选字段，旧分组无颜色时使用固定调色板。未改动 Unity 与发布目录，未发布。
+- 真实未完成项：本机沙箱禁止 esbuild 子进程（`spawn EPERM`），`scripts/build.cjs` 与 Electron/Playwright 冒烟测试未能由本 worker 执行（需主代理在可运行环境跑）；跨原容器「跨房连接」的工程接口已在阶段 1 提供 `project.map`，本阶段未新增其 UI 入口；教师节点与清醒加速按合同留待下一阶段；入口/出口端口已在后续补齐中纳入框选复制（新 ID 的纯数据副本，不复制外部接线）。
+
+## 2026-11-20 · 4.2.1 阶段 1 审查补修（未发布）
+
+- Engine 房间校验延迟到 `loadRoom`：构造函数只做项目级结构检查，目标房间按 `M.validateRoom` 做 play 校验并校验插件参数；未加载房间的缺失插件/越界不再阻塞当前房间，加载坏房间时才报错且不切换当前房间。
+- `loadRoom` 按目标房间所属大关同步 `this.course`；跨原大关时 AI 默认 ID 跟随目标大关（显式覆盖保留），`retry` 的 life 回退遍历项目全部房间，旧单大关行为不变。
+- 试玩背包定义为“进入时拥有哪些”的完整覆盖：显式勾选（含空勾选）与旧版全道具都不再叠加 `project.itemState.initial`；正常成品流程仍使用项目初始道具。
+- `ItemState.restore` 同步 `credited` 与 `itemCollects`，快照中未收集的道具恢复为可重新收集；checkpoint 增加 `collects` 快照，`retry` 一并回退，避免道具已回退但收集键残留。
+- 新增 `tests/runtime-room-binding.test.cjs`（6 项）；59 个核心测试文件、301 项全部通过。限制：本机沙箱仍禁止 esbuild 子进程（`spawn EPERM`），未重新生成 `build/`，未发布。
+
+## 2026-11-20 · 4.2.1 阶段 1 · 统一地图兼容层与道具配置
+
+- 新增 `src/project/map-compat.cjs`：项目级全局房间索引、全局连接合并（项目级显式连接优先）、跨原大关连接解析与校验、只读全局视图；`project.courses`、旧连接、房间/机关 ID、未知字段与素材绑定全部原样保留，不删除 courses。
+- Engine 的房间加载、出口过门、反向返回改用全局索引/全局连接，跨原大关连接可实际运行；`M.validate` 追加全局校验，跨大关连接给出兼容提示而非拒绝。
+- 房间属性新增「试玩进入背包」图标勾选（Registry 道具定义），字段 `room.playtestItems`；显式配置优先，旧存档无配置保持旧的开发者全道具试玩；试玩背包不进入正常成品流程。
+- 新增项目级 `project.itemState = {version, initial}` 与 `src/runtime/item-state.cjs` 运行时接口；道具跨房间保留，死亡按存档点快照回退；Unity 端未修改。
+- 房间属性删除快慢节奏选择，旧 `phase` 字段保留并可加载；新流程不再由旧 course 阶段驱动。
+- 新增 `tests/map-compat.test.cjs`、`tests/playtest-items.test.cjs`（13 项）；核心测试 295 项通过。兼容迁移说明见 [阶段 1 文档](MAP_COMPAT_STAGE1.md)。
+- 限制：本机沙箱禁止 esbuild 子进程管道（`spawn EPERM`），`scripts/build.cjs` 未能在本阶段执行，未声称 build/ 已更新。
+
 ## 2026-11-20 · 4.2.0 build5
 
 - 房间编辑器移除原大关房间标签；顶部显示「项目 / 全部房间或自定义分组 / 当前房间」，可跨原大关切换。选定分组时只显示该组房间标签，允许拖动组内顺序，不改变原归属、首房和接线。
@@ -15,7 +92,6 @@
 - 顶部房间选择栏可折叠并记住本机状态，折叠时重新测量地图画布，保持缩放和平移。
 - 修复云端房间库原双端回归测试的恢复草稿时序与兼容确认等待，补充结构预览不加载素材、清单篡改拒绝和折叠重载验证。
 
-
 ## 2026-11-19 · 4.2.0 房间优先、收藏与分组、精简界面（第三阶段）
 
 - 规划主页不再按大关分类：删除大关卡片/大关图例/「进入大关 →」/大段大关·AI·数量介绍；路线图默认仍同时显示全部大关的全部房间。大关仍是大关所有权与运行时容器，旧的 `project.courses`、规则、美术绑定和旧存档不需要迁移。
@@ -28,6 +104,7 @@
 - 自动保存竞态修复：桌面端异步自动保存回复只有在「项目 ID 与文件会话仍是发起写入时的同一个」时才重新关联会话；用户期间打开/切换项目或云端检出（即使项目 ID 相同）时回复标记为过期，不更新基线或未保存标记。新增 `reconcileSession` 与竞态回归。
 - 关闭备份修复：关闭窗口先暂停分钟自动保存并等待进行中的写入，再备份；备份失败或取消关闭时恢复自动保存，编辑器继续每分钟保存；成功退出时才彻底停止定时器。
 - 测试：新增 `tests/room-organization.test.cjs`（收藏切换、跨大关/多分组、重命名/删除保留房间、失效 ID 清理、JSON/ZIP/云 codec 往返、单房间导出不泄漏分组）；`tests/room-first-ui-smoke.cjs`（真实 Electron/Chromium：缩略图单击定位、双击/✎ 编辑、收藏高亮与筛选、跨大关多选分组及重载持久化）；`tests/planning-redesign.test.cjs` 与 `tests/planning-redesign-ui-smoke.cjs` 改为房间优先契约；`tests/autosave.test.cjs` 增加过期回复、suspend/resume、whenIdle 回归；原有 UI 验收通过 `window.__ROOM_LAB__.openCourseWorkspace()/newCourse()` 进入隐藏的高级大关管理，继续覆盖规则/美术/房间列表。
+
 ## 2026-11-19 · 4.2.0 分钟自动保存与保存边界（第二阶段）
 
 - 每 60 秒检查一次：有项目且自上次自动保存后确有改动时，自动保存到本机；没有改动不写盘，同一时间只有一个保存在进行。定时器可注入，测试用 `tick()` 触发，不必等真实的 1 分钟。

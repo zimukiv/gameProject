@@ -89,6 +89,8 @@ class CloudController {
     return p;
   }
   capture() {
+    // Snapshot the newest typed values, not the draft queue.
+    require('./live-fields.cjs').flushAll();
     return {
       project: this.app.store.snapshot(),
       files: [...this.app.store.assetFiles].map(([p, b]) => [p, new Uint8Array(b)]),

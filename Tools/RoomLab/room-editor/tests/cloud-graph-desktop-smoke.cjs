@@ -117,7 +117,7 @@ const call = (p, name, data) =>
     const exported = Archive.unpack(fs.readFileSync(file));
     assert.equal(exported.project.courses[0].rooms.length, 1);
     assert.equal(exported.project.courses[0].rooms[0].id, 'jet-room');
-    await page.locator('#back-course').click();
+    await page.locator('#crumb-project').click();
     await page.getByRole('button', { name: '全局路线图', exact: true }).click();
     // Select a room node through the same hit testing used by the designer.
     await page.locator('#graph-fit').click();

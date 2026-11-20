@@ -82,8 +82,13 @@ const root = path.resolve(__dirname, '..'),
       0,
       'ungrouped rooms have no old course tabs',
     );
+    // Stage 2: the room page shows the thumbnail selector instead of tabs or a
+    // room dropdown, with the current room highlighted.
+    assert.equal(await page.locator('.room-thumb-selector').count(), 1);
+    assert.equal(await page.locator('.room-thumb-card.active').count(), 1);
     assert.equal(await page.locator('#crumb-course').count(), 0);
-    assert.equal(await page.locator('#room-nav-current option').count(), rooms.length);
+    assert.equal(await page.locator('#room-nav-current').count(), 0);
+    assert.equal(await page.locator('.room-thumb-card[data-nav-room]').count(), rooms.length);
     const beforeHelp = await project();
     await page.locator('#block-help').click();
     await page.locator('#block-guide-search').fill('温控');
@@ -93,7 +98,7 @@ const root = path.resolve(__dirname, '..'),
     await page.locator('#dialog-actions button').click();
     assert.deepEqual(await project(), beforeHelp, 'guide is read only');
     const otherOwner = (await project()).courses[1];
-    await page.locator('#room-nav-current').selectOption(otherOwner.rooms[0].id);
+    await page.locator(`[data-nav-room="${otherOwner.rooms[0].id}"]`).click();
     assert.equal((await snap()).state.courseId, otherOwner.id);
     assert.equal((await snap()).state.roomId, otherOwner.rooms[0].id);
     await page.locator('#crumb-project').click();
@@ -146,14 +151,32 @@ const root = path.resolve(__dirname, '..'),
     await page.locator(`[data-room-card="${first.id}"]`).dblclick();
     await page.locator('#room-canvas').waitFor();
     assert.equal(await page.locator('[data-nav-room]').count(), 2);
-    assert.equal(await page.locator('#room-nav-scope').inputValue(), grouped.groups[0].id);
+    // The group filter is active in the room page selector bar as well.
+    assert.equal(
+      await page.locator(`[data-room-filter="group:${grouped.groups[0].id}"].active`).count(),
+      1,
+    );
     await page.locator(`[data-nav-room="${crossCourse.id}"]`).click();
     assert.equal((await snap()).state.courseId, (await project()).courses[1].id);
     assert.equal((await snap()).state.roomId, crossCourse.id);
-    await page.locator('#room-nav-scope').selectOption('');
+    // Clicking the owning-group label filters the thumbnail bar to that group;
+    // an ungrouped room's label returns to the all-rooms thumbnail view (no
+    // dropdown anywhere and no course tab list).
+    await page.locator('#crumb-owner').click();
     assert.equal(await page.locator('.room-tabs').count(), 0);
-    assert.equal(await page.locator('#room-nav-current option').count(), rooms.length);
-    await page.locator('#room-nav-scope').selectOption(grouped.groups[0].id);
+    assert.equal(await page.locator('#room-nav-current').count(), 0);
+    assert.equal(await page.locator('.room-thumb-card[data-nav-room]').count(), 2);
+    assert.equal(
+      await page.locator(`[data-room-filter="group:${grouped.groups[0].id}"].active`).count(),
+      1,
+    );
+    await page.locator('[data-room-filter="all"]').click();
+    await page.locator(`[data-nav-room="${second.id}"]`).click();
+    assert.equal((await snap()).state.roomId, second.id);
+    assert.equal((await page.locator('#crumb-owner').textContent()).trim(), '未分组');
+    await page.locator('#crumb-owner').click();
+    assert.equal(await page.locator('.room-thumb-card[data-nav-room]').count(), rooms.length);
+    await page.locator(`[data-room-filter="group:${grouped.groups[0].id}"]`).click();
     assert.equal(await page.locator('[data-nav-room]').count(), 2);
     const groupOrderBefore = (await org()).groups[0].roomIds;
     const ownerArrays = (await project()).courses.map((c) => c.rooms.map((r) => r.id));
@@ -169,7 +192,7 @@ const root = path.resolve(__dirname, '..'),
       ownerArrays,
     );
     await page.screenshot({ path: path.join(root, 'test-output/room-navigation-groups.png') });
-    await page.locator('#back-course').click();
+    await page.locator('#crumb-project').click();
     assert.equal((await snap()).state.planningTab, 'map');
 
     // 6. Organisation survives a reload (local draft round trip), and the map

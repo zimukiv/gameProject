@@ -45,8 +45,10 @@ function stripMarkup(app) {
       const { width, height } = thumbSize(room),
         favorite = org.favorites.includes(room.id),
         selected = selection?.kind === 'room' && selection.id === room.id,
-        chosen = multi.has(room.id);
-      return `<article class="room-strip-item${favorite ? ' favorite' : ''}${selected ? ' selected' : ''}${chosen ? ' multi' : ''}" role="listitem" data-strip-room="${esc(room.id)}" tabindex="0" title="${esc(room.name)}${room.notes ? ' · ' + esc(room.notes) : ''}" aria-label="${esc(room.name)}${favorite ? '（已收藏）' : ''}"><canvas class="strip-thumb" width="${width * 2}" height="${height * 2}" style="width:${width}px;height:${height}px" data-strip-mini="${esc(room.id)}"></canvas>${OrgUI.starMarkup(app, room.id, 'strip-fav')}<button class="strip-edit" data-strip-edit="${esc(room.id)}" title="编辑房间">✎</button><span class="strip-name">${esc(room.name)}</span></article>`;
+        chosen = multi.has(room.id),
+        // Same user-group accent as the route map and the room page bar.
+        color = require('../project/room-organization.cjs').colorFor(org, room.id);
+      return `<article class="room-strip-item${favorite ? ' favorite' : ''}${selected ? ' selected' : ''}${chosen ? ' multi' : ''}" role="listitem" data-strip-room="${esc(room.id)}" tabindex="0" style="--group-color:${esc(color || '#2a4154')}" title="${esc(room.name)}${room.notes ? ' · ' + esc(room.notes) : ''}" aria-label="${esc(room.name)}${favorite ? '（已收藏）' : ''}"><canvas class="strip-thumb" width="${width * 2}" height="${height * 2}" style="width:${width}px;height:${height}px" data-strip-mini="${esc(room.id)}"></canvas>${OrgUI.starMarkup(app, room.id, 'strip-fav')}<button class="strip-edit" data-strip-edit="${esc(room.id)}" title="编辑房间">✎</button><span class="strip-name">${esc(room.name)}</span></article>`;
     })
     .join('')}</div>`;
 }
@@ -67,9 +69,7 @@ function filters(app) {
   return OrgUI.filtersMarkup(app);
 }
 const ADV_ACTIONS = [
-  ['enter', 'enter-course', '大关工作区'],
   ['settings', 'course-settings', '大关规则'],
-  ['bindings', 'course-bindings', '本关美术绑定'],
   ['add', 'add-course', '＋ 新建大关'],
   ['rename', 'rename-course', '重命名大关'],
   ['delete', 'delete-course', '删除大关'],
@@ -82,18 +82,20 @@ function advancedActions(withIds) {
       `<button ${withIds ? `id="${id}"` : ''} data-adv="${action}"${action === 'delete' ? ' class="danger"' : ''}>${label}</button>`,
   ).join('');
 }
-// Legacy course management stays available, but collapsed and out of the way.
-function advanced(app) {
-  const c = app.course();
-  return `<details class="advanced-tools" id="advanced-tools"><summary title="大关规则、美术绑定、重命名与删除">高级：大关管理（${esc(c.name)}）</summary><div class="advanced-body"><p class="hint">大关仍是大关 / 运行时容器；房间归属不改。房间库与路线图始终显示全部房间。</p><div class="actions">${advancedActions(true)}</div></div></details>`;
+// The legacy big-course workspace is not reachable from navigation any more.
+// `courses` stays the hidden runtime/ownership container for compatibility and
+// the old saved files, but the room-first UI no longer offers a course page as
+// a navigation step.
+function advanced() {
+  return '';
 }
 function contextMenu() {
   return '';
 }
 function courseTools(app) {
   modal(
-    '大关与规则（高级）',
-    `<p class="hint">日常整理用房间库、收藏与分组；这里保留大关级规则、美术绑定与增删。</p><div class="actions">${advancedActions(false)}</div>`,
+    '大关容器（仅数据兼容）',
+    `<p class="hint">导航已不再提供大关工作区；房间库与路线图始终显示全部房间。这里只保留大关级规则与增删的兼容入口，日常整理请用房间库、收藏和分组。</p><div class="actions">${advancedActions(false)}</div>`,
     [{ label: '关闭' }],
   );
   bindAdvanced(app, $('dialog-content'));

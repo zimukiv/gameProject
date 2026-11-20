@@ -4,7 +4,11 @@ const { esc } = require('./dom.cjs');
 
 function card(app, course, { tool, type, label, glyph, hint }) {
   const d = type && Registry.get(type);
-  const overrides = course.blockDefaults?.[type]?.assets;
+  // Global project defaults first, legacy per-course defaults override them.
+  const overrides = {
+    ...(app.store?.project?.blockDefaults?.[type]?.assets || {}),
+    ...(course.blockDefaults?.[type]?.assets || {}),
+  };
   const slot =
     d?.slots.find((s) => overrides?.[s]) || d?.slots.find((s) => course.artBindings?.[type]?.[s]);
   const asset = type

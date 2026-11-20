@@ -130,19 +130,38 @@ test('a manual move writes back to the owner course only and keeps ids and wires
   );
 });
 
-test('cross-course wiring is guarded and within-course wiring is still allowed', () => {
+test('project wiring crosses the old containers and still validates ports', () => {
   const project = starter(),
     first = project.courses[0],
     second = project.courses[1],
     local = { courseId: first.id, roomId: first.rooms[0].id },
     foreign = { courseId: second.id, roomId: second.rooms[0].id };
-  assert.equal(G.canConnect(project, local, foreign), false);
-  assert.equal(G.canConnect(project, foreign, local), false);
+  // Stage 2: wires are project-wide; the legacy course container no longer
+  // forbids a connection. Both directions are allowed when the rooms exist.
+  assert.equal(G.canConnect(project, local, foreign), true);
+  assert.equal(G.canConnect(project, foreign, local), true);
   assert.equal(
     G.canConnect(project, local, { courseId: first.id, roomId: first.rooms[1].id }),
     true,
   );
   assert.equal(G.canConnect(project, local, { courseId: first.id, roomId: 'missing-room' }), false);
+  // Ports are still validated when they are supplied.
+  assert.equal(
+    G.canConnect(
+      project,
+      { ...local, exitId: 'not-an-exit' },
+      { ...foreign, entryId: second.rooms[0].entries[0].id },
+    ),
+    false,
+  );
+  assert.equal(
+    G.canConnect(
+      project,
+      { ...local, exitId: first.rooms[0].exits[0].id },
+      { ...foreign, entryId: second.rooms[0].entries[0].id },
+    ),
+    true,
+  );
   // The existing per-course connection model still connects same-course ports.
   const count = first.connections.length,
     exit = first.rooms[2].exits[0],

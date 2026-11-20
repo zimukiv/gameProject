@@ -202,15 +202,20 @@ function manageGroups(app) {
   const org = organization(app);
   const rows = org.groups
     .map(
-      (group) =>
-        `<div class="group-row" data-group-row="${esc(group.id)}"><button data-group-pick="${esc(group.id)}" class="group-name" title="筛选此分组">${esc(group.name)}</button><span class="muted">${group.roomIds.length} 间房</span><button data-group-rename="${esc(group.id)}">重命名</button><button data-group-delete="${esc(group.id)}" class="danger">删除</button></div>`,
+      (group, index) =>
+        `<div class="group-row" data-group-row="${esc(group.id)}"><input type="color" data-group-color="${esc(group.id)}" value="${esc(Org.groupColor(group, index))}" title="分组颜色（新界面按此着色，不改变大关归属）"><button data-group-pick="${esc(group.id)}" class="group-name" title="筛选此分组">${esc(group.name)}</button><span class="muted">${group.roomIds.length} 间房</span><button data-group-rename="${esc(group.id)}">重命名</button><button data-group-delete="${esc(group.id)}" class="danger">删除</button></div>`,
     )
     .join('');
   modal(
     '分组管理',
-    `<p class="hint">分组只用于整理；可以跨大关，删除分组不会删除房间。</p>${rows || '<p class="muted">还没有分组。</p>'}<div class="actions"><button id="group-here-new">＋ 新建分组</button></div>`,
+    `<p class="hint">分组只用于整理；可以跨大关，删除分组不会删除房间。分组颜色用于新的房间缩略界面（旧主题色只作兼容适配）。</p>${rows || '<p class="muted">还没有分组。</p>'}<div class="actions"><button id="group-here-new">＋ 新建分组</button></div>`,
     [{ label: '关闭' }],
   );
+  for (const input of document.querySelectorAll('[data-group-color]'))
+    input.onchange = () => {
+      const groupId = input.dataset.groupColor;
+      write(app, Org.setGroupColor(organization(app), groupId, input.value));
+    };
   for (const button of document.querySelectorAll('[data-group-rename]'))
     button.onclick = () => {
       $('dialog').close();

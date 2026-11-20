@@ -49,7 +49,7 @@ const assert = require('node:assert/strict'),
     await page.locator('#play-edit').click();
     await page.getByRole('button', { name: '不保存并退出', exact: true }).click();
     assert.equal((await state()).route, 'room');
-    await page.locator('#back-course').click();
+    await page.locator('#crumb-project').click();
     await page.getByRole('button', { name: '从首房试玩', exact: true }).click();
     if (await page.locator('#dialog').isVisible())
       await page.getByRole('button', { name: '仅检查基础机制', exact: true }).click();

@@ -116,13 +116,14 @@
 
 ## 巡查老师 · slacker.teacher
 
-版本：1.0.0；大关：slacker；触发：none；素材状态：idle / active
+版本：1.1.0；大关：slacker；触发：none；素材状态：idle / active
 
 | 参数 | 说明 | 类型 | 默认值 | 范围/选项 |
 | --- | --- | --- | --- | --- |
 | patrolMinX | 平台左边界（列） | number | `0` | 0–255 |
 | patrolMaxX | 平台右边界（列） | number | `4` | 0–255 |
-| speed | 巡查速度（格/秒） | number | `1.5` | 0.1–20 |
+| speed | 巡查速度（格/秒，无节点路线时生效） | number | `1.5` | 0.1–20 |
+| pathLoop | 节点路线循环 | select | `"roundtrip"` | roundtrip / loop / once |
 
 ## 大 token · common.coin
 

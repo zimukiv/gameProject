@@ -179,6 +179,12 @@ function migrate(data) {
       const Org = require('./room-organization.cjs');
       project.roomOrganization = Org.sanitize(project.roomOrganization, Org.roomIdList(project));
     }
+    // 可选项目级全局连接层：只在存在时清理结构，绝不重建或删除 courses。
+    if (project.map !== undefined) {
+      const clean = require('./map-compat.cjs').sanitize(project.map);
+      if (clean) project.map = clean;
+      else delete project.map;
+    }
     return project;
   }
   if (data?.version !== 1 || !Array.isArray(data.rooms)) throw new Error('不支持的项目版本。');
@@ -447,7 +453,25 @@ function validate(p, { play = false } = {}) {
   const native = require('./native-validation.cjs').validate(p, { play });
   errors.push(...native.errors);
   warnings.push(...native.warnings);
+  // 统一地图兼容层校验：项目级全局连接、跨原大关端口与房间索引。
+  // 旧 course.connections 与 project.courses 保持不变。
+  const compat = require('./map-compat.cjs').validate(p);
+  errors.push(...compat.errors);
+  warnings.push(...compat.warnings);
   return { errors: [...new Set(errors)], warnings: [...new Set(warnings)] };
+}
+// 运行时按需校验单个房间：只把目标房间纳入 play 校验，未加载房间的
+// 缺失插件/越界不阻塞当前房间。旧 course.connections 不参与，因为运行时
+// 过门走全局连接解析，坏连接应由编辑器保存校验提示，而不是阻止进房。
+function validateRoom(p, roomId, { play = true } = {}) {
+  const ref = require('./map-compat.cjs').roomRef(p, roomId);
+  if (!ref) return { errors: ['目标房间不存在：' + roomId], warnings: [] };
+  const scoped = {
+    ...p,
+    map: undefined,
+    courses: [{ ...ref.course, rooms: [ref.room], connections: [] }],
+  };
+  return validate(scoped, { play });
 }
 function resizeRoom(r, cols, rows) {
   const next = clone(r);
@@ -524,6 +548,7 @@ module.exports = {
   themedExample,
   migrate,
   validate,
+  validateRoom,
   resizeRoom,
   duplicateRoom,
   connect,

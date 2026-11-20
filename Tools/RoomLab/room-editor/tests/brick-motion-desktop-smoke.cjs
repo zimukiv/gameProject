@@ -83,7 +83,6 @@ const assert = require('node:assert/strict'),
     await page.locator('[data-tab="rooms"]').click();
     await page.locator('[data-room]').first().click();
     assert.equal(await page.locator('#room-env').count(), 0);
-    await page.locator('#apply-room').click();
     const point = async (x, y) => {
       const box = await page.locator('#room-canvas').boundingBox(),
         view = (await snap()).state.roomView;

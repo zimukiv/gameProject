@@ -48,6 +48,11 @@ function shape(value) {
       id: group.id,
       name,
       roomIds: uniqueIds(group.roomIds).slice(0, MAX_ROOM_IDS),
+      // Optional user-configurable accent. Legacy groups have no colour and get
+      // a deterministic palette entry, so old projects keep working.
+      ...(typeof group.color === 'string' && /^#[0-9a-f]{6}$/i.test(group.color)
+        ? { color: group.color.toLowerCase() }
+        : {}),
     });
     if (org.groups.length >= MAX_GROUPS) break;
   }
@@ -107,6 +112,30 @@ function groupOf(org, groupId) {
 }
 function groupsContaining(org, roomId) {
   return shape(org).groups.filter((group) => group.roomIds.includes(roomId));
+}
+// Accent colours for the new room-first UI come from user groups (configurable)
+// rather than the legacy course themes. Legacy groups without a colour get a
+// deterministic palette entry.
+const COLORS = ['#70d9dd', '#e7b867', '#c78bd9', '#8fd77f', '#e48b8b', '#7fb2e4'];
+function groupColor(group, index = 0) {
+  return typeof group?.color === 'string' && /^#[0-9a-f]{6}$/i.test(group.color)
+    ? group.color
+    : COLORS[Math.max(0, index) % COLORS.length];
+}
+function groupIndex(org, groupId) {
+  return shape(org).groups.findIndex((group) => group.id === groupId);
+}
+function colorFor(org, roomId) {
+  const groups = shape(org).groups,
+    index = groups.findIndex((group) => group.roomIds.includes(roomId));
+  return index < 0 ? null : groupColor(groups[index], index);
+}
+function setGroupColor(org, groupId, color) {
+  const next = shape(org),
+    group = next.groups.find((candidate) => candidate.id === groupId);
+  if (group && typeof color === 'string' && /^#[0-9a-f]{6}$/i.test(color))
+    group.color = color.toLowerCase();
+  return next;
 }
 function createGroup(org, name, roomIds = []) {
   const next = shape(org),
@@ -201,4 +230,9 @@ module.exports = {
   filterRoomIds,
   summary,
   nextGroupId,
+  COLORS,
+  groupColor,
+  groupIndex,
+  colorFor,
+  setGroupColor,
 };

@@ -275,7 +275,9 @@ function ensureOffsets(project) {
   return { offsets, changed };
 }
 // One placement per room of every course: x/y are global top-left coordinates.
-function placements(project, offsets, activeCourseId = null) {
+// `accentOf(room)` lets the caller paint user-group colours on the map exactly
+// like the thumbnail bars do; without it the legacy theme colour is kept.
+function placements(project, offsets, activeCourseId = null, accentOf = null) {
   const list = [];
   for (const course of project?.courses || []) {
     const offset = offsetOf(offsets, course),
@@ -290,7 +292,7 @@ function placements(project, offsets, activeCourseId = null) {
         courseId: course.id,
         course,
         room,
-        color,
+        color: (accentOf && accentOf(room, course)) || color,
         active,
         offset,
         x,
@@ -345,15 +347,18 @@ function locate(project, roomId) {
 function courseOf(project, courseId) {
   return (project?.courses || []).find((course) => course.id === courseId) || null;
 }
-// Project wiring uses the existing per-course connection model: a wire may only
-// join two ports of rooms that belong to the same course.
+// Project wiring is project-wide: a wire joins a port of any room to a port of
+// any other room, crossing the legacy course containers (project.map). The
+// legacy same-course wires keep working through the same compatibility layer.
 function canConnect(project, from, to) {
-  if (!from || !to || from.courseId !== to.courseId) return false;
-  const course = courseOf(project, from.courseId);
-  if (!course) return false;
-  const a = course.rooms.find((room) => room.id === from.roomId),
-    b = course.rooms.find((room) => room.id === to.roomId);
-  return !!(a && b);
+  if (!from || !to || !from.roomId || !to.roomId) return false;
+  const MapCompat = require('../project/map-compat.cjs'),
+    a = MapCompat.roomRef(project, from.roomId),
+    b = MapCompat.roomRef(project, to.roomId);
+  if (!a || !b) return false;
+  if (from.exitId && !a.room.exits.some((exit) => exit.id === from.exitId)) return false;
+  if (to.entryId && !b.room.entries.some((entry) => entry.id === to.entryId)) return false;
+  return true;
 }
 module.exports = {
   CELL_SIZE,

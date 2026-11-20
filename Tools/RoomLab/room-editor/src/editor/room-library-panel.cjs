@@ -4,6 +4,7 @@
 // name (tooltip carries the notes), favourite star, group membership and the
 // room actions. The list never reorders the project array; it only filters.
 const D = require('./draw.cjs'),
+  DPR = require('./canvas-dpr.cjs'),
   M = require('../project/model.cjs'),
   Org = require('../project/room-organization.cjs'),
   GraphLayout = require('./graph-layout.cjs'),
@@ -42,8 +43,13 @@ function card(app, course, room, selected) {
       selected?.kind === 'room' && selected.id === room.id && !(app.state.roomMulti || []).length,
     multi = (app.state.roomMulti || []).includes(room.id),
     favorite = Org.isFavorite(OrgUI.organization(app), room.id),
-    title = room.name + (room.notes ? ' · ' + room.notes : '');
-  return `<article class="card room-card${active ? ' selected' : ''}${multi ? ' multi' : ''}${favorite ? ' favorite' : ''}" data-room-card="${esc(room.id)}" data-course-card="${esc(course.id)}" style="--theme-color:${esc(require('../project/themes.cjs').theme(course.kind).color)}" title="${esc(title)}"><div class="room-card-head"><span class="room-card-title" title="${esc(title)}">${esc(room.name)}</span>${OrgUI.starMarkup(app, room.id)}</div><div class="room-thumb"><canvas width="270" height="150" data-mini="${esc(room.id)}"></canvas></div><p class="room-meta">${room.cols}×${room.rows} · ${room.entries.length} 入 / ${room.exits.length} 出</p><div class="actions"><button data-room="${esc(room.id)}" class="primary">编辑房间</button><button data-room-rename="${esc(room.id)}">重命名</button><button data-room-copy="${esc(room.id)}">复制</button><button data-room-export="${esc(room.id)}">导出</button><button data-room-delete="${esc(room.id)}" class="danger">删除</button></div>${OrgUI.groupControlMarkup(app, [room.id])}</article>`;
+    title = room.name + (room.notes ? ' · ' + room.notes : ''),
+    // New room-first UI is coloured by the user's group; the legacy course
+    // theme colour is only a fallback for ungrouped rooms.
+    accent =
+      Org.colorFor(Org.ensure(app.store.project), room.id) ||
+      require('../project/themes.cjs').theme(course.kind).color;
+  return `<article class="card room-card${active ? ' selected' : ''}${multi ? ' multi' : ''}${favorite ? ' favorite' : ''}" data-room-card="${esc(room.id)}" data-course-card="${esc(course.id)}" style="--theme-color:${esc(accent)}" title="${esc(title)}"><div class="room-card-head"><span class="room-card-title" title="${esc(title)}">${esc(room.name)}</span>${OrgUI.starMarkup(app, room.id)}</div><div class="room-thumb"><canvas width="270" height="150" data-mini="${esc(room.id)}"></canvas></div><p class="room-meta">${room.cols}×${room.rows} · ${room.entries.length} 入 / ${room.exits.length} 出</p><div class="actions"><button data-room="${esc(room.id)}" class="primary">编辑房间</button><button data-room-rename="${esc(room.id)}">重命名</button><button data-room-copy="${esc(room.id)}">复制</button><button data-room-export="${esc(room.id)}">导出</button><button data-room-delete="${esc(room.id)}" class="danger">删除</button></div>${OrgUI.groupControlMarkup(app, [room.id])}</article>`;
 }
 function markup(app, options = {}) {
   const list = entries(app, options),
@@ -56,7 +62,16 @@ function bind(app, host, options = {}) {
   target.querySelectorAll('[data-mini]').forEach((canvas) => {
     const owner = GraphLayout.locate(app.store.project, canvas.dataset.mini);
     if (!owner) return;
-    D.miniature(canvas.getContext('2d'), owner.room, 0, 0, canvas.width, canvas.height);
+    // Draw the existing proportional miniature at the real pixel density
+    // instead of stretching a 270×150 bitmap on HiDPI screens.
+    const box = DPR.prepare(
+      canvas,
+      Number(canvas.dataset.cssWidth) || 270,
+      Number(canvas.dataset.cssHeight) || 150,
+      globalThis.devicePixelRatio,
+    );
+    box.ctx.clearRect(0, 0, box.width, box.height);
+    D.miniature(box.ctx, owner.room, 0, 0, box.width, box.height);
   });
   OrgUI.bindStars(app, target);
   OrgUI.bindGroupControls(app, target);

@@ -67,11 +67,9 @@ function instantiate(project, type, id, x, y, course) {
   project.pluginManifest ||= {};
   if (!project.pluginManifest[type]) project.pluginManifest[type] = d.version;
   const config = courseDefaults(project, course, type);
-  const values = clone(
-    course?.blockDefaults?.[type]
-      ? params(project, { type, params: config.params })
-      : { ...d.defaults, ...config.params },
-  );
+  // Project-global defaults are the base; a legacy course.blockDefaults still
+  // inherits over them without any write-back into the old course object.
+  const values = clone(params(project, { type, params: config.params }));
   if (type === 'slacker.teacher') {
     const configured = config.params || {};
     if (!Object.hasOwn(configured, 'patrolMinX')) values.patrolMinX = x;
@@ -110,7 +108,7 @@ function instantiate(project, type, id, x, y, course) {
     },
     aiId: null,
     assetOverrides: Object.fromEntries(
-      Object.entries(course?.blockDefaults?.[type]?.assets || {}).filter(([, id]) => id),
+      Object.entries(config.assets || {}).filter(([, id]) => id),
     ),
     resetPolicy: 'checkpoint',
   });

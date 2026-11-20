@@ -2483,9 +2483,86 @@ body.planning main {
 .block-guide-card dd {
   margin: 0;
 }
-.room-shell:not(:has(.room-tabs)) {
+.room-shell:not(:has(.room-tabs)):not(:has(.room-thumb-selector)) {
   grid-template-rows: auto minmax(0, 1fr);
 }
-.room-shell:has(.room-tabs) {
-  grid-template-rows: auto 44px minmax(0, 1fr);
+.room-shell:has(.room-tabs),
+.room-shell:has(.room-thumb-selector) {
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+/* Room page thumbnail selector: same filters as the home page, proportional
+   miniatures, current room highlighted. No text tab list or dropdown. */
+.room-thumb-selector {
+  display: grid;
+  gap: 6px;
+  padding: 6px 12px 4px;
+  border-bottom: 1px solid #24384a;
+  background: #0c1725;
+  min-height: 0;
+}
+.room-thumb-selector .room-filters {
+  margin: 0;
+}
+.room-thumb-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 0 6px;
+  scrollbar-width: thin;
+}
+.room-thumb-card {
+  flex: 0 0 auto;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 4px;
+  background: #10202e;
+  border: 1px solid #2a4154;
+  border-left: 3px solid var(--group-color, #2a4154);
+  border-radius: 8px;
+  color: #cfe3f3;
+  cursor: pointer;
+}
+.room-thumb-card:hover {
+  border-color: #4d84a6;
+}
+.room-thumb-card.active {
+  border-color: #70d9dd;
+  box-shadow: 0 0 0 1px #70d9dd inset;
+  background: #14283a;
+}
+.room-thumb-card canvas {
+  display: block;
+  border-radius: 5px;
+  background: #0d1622;
+  pointer-events: none;
+}
+.room-thumb-name {
+  font-size: 12px;
+  max-width: 132px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.room-thumb-owner {
+  font-size: 10px;
+  color: #7f9ab0;
+  max-width: 132px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#crumb-owner {
+  background: none;
+  border: 0;
+  color: #8fd7ff;
+  cursor: pointer;
+  padding: 0 2px;
+}
+#crumb-owner:hover {
+  text-decoration: underline;
+}
+.room-current-name {
+  color: #cfe3f3;
 }

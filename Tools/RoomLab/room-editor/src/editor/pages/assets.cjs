@@ -21,18 +21,14 @@ function folders(project, group, course, assets) {
 const courseLabel = (c) => c.name + '（' + Themes.theme(c.kind).label + '）';
 function render(app) {
   const p = app.store.project,
-    scope = app.state.assetCourse,
-    course = p.courses.find((c) => c.id === scope),
-    courseId = scope === 'all' || scope === 'common' ? scope : (course || app.course()).id,
-    active = p.courses.find((c) => c.id === courseId),
+    // The asset page always browses the whole project. asset.courseId is still
+    // read for compatibility/import ownership, but never hides an asset and is
+    // never rewritten here.
+    courseId = 'all',
+    active = app.course(),
     group = app.state.assetGroup || null,
     sub = app.state.assetSub || null;
-  const scoped = p.assets.filter((a) => {
-    if (courseId === 'all' || a.courseId === courseId) return true;
-    if (!active || !C.inCourse(a, active)) return false;
-    const f = C.classification(p, a);
-    return C.children(f.category, active.kind).some((v) => v.id === f.subcategory);
-  });
+  const scoped = p.assets;
   const matches = (a, g, s) => {
     const f = C.classification(p, a);
     return f.category === g && (!s || f.subcategory === s);
@@ -82,14 +78,7 @@ function render(app) {
     content = `<div class="asset-grid">${items.map((a) => `<article class="card asset-card"><img src="${esc(app.assetURL(a.id) || '')}" alt="${esc(a.name)}"><h3>${esc(a.name)}</h3><p>${a.width} × ${a.height} · ${A.usage(p, a.id).length} 处引用</p><p>${esc(p.courses.find((c) => c.id === a.courseId)?.name || '通用素材')}</p><div class="actions"><button data-meta="${esc(a.id)}">资料 / 归类</button><button data-replace="${esc(a.id)}">替换</button><button data-remove="${esc(a.id)}" class="danger">移除</button></div></article>`).join('')}</div>${!items.length ? '<div class="asset-empty"><h2>这个分类还没有素材</h2><p>点击「导入图片 / 图集」，新素材会直接放到当前分类。</p></div>' : ''}`;
   }
   $('app').innerHTML =
-    `<div class="page-title"><div><h1>项目素材库</h1><p class="muted">大关 → 大类 → 子类 → 图片。大关视图也显示适用的通用素材；新导入的图片归当前大关。</p></div><button id="add-assets" class="primary">导入图片 / 图集</button></div><div class="asset-library-toolbar">${crumbs}<select id="asset-filter" aria-label="素材所属大关"><option value="all">全部大关</option><option value="common">通用素材</option>${p.courses.map((c) => `<option value="${esc(c.id)}">${esc(courseLabel(c))}</option>`).join('')}</select></div>${group && sub ? `<p class="asset-folder-hint">当前目录：${esc(groupName)} / ${esc(subName)} · 在这里导入将自动归入此类</p>` : ''}${content}`;
-  $('asset-filter').value = courseId;
-  $('asset-filter').onchange = (e) => {
-    app.state.assetCourse = e.target.value;
-    app.state.assetGroup = null;
-    app.state.assetSub = null;
-    app.render();
-  };
+    `<div class="page-title"><div><h1>项目素材库</h1><p class="muted">归属分组 → 大类 → 子类 → 图片。全部视图也显示适用的通用素材；新导入的图片归当前归属。旧存档的大关归属仍被继承读取。</p></div><button id="add-assets" class="primary">导入图片 / 图集</button></div><div class="asset-library-toolbar">${crumbs}<span class="muted">全部素材</span></div>${group && sub ? `<p class="asset-folder-hint">当前目录：${esc(groupName)} / ${esc(subName)} · 在这里导入将自动归入此类</p>` : ''}${content}`;
   $('app')
     .querySelectorAll('[data-asset-home]')
     .forEach(
@@ -176,7 +165,7 @@ function editMeta(app, a) {
     scopes.push([a.courseId, '原归属：' + a.courseId]);
   modal(
     '素材资料与分类',
-    `<div class="form">${field('名称', 'asset-name', a.name)}${select('所属大关', 'asset-course', a.courseId, scopes)}<div class="row">${select(
+    `<div class="form">${field('名称', 'asset-name', a.name)}${select('素材归属（兼容旧大关）', 'asset-course', a.courseId, scopes)}<div class="row">${select(
       '大类',
       'asset-category',
       f.category,

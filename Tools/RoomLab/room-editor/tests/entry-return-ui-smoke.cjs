@@ -52,7 +52,7 @@ const assert = require('node:assert/strict'),
     await page.locator('#save-entry').evaluate((button) => button.click());
     assert.equal((await room()).entries[0].allowReturn, false);
 
-    await page.locator('#back-course').click();
+    await page.locator('#crumb-project').click();
     await page.locator('[data-room]').first().click();
     await page.mouse.click(...(await point(entry.x, entry.y)));
     await page.locator('[data-inspector="links"]').click();

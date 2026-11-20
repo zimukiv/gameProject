@@ -7,6 +7,8 @@ const Performance = require('../project/performance.cjs');
 const Temperature = require('../project/temperature.cjs');
 const Collision = require('../project/collision.cjs');
 const Motion = require('../project/brick-motion.cjs');
+const MapCompat = require('../project/map-compat.cjs');
+const ItemState = require('./item-state.cjs');
 function direction(input, face) {
   let x = Number(!!input.right) - Number(!!input.left),
     y = input.up ? -1 : input.down ? 1 : 0;
@@ -16,18 +18,19 @@ function direction(input, face) {
 }
 class Engine {
   constructor(project, courseId, roomId, entryId, options = {}) {
-    const errors = M.validate(project, { play: true }).errors;
-    if (errors.length) throw new Error(errors[0]);
+    // 只做项目级结构检查；房间内容（含缺失插件）延迟到 loadRoom 按目标房间校验，
+    // 避免旧存档中未试玩的房间阻塞当前房间。
+    if (
+      !project ||
+      project.version !== 2 ||
+      !Array.isArray(project.courses) ||
+      !project.courses.length
+    )
+      throw new Error('项目版本或大关列表无效。');
     this.config = Performance.resolve(project.settings);
     this.paidStockCap = 1;
     this.project = clone(project);
     this.course = this.project.courses.find((c) => c.id === courseId) || this.project.courses[0];
-    for (const r of this.course.rooms)
-      for (const o of r.objects) {
-        const errors = Registry.validateObject(this.project, o);
-        if (errors.length) throw new Error(errors[0]);
-        o.params = clone(Registry.params(this.project, o));
-      }
     this.elapsed = 0;
     this.score = 0;
     this.deaths = 0;
@@ -35,9 +38,21 @@ class Engine {
     this.events = [];
     this.credited = new Set();
     this.developerMode = options.developerMode === true;
-    this.items = {};
-    if (this.developerMode)
+    // 项目级初始道具状态（可序列化），然后才是编辑器试玩背包：
+    //   options.playtest = { mode:'configured'|'legacy-all', items:[itemType] }
+    // 试玩背包是“进入时拥有哪些”的完整覆盖：显式配置（含空勾选）与旧版全道具
+    // 都不叠加 project.itemState.initial；只有正常成品流程使用项目初始状态。
+    this.items = ItemState.initial(this.project);
+    this.itemCollects = [];
+    const playtest = options.playtest || null;
+    if (playtest && playtest.mode === 'configured') {
+      this.items = {};
+      for (const type of playtest.items || []) this.items[type] = 1;
+    } else if (this.developerMode && (!playtest || playtest.mode === 'legacy-all')) {
+      // 旧存档兼容：房间没有 playtestItems 配置时沿用旧的“全道具”试玩。
+      this.items = {};
       for (const definition of Registry.all()) if (definition.item) this.items[definition.type] = 1;
+    }
     this.roomCaches = new Map();
     this.lifeBaselines = new Map();
     this.courseState = {
@@ -47,7 +62,7 @@ class Engine {
       phase: 'slow',
       life: 1,
     };
-    this.loadRoom(roomId || this.course.rooms[0].id, entryId, {
+    this.loadRoom(roomId || this.course.rooms?.[0]?.id, entryId, {
       tokens: 0,
       charges: 0,
       recharge: 0,
@@ -65,6 +80,13 @@ class Engine {
   }
   hasItem(type) {
     return (this.items?.[type] || 0) > 0;
+  }
+  // 运行时全局道具状态接口：跨房间保留，可选快照 / 恢复。
+  itemState() {
+    return ItemState.snapshot(this);
+  }
+  restoreItemState(state) {
+    return ItemState.restore(this, state);
   }
   takeHalfTokens() {
     const before = this.tokens,
@@ -181,9 +203,27 @@ class Engine {
     }
   }
   loadRoom(id, entryId, resources, carry = null, respawn = null, returnLink = null) {
+    // 先解析并校验目标房间，失败时不改变当前房间/缓存。
+    const ref = MapCompat.roomRef(this.project, id);
+    if (!ref) throw new Error('目标房间不存在');
+    const errors = M.validateRoom(this.project, id, { play: true }).errors;
+    if (errors.length) throw new Error(errors[0]);
+    for (const o of ref.room.objects) {
+      const objectErrors = Registry.validateObject(this.project, o);
+      if (objectErrors.length) throw new Error(objectErrors[0]);
+    }
     if (this.room) this.roomCaches.set(this.room.id, this.serializeRoom());
-    this.room = this.course.rooms.find((r) => r.id === id);
-    if (!this.room) throw new Error('目标房间不存在');
+    const previousCourse = this.course;
+    this.course = ref.course;
+    // 跨原大关时运行归属跟随目标房间，AI 默认 ID 也跟随目标大关；
+    // 显式覆盖过的 aiId（不等于原大关默认值）保留。
+    if (
+      previousCourse !== this.course &&
+      (!this.courseState.aiId || this.courseState.aiId === previousCourse.aiId)
+    )
+      this.courseState.aiId = this.course.aiId;
+    this.room = ref.room;
+    for (const o of this.room.objects) o.params = clone(Registry.params(this.project, o));
     this.entry = this.room.entries.find((e) => e.id === entryId) || this.room.entries[0];
     const spawn =
       respawn && respawn.roomId === this.room.id
@@ -218,6 +258,7 @@ class Engine {
       dashCount: resources.dashCount,
       launched: false,
       launchX: 0,
+      launchHold: 0,
       rail: null,
       invulnerable: 0.4,
       crouching: false,
@@ -231,8 +272,9 @@ class Engine {
     if (carry && (Math.abs(carry.vx) > 1 || Math.abs(carry.vy) > 1)) {
       this.player.launched = true;
       this.player.launchX = carry.vx;
+      this.player.launchHold = Math.abs(carry.vx) > 1 ? 0.3 : 0;
     }
-    if (this.room.phase !== 'inherit') this.courseState.phase = this.room.phase;
+    if (this.room.phase !== 'inherit') this.courseState.phase = this.room.phase; // 仅旧数据兼容：新流程不按阶段切换
     if (this.room.aiPolicy === 'start') this.courseState.aiActive = true;
     const pc = center(this.player);
     this.ai = {
@@ -272,6 +314,7 @@ class Engine {
       },
       score: this.score,
       credited: [...this.credited],
+      collects: (this.itemCollects || []).slice(),
       items: clone(this.items),
       course: clone(this.courseState),
       state: this.serializeRoom(),
@@ -285,7 +328,7 @@ class Engine {
     for (const o of this.room.objects)
       if (o.resetPolicy === 'preserve') preserved.set(o.id, clone(this.objectStates.get(o.id)));
     this.roomCaches.set(this.room.id, this.serializeRoom());
-    for (const room of this.course.rooms) {
+    for (const { room } of MapCompat.listRooms(this.project)) {
       const cache = this.roomCaches.get(room.id),
         baseline = this.lifeBaselines.get(room.id);
       if (!cache || !baseline) continue;
@@ -304,6 +347,7 @@ class Engine {
       returnLink = cp.returnLink;
     this.score = cp.score;
     this.credited = new Set(cp.credited);
+    this.itemCollects = Array.isArray(cp.collects) ? cp.collects.slice() : [];
     this.items = clone(cp.items || {});
     this.courseState = cp.course;
     this.courseState.life++;
@@ -355,7 +399,7 @@ class Engine {
       return false;
     }
     if (!this.entryTriggerArmed) return false;
-    const source = this.course.rooms.find((room) => room.id === this.entryReturn.roomId),
+    const source = MapCompat.roomRef(this.project, this.entryReturn.roomId)?.room,
       exit = source?.exits.find((item) => item.id === this.entryReturn.exitId);
     if (!source || !exit) {
       this.entryReturn = null;
@@ -504,6 +548,11 @@ class Engine {
       vy: y,
       launched: true,
       launchX: x,
+      // A horizontal launch is a short burst, not a single frame: landing used
+      // to clear `launched` immediately, so the next frame's walk speed erased
+      // it. Keep the momentum for 0.3 s after a horizontal launch; vertical
+      // launches still end on landing as before.
+      launchHold: Math.abs(Number(x) || 0) > 1 ? 0.3 : 0,
       rail: null,
       dash: 0,
       grounded: false,
@@ -634,8 +683,16 @@ class Engine {
     const s = this.objectStates.get(o.id),
       def = Registry.get(o.type);
     if (def.requiresItem && !this.hasItem(def.requiresItem)) {
-      if (!def.silentWithoutItem) {
-        this.say('需要' + Registry.get(def.requiresItem).name + '才能使用' + (o.name || def.name));
+      const required = Registry.get(def.requiresItem).name;
+      if (def.silentWithoutItem) {
+        // 不清屏、不刷屏：同一方块最多每 3 秒提示一次缺少前置道具。
+        if (s && !(s.hintAt > this.elapsed - 3)) {
+          s.hintAt = this.elapsed;
+          this.say('需要' + required + '才能使用' + (o.name || def.name), 2);
+          this.emit('item-needed', { id: o.id, item: def.requiresItem });
+        }
+      } else {
+        this.say('需要' + required + '才能使用' + (o.name || def.name));
         this.emit('item-required', { id: o.id, item: def.requiresItem });
       }
       return false;
@@ -704,6 +761,7 @@ class Engine {
       },
       score: this.score,
       credited: [...this.credited],
+      collects: (this.itemCollects || []).slice(),
       items: clone(this.items),
       course: clone(this.courseState),
       state: this.serializeRoom(),
@@ -729,6 +787,7 @@ class Engine {
     this.credited.add(key);
     if (def.item) {
       this.items[o.type] = (this.items[o.type] || 0) + 1;
+      (this.itemCollects ||= []).push(key);
       this.emit('item-collect', { id: o.id, itemType: o.type, count: this.items[o.type] });
     } else if (o.type === 'common.collectible') this.score += 10000;
     else {
@@ -917,6 +976,7 @@ class Engine {
       return;
     }
     p.invulnerable = Math.max(0, p.invulnerable - dt);
+    p.launchHold = Math.max(0, (p.launchHold || 0) - dt);
     const crouch = input.down && p.grounded && !p.launched && !p.rail && p.dash <= 0;
     if (crouch && !p.crouching) {
       p.y += 10;
@@ -1030,7 +1090,7 @@ class Engine {
       p.vy = 0;
       p.grounded = true;
       p.support = b.id;
-      p.launched = false;
+      if (!p.launchHold) p.launched = false;
       if (dashing) p.dashY = 0;
     } else if (p.vy < 0)
       for (const b of colliders)
@@ -1093,9 +1153,9 @@ class Engine {
         this.exitCooldown === 0 &&
         overlap(p, { x: exit.x * T, y: exit.y * T, w: exit.w * T, h: exit.h * T })
       ) {
-        const edge = this.course.connections.find(
-          (w) => w.from.roomId === this.room.id && w.from.exitId === exit.id,
-        );
+        // 统一地图兼容层：先查项目级全局连接，再回落到原 course.connections，
+        // 因此跨原大关连接可运行，旧数据不做迁移也能原样运行。
+        const edge = MapCompat.resolve(this.project, this.room.id, exit.id);
         if (edge) {
           const from = this.room.id,
             returnLink = { roomId: from, exitId: exit.id, entryId: edge.to.entryId };

@@ -126,3 +126,85 @@ test('copying a room remaps teacher check-in bindings', () => {
     copiedCheckin = copy.objects.find((o) => o.type === 'slacker.checkin');
   assert.deepEqual(copiedTeacher.params.checkinIds, [copiedCheckin.id]);
 });
+
+test('teacher follows a 2D node route with per-segment time and round trip', () => {
+  const Route = require('../src/project/teacher-route.cjs'),
+    s = scene(),
+    teacher = addTeacher(s, 'teacher-route', 4, 4);
+  teacher.params.path = [
+    { x: 8, y: 4, seconds: 1, mode: 'linear' },
+    { x: 8, y: 8, seconds: 1, mode: 'linear' },
+  ];
+  teacher.params.pathLoop = 'roundtrip';
+  assert.equal(Route.hasPath(teacher), true);
+  assert.equal(Route.duration(teacher), 2);
+  const engine = new Engine(s.project, s.course.id, s.room.id),
+    state = engine.objectStates.get(teacher.id),
+    xs = [],
+    ys = [];
+  engine.player.x = 32;
+  engine.player.y = 32;
+  for (let i = 0; i < 360; i++) {
+    engine.update(1 / 120, {});
+    xs.push(state.x);
+    ys.push(state.y);
+  }
+  assert.ok(Math.max(...xs) > 7.9 && Math.max(...ys) > 7.9, 'route moves on both axes');
+  assert.ok(Math.min(...ys) < 4.1, 'round trip returns towards the teacher node 0');
+  assert.ok(
+    xs.every((x) => x >= 4 && x <= 8) && ys.every((y) => y >= 4 && y <= 8),
+    'route stays inside its nodes',
+  );
+});
+
+test('moving the teacher carries the node route and copying keeps it', () => {
+  const Route = require('../src/project/teacher-route.cjs'),
+    s = scene(),
+    teacher = addTeacher(s, 'teacher-move-route', 4, 4);
+  teacher.params.path = [{ x: 8, y: 4, seconds: 1, mode: 'smooth' }];
+  Route.moveOwner(teacher, 6, 5);
+  assert.deepEqual(
+    [teacher.x, teacher.y, ...Route.nodes(teacher).flatMap((n) => [n.x, n.y])],
+    [6, 5, 10, 5],
+  );
+  const copy = M.duplicateRoom(s.course, s.room.id),
+    copied = copy.objects.find((o) => o.type === 'slacker.teacher');
+  assert.deepEqual(
+    Route.nodes(copied).map((n) => [n.x, n.y, n.seconds, n.mode]),
+    [[10, 5, 1, 'smooth']],
+    'copied room keeps its own route copy',
+  );
+  copied.params.path[0].x = 3;
+  assert.equal(Route.nodes(teacher)[0].x, 10, 'route is deep copied, not shared');
+});
+
+test('a teacher without a node route keeps the legacy patrol behaviour', () => {
+  const Route = require('../src/project/teacher-route.cjs'),
+    s = scene(),
+    teacher = addTeacher(s, 'teacher-legacy', 6, 11);
+  assert.equal(Route.hasPath(teacher), false);
+  assert.equal(teacher.params.path.length, 0);
+  const engine = new Engine(s.project, s.course.id, s.room.id),
+    state = engine.objectStates.get(teacher.id);
+  engine.player.x = 32;
+  engine.player.y = 32;
+  for (let i = 0; i < 120; i++) engine.update(1 / 120, {});
+  assert.equal(state.y, 11, 'legacy patrol never changes row');
+  assert.ok(state.x >= 6 && state.x <= 9);
+});
+
+test('teacher route serialization round trip keeps the unknown fields', () => {
+  const Route = require('../src/project/teacher-route.cjs'),
+    s = scene(),
+    teacher = addTeacher(s, 'teacher-save', 5, 5);
+  teacher.params.path = [{ x: 7, y: 5, seconds: 1.5, mode: 'easeIn' }];
+  teacher.params.pathLoop = 'loop';
+  teacher.params.checkinIds = [s.first.id];
+  const json = JSON.parse(JSON.stringify(s.project)),
+    saved = json.courses
+      .find((c) => c.kind === 'slacker')
+      .rooms[0].objects.find((o) => o.type === 'slacker.teacher');
+  assert.deepEqual(Route.nodes(saved), [{ x: 7, y: 5, seconds: 1.5, mode: 'easeIn' }]);
+  assert.equal(saved.params.pathLoop, 'loop');
+  assert.deepEqual(saved.params.checkinIds, [s.first.id]);
+});

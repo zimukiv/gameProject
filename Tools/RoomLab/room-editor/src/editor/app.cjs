@@ -47,6 +47,8 @@ class App {
     this.currentDraw = null;
     this.assetURLs = new Map();
     this.roomClipboard = null;
+    this.selectionClipboard = null;
+    this.selectionPasteCount = 0;
     this.game = null;
     this.keys = new Set();
     this.edges = {};
@@ -75,6 +77,7 @@ class App {
   }
   go(route, values = {}) {
     if (!this.store.hasProject) return;
+    require('./live-fields.cjs').flushAll();
     if (route !== 'play' && this.game) {
       this.stopPlay(() => this.go(route, values));
       return;
@@ -152,6 +155,7 @@ class App {
       if (owner) this.exportRoom(owner.course.id, owner.room.id);
     };
     $('export-project').onclick = async () => {
+      require('./live-fields.cjs').flushAll();
       try {
         const bytes = Archive.pack(this.store.project, this.store.assetFiles);
         if (window.desktopAPI) {
@@ -180,8 +184,16 @@ class App {
       await this.addAssetInputs(files.map((file) => ({ name: file.name, file })));
     };
     document.addEventListener('keydown', (e) => {
-      if (!this.store.hasProject || e.target.closest('input,textarea,select') || $('dialog').open)
+      if (!this.store.hasProject || $('dialog').open) return;
+      if (e.target.closest?.('input,textarea,select')) {
+        // Inside a text field the system keeps Ctrl+C/V text editing. Ctrl+S is
+        // the exception: saving must not be swallowed by the focused input.
+        if ((e.ctrlKey || e.metaKey) && e.code === 'KeyS') {
+          e.preventDefault();
+          $('save-project').click();
+        }
         return;
+      }
       if (this.game) {
         if (
           [
@@ -221,12 +233,23 @@ class App {
         e.preventDefault();
         $('save-project').click();
       } else if ((e.ctrlKey || e.metaKey) && e.code === 'KeyC') {
-        if (require('./room-clipboard.cjs').copySelection(this)) e.preventDefault();
+        // In a room the shortcut copies the current selection; the room-wide
+        // clipboard stays on the home page (library / wiring board). Focused
+        // inputs return early above, so the system clipboard still works there.
+        const selection = require('./room-selection-clipboard.cjs'),
+          roomCopy = require('./room-clipboard.cjs');
+        if (this.state.route === 'room') {
+          if (selection.copy(this)) e.preventDefault();
+        } else if (roomCopy.copySelection(this)) e.preventDefault();
       } else if ((e.ctrlKey || e.metaKey) && e.code === 'KeyV') {
-        const clipboard = require('./room-clipboard.cjs');
-        if (clipboard.canPaste(this)) {
+        const selection = require('./room-selection-clipboard.cjs'),
+          roomCopy = require('./room-clipboard.cjs');
+        if (this.state.route === 'room' && this.selectionClipboard) {
           e.preventDefault();
-          clipboard.paste(this);
+          selection.paste(this);
+        } else if (roomCopy.canPaste(this)) {
+          e.preventDefault();
+          roomCopy.paste(this);
         }
       } else if (this.state.route === 'room') {
         const tools = require('./room-keys.cjs').tools;
@@ -256,6 +279,10 @@ class App {
     this.currentDraw = null;
     this.setRoomTool = null;
     this.nodePanelRefresh = null;
+    // The map owns a ResizeObserver, a window resize listener and a matchMedia
+    // DPR watcher that all outlive its DOM node. Dispose them before the page
+    // markup is replaced so a late event cannot draw into a detached canvas.
+    require('./graph-board.cjs').dispose(this);
     $('editor-actions').hidden = !this.store.hasProject;
     this.autosave?.renderStatus();
     if (!this.store.hasProject) {
@@ -279,7 +306,8 @@ class App {
     if (this.state.route === 'room') {
       const navigation = require('./room-navigation.cjs');
       $('breadcrumbs').innerHTML = navigation.breadcrumbs(this);
-      $('crumb-project').onclick = () => this.go('home');
+      // 顶栏「项目」明确返回路线图（不是上次停留的房间库页签）。
+      $('crumb-project').onclick = () => this.go('home', { planningTab: 'map' });
       navigation.bindBreadcrumbs(this);
     }
     if (this.state.route === 'home') Planning.render(this);
@@ -319,6 +347,7 @@ class App {
       : '编辑房间或在地图上选择一个房间后导出';
   }
   async exportRoom(courseId, roomId) {
+    require('./live-fields.cjs').flushAll();
     try {
       const project = require('../project/room-export.cjs').standalone(
           this.store.project,
@@ -506,6 +535,8 @@ class App {
     }
   }
   async saveNativeNow(saveAs = false, complete = false) {
+    // A pending typed draft is part of the project the user is about to save.
+    require('./live-fields.cjs').flushAll();
     this.store.persist();
     if (!window.desktopAPI) {
       if (complete) {
@@ -581,8 +612,13 @@ class App {
       return;
     }
     try {
-      this.game = new Engine(this.store.project, this.course().id, roomId, entryId, {
+      // 统一地图兼容层：按全局房间索引确定所属大关，跨原大关的房间也能直接试玩。
+      require('./live-fields.cjs').flushAll();
+      const owner = require('../project/map-compat.cjs').roomRef(this.store.project, roomId),
+        courseId = owner ? owner.courseId : this.course().id;
+      this.game = new Engine(this.store.project, courseId, roomId, entryId, {
         developerMode: options.developerMode === true,
+        playtest: options.playtest || null,
       });
       this.traceRecorder = new Recorder(this.game);
       this.clearInputs();
@@ -716,6 +752,43 @@ window.__ROOM_LAB__ = {
   openCourseTools: () => require('./planning-nav.cjs').courseTools(app),
   newCourse: () => app.chooseCourse(),
   organization: () => require('../project/room-organization.cjs').ensure(app.store.project),
+  // Accent colour used on the route map for a room: user-group colour when the
+  // room is grouped, otherwise null (legacy theme colour applies).
+  mapAccent: (roomId) =>
+    require('../project/room-organization.cjs').colorFor(
+      require('../project/room-organization.cjs').ensure(app.store.project),
+      roomId,
+    ),
+  // Read-only geometry of the route map ports in world space plus the current
+  // view transform. Acceptance tests use it to drag a real wire between two
+  // rooms of different legacy containers without guessing pixel positions.
+  wiringPorts: () => {
+    const project = app.store.project,
+      offsets = app.state.courseOffsets || GraphLayout.ensureOffsets(project).offsets,
+      places = GraphLayout.placements(project, offsets, app.state.courseId),
+      canvas = typeof document === 'undefined' ? null : document.getElementById('graph'),
+      size = app.state.graphCanvas || {};
+    // CSS-space size and DPR are returned explicitly so acceptance can convert
+    // world → client coordinates without assuming the backing store equals the
+    // CSS box (it is CSS * ratio on HiDPI displays).
+    return {
+      view: { ...(app.state.graphView || { x: 0, y: 0, scale: 1 }) },
+      cssWidth: Number(canvas?.dataset?.cssWidth) || size.cssWidth || 0,
+      cssHeight: Number(canvas?.dataset?.cssHeight) || size.cssHeight || 0,
+      dpr: Number(canvas?.dataset?.dpr) || size.dpr || 1,
+      backingWidth: canvas?.width || size.backingWidth || 0,
+      backingHeight: canvas?.height || size.backingHeight || 0,
+      places: places.map((place) => ({
+        courseId: place.courseId,
+        roomId: place.room.id,
+        exits: place.ports.exits,
+        entries: place.ports.entries,
+      })),
+    };
+  },
+  // Undo/redo counts (already part of snapshot) are not enough for the UI test:
+  // expose the live unified connection list for cross-container assertions.
+  mapConnections: () => require('../project/map-compat.cjs').connections(app.store.project),
   roomFilter: (value) => {
     app.state.roomFilter = value || 'all';
     app.render();

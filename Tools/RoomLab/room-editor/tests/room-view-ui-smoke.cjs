@@ -71,7 +71,11 @@ const assert = require('node:assert/strict'),
     await p.mouse.click(q.x, q.y);
     await p.locator('#room-cols').fill('256');
     await p.locator('#room-rows').fill('256');
-    await p.locator('#apply-room').click();
+    // Stage 2: size applies on change instead of via an apply button.
+    await p.locator('#room-rows').dispatchEvent('change');
+    await p.waitForFunction(
+      () => window.__ROOM_LAB__.snapshot().project.courses[0].rooms[0].cols === 256,
+    );
     await preserved();
     assert.equal((await snap()).project.courses[0].rooms[0].cols, 256);
     await p.locator('#fit-room').click();

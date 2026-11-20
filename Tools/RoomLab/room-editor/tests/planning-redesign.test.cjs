@@ -162,7 +162,8 @@ test('map markup drops the course legend and moves help behind a summary', () =>
   assert.match(markup, /id="graph"/);
   assert.match(markup, /id="graph-snap"[^>]*checked/);
   assert.match(markup, /id="graph-fit"/);
-  assert.match(markup, /id="graph-focus-course"/);
+  assert.match(markup, /id="graph-focus-selection"/);
+  assert.equal(markup.includes('当前大关'), false);
   assert.match(markup, /全部房间/);
   assert.equal(markup.includes('graph-legend'), false);
   assert.equal(markup.includes('course-chip'), false);

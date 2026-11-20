@@ -51,7 +51,15 @@ const assert = require('node:assert/strict'),
     await page.locator('#project-settings').click();
     await page.locator('#project-notes').fill('自动保存写入的备注');
     await page.locator('#dialog-actions .primary').click();
-    const stateBefore = await page.evaluate(() => window.__ROOM_LAB__.snapshot().state);
+    // ResizeObserver measurements can settle after the settings dialog closes;
+    // they are DOM geometry, not authored view/selection/navigation state.
+    const stableState = (state) => {
+      const { graphCanvas, ...stable } = state;
+      return stable;
+    };
+    const stateBefore = stableState(
+      await page.evaluate(() => window.__ROOM_LAB__.snapshot().state),
+    );
     const result = await page.evaluate(() => window.__ROOM_LAB__.autosaveTick());
     assert.equal(result.mode, 'file');
     assert.equal(result.ok, true);
@@ -61,7 +69,7 @@ const assert = require('node:assert/strict'),
     assert.match(await status.textContent(), /^自动保存 \d{2}:\d{2}:\d{2}$/);
     assert.match(await status.getAttribute('title'), /已写入项目文件/);
     assert.match(await status.getAttribute('title'), /位置：/);
-    const stateAfter = await page.evaluate(() => window.__ROOM_LAB__.snapshot().state);
+    const stateAfter = stableState(await page.evaluate(() => window.__ROOM_LAB__.snapshot().state));
     assert.deepEqual(stateAfter, stateBefore, 'autosave keeps route, tab, selection and zoom');
     assert.equal(await page.locator('#graph').count(), 1);
     const cloudAfter = await page.evaluate(() => window.desktopAPI.cloud('status'));

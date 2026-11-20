@@ -128,12 +128,16 @@ function drawRoom(
     assetURL = () => null,
     grid = true,
     nativeBand = 'all',
+    dpr = 1,
   } = {},
 ) {
   if (r.artBindings)
     course = { ...course, artBindings: { ...course.artBindings, ...r.artBindings } };
-  const w = ctx.canvas.width,
-    h = ctx.canvas.height,
+  // Logical (CSS) size: the backing store is device pixels, so dividing by the
+  // ratio keeps the view transform in CSS units and the drawing sharp.
+  const ratio = Number(dpr) > 0 ? Number(dpr) : 1,
+    w = ctx.canvas.width / ratio,
+    h = ctx.canvas.height / ratio,
     v = view || fit(r, w, h);
   ctx.fillStyle = '#09121d';
   ctx.fillRect(0, 0, w, h);
@@ -392,16 +396,43 @@ function drawRoom(
       ctx.save();
       ctx.strokeStyle = selected ? '#ffd37a' : '#d6a95d99';
       ctx.lineWidth = 2 / v.scale;
-      ctx.setLineDash([6, 4]);
-      line(
-        ctx,
-        (min + 0.1) * T,
-        teacher.y * T + T * 0.75,
-        (max + 0.9) * T,
-        teacher.y * T + T * 0.75,
-        ctx.strokeStyle,
-      );
-      ctx.setLineDash([]);
+      const route = require('../project/teacher-route.cjs').nodes(teacher);
+      if (route.length) {
+        // Two-dimensional node route: 0 is the teacher, nodes are I..N.
+        const points = [
+          { x: teacher.x + 0.5, y: teacher.y + 0.5 },
+          ...route.map((n) => ({ x: n.x + 0.5, y: n.y + 0.5 })),
+        ];
+        ctx.setLineDash([6, 4]);
+        ctx.beginPath();
+        points.forEach((p, i) =>
+          i ? ctx.lineTo(p.x * T, p.y * T) : ctx.moveTo(p.x * T, p.y * T),
+        );
+        ctx.stroke();
+        ctx.setLineDash([]);
+        points.forEach((p, i) => {
+          ctx.fillStyle = i === 0 ? '#ffd37a' : '#101e2d';
+          ctx.fillRect(p.x * T - 9, p.y * T - 9, 18, 18);
+          ctx.strokeStyle = selected ? '#ffd37a' : '#d6a95d';
+          ctx.strokeRect(p.x * T - 9, p.y * T - 9, 18, 18);
+          ctx.fillStyle = selected ? '#1a1206' : '#e7ce9b';
+          ctx.font = '11px Consolas,"Microsoft YaHei",sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(require('../project/rail-nodes.cjs').label(i), p.x * T, p.y * T + 1);
+        });
+      } else {
+        ctx.setLineDash([6, 4]);
+        line(
+          ctx,
+          (min + 0.1) * T,
+          teacher.y * T + T * 0.75,
+          (max + 0.9) * T,
+          teacher.y * T + T * 0.75,
+          ctx.strokeStyle,
+        );
+        ctx.setLineDash([]);
+      }
       if (showBindings)
         for (const checkin of TeacherLinks.checkins(r, teacher)) {
           ctx.strokeStyle = '#e7b86788';

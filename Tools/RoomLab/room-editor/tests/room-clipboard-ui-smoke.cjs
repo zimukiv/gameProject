@@ -30,16 +30,17 @@ const assert = require('node:assert/strict'),
     await page.locator('#start-new').click();
     await page.locator('[data-course="physics"] [data-enter]').click();
     await page.getByRole('button', { name: '房间列表', exact: true }).click();
-    await page.getByRole('button', { name: '编辑房间', exact: true }).first().click();
 
     const source = (await snapshot()).project.courses.find((course) => course.id === 'physics')
       .rooms[0];
-    await page.keyboard.press('Control+c');
+    // Stage 2: whole-room copy/paste lives on the home page. Inside the room
+    // editor Ctrl+C/V copy and paste the current selection instead.
+    await page.locator(`[data-room-card="${source.id}"]`).click();
+    await page.locator('[data-room-clipboard-copy]').click();
     await page.waitForFunction(() =>
       document.querySelector('#status').textContent.includes('已复制整房'),
     );
 
-    await page.locator('#home').click();
     await page.locator('[data-course="calculus"] [data-enter]').click();
     const before = (await snapshot()).project.courses.find((course) => course.id === 'calculus');
     await page.keyboard.press('Control+v');
