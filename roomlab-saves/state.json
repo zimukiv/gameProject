@@ -1,0 +1,348 @@
+{
+  "schema": 1,
+  "workspace": "51a028018773c27d63114d81ad12357b2eb28abd7b53f99949ad154cea4f8a95",
+  "branches": [
+    {
+      "name": "main",
+      "head": "76452553726e184935ffc4747e6b03fbc823735c1b83c69a57915611e4bcd5c8",
+      "updatedAt": 1795229522863
+    }
+  ],
+  "revisions": [
+    {
+      "summary": {
+        "projectName": "第一大关 · 物理 DDL",
+        "courseNames": [
+          "物理",
+          "新大关 2 · 高数",
+          "新大关 3 · 水课"
+        ],
+        "roomCount": 41
+      },
+      "fingerprint": "09691191f6540628c8f3eefa81d4181131c7634fc61853b9dc2cf373a5ad3e58",
+      "files": [
+        {
+          "path": "assets/asset-mw7fak5b-ha7ogc-seed-calculus-integral.svg",
+          "hash": "beef45b44661c2540093ed4ab322c9d98de1bc9e76372864323840e84468ba8c",
+          "size": 401,
+          "chunks": [
+            {
+              "hash": "beef45b44661c2540093ed4ab322c9d98de1bc9e76372864323840e84468ba8c",
+              "size": 401
+            }
+          ]
+        },
+        {
+          "path": "assets/asset-mw7fak5b-wqe886-seed-metal.svg",
+          "hash": "7654dd8c088c1994cb6323b680523ade7007f9489094e7476daa02512fe2333c",
+          "size": 349,
+          "chunks": [
+            {
+              "hash": "7654dd8c088c1994cb6323b680523ade7007f9489094e7476daa02512fe2333c",
+              "size": 349
+            }
+          ]
+        },
+        {
+          "path": "assets/asset-mw7fak5b-wtq652-seed-calculus-derivative.svg",
+          "hash": "a31c43b76d73d875ccdb93a9f6fbf430d004552d5013e3f1f07314dcb7581a8e",
+          "size": 382,
+          "chunks": [
+            {
+              "hash": "a31c43b76d73d875ccdb93a9f6fbf430d004552d5013e3f1f07314dcb7581a8e",
+              "size": 382
+            }
+          ]
+        },
+        {
+          "path": "assets/asset-mwkhwov9-5qmpav-seed-slacker-awake.svg",
+          "hash": "d7b44300ee63fd093f7274b55f11c2255afca7fcb29506bb252cbc603fdbb1b7",
+          "size": 427,
+          "chunks": [
+            {
+              "hash": "d7b44300ee63fd093f7274b55f11c2255afca7fcb29506bb252cbc603fdbb1b7",
+              "size": 427
+            }
+          ]
+        },
+        {
+          "path": "assets/asset-mwkhwov9-ah4131-seed-calculus-derivative.svg",
+          "hash": "a31c43b76d73d875ccdb93a9f6fbf430d004552d5013e3f1f07314dcb7581a8e",
+          "size": 382,
+          "chunks": [
+            {
+              "hash": "a31c43b76d73d875ccdb93a9f6fbf430d004552d5013e3f1f07314dcb7581a8e",
+              "size": 382
+            }
+          ]
+        },
+        {
+          "path": "assets/asset-mwkhwov9-ecqswa-seed-slacker-teacher.svg",
+          "hash": "c2373d831e393a43bcec992180fe17b4e886fffe4e890ef3245ac5c40deda03e",
+          "size": 713,
+          "chunks": [
+            {
+              "hash": "c2373d831e393a43bcec992180fe17b4e886fffe4e890ef3245ac5c40deda03e",
+              "size": 713
+            }
+          ]
+        },
+        {
+          "path": "assets/asset-mwkhwov9-tai529-seed-slacker-checkin.svg",
+          "hash": "14a9f72267b91b29018c67a34adde61e369d57859d7c21eac5b674779f651534",
+          "size": 335,
+          "chunks": [
+            {
+              "hash": "14a9f72267b91b29018c67a34adde61e369d57859d7c21eac5b674779f651534",
+              "size": 335
+            }
+          ]
+        },
+        {
+          "path": "assets/asset-mwkhwov9-ya8dmb-seed-calculus-integral.svg",
+          "hash": "beef45b44661c2540093ed4ab322c9d98de1bc9e76372864323840e84468ba8c",
+          "size": 401,
+          "chunks": [
+            {
+              "hash": "beef45b44661c2540093ed4ab322c9d98de1bc9e76372864323840e84468ba8c",
+              "size": 401
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-calculator.svg",
+          "hash": "1bc42a6bb626f8683788aa38190280fa32d474cc3eff4b3093854f3bdd93a4e2",
+          "size": 704,
+          "chunks": [
+            {
+              "hash": "1bc42a6bb626f8683788aa38190280fa32d474cc3eff4b3093854f3bdd93a4e2",
+              "size": 704
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-calculus-derivative.svg",
+          "hash": "a31c43b76d73d875ccdb93a9f6fbf430d004552d5013e3f1f07314dcb7581a8e",
+          "size": 382,
+          "chunks": [
+            {
+              "hash": "a31c43b76d73d875ccdb93a9f6fbf430d004552d5013e3f1f07314dcb7581a8e",
+              "size": 382
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-calculus-integral.svg",
+          "hash": "beef45b44661c2540093ed4ab322c9d98de1bc9e76372864323840e84468ba8c",
+          "size": 401,
+          "chunks": [
+            {
+              "hash": "beef45b44661c2540093ed4ab322c9d98de1bc9e76372864323840e84468ba8c",
+              "size": 401
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-coffee.svg",
+          "hash": "e341b921db0e6830aff2b1e683b69228fbd56ca0adf986152aa9741a96314cb8",
+          "size": 437,
+          "chunks": [
+            {
+              "hash": "e341b921db0e6830aff2b1e683b69228fbd56ca0adf986152aa9741a96314cb8",
+              "size": 437
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-ice-cracked.svg",
+          "hash": "23e6ac912d5eea83cd55d401f8d26a63e17a41384249ac54faab0d8461c83d9d",
+          "size": 306,
+          "chunks": [
+            {
+              "hash": "23e6ac912d5eea83cd55d401f8d26a63e17a41384249ac54faab0d8461c83d9d",
+              "size": 306
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-ice-solid.svg",
+          "hash": "7ced1ed4c5d649cd4f07c0155057df07b83366882c4408a488fff7d6d0fae04d",
+          "size": 318,
+          "chunks": [
+            {
+              "hash": "7ced1ed4c5d649cd4f07c0155057df07b83366882c4408a488fff7d6d0fae04d",
+              "size": 318
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-iced-tea.svg",
+          "hash": "17075870281e80133e99919d4d2c90cdfbe159f4fc5f3a7d6365fea710c69ce1",
+          "size": 568,
+          "chunks": [
+            {
+              "hash": "17075870281e80133e99919d4d2c90cdfbe159f4fc5f3a7d6365fea710c69ce1",
+              "size": 568
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-jet-active.svg",
+          "hash": "03ce6332f16b0c788d4bdedf6456477120994d74fce51466142a04f612ebfabb",
+          "size": 285,
+          "chunks": [
+            {
+              "hash": "03ce6332f16b0c788d4bdedf6456477120994d74fce51466142a04f612ebfabb",
+              "size": 285
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-jet-idle.svg",
+          "hash": "f32967c0f98516ce8390c26bd95604fe670c16d079ccbaf5cef090776ce21992",
+          "size": 317,
+          "chunks": [
+            {
+              "hash": "f32967c0f98516ce8390c26bd95604fe670c16d079ccbaf5cef090776ce21992",
+              "size": 317
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-metal.svg",
+          "hash": "7654dd8c088c1994cb6323b680523ade7007f9489094e7476daa02512fe2333c",
+          "size": 349,
+          "chunks": [
+            {
+              "hash": "7654dd8c088c1994cb6323b680523ade7007f9489094e7476daa02512fe2333c",
+              "size": 349
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-phone.svg",
+          "hash": "e6c2cba9c69328e5254f2c2d3a57f496fd02c54397ffbee73bd44357576cb2f5",
+          "size": 445,
+          "chunks": [
+            {
+              "hash": "e6c2cba9c69328e5254f2c2d3a57f496fd02c54397ffbee73bd44357576cb2f5",
+              "size": 445
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-rail-active.svg",
+          "hash": "4494e03047ab7698589c0baf3b327f3e49efda905bde5eb04c20e224d3a3cf4e",
+          "size": 330,
+          "chunks": [
+            {
+              "hash": "4494e03047ab7698589c0baf3b327f3e49efda905bde5eb04c20e224d3a3cf4e",
+              "size": 330
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-rail-idle.svg",
+          "hash": "68f5595b1b90b8769a82ff5163399b6d256b1d3310edb6579084ed75ba099cad",
+          "size": 336,
+          "chunks": [
+            {
+              "hash": "68f5595b1b90b8769a82ff5163399b6d256b1d3310edb6579084ed75ba099cad",
+              "size": 336
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-slacker-awake.svg",
+          "hash": "d7b44300ee63fd093f7274b55f11c2255afca7fcb29506bb252cbc603fdbb1b7",
+          "size": 427,
+          "chunks": [
+            {
+              "hash": "d7b44300ee63fd093f7274b55f11c2255afca7fcb29506bb252cbc603fdbb1b7",
+              "size": 427
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-slacker-checkin.svg",
+          "hash": "14a9f72267b91b29018c67a34adde61e369d57859d7c21eac5b674779f651534",
+          "size": 335,
+          "chunks": [
+            {
+              "hash": "14a9f72267b91b29018c67a34adde61e369d57859d7c21eac5b674779f651534",
+              "size": 335
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-slacker-teacher.svg",
+          "hash": "c2373d831e393a43bcec992180fe17b4e886fffe4e890ef3245ac5c40deda03e",
+          "size": 713,
+          "chunks": [
+            {
+              "hash": "c2373d831e393a43bcec992180fe17b4e886fffe4e890ef3245ac5c40deda03e",
+              "size": 713
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-submit-assignment.svg",
+          "hash": "379e37d7be54e0b2c2b7eaa5ff516778a0b49e746a713abe3a4fb11533896255",
+          "size": 489,
+          "chunks": [
+            {
+              "hash": "379e37d7be54e0b2c2b7eaa5ff516778a0b49e746a713abe3a4fb11533896255",
+              "size": 489
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-thermal-cold.svg",
+          "hash": "cc606a5d1fdfe79c2f39752f92aafb6f53846b5b856884f13e368145a0e82068",
+          "size": 265,
+          "chunks": [
+            {
+              "hash": "cc606a5d1fdfe79c2f39752f92aafb6f53846b5b856884f13e368145a0e82068",
+              "size": 265
+            }
+          ]
+        },
+        {
+          "path": "assets/seed-thermal-hot.svg",
+          "hash": "a9acbaee624d85ae5ddb360d7713cc20263d47f14601a68bf923f9e8129d537c",
+          "size": 285,
+          "chunks": [
+            {
+              "hash": "a9acbaee624d85ae5ddb360d7713cc20263d47f14601a68bf923f9e8129d537c",
+              "size": 285
+            }
+          ]
+        },
+        {
+          "path": "project.json",
+          "hash": "7e88cec3ec7f4636c6f17f4ef878cb46112de03d2d0445a501991cb1d04879f3",
+          "size": 1378797,
+          "chunks": [
+            {
+              "hash": "7e88cec3ec7f4636c6f17f4ef878cb46112de03d2d0445a501991cb1d04879f3",
+              "size": 1378797
+            }
+          ]
+        }
+      ],
+      "device": "RoomLab",
+      "message": "最终合并 · 41 个房间",
+      "parent": null,
+      "createdAt": 1795229522863,
+      "nonce": "61863183-83bf-4199-8701-8085dcbaacbd",
+      "id": "76452553726e184935ffc4747e6b03fbc823735c1b83c69a57915611e4bcd5c8"
+    }
+  ],
+  "revisionTimes": {
+    "76452553726e184935ffc4747e6b03fbc823735c1b83c69a57915611e4bcd5c8": 1795229522863
+  },
+  "graph": {
+    "generation": 1,
+    "metadata": []
+  }
+}
