@@ -832,12 +832,31 @@ window.__ROOM_LAB__ = {
         roomId: place.room.id,
         exits: place.ports.exits,
         entries: place.ports.entries,
+        // AI port handles use the same world coordinates as player ports, so a
+        // headless acceptance test can drag an AI exit -> AI entrance too.
+        aiExits: place.ports.aiExits || [],
+        aiEntries: place.ports.aiEntries || [],
       })),
     };
   },
   // Undo/redo counts (already part of snapshot) are not enough for the UI test:
   // expose the live unified connection list for cross-container assertions.
   mapConnections: () => require('../project/map-compat.cjs').connections(app.store.project),
+  // AI wires are deliberately a separate list, so tests (and the UI) can prove
+  // an AI drag never leaks into player wiring.
+  aiConnections: () => require('../project/ai-ports.cjs').connections(app.store.project),
+  aiWires: () => require('../project/ai-ports.cjs').connections(app.store.project),
+  mapAiConnections: () => require('../project/ai-ports.cjs').connections(app.store.project),
+  aiBindings: (roomId) => {
+    const AIPorts = require('../project/ai-ports.cjs');
+    if (roomId) {
+      const ref = AIPorts.roomRef(app.store.project, roomId);
+      return ref ? AIPorts.bindings(ref.room) : [];
+    }
+    return AIPorts.listRooms(app.store.project).flatMap(({ room }) =>
+      AIPorts.bindings(room).map((item) => ({ roomId: room.id, ...item })),
+    );
+  },
   roomFilter: (value) => {
     app.state.roomFilter = value || 'all';
     app.render();

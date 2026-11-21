@@ -194,6 +194,7 @@ function forgetRoom(project, roomId) {
     );
     removed += before - course.connections.length;
   }
+  removed += require('./ai-ports.cjs').forgetRoom(project, roomId);
   return removed;
 }
 // Every wire touching one of the given port ids, in both stores. Port ids are
@@ -233,6 +234,8 @@ function forgetPorts(project, portIds) {
     course.connections = course.connections.filter((raw) => !touch(raw));
     removed += before - course.connections.length;
   }
+  // Explicit AI exit/entrance wires and room bindings are cleaned too.
+  removed += require('./ai-ports.cjs').forgetPorts(project, [...ids]);
   return removed;
 }
 const forgetPort = (project, portId) => forgetPorts(project, [portId]);

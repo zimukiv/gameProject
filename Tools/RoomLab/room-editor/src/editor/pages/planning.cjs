@@ -16,7 +16,7 @@ function render(app) {
     org = OrgUI.organization(app);
   if (tab === 'map' && Board.ensureProjectLayout(app)) return;
   $('app').innerHTML =
-    `<div class="planning-head"><div class="planning-title"><h1>${esc(project.name)}</h1><p class="muted">${rooms.length} 间房${org.favorites.length ? ' · ★ ' + org.favorites.length : ''}${org.groups.length ? ' · ' + org.groups.length + ' 个分组' : ''}</p></div><details class="planning-help"><summary title="使用说明与快捷操作">？ 说明</summary><div class="help-body"><p>单击房间缩略图：选中并在路线图上定位；双击或 ✎：进入房间。☆ 收藏房间；分组只用于整理，可跨大关，不改变房间归属。</p><p>路线图：滚轮缩放 · 中键/空白拖动平移 · 拖动房间排布 · 双击进入 · 从出口拖到任意房间的入口接线。收藏房间在地图与缩略图上以金色★标出。</p></div></details></div>` +
+    `<div class="planning-head"><div class="planning-title"><h1>${esc(project.name)}</h1><p class="muted">${rooms.length} 间房${org.favorites.length ? ' · ★ ' + org.favorites.length : ''}${org.groups.length ? ' · ' + org.groups.length + ' 个分组' : ''}</p></div><details class="planning-help"><summary title="使用说明与快捷操作">？ 说明</summary><div class="help-body"><p>单击房间缩略图：选中并在路线图上定位；双击或 ✎：进入房间。☆ 收藏房间；分组只用于整理，可跨大关，不改变房间归属。</p><p>路线图：滚轮缩放 · 中键/空白拖动平移 · 拖动房间排布 · 双击进入 · 从出口拖到任意房间的入口接线。紫色「AI 出」/「AI 入」是独立 AI 端口，从 AI 出口拖到任意房间的 AI 入口即可跨课程接线，玩家接线不受影响；点击紫色 AI 连线可在右侧删除。收藏房间在地图与缩略图上以金色★标出。</p></div></details></div>` +
     `<div class="planning-bar">${Nav.tabs(tab)}${Nav.tools(app)}</div>` +
     Nav.filters(app) +
     `<details id="room-picker" class="room-picker" ${app.state.roomPickerCollapsed ? '' : 'open'}><summary>房间选择 <small>${rooms.length}</small></summary>${Nav.strip(app)}</details>` +

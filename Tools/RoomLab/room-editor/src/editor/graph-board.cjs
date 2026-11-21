@@ -8,6 +8,7 @@
 const D = require('./draw.cjs'),
   M = require('../project/model.cjs'),
   MapCompat = require('../project/map-compat.cjs'),
+  AIPorts = require('../project/ai-ports.cjs'),
   Org = require('../project/room-organization.cjs'),
   OrgUI = require('./room-org-ui.cjs'),
   GraphLayout = require('./graph-layout.cjs'),
@@ -74,6 +75,8 @@ function wires(project, places, activeCourseId) {
     const crossCourse = from.courseId !== to.courseId;
     list.push({
       id: edge.id,
+      kind: 'player',
+      ai: false,
       source: edge.source,
       courseId: from.courseId,
       edge,
@@ -83,10 +86,36 @@ function wires(project, places, activeCourseId) {
       color: crossCourse ? '#e7b867' : from.courseId === activeCourseId ? '#9fd8cf' : '#6aa9a3',
     });
   }
+  // Explicit AI exit -> AI entrance wires are a separate project store. They are
+  // drawn on the same board but never mixed into player wiring: `AIPorts` owns
+  // validation, connection replacement and deletion, and the player edge list
+  // above stays exactly as `MapCompat` returned it.
+  for (const edge of AIPorts.connections(project)) {
+    const from = byRoom.get(edge.from.roomId),
+      to = byRoom.get(edge.to.roomId);
+    if (!from || !to) continue;
+    const a = (from.ports.aiExits || []).find((p) => p.id === edge.from.aiExitId),
+      b = (to.ports.aiEntries || []).find((p) => p.id === edge.to.aiEntranceId);
+    if (!a || !b) continue;
+    const crossCourse = from.courseId !== to.courseId;
+    list.push({
+      id: edge.id,
+      kind: 'ai',
+      ai: true,
+      source: 'ai',
+      courseId: from.courseId,
+      edge,
+      from: a,
+      to: b,
+      crossCourse,
+      // Purple marks AI-only routing, so a glance separates it from player wires.
+      color: crossCourse ? '#c7a8ff' : from.courseId === activeCourseId ? '#b79cff' : '#8d79bd',
+    });
+  }
   return list;
 }
 function markup(app) {
-  return `<div class="graph-layout planning-map"><div class="panel graph-panel"><div class="graph-controls"><span>全部房间</span><div class="actions"><span id="graph-zoom"></span><label class="check" title="拖动房间时对齐房间格网格"><input id="graph-snap" type="checkbox" checked>吸附</label><button id="graph-fit">全部</button><button id="graph-focus-selection" title="聚焦当前分组或所选房间，其他房间仍然显示">聚焦所选</button><button id="graph-reset">100%</button><details class="graph-help"><summary title="操作说明">？</summary><div class="help-body">滚轮缩放 · 中键/空白拖动平移 · 拖动房间排布 · 双击进入 · 从出口拖到任意房间的入口接线。金色★为收藏房间。</div></details></div></div><div class="graph-canvas-wrap"><canvas id="graph" width="1120" height="650" aria-label="项目路线图：全部房间分布"></canvas></div></div><aside class="panel form" id="graph-inspector"></aside></div>`;
+  return `<div class="graph-layout planning-map"><div class="panel graph-panel"><div class="graph-controls"><span>全部房间</span><span class="badge ai-ports-legend" data-ai-legend="1" title="AI 出口和 AI 入口只连接 AI 连线，与玩家出口/入口接线互不影响">AI 出口 → AI 入口</span><div class="actions"><span id="graph-zoom"></span><label class="check" title="拖动房间时对齐房间格网格"><input id="graph-snap" type="checkbox" checked>吸附</label><button id="graph-fit">全部</button><button id="graph-focus-selection" title="聚焦当前分组或所选房间，其他房间仍然显示">聚焦所选</button><button id="graph-reset">100%</button><details class="graph-help"><summary title="操作说明">？</summary><div class="help-body">滚轮缩放 · 中键/空白拖动平移 · 拖动房间排布 · 双击进入 · 从出口拖到任意房间的入口接线。紫色「AI 出」/「AI 入」是独立 AI 端口：从 AI 出口拖到任意房间的 AI 入口即可跨课程接线，不改变玩家接线。点击紫色 AI 连线后可在右侧删除。金色★为收藏房间。</div></details></div></div><div class="graph-canvas-wrap"><canvas id="graph" width="1120" height="650" aria-label="项目路线图：全部房间分布、玩家端口与 AI 端口"></canvas></div></div><aside class="panel form" id="graph-inspector"></aside></div>`;
 }
 // The view transform is expressed in CSS/layout pixels. Only the backing store
 // is multiplied by the device ratio; the canvas is pinned to the measured CSS
@@ -210,10 +239,12 @@ function mount(app) {
   // Ports come straight from the shared placement geometry, so a marker is
   // always grabbable exactly where it is painted.
   const portAt = (p, kind) => {
+    const kinds = Array.isArray(kind) ? kind : [kind];
     for (let i = places.length - 1; i >= 0; i--)
-      for (const node of places[i].ports[kind])
-        if (Math.hypot(node.x - p.x, node.y - p.y) < 9 / view.scale)
-          return { place: places[i], node };
+      for (const name of kinds)
+        for (const node of places[i].ports[name] || [])
+          if (Math.hypot(node.x - p.x, node.y - p.y) < 9 / view.scale)
+            return { place: places[i], node, kind: name };
     return null;
   };
   const draw = () => {
@@ -354,17 +385,31 @@ function mount(app) {
       return;
     }
     const p = point(e),
-      out = portAt(p, 'exits');
+      out = portAt(p, ['aiExits', 'exits']);
     canvas.setPointerCapture(e.pointerId);
     if (out) {
-      wire = {
-        courseId: out.place.courseId,
-        roomId: out.node.roomId,
-        exitId: out.node.id,
-        x: out.node.x,
-        y: out.node.y,
-        to: p,
-      };
+      const isAI = out.kind === 'aiExits' || out.node.kind === 'ai';
+      wire = isAI
+        ? {
+            ai: true,
+            kind: 'ai-wire',
+            courseId: out.place.courseId,
+            roomId: out.node.roomId,
+            aiExitId: out.node.id,
+            x: out.node.x,
+            y: out.node.y,
+            to: p,
+          }
+        : {
+            ai: false,
+            kind: 'wire',
+            courseId: out.place.courseId,
+            roomId: out.node.roomId,
+            exitId: out.node.id,
+            x: out.node.x,
+            y: out.node.y,
+            to: p,
+          };
       return;
     }
     for (const link of links) {
@@ -386,7 +431,12 @@ function mount(app) {
         onWire = Math.hypot(x - p.x, y - p.y) < 10;
       }
       if (onWire) {
-        app.state.graphSelection = { kind: 'wire', id: link.id, courseId: link.courseId };
+        app.state.graphSelection = {
+          kind: link.kind === 'ai' ? 'ai-wire' : 'wire',
+          wireKind: link.kind === 'ai' ? 'ai' : 'player',
+          id: link.id,
+          courseId: link.courseId,
+        };
         draw();
         renderInspector(app);
         return;
@@ -421,8 +471,11 @@ function mount(app) {
       return;
     }
     const p = point(e);
-    const hovered = portAt(p, 'exits') || portAt(p, 'entries');
-    canvas.title = hovered ? hovered.node.label : '';
+    const hovered =
+      portAt(p, ['aiExits', 'exits']) || portAt(p, ['aiEntries', 'entries']);
+    canvas.title = hovered
+      ? (hovered.node.kind === 'ai' ? 'AI ' : '') + (hovered.node.label || '')
+      : '';
     if (wire) {
       wire.to = p;
       draw();
@@ -453,27 +506,49 @@ function mount(app) {
       return;
     }
     if (wire) {
-      const input = portAt(point(e), 'entries');
-      const started = wire;
+      const started = wire,
+        isAI = !!started.ai,
+        input = portAt(point(e), isAI ? 'aiEntries' : 'entries');
       wire = null;
       if (input) {
-        const from = { roomId: started.roomId, exitId: started.exitId },
-          to = { roomId: input.place.room.id, entryId: input.node.id },
+        const live = app.store.project;
+        const from = isAI
+            ? { roomId: started.roomId, aiExitId: started.aiExitId }
+            : { roomId: started.roomId, exitId: started.exitId },
+          to = isAI
+            ? { roomId: input.place.room.id, aiEntranceId: input.node.id }
+            : { roomId: input.place.room.id, entryId: input.node.id },
           before = app.store.snapshot();
-        if (!GraphLayout.canConnect(project, from, to)) {
-          app.message('不能连接：端口已不存在，请重新选择出口与入口。', true);
+        if (!GraphLayout.canConnect(live, from, to)) {
+          app.message(
+            isAI
+              ? '不能连接 AI：目标必须是真实 AI 入口，请重新拖拽。'
+              : '不能连接：端口已不存在，请重新选择出口与入口。',
+            true,
+          );
           draw();
+        } else if (isAI) {
+          // AI-only store: one wire per AI exit, never written to player stores.
+          try {
+            app.store.change(() => {
+              AIPorts.connect(live, from, to);
+            });
+            app.message('AI 出口已连接到 AI 入口（不影响玩家接线），可撤销。');
+          } catch (error) {
+            app.store.commit(before);
+            app.message('AI 连线失败：' + error.message, true);
+          }
         } else if (started.courseId === input.place.courseId) {
           // Same legacy container: keep writing the old course.connections so
           // existing exports/runtime data stay canonical.
-          const course = GraphLayout.courseOf(project, input.place.courseId);
+          const course = GraphLayout.courseOf(live, input.place.courseId);
           M.connect(course, from.roomId, from.exitId, to.roomId, to.entryId);
           app.store.commit(before);
           app.message('房间端口已连接，可撤销。');
         } else {
           // Cross-container wiring goes through the unified map layer.
           app.store.change(() => {
-            MapCompat.connect(project, from, to);
+            MapCompat.connect(live, from, to);
           });
           app.message('已跨原课程连接房间端口（统一地图连接），可撤销。');
         }
@@ -567,6 +642,33 @@ function renderInspector(app) {
     $('graph-copy').onclick = () => duplicate(app, course, room);
     $('graph-delete').onclick = () => remove(app, course, room);
     require('./room-clipboard.cjs').sync(app);
+  } else if (
+    selection.kind === 'ai-wire' ||
+    selection.wireKind === 'ai' ||
+    // Backward/forwards compatible selection shape: a plain {kind:'wire'} that
+    // does not resolve as a player edge is still an AI edge when one exists.
+    (!MapCompat.find(project, selection.id) && AIPorts.find(project, selection.id))
+  ) {
+    // AI wires live in their own project store, so they get their own inspector:
+    // deleting one can never remove a player wire (and vice versa).
+    const edge = AIPorts.find(project, selection.id);
+    if (!edge) {
+      app.state.graphSelection = null;
+      renderInspector(app);
+      return;
+    }
+    const fromOwner = AIPorts.roomRef(project, edge.from.roomId),
+      toOwner = AIPorts.roomRef(project, edge.to.roomId),
+      cross = !!fromOwner && !!toOwner && fromOwner.courseId !== toOwner.courseId,
+      sourceObject = (fromOwner?.room.objects || []).find(
+        (object) => object.id === edge.from.aiExitId,
+      );
+    host.innerHTML = `<h2>AI 连接</h2><p class="hint"><span class="badge">AI 端口</span> ${esc(fromOwner?.room.name || edge.from.roomId)} 的 AI 出口 → ${esc(toOwner?.room.name || edge.to.roomId)} 的 AI 入口${cross ? ' <span class="badge">跨原课程</span>' : ''}<br>AI 连线只决定 AI 进入目标房间时使用哪个 AI 入口，不改变玩家出口/入口接线。${sourceObject?.params?.routeId ? ' 原传送路径 ID（routeId）保持为 ' + esc(sourceObject.params.routeId) + '。' : ''}</p><p class="muted">AI 出口：${esc(edge.from.aiExitId)} · AI 入口：${esc(edge.to.aiEntranceId)}</p><div class="actions"><button id="ai-wire-delete" class="danger">删除 AI 连线</button></div>`;
+    $('ai-wire-delete').onclick = () =>
+      app.store.change(() => {
+        AIPorts.disconnect(app.store.project, edge.id);
+        app.state.graphSelection = null;
+      });
   } else {
     // Wire details come from the unified map layer, so a legacy course wire and a
     // project-level cross-container wire are edited through the same controls.
@@ -696,6 +798,9 @@ module.exports = {
   dispose,
   renderInspector,
   ensureProjectLayout,
+  // Pure edge projection for tests and for any caller that wants the same
+  // player + AI edge list the board paints without mounting the canvas.
+  wires,
   duplicate,
   remove,
 };

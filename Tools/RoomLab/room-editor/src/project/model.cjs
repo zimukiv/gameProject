@@ -185,6 +185,9 @@ function migrate(data) {
       if (clean) project.map = clean;
       else delete project.map;
     }
+    // Explicit cross-room AI routing: keep valid bindings/wires across save/load
+    // and silently drop stale references (deleted ports, rooms or wrong types).
+    require('./ai-ports.cjs').sanitize(project);
     return project;
   }
   if (data?.version !== 1 || !Array.isArray(data.rooms)) throw new Error('不支持的项目版本。');
@@ -458,6 +461,10 @@ function validate(p, { play = false } = {}) {
   const compat = require('./map-compat.cjs').validate(p);
   errors.push(...compat.errors);
   warnings.push(...compat.warnings);
+  // Explicit AI exit/entrance wires and room bindings.
+  const aiPorts = require('./ai-ports.cjs').validate(p);
+  errors.push(...aiPorts.errors);
+  warnings.push(...aiPorts.warnings);
   return { errors: [...new Set(errors)], warnings: [...new Set(warnings)] };
 }
 // 运行时按需校验单个房间：只把目标房间纳入 play 校验，未加载房间的
@@ -526,6 +533,7 @@ function duplicateRoom(course, sourceId) {
   for (const b of r.movables) if (b.padId) b.padId = map.get(b.padId) || '';
   for (const { item } of require('./block-groups.cjs').items(r))
     if (item.attachmentTo) item.attachmentTo = map.get(item.attachmentTo) || item.attachmentTo;
+  require('./ai-ports.cjs').remapRoom(r, map);
   require('./native-compat.cjs').duplicate(r);
   return r;
 }

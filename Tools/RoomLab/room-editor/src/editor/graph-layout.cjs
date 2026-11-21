@@ -64,6 +64,14 @@ function portAt(room, originX, originY) {
   return {
     entries: (room.entries || []).map(project),
     exits: (room.exits || []).map(project),
+    // Explicit AI exits/entrances are ordinary scene objects; project them with
+    // the same thumbnail geometry so the route map can wire them across rooms.
+    aiExits: (room.objects || [])
+      .filter((o) => o.type === 'common.portalOut')
+      .map((o) => ({ ...project(o), kind: 'ai' })),
+    aiEntries: (room.objects || [])
+      .filter((o) => o.type === 'common.portalIn')
+      .map((o) => ({ ...project(o), kind: 'ai' })),
   };
 }
 function ports(room, originX, originY) {
@@ -356,6 +364,11 @@ function canConnect(project, from, to) {
     a = MapCompat.roomRef(project, from.roomId),
     b = MapCompat.roomRef(project, to.roomId);
   if (!a || !b) return false;
+  // AI exit -> AI entrance wires (including across course containers) are
+  // validated against the actual scene objects, never against player ports.
+  if (from.aiExitId || to.aiEntranceId || from.kind === 'ai' || to.kind === 'ai') {
+    return require('../project/ai-ports.cjs').canConnect(project, from, to);
+  }
   if (from.exitId && !a.room.exits.some((exit) => exit.id === from.exitId)) return false;
   if (to.entryId && !b.room.entries.some((entry) => entry.id === to.entryId)) return false;
   return true;

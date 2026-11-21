@@ -1,6 +1,7 @@
 'use strict';
 const M = require('../../project/model.cjs'),
   MapCompat = require('../../project/map-compat.cjs'),
+  AIPorts = require('../../project/ai-ports.cjs'),
   Registry = require('../../plugins/registry.cjs'),
   D = require('../draw.cjs'),
   DPR = require('../canvas-dpr.cjs'),
@@ -1536,6 +1537,41 @@ function baseInspector(app, r, setTool) {
           app.store.change(() => TeacherLinks.set(o, ids));
         };
       });
+    } else if (ref.kind === 'objects' && AIPorts.isExit(o)) {
+      // Selected AI exit: choose the same-room player exit it belongs to. The
+      // binding only records ids; the AI exit object (including params.routeId)
+      // is never rewritten, so legacy same-room portals keep working.
+      const bound =
+        AIPorts.bindings(r).find((item) => item.aiExitId === o.id)?.exitId || '';
+      body.innerHTML =
+        select(
+          '绑定玩家出口',
+          'ai-exit-binding',
+          bound,
+          [
+            ['', '未绑定（仅使用地图 AI 连线）'],
+            ...r.exits.map((exit) => [
+              exit.id,
+              (exit.name || '出口') + ' · ' + exit.x + ', ' + exit.y,
+            ]),
+          ],
+        ) +
+        '<p class="hint">玩家靠近绑定出口时，AI 会走向这个出口。在路线图将紫色 AI 出口连到玩家目标房间的紫色 AI 入口。</p>' +
+        '' +
+        field('对应 AI ID（空白继承全局）', 'object-ai', o.aiId || '') +
+        '<p class="hint">仅登记 ID，不在编辑器配置 AI 技能。距离量到机关。</p><button id="save-ai-id" class="apply">应用关联</button>';
+      $('ai-exit-binding').onchange = () => {
+        app.store.change(() => {
+          const exitId = $('ai-exit-binding').value;
+          if (exitId) AIPorts.bind(r, exitId, o.id);
+          else AIPorts.unbind(r, o.id);
+        });
+        app.message('AI 出口绑定已保存，可撤销；传送路径 ID 保持不变。');
+      };
+      $('save-ai-id').onclick = () =>
+        app.store.change(() => {
+          o.aiId = $('object-ai').value.trim() || null;
+        });
     } else if (ref.kind === 'objects') {
       body.innerHTML =
         field('对应 AI ID（空白继承全局）', 'object-ai', o.aiId || '') +
@@ -1545,8 +1581,33 @@ function baseInspector(app, r, setTool) {
           o.aiId = $('object-ai').value.trim() || null;
         });
     } else if (ref.kind === 'exits') {
+      const bound = AIPorts.bindingFor(r, o.id) || '',
+        aiExits = (r.objects || []).filter(AIPorts.isExit);
       body.innerHTML =
-        '<p class="hint">在大关接线板，从此出口拖线到目标房间入口。</p><button id="go-wiring" class="apply">打开接线板</button>';
+        select(
+          '绑定 AI 出口',
+          'player-exit-ai-binding',
+          bound,
+          [
+            ['', '不绑定 AI 出口'],
+            ...aiExits.map((aiExit) => [
+              aiExit.id,
+              (aiExit.name || 'AI 出口') + ' · ' + aiExit.x + ', ' + aiExit.y,
+            ]),
+          ],
+        ) +
+        '<p class="hint">绑定后，玩家从这个出口离开时 AI 会前往该 AI 出口，再按路线图上的紫色 AI 连线进入目标房间的 AI 入口。绑定不修改 AI 出口的传送路径 ID（routeId），玩家接线保持不变。' +
+        (aiExits.length ? '' : ' 本房还没有 AI 出口，请先在房间放置 common.portalOut。') +
+        '</p>' +
+        '<p class="hint">玩家接线仍在路线图：从此出口拖线到目标房间入口。</p><button id="go-wiring" class="apply">打开接线板</button>';
+      $('player-exit-ai-binding').onchange = () => {
+        app.store.change(() => {
+          const aiExitId = $('player-exit-ai-binding').value;
+          if (aiExitId) AIPorts.bind(r, o.id, aiExitId);
+          else AIPorts.unbind(r, o.id);
+        });
+        app.message('玩家出口的 AI 绑定已保存，可撤销；玩家接线未改变。');
+      };
       $('go-wiring').onclick = () => app.go('course', { courseTab: 'graph' });
     } else if (ref.kind === 'entries') {
       body.innerHTML =

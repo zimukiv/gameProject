@@ -8,6 +8,7 @@ const Temperature = require('../project/temperature.cjs');
 const Collision = require('../project/collision.cjs');
 const Motion = require('../project/brick-motion.cjs');
 const MapCompat = require('../project/map-compat.cjs');
+const AIPorts = require('../project/ai-ports.cjs');
 const ItemState = require('./item-state.cjs');
 function direction(input, face) {
   let x = Number(!!input.right) - Number(!!input.left),
@@ -255,7 +256,7 @@ class Engine {
       this.movableStates = new Map(Object.entries(clone(cache.movables)));
     }
   }
-  loadRoom(id, entryId, resources, carry = null, respawn = null, returnLink = null) {
+  loadRoom(id, entryId, resources, carry = null, respawn = null, returnLink = null, aiRoute = null) {
     // 先解析并校验目标房间，失败时不改变当前房间/缓存。
     const ref = MapCompat.roomRef(this.project, id);
     if (!ref) throw new Error('目标房间不存在');
@@ -363,6 +364,29 @@ class Engine {
         this.ai.trail = [center(this.player)];
         spawn.x += dx;
         spawn.y += dy;
+      }
+    }
+    // Explicit cross-room AI routing: when the player took a wire whose bound
+    // AI exit is wired to an AI entrance, the carried AI materializes at that
+    // entrance — but only when the entrance really belongs to this destination
+    // room. Direct playtest starts never pass aiRoute, so they keep the normal
+    // "spawn beside the player" behavior.
+    if (aiRoute) {
+      const entrance = this.room.objects.find(
+        (o) => o.id === aiRoute.entranceId && AIPorts.isEntrance(o),
+      );
+      if (entrance) {
+        const rect = this.objectRect(entrance);
+        this.ai.x = rect.x + rect.w / 2;
+        this.ai.y = rect.y + rect.h / 2;
+        this.ai.warning = null;
+        this.ai.processing = 0.5;
+        this.ai.trail = [center(this.player)];
+        this.emit('ai-carry', {
+          exitId: aiRoute.exitId || null,
+          entranceId: entrance.id,
+          from: aiRoute.fromRoomId || null,
+        });
       }
     }
     if (!this.lifeBaselines.has(id))
@@ -895,6 +919,29 @@ class Engine {
     p.invulnerable = 1.3;
     this.emit('steal', { amount });
   }
+  // The player standing near an exit that owns an explicit AI-exit binding pulls
+  // the active AI towards that AI exit instead of the player's trail. Attachment
+  // geometry is shared with drawing/triggers through objectRect()/exitRect().
+  aiRedirectTarget() {
+    const a = this.ai;
+    if (!a?.active) return null;
+    const pc = center(this.player);
+    for (const exit of this.room.exits || []) {
+      const aiExit = AIPorts.redirectExit(this.room, exit.id);
+      if (!aiExit) continue;
+      const rect = this.exitRect(exit);
+      if (
+        pc.x < rect.x - AIPorts.RANGE ||
+        pc.x > rect.x + rect.w + AIPorts.RANGE ||
+        pc.y < rect.y - AIPorts.RANGE ||
+        pc.y > rect.y + rect.h + AIPorts.RANGE
+      )
+        continue;
+      const target = center(this.objectRect(aiExit));
+      return { exitId: exit.id, aiExitId: aiExit.id, x: target.x, y: target.y };
+    }
+    return null;
+  }
   updateAI(dt, colliders) {
     const a = this.ai,
       pc = center(this.player);
@@ -928,8 +975,12 @@ class Engine {
       const tail = a.trail.at(-1);
       if (!tail || Math.hypot(tail.x - pc.x, tail.y - pc.y) > 4) a.trail.push(pc);
       for (const entry of this.room.objects.filter((o) => o.type === 'common.portalIn')) {
+        if (AIPorts.connections(this.project).some(
+          (edge) => edge.to.roomId === this.room.id && edge.to.aiEntranceId === entry.id,
+        )) continue;
         const exit = this.room.objects.find(
-          (o) => o.type === 'common.portalOut' && o.params.routeId === entry.params.routeId,
+          (o) => o.type === 'common.portalOut' && o.params.routeId === entry.params.routeId
+            && !AIPorts.bindings(this.room).some((binding) => binding.aiExitId === o.id),
         );
         if (!exit) continue;
         // Both the trigger radius and the destination come from the same
@@ -962,21 +1013,36 @@ class Engine {
           this.emit('ai-teleport');
         }
       } else if (a.processing <= 0) {
-        let distance = a.speed * dt;
-        while (distance > 0 && a.trail.length) {
-          const t = a.trail[0],
-            dx = t.x - a.x,
-            dy = t.y - a.y,
-            n = Math.hypot(dx, dy);
-          if (n <= distance) {
-            a.x = t.x;
-            a.y = t.y;
-            distance -= n;
-            a.trail.shift();
-          } else {
-            a.x += (dx / n) * distance;
-            a.y += (dy / n) * distance;
-            distance = 0;
+        const redirect = this.aiRedirectTarget();
+        if (redirect) {
+          // Bound player exit in range: head for the matching AI exit. Leaving
+          // the range simply drops this override and the trail chase resumes.
+          const dx = redirect.x - a.x,
+            dy = redirect.y - a.y,
+            n = Math.hypot(dx, dy),
+            step = a.speed * dt;
+          if (n > 0.5) {
+            const k = Math.min(1, step / n);
+            a.x += dx * k;
+            a.y += dy * k;
+          }
+        } else {
+          let distance = a.speed * dt;
+          while (distance > 0 && a.trail.length) {
+            const t = a.trail[0],
+              dx = t.x - a.x,
+              dy = t.y - a.y,
+              n = Math.hypot(dx, dy);
+            if (n <= distance) {
+              a.x = t.x;
+              a.y = t.y;
+              distance -= n;
+              a.trail.shift();
+            } else {
+              a.x += (dx / n) * distance;
+              a.y += (dy / n) * distance;
+              distance = 0;
+            }
           }
         }
       }
@@ -1239,7 +1305,13 @@ class Engine {
         const edge = MapCompat.resolve(this.project, this.room.id, exit.id);
         if (edge) {
           const from = this.room.id,
-            returnLink = { roomId: from, exitId: exit.id, entryId: edge.to.entryId };
+            returnLink = { roomId: from, exitId: exit.id, entryId: edge.to.entryId },
+            // Only the bound player exit of THIS wire may carry the AI. The
+            // explicit AI link must also land in the real destination room.
+            carried =
+              this.ai.active
+                ? AIPorts.carryEntrance(this.project, this.room, exit.id, edge.to.roomId)
+                : null;
           this.loadRoom(
             edge.to.roomId,
             edge.to.entryId,
@@ -1253,6 +1325,7 @@ class Engine {
             edge.velocity === 'keep' ? { vx: p.vx, vy: p.vy } : null,
             null,
             returnLink,
+            carried ? { entranceId: carried.id, exitId: exit.id, fromRoomId: from } : null,
           );
           this.emit('room-change', { from, to: edge.to.roomId });
         } else {

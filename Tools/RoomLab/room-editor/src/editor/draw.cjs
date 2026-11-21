@@ -672,36 +672,42 @@ function graphGrid(ctx, view) {
   ctx.stroke();
 }
 function graphPortMarker(ctx, p, entry, scale) {
-  const color = entry ? '#70ebbe' : '#ffb55d',
+  const ai = p.kind === 'ai',
+    color = ai ? (entry ? '#b79cff' : '#d8b4fe') : entry ? '#70ebbe' : '#ffb55d',
+    glyph = ai ? (entry ? 'AI入' : 'AI出') : entry ? '入' : '出',
     radius = Math.min(16, 9 / scale);
-  ctx.fillStyle = '#07121e';
+  ctx.fillStyle = ai ? '#170f26' : '#07121e';
   ctx.beginPath();
   ctx.arc(p.x, p.y, radius + 3, 0, Math.PI * 2);
   ctx.fill();
   ctx.fillStyle = color;
-  ctx.strokeStyle = '#e3f7f5';
+  ctx.strokeStyle = ai ? '#efe2ff' : '#e3f7f5';
+  if (ai) ctx.setLineDash([3 / scale, 2 / scale]);
   ctx.lineWidth = 1.5 / scale;
   ctx.beginPath();
   ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
   ctx.fill();
   ctx.stroke();
+  ctx.setLineDash([]);
   text(
     ctx,
-    entry ? '入' : '出',
+    glyph,
     p.x,
     p.y + 3 / scale,
-    Math.min(14, 9 / scale),
+    Math.min(ai ? 11 : 14, (ai ? 7.5 : 9) / scale),
     '#0e2630',
     'center',
   );
   if (scale < 0.55) return;
-  const label = (entry ? '入口' : '出口') + ' · ' + (p.label || '未命名').slice(0, 6),
+  const label = ai
+      ? 'AI ' + (entry ? '入口' : '出口') + ' · ' + (p.label || '未命名').slice(0, 6)
+      : (entry ? '入口' : '出口') + ' · ' + (p.label || '未命名').slice(0, 6),
     font = 10 / Math.max(scale, 0.85);
   ctx.font = font + 'px "Microsoft YaHei",sans-serif';
   const width = ctx.measureText(label).width + 10;
   const x = entry ? p.x + radius + 7 : p.x - radius - 7 - width,
     y = entry ? p.y + radius + 5 / scale : p.y - radius - 23 / scale;
-  ctx.fillStyle = '#081420';
+  ctx.fillStyle = ai ? '#171025' : '#081420';
   ctx.fillRect(x, y, width, 18 / scale);
   text(ctx, label, x + 5, y + 12 / scale, font, color);
 }
@@ -770,19 +776,36 @@ function drawGraph(
   }
   // Paint wires over rooms, then endpoints on top: connections stay visible through a thumbnail.
   for (const edge of wires) {
-    const curve = graphCurve(edge, edge.from, edge.to),
-      focused = selected?.kind === 'wire' && selected.id === edge.id;
-    ctx.strokeStyle = focused ? '#ffe8a7' : edge.color || '#79c5be';
-    ctx.lineWidth = focused ? 2.5 : 2;
+    const ai = !!edge.ai || edge.kind === 'ai',
+      curve = graphCurve(edge, edge.from, edge.to),
+      focused =
+        (selected?.kind === 'wire' || selected?.kind === 'ai-wire') && selected.id === edge.id;
+    ctx.save();
+    // AI wires are dashed purple so they stay readable on top of player wires
+    // and cannot be mistaken for a player route.
+    if (ai) ctx.setLineDash([8 / Math.max(view.scale, 0.001), 5 / Math.max(view.scale, 0.001)]);
+    ctx.strokeStyle = focused ? '#ffe8a7' : edge.color || (ai ? '#b79cff' : '#79c5be');
+    ctx.lineWidth = ai ? (focused ? 3 : 2.5) : focused ? 2.5 : 2;
     ctx.beginPath();
     ctx.moveTo(edge.from.x, edge.from.y);
     ctx.bezierCurveTo(curve.c1.x, curve.c1.y, curve.c2.x, curve.c2.y, edge.to.x, edge.to.y);
     ctx.stroke();
+    ctx.setLineDash([]);
+    if (ai && view.scale >= 0.45) {
+      const mx = (edge.from.x + edge.to.x) / 2,
+        my = (edge.from.y + edge.to.y) / 2,
+        font = 10 / Math.max(view.scale, 0.85);
+      ctx.font = font + 'px "Microsoft YaHei",sans-serif';
+      ctx.fillStyle = '#171025';
+      ctx.fillRect(mx - 12, my - font, 24, font + 4);
+      text(ctx, 'AI', mx, my - 2, font, '#d8b4fe', 'center');
+    }
+    ctx.restore();
   }
   if (wire) {
     const curve = graphCurve(wire, wire, wire.to);
-    ctx.strokeStyle = '#f5d39b';
-    ctx.setLineDash([5, 4]);
+    ctx.strokeStyle = wire.ai ? '#d8b4fe' : '#f5d39b';
+    ctx.setLineDash(wire.ai ? [8, 5] : [5, 4]);
     ctx.beginPath();
     ctx.moveTo(wire.x, wire.y);
     ctx.bezierCurveTo(curve.c1.x, curve.c1.y, curve.c2.x, curve.c2.y, wire.to.x, wire.to.y);
@@ -792,6 +815,10 @@ function drawGraph(
   for (const place of places) {
     for (const p of place.ports.entries) graphPortMarker(ctx, p, true, view.scale);
     for (const p of place.ports.exits) graphPortMarker(ctx, p, false, view.scale);
+    // Explicit AI ports stay visible next to player ports; their dashed marker
+    // and "AI" label make it obvious which handle starts an AI-only wire.
+    for (const p of place.ports.aiEntries || []) graphPortMarker(ctx, p, true, view.scale);
+    for (const p of place.ports.aiExits || []) graphPortMarker(ctx, p, false, view.scale);
   }
   ctx.restore();
 }
