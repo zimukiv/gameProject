@@ -343,3 +343,45 @@ test('native and port out-of-bounds pastes are rejected before any mutation', ()
   assert.throws(() => Clip.paste(r, patrolClip, { offsetX: 1, offsetY: 0 }), /边界/);
   assert.equal(JSON.stringify(r), before, 'rejected patrol paste mutates nothing');
 });
+
+test('a full assembly copy carries ports and zones and keeps source IDs intact', () => {
+  const Groups = require('../src/project/block-groups.cjs');
+  const Native = require('../src/project/native-compat.cjs');
+  const r = room();
+  Native.initRoom(r);
+  r.entries[0] = { id: 'entry-1', name: '入口', x: 2, y: 4, face: 1, allowReturn: true };
+  r.exits.push({ id: 'exit-1', name: '出口', x: 10, y: 4, w: 1, h: 2 });
+  r.zones.push({ id: 'zone-1', name: '热区', x: 3, y: 2, w: 2, h: 2, initial: 'hot' });
+  r.movables.push(movable('brick-1', 5, 4, { targetX: 8, targetY: 4 }));
+  r.nativeCampaign.signs.push({ id: 'sign-1', x: 1, y: 1, text: '标记' });
+  Groups.create(r, [
+    { kind: 'entries', id: 'entry-1' },
+    { kind: 'exits', id: 'exit-1' },
+    { kind: 'zones', id: 'zone-1' },
+    { kind: 'movables', id: 'brick-1' },
+    { kind: 'signs', id: 'sign-1' },
+  ]);
+  const clip = Clip.capture(
+    r,
+    Groups.members(r, r.entries[0]).map(({ ref }) => ref),
+  );
+  assert.equal(clip.items.length, 5, 'the whole assembly is captured, ports included');
+  const result = Clip.paste(r, clip, { offsetX: 0, offsetY: 1 });
+  assert.equal(result.count, 5);
+  const entry = r.entries.at(-1),
+    exit = r.exits.at(-1),
+    zone = r.zones.at(-1),
+    brick = r.movables.at(-1);
+  assert.notEqual(entry.id, 'entry-1');
+  assert.notEqual(exit.id, 'exit-1');
+  assert.notEqual(zone.id, 'zone-1');
+  assert.ok(entry.assemblyId && entry.assemblyId === exit.assemblyId);
+  assert.equal(zone.assemblyId, entry.assemblyId);
+  assert.equal(brick.assemblyId, entry.assemblyId);
+  assert.equal(entry.attachmentTo, brick.id);
+  assert.equal(exit.attachmentTo, brick.id);
+  assert.equal(zone.attachmentTo, brick.id);
+  assert.equal(r.entries[0].id, 'entry-1', 'the source port keeps its ID');
+  assert.equal(r.exits[0].id, 'exit-1', 'the source wire target keeps its ID');
+});
+

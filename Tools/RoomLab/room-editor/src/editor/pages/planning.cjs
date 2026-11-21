@@ -31,6 +31,7 @@ function render(app) {
     Library.render(app, $('planning-content'));
     OrgUI.bindStars(app, $('app'));
     OrgUI.bindGroupControls(app, $('planning-content'));
+    OrgUI.bindCardDrag(app, $('planning-content'));
   }
 }
 function projectSettings(app) {

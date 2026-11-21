@@ -121,6 +121,8 @@ function drawRoom(
     selection = null,
     selections = [],
     selectedBrickNodeIndex = null,
+    selectedBrickNodeOwner = null,
+    peekBrickPaths = false,
     selectedRailNodeId = null,
     traces = null,
     hover = null,
@@ -469,18 +471,27 @@ function drawRoom(
       );
     }
   for (const entry of r.entries) {
+    // Grouped ports are drawn at the mechanism's live position during play;
+    // the authored origin in the project stays untouched.
+    const rect = game?.entryRect?.(entry) || { x: entry.x * T, y: entry.y * T, w: T, h: T };
     ctx.strokeStyle = '#72d8ac';
-    ctx.strokeRect(entry.x * T + 3, entry.y * T + 3, T - 6, T - 6);
-    text(ctx, 'IN', entry.x * T + 16, entry.y * T + 21, 10, '#72d8ac', 'center');
-    if (!game) text(ctx, entry.name, entry.x * T, entry.y * T - 6, 9, '#72d8ac');
+    ctx.strokeRect(rect.x + 3, rect.y + 3, rect.w - 6, rect.h - 6);
+    text(ctx, 'IN', rect.x + rect.w / 2, rect.y + 21, 10, '#72d8ac', 'center');
+    if (!game) text(ctx, entry.name, rect.x, rect.y - 6, 9, '#72d8ac');
   }
   for (const exit of r.exits) {
+    const rect = game?.exitRect?.(exit) || {
+      x: exit.x * T,
+      y: exit.y * T,
+      w: exit.w * T,
+      h: exit.h * T,
+    };
     ctx.fillStyle = '#dd9e4633';
-    ctx.fillRect(exit.x * T, exit.y * T, exit.w * T, exit.h * T);
+    ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
     ctx.strokeStyle = '#f6bb73';
-    ctx.strokeRect(exit.x * T, exit.y * T, exit.w * T, exit.h * T);
-    text(ctx, 'OUT', exit.x * T + 16, exit.y * T + 24, 10, '#f6bb73', 'center');
-    if (!game) text(ctx, exit.name, exit.x * T, exit.y * T - 6, 9, '#f6bb73');
+    ctx.strokeRect(rect.x, rect.y, rect.w, rect.h);
+    text(ctx, 'OUT', rect.x + rect.w / 2, rect.y + 24, 10, '#f6bb73', 'center');
+    if (!game) text(ctx, exit.name, rect.x, rect.y - 6, 9, '#f6bb73');
   }
   if (game) {
     const trail = (points, color) => {
@@ -511,17 +522,34 @@ function drawRoom(
       ctx.fillRect(pad.x * T + 1, pad.y * T + 1, T - 2, 3);
     }
   }
-  if (!game && selection?.kind === 'movables') {
-    const brick = r.movables.find((b) => b.id === selection.id);
-    if (brick) {
-      const color = Motion.colorFor(r, brick.padId),
-        { label } = require('../project/rail-nodes.cjs');
+  // Node handles normally belong to the selected brick. During the Space peek
+  // every visible mechanism path gets handles so any of them can be dragged
+  // directly; the owner id keeps the current node highlighted even when the
+  // inspector selection is a different block.
+  if (!game) {
+    const bricks = new Map();
+    if (selection?.kind === 'movables') {
+      const brick = r.movables.find((b) => b.id === selection.id);
+      if (brick) bricks.set(brick.id, brick);
+    }
+    if (peekBrickPaths)
+      for (const ref of selections)
+        if (ref.kind === 'movables') {
+          const brick = r.movables.find((b) => b.id === ref.id);
+          if (brick) bricks.set(brick.id, brick);
+        }
+    const { label } = require('../project/rail-nodes.cjs');
+    for (const brick of bricks.values()) {
+      const color = Motion.colorFor(r, brick.padId);
       for (const [index, node] of Motion.nodes(brick).entries()) {
         const x = (node.x + 0.5) * T,
-          y = (node.y + 0.5) * T;
+          y = (node.y + 0.5) * T,
+          active =
+            index === selectedBrickNodeIndex &&
+            (!selectedBrickNodeOwner || brick.id === selectedBrickNodeOwner);
         ctx.fillStyle = '#101b2a';
         ctx.fillRect(x - 9, y - 9, 18, 18);
-        ctx.strokeStyle = index === selectedBrickNodeIndex ? '#fff' : color;
+        ctx.strokeStyle = active ? '#fff' : color;
         ctx.strokeRect(x - 9, y - 9, 18, 18);
         text(ctx, label(index + 1), x, y + 4, 10, color, 'center');
       }

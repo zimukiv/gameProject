@@ -111,4 +111,4 @@ function remove(course, room, refs) {
   }
   require('./teacher-links.cjs').cleanup(room);
 }
-module.exports = { key, get, box, combine, move, remove };
+module.exports = { kinds, key, get, box, combine, move, remove };

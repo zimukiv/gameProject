@@ -32,12 +32,12 @@ function thumbSize(room) {
   return { width, height };
 }
 function stripMarkup(app) {
-  const entries = roomsOf(app),
-    visible = new Set(OrgUI.filteredRoomIds(app)),
-    selection = app.state.graphSelection,
+  const selection = app.state.graphSelection,
     multi = new Set(app.state.roomMulti || []),
     org = OrgUI.organization(app);
-  const list = entries.filter(({ room }) => visible.has(room.id));
+  // Keep the organisation order: a named group renders its own roomIds order,
+  // not the underlying project/course order.
+  const list = OrgUI.orderedRooms(app);
   if (!list.length)
     return `<div class="room-strip-empty muted">此筛选下没有房间；切回「全部」或先给房间分组。</div>`;
   return `<div class="room-strip" role="list" aria-label="房间预览（全部大关）">${list
@@ -244,6 +244,10 @@ function bind(app) {
   for (const item of $('app').querySelectorAll('[data-strip-room]')) {
     item.onclick = (event) => {
       if (event.target.closest('[data-fav], [data-strip-edit]')) return;
+      if (performance.now() < (app.state.roomTabClickAfter || 0)) {
+        event.preventDefault();
+        return;
+      }
       selectRoom(app, item.dataset.stripRoom, {
         toggle: event.ctrlKey || event.metaKey,
         extend: event.shiftKey,
@@ -263,6 +267,9 @@ function bind(app) {
       editRoom(app, button.dataset.stripEdit);
     };
   OrgUI.bindStars(app, $('app'));
+  // Drag a card onto a group tab to assign it; inside a group view, dragging
+  // one card onto another reorders the group only (project order is untouched).
+  OrgUI.bindCardDrag(app, $('app'));
   // Miniature thumbnails: same painter as the map/library, real room contents.
   const Draw = require('./draw.cjs');
   for (const canvas of $('app').querySelectorAll('[data-strip-mini]')) {

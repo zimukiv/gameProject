@@ -23,8 +23,8 @@ function input(host, id, value = '', type = 'number') {
     addEventListener(type, fn) {
       (this.listeners[type] ||= []).push(fn);
     },
-    dispatch(type) {
-      for (const fn of this.listeners[type] || []) fn({ target: this });
+    dispatch(type, event = {}) {
+      for (const fn of this.listeners[type] || []) fn({ target: this, ...event });
     },
     closest() {
       return null;
@@ -163,13 +163,77 @@ test('Ctrl+S saves from a focused input and other shortcuts stay native', () => 
   const fs = require('node:fs'),
     path = require('node:path'),
     app = fs.readFileSync(path.join(__dirname, '../src/editor/app.cjs'), 'utf8');
-  const guard = app.slice(
-    app.indexOf("document.addEventListener('keydown'"),
-    app.indexOf("document.addEventListener('keydown'") + 520,
-  );
+  const start = app.indexOf("document.addEventListener('keydown'"),
+    end = app.indexOf('\n      if (this.game) {', start);
+  assert.notEqual(start, -1, 'keydown handler exists');
+  assert.notEqual(end, -1, 'game key branch marks the end of the editor guard');
+  // The guard now also contains the F11 fullscreen branch; slice to the game
+  // branch instead of a fixed character count so unrelated additions cannot
+  // silently truncate the input handling being asserted.
+  const guard = app.slice(start, end);
   assert.ok(guard.includes("closest?.('input,textarea,select')"));
   assert.ok(guard.includes("e.code === 'KeyS'"));
   assert.ok(guard.includes("$('save-project').click()"));
   assert.ok(!guard.includes("e.code === 'KeyC'"), 'Ctrl+C is not intercepted in inputs');
   assert.ok(!guard.includes("e.code === 'KeyV'"), 'Ctrl+V is not intercepted in inputs');
+});
+
+// Typing while an IME composition is active must never draft or repaint: the
+// candidate text lives in the live input until compositionend.
+test('an IME composition defers the commit and compositionend lands it once', async () => {
+  const host = hostWith(['native-x']);
+  LiveFields.install(host);
+  const x = host.inputs[0];
+  x.focus();
+  x.dispatch('compositionstart');
+  x.value = '5';
+  x.dispatch('input', { isComposing: true });
+  x.dispatch('change', { isComposing: true });
+  await new Promise((resolve) => setTimeout(resolve, 260));
+  assert.equal(host.clicks.length, 0, 'nothing committed mid-composition');
+  x.dispatch('compositionend');
+  await new Promise((resolve) => setTimeout(resolve, 260));
+  assert.equal(host.clicks.length, 1);
+  assert.deepEqual(host.clicks[0], ['5']);
+});
+
+test('flushAll during a composition keeps the draft for compositionend', async () => {
+  const host = hostWith(['native-x']);
+  LiveFields.install(host);
+  const x = host.inputs[0];
+  x.focus();
+  x.value = '8';
+  x.dispatch('input');
+  x.dispatch('compositionstart');
+  LiveFields.flushAll();
+  assert.equal(host.clicks.length, 0, 'no rebuild under the IME candidate');
+  x.dispatch('compositionend');
+  await new Promise((resolve) => setTimeout(resolve, 260));
+  assert.equal(host.clicks.length, 1);
+  assert.deepEqual(host.clicks[0], ['8']);
+});
+
+test('text fields use the long delay while an explicit save flushes them now', async () => {
+  const host = hostWith(['native-name']);
+  host.inputs[0].type = 'text';
+  LiveFields.install(host);
+  const el = host.inputs[0];
+  assert.equal(LiveFields.TEXT_DRAFT_DELAY, 900);
+  el.value = '新名称';
+  el.dispatch('input');
+  await new Promise((resolve) => setTimeout(resolve, 260));
+  assert.equal(host.clicks.length, 0, 'text waits ~900ms before the repaint');
+  LiveFields.flushAll();
+  assert.equal(host.clicks.length, 1, 'explicit save flushes pending text');
+  assert.deepEqual(host.clicks[0], ['新名称']);
+});
+
+test('a checkbox still commits immediately on change', () => {
+  const host = hostWith(['native-flag']);
+  const box = host.inputs[0];
+  box.type = 'checkbox';
+  box.value = 'on';
+  LiveFields.install(host);
+  box.dispatch('change');
+  assert.equal(host.clicks.length, 1, 'checkbox commits without waiting');
 });

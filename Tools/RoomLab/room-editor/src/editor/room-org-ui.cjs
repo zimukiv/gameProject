@@ -54,6 +54,9 @@ function filtersMarkup(app) {
         'group:' + group.id,
         esc(group.name),
         group.roomIds.length ? `<small>${group.roomIds.length}</small>` : '',
+      ).replace(
+        '<button ',
+        `<button data-group-tab="${esc(group.id)}" title="分组「${esc(group.name)}」：把房间卡片拖到这里加入；在分组视图内拖动卡片可调整组内顺序" `,
       ),
     )
     .join(
@@ -62,6 +65,17 @@ function filtersMarkup(app) {
 }
 function filteredRoomIds(app) {
   return Org.filterRoomIds(app.store.project, filterValue(app));
+}
+// Ordered project rooms for the current filter. `filterRoomIds` already returns
+// a group's own `roomIds` order, so the strips must map IDs in that order instead
+// of filtering the project array (which would silently restore project order).
+function orderedRooms(app, filter = filterValue(app)) {
+  const byId = new Map();
+  for (const course of app.store.project.courses || [])
+    for (const room of course.rooms || []) byId.set(room.id, { course, room });
+  return Org.filterRoomIds(app.store.project, filter)
+    .map((id) => byId.get(id))
+    .filter(Boolean);
 }
 function bindFilters(app, host) {
   if (!host) return;
@@ -137,6 +151,214 @@ function bindGroupControls(app, host, targetsFor) {
         event.stopPropagation();
         write(app, Org.unassign(organization(app), chip.dataset.groupRemove, [chip.dataset.room]));
       };
+  }
+}
+// ---------------------------------------------------------------------------
+// Drag cards onto group tabs / onto each other.
+//
+// Planning cards (`[data-strip-room]`) and library cards (`[data-room-card]`)
+// are pointer-dragged. Dropping one on a group filter tab assigns it to that
+// group. Dropping it on another card while a group filter is active reorders
+// the group's own roomIds list only: project.courses[].rooms is never touched,
+// so group order can stay independent of project order.
+// Room-page thumbnail cards use data-nav-room, so the same binder now covers
+// them: they can be dropped on a named group tab or reordered inside a group.
+const CARD_SELECTOR = '[data-strip-room],[data-room-card],[data-nav-room]';
+const cardId = (card) =>
+  card?.dataset.stripRoom || card?.dataset.roomCard || card?.dataset.navRoom || null;
+const cardSelector = (id) =>
+  `[data-strip-room="${id}"], [data-room-card="${id}"], [data-nav-room="${id}"]`;
+const groupTabAt = (x, y) => {
+  const target = document.elementFromPoint?.(x, y);
+  const tab = target?.closest?.('[data-room-filter^="group:"]');
+  return tab ? tab.dataset.roomFilter.slice(6) : null;
+};
+const cardAt = (x, y) => {
+  const target = document.elementFromPoint?.(x, y);
+  return cardId(target?.closest?.(CARD_SELECTOR));
+};
+function clearDropMarks(host) {
+  for (const node of host.querySelectorAll('.group-tab-drop, .room-card-drop-before, .room-card-drop-after'))
+    node.classList.remove('group-tab-drop', 'room-card-drop-before', 'room-card-drop-after');
+}
+function activeGroupId(app) {
+  const filter = filterValue(app);
+  return typeof filter === 'string' && filter.startsWith('group:') ? filter.slice(6) : null;
+}
+// In the All/favourites view there is no active group filter, but dropping a
+// card on another card can still reorder a shared group. Only do it when the
+// two rooms share exactly one group; two shared groups are ambiguous and must
+// leave every order untouched.
+function reorderGroupId(app, roomId, targetId) {
+  if (!roomId || !targetId || roomId === targetId) return null;
+  const org = organization(app);
+  const shared = Org.groupsContaining(org, roomId).filter((group) =>
+    group.roomIds.includes(targetId),
+  );
+  return shared.length === 1 ? shared[0].id : null;
+}
+function bindCardDrag(app, host) {
+  if (!host) return;
+  const cards = [...host.querySelectorAll(CARD_SELECTOR)];
+  if (cards.length < 1) return;
+  for (const card of cards) {
+    const roomId = cardId(card);
+    let drag = null;
+    card.addEventListener('pointerdown', (event) => {
+      if (event.button !== 0) return;
+      // A card may itself be a button (room-page thumbnails): only nested
+      // interactive controls opt out of dragging, not the card element.
+      const interactive = event.target.closest(
+        'button, a, input, select, textarea, [data-fav]',
+      );
+      if (interactive && interactive !== card) return;
+      drag = { x: event.clientX, y: event.clientY, active: false, id: roomId };
+    });
+    card.addEventListener('pointermove', (event) => {
+      if (!drag) return;
+      if (!drag.active) {
+        if (Math.hypot(event.clientX - drag.x, event.clientY - drag.y) < 7) return;
+        drag.active = true;
+        card.classList.add('room-card-dragging');
+        card.setPointerCapture?.(event.pointerId);
+      }
+      event.preventDefault();
+      clearDropMarks(host);
+      const tabGroupId = groupTabAt(event.clientX, event.clientY);
+      if (tabGroupId) {
+        const tab = host.querySelector(`[data-room-filter="group:${tabGroupId}"]`);
+        tab?.classList.add('group-tab-drop');
+        return;
+      }
+      const targetId = cardAt(event.clientX, event.clientY),
+        groupId = activeGroupId(app) || reorderGroupId(app, drag.id, targetId);
+      if (!groupId || !targetId || targetId === drag.id) return;
+      const target = host.querySelector(cardSelector(targetId));
+      const box = target?.getBoundingClientRect?.();
+      if (target && box)
+        target.classList.add(
+          event.clientX > box.x + box.width / 2
+            ? 'room-card-drop-after'
+            : 'room-card-drop-before',
+        );
+    });
+    const finish = (event) => {
+      if (!drag) return;
+      const wasActive = drag.active;
+      const room = drag.id;
+      drag = null;
+      card.classList.remove('room-card-dragging');
+      if (card.hasPointerCapture?.(event.pointerId)) card.releasePointerCapture(event.pointerId);
+      clearDropMarks(host);
+      if (!wasActive) return;
+      // The trailing click of a drag must not open/select the card.
+      app.state.roomTabClickAfter = performance.now() + 250;
+      const tabGroupId = groupTabAt(event.clientX, event.clientY);
+      if (tabGroupId) {
+        write(app, Org.assign(organization(app), tabGroupId, [room]));
+        const joined = Org.groupOf(organization(app), tabGroupId);
+        app.message?.('已加入分组「' + (joined?.name || tabGroupId) + '」');
+        return;
+      }
+      const targetId = cardAt(event.clientX, event.clientY),
+        groupId = activeGroupId(app) || reorderGroupId(app, room, targetId);
+      if (!groupId || !targetId || targetId === room) return;
+      const group = Org.groupOf(organization(app), groupId);
+      if (!group?.roomIds.includes(room) || !group.roomIds.includes(targetId)) return;
+      const target = host.querySelector(cardSelector(targetId));
+      const box = target?.getBoundingClientRect?.();
+      const after = !box || event.clientX > box.x + box.width / 2;
+      write(app, Org.moveWithinGroup(organization(app), groupId, room, targetId, after));
+      app.message?.('组内顺序已调整（不影响项目顺序）');
+    };
+    card.addEventListener('pointerup', finish);
+    card.addEventListener('pointercancel', finish);
+  }
+}
+// ---------------------------------------------------------------------------
+// Route map sidebar quick mode for a named group: every room is a row. A left
+// click adds that room to the group, a right click removes it. Both go through
+// the shared organisation store, so they are undoable and never delete rooms.
+function quickGroup(app, groupId) {
+  const org = organization(app),
+    active = groupId || activeGroupId(app);
+  if (active) return Org.groupOf(org, active);
+  const selected = app.state.graphSelection?.kind === 'room' ? app.state.graphSelection.id : null;
+  return selected ? Org.groupsContaining(org, selected)[0] || null : null;
+}
+function projectRooms(app) {
+  return (app.store.project.courses || []).flatMap((course) => course.rooms || []);
+}
+function quickRoomRow(room, group) {
+  const member = group.roomIds.includes(room.id),
+    index = group.roomIds.indexOf(room.id);
+  return `<button class="group-quick-room${member ? ' in' : ''}" data-group-quick-room="${esc(room.id)}" data-group-quick-group="${esc(group.id)}" aria-pressed="${member}" title="${member ? '右键从分组移出' : '左键加入分组'}「${esc(group.name)}」"><span class="group-quick-mark" aria-hidden="true">${member ? '✓' : '＋'}</span><span class="group-quick-name">${esc(room.name)}</span>${member ? `<span class="group-quick-index">${index + 1}</span>` : ''}</button>`;
+}
+function staticRoomRow(room) {
+  return `<div class="group-quick-room static"><span class="group-quick-mark" aria-hidden="true">·</span><span class="group-quick-name">${esc(room.name)}</span></div>`;
+}
+function quickList(rows, empty) {
+  return `<div class="group-quick-list">${rows || `<p class="muted">${empty}</p>`}</div>`;
+}
+// No named group is active: show every group as its own collapsible list plus
+// one ungrouped bucket. Groups keep their independent roomIds order, and
+// rooms may appear in several group lists without being duplicated in data.
+function groupsOverviewMarkup(app) {
+  const org = organization(app),
+    rooms = projectRooms(app),
+    byId = new Map(rooms.map((room) => [room.id, room])),
+    grouped = new Set(org.groups.flatMap((group) => group.roomIds)),
+    ungrouped = rooms.filter((room) => !grouped.has(room.id));
+  if (!org.groups.length && !ungrouped.length) return '';
+  const sections = org.groups.map((group, index) => {
+    const members = group.roomIds.map((id) => byId.get(id)).filter(Boolean);
+    return `<details class="group-overview-group${index === 0 ? ' first' : ''}"${index === 0 ? ' open' : ''} style="--group-color:${esc(Org.groupColor(group, index))}"><summary><span class="group-overview-dot" aria-hidden="true"></span><span class="group-overview-name">${esc(group.name)}</span><small>${members.length}</small></summary>${quickList(
+      members.map((room) => quickRoomRow(room, group)).join(''),
+      '这个分组还没有房间。',
+    )}</details>`;
+  });
+  const ungroupedSection = `<details class="group-overview-group ungrouped"${org.groups.length ? '' : ' open'}><summary><span class="group-overview-dot" aria-hidden="true"></span><span class="group-overview-name">未分组</span><small>${ungrouped.length}</small></summary>${quickList(
+    ungrouped.map(staticRoomRow).join(''),
+    '所有房间都已分组。',
+  )}</details>`;
+  return `<section class="group-overview"><h3>房间分组</h3><p class="inspector-empty muted">点击房间查看说明与操作；分组列表可折叠。</p>${sections.join('')}${ungroupedSection}</section>`;
+}
+// A named group is active (or the selected room belongs to one): keep the quick
+// panel, but split the collapsible lists into in-group and not-in-group. Left
+// click adds, right click removes, exactly as before.
+function quickGroupMarkup(app, groupId, options = {}) {
+  const group = quickGroup(app, groupId);
+  if (!group) return options.overview === false ? '' : groupsOverviewMarkup(app);
+  const rooms = projectRooms(app),
+    inGroup = group.roomIds.map((id) => rooms.find((room) => room.id === id)).filter(Boolean),
+    rest = rooms.filter((room) => !group.roomIds.includes(room.id)),
+    active = app.state.graphQuickGroupId === group.id;
+  return `<section class="group-quick" data-group-quick="${esc(group.id)}"><h3>快捷分组 · ${esc(group.name)}</h3><div class="group-quick-actions"><button class="group-quick-toggle${active ? ' primary' : ''}" data-graph-quick-toggle="${esc(group.id)}" aria-pressed="${active}">${active ? '退出路线图快捷模式' : '在路线图上快捷增减'}</button>${active ? '<span class="badge">快捷模式</span>' : ''}</div><details class="group-quick-section" open><summary>组内房间 <small>${inGroup.length}</small></summary>${quickList(
+    inGroup.map((room) => quickRoomRow(room, group)).join(''),
+    '还没有房间，左键点击下方房间加入。',
+  )}</details><details class="group-quick-section"><summary>未加入 <small>${rest.length}</small></summary>${quickList(
+    rest.map((room) => quickRoomRow(room, group)).join(''),
+    '所有房间都已在组内。',
+  )}</details></section>`;
+}
+function bindQuickGroup(app, host) {
+  if (!host) return;
+  for (const toggle of host.querySelectorAll('[data-graph-quick-toggle]')) {
+    const groupId = toggle.dataset.graphQuickToggle;
+    toggle.onclick = () => {
+      app.state.graphQuickGroupId = app.state.graphQuickGroupId === groupId ? null : groupId;
+      app.render();
+    };
+  }
+  for (const button of host.querySelectorAll('[data-group-quick-room]')) {
+    const groupId = button.dataset.groupQuickGroup,
+      roomId = button.dataset.groupQuickRoom;
+    button.onclick = () => write(app, Org.assign(organization(app), groupId, [roomId]));
+    button.oncontextmenu = (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      write(app, Org.unassign(organization(app), groupId, [roomId]));
+    };
   }
 }
 function promptGroupName(app, title, value, onSave) {
@@ -245,11 +467,22 @@ module.exports = {
   filterValue,
   filtersMarkup,
   filteredRoomIds,
+  orderedRooms,
   bindFilters,
   currentSelection,
   groupNamesMarkup,
   groupControlMarkup,
   bindGroupControls,
+  CARD_SELECTOR,
+  cardId,
+  bindCardDrag,
+  activeGroupId,
+  reorderGroupId,
+  projectRooms,
+  groupsOverviewMarkup,
+  quickGroup,
+  quickGroupMarkup,
+  bindQuickGroup,
   newGroup,
   renameGroup,
   removeGroup,

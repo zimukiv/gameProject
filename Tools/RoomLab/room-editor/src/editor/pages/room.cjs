@@ -31,6 +31,23 @@ const Native = require('../../project/native-compat.cjs'),
 const brickRef = (brick) => ({ kind: 'movables', id: brick.id });
 const RoomKeys = require('../room-keys.cjs');
 const nodeTools = ['path', 'brick-path', 'teacher-path', 'native-target'];
+// Fullscreen room editing: the shell takes over the window and only the tools,
+// canvas and inspector stay visible (title bar, thumbnail strip, app header and
+// status bar are hidden by CSS). The flag is editor state only; F11 toggles it
+// and Esc leaves it. It is never written into the project.
+function toggleFullscreen(app) {
+  if (app.state.route !== 'room') return;
+  app.state.roomFullscreen = !app.state.roomFullscreen;
+  document.body.classList.toggle('room-fullscreen', app.state.roomFullscreen);
+  app.render();
+}
+function exitFullscreen(app) {
+  if (!app.state.roomFullscreen) return false;
+  app.state.roomFullscreen = false;
+  document.body.classList.remove('room-fullscreen');
+  app.render();
+  return true;
+}
 function expandGroups(room, refs) {
   return Select.combine(
     [],
@@ -43,12 +60,56 @@ function expandGroups(room, refs) {
     ),
   );
 }
+// Whole-group editing keeps a single representative selected. A brick group and
+// a mixed assembly are both addressed through it, so clicking any member can
+// still start a group-wide drag while the inspector shows one stable entity.
 function selectRepresentative(room, state) {
-  if (state.selection?.kind !== 'movables') return;
-  const representative = Motion.representative(
-    Motion.groupMembers(room, Select.get(room, state.selection)),
-  );
+  const ref = state.selection;
+  if (!ref) return;
+  const item = Select.get(room, ref);
+  if (!item) return;
+  if (item.assemblyId) {
+    const representative = Groups.representative(room, item);
+    if (representative) state.selection = representative;
+    return;
+  }
+  if (ref.kind !== 'movables') return;
+  const representative = Motion.representative(Motion.groupMembers(room, item));
   if (representative) state.selection = brickRef(representative);
+}
+function memberLocked(room, brick) {
+  if (Motion.groupMembers(room, brick).some((member) => member.locked)) return true;
+  return (
+    !!brick.assemblyId &&
+    Groups.members(room, brick).some(({ item }) => item.locked)
+  );
+}
+function brickPathNodeAt(brick, point) {
+  return Motion.nodes(brick)
+    .map((node, index) => ({ node, index }))
+    .reverse()
+    .find(
+      ({ node }) =>
+        point.x >= node.x &&
+        point.x <= node.x + 1 &&
+        point.y >= node.y &&
+        point.y <= node.y + 1 &&
+        (node.x !== brick.x || node.y !== brick.y),
+    );
+}
+// Space-peek hit testing: every mechanism brick owns its nodes, so a point can
+// resolve to a different brick than the current inspector selection. Locked
+// members (of the brick group or the mixed assembly) are never draggable.
+function brickPathNodeHit(room, point, selectedId = null) {
+  const owners = room.movables
+    .slice()
+    .sort((a, b) => Number(b.id === selectedId) - Number(a.id === selectedId));
+  for (const brick of owners) {
+    if (memberLocked(room, brick)) continue;
+    const hit = brickPathNodeAt(brick, point);
+    if (hit) return { brick, node: hit.node, index: hit.index };
+  }
+  return null;
 }
 function render(app) {
   let r = app.room();
@@ -66,7 +127,7 @@ function render(app) {
     }
   }
   $('app').innerHTML =
-    `<div class="room-shell ${s.keyHints ? 'show-key-hints' : ''}"><div class="room-title"><div><h1>${esc(r.name)}</h1><span class="room-size-tag">${r.cols} × ${r.rows} 格</span></div><div class="actions"><button id="room-traces">试玩路径</button><button id="room-help">⌨ 按键说明</button><button id="block-help">▦ 方块说明</button><button id="room-hints" aria-pressed="${s.keyHints}">按键提示</button><button id="toggle-inspector">${s.inspectorHidden ? '显示属性' : '收起属性'}</button><button id="play-room" aria-label="试玩此房" class="primary">▶ 试玩此房</button></div></div>${require('../room-navigation.cjs').strip(app)}<div class="room-workspace ${s.inspectorHidden ? 'inspector-hidden' : ''}"><section class="panel canvas-panel room-canvas-panel"><div class="room-toolstrip"><div class="actions"><button data-tool="select">↖ 选择<span class="key-hint" aria-hidden="true">${RoomKeys.tools.select}</span></button><button data-tool="marquee">▧ 框选<span class="key-hint" aria-hidden="true">${RoomKeys.tools.marquee}</span></button><button data-tool="erase">⌫ 擦除<span class="key-hint" aria-hidden="true">${RoomKeys.tools.erase}</span></button><button id="undo">撤销<span class="key-hint" aria-hidden="true">Ctrl Z</span></button><button id="redo">重做<span class="key-hint" aria-hidden="true">Ctrl Y</span></button></div><div class="actions"><button id="fit-room">适应房间</button><label class="check"><input id="targets" type="checkbox" checked>关联目标</label></div></div><div class="block-palette" aria-label="方块选择栏">${Palette.render(app, c)}</div><div class="canvas-heading"><span id="tool-label"></span><span><span id="room-pointer"></span> · <span id="room-zoom"></span></span></div><div class="canvas-wrap"><canvas id="room-canvas" width="960" height="540" tabindex="0" aria-label="房间编辑画布"></canvas></div></section><aside class="panel inspector form" id="room-inspector"></aside></div></div>`;
+    `<div class="room-shell ${s.keyHints ? 'show-key-hints' : ''}${s.roomFullscreen ? ' fullscreen' : ''}"><div class="room-title"><div><h1>${esc(r.name)}</h1><span class="room-size-tag">${r.cols} × ${r.rows} 格</span></div><div class="actions"><button id="room-traces">试玩路径</button><button id="room-help">⌨ 按键说明</button><button id="block-help">▦ 方块说明</button><button id="room-hints" aria-pressed="${s.keyHints}">按键提示</button><button id="toggle-inspector">${s.inspectorHidden ? '显示属性' : '收起属性'}</button><button id="play-room" aria-label="试玩此房" class="primary">▶ 试玩此房</button></div></div>${require('../room-navigation.cjs').strip(app)}<div class="room-workspace ${s.inspectorHidden ? 'inspector-hidden' : ''}"><section class="panel canvas-panel room-canvas-panel"><div class="room-toolstrip"><div class="actions"><button data-tool="select">↖ 选择<span class="key-hint" aria-hidden="true">${RoomKeys.tools.select}</span></button><button data-tool="marquee">▧ 框选<span class="key-hint" aria-hidden="true">${RoomKeys.tools.marquee}</span></button><button data-tool="erase">⌫ 擦除<span class="key-hint" aria-hidden="true">${RoomKeys.tools.erase}</span></button><button id="undo">撤销<span class="key-hint" aria-hidden="true">Ctrl Z</span></button><button id="redo">重做<span class="key-hint" aria-hidden="true">Ctrl Y</span></button></div><div class="actions"><button id="room-fullscreen" aria-pressed="${!!s.roomFullscreen}" title="全屏编辑：只保留工具、画布与属性面板（F11 切换，Esc 退出）">${s.roomFullscreen ? '⤡ 退出全屏' : '⛶ 全屏'}</button><button id="fit-room">适应房间</button><label class="check"><input id="targets" type="checkbox" checked>关联目标</label></div></div><div class="block-palette" aria-label="方块选择栏">${Palette.render(app, c)}</div><div class="canvas-heading"><span id="tool-label"></span><span><span id="room-pointer"></span> · <span id="room-zoom"></span></span></div><div class="canvas-wrap"><canvas id="room-canvas" width="960" height="540" tabindex="0" aria-label="房间编辑画布"></canvas></div></section><aside class="panel inspector form" id="room-inspector"></aside></div></div>`;
   if (Native.active(app.store.project, app.course())) {
     const bar = document.createElement('div');
     bar.className = 'native-toolbar actions';
@@ -163,17 +224,28 @@ function render(app) {
   app.currentDraw = () => {
     size();
     DPR.apply(ctx, dprRatio);
+    // Space-peek borrows the ordinary multi-selection paint pass for every
+    // mechanism brick's path but never touches s.selection / s.multiSelection.
+    const selections = expandGroups(
+        r,
+        s.multiSelection.length ? s.multiSelection : s.selection ? [s.selection] : [],
+      ),
+      peek = !!s.roomPathPeek;
     D.drawRoom(ctx, app.store.project, c, r, {
       view: s.roomView,
       dpr: dprRatio,
       selection: s.selection,
-      selections: expandGroups(
-        r,
-        s.multiSelection.length ? s.multiSelection : s.selection ? [s.selection] : [],
-      ),
+      selections: peek
+        ? Select.combine([], [...selections, ...r.movables.map(brickRef)])
+        : selections,
       selectedRailNodeId: s.railNodeId,
       nativeBand: s.nativeBand || 'all',
-      selectedBrickNodeIndex: s.brickNodeOwner === s.selection?.id ? s.brickNodeIndex : null,
+      peekBrickPaths: peek,
+      selectedBrickNodeOwner: s.brickNodeOwner || null,
+      selectedBrickNodeIndex:
+        s.brickNodeOwner && (peek || s.brickNodeOwner === s.selection?.id)
+          ? s.brickNodeIndex
+          : null,
       hover,
       targets: $('targets')?.checked,
       assetURL: (id) => app.assetURL(id),
@@ -263,6 +335,18 @@ function render(app) {
         }),
     );
   $('fit-room').onclick = fit;
+  $('room-fullscreen').onclick = () => toggleFullscreen(app);
+  // App-level F11 / Esc dispatch into these; they stay null on other pages.
+  app.toggleRoomFullscreen = () => toggleFullscreen(app);
+  app.exitRoomFullscreen = () => exitFullscreen(app);
+  // App-level Space dispatch into the transient all-paths preview. Releasing the
+  // key only hides the overlay: no selection, project or history state changes.
+  app.setRoomPathPeek = (active) => {
+    const next = !!active;
+    if (!!s.roomPathPeek === next) return;
+    s.roomPathPeek = next;
+    app.currentDraw?.();
+  };
   setTool(s.tool || 'select');
   const pixel = (e) => DPR.pointer(canvas, e.clientX, e.clientY);
   const cell = (e) => {
@@ -316,27 +400,23 @@ function render(app) {
           Math.abs(node.x + 0.5 - p.x) <= 0.55 && Math.abs(node.y + 0.5 - p.y) <= 0.55,
       );
   };
+  // The selected mechanism brick's trajectory stays directly draggable on every
+  // inspector tab (base / behavior / links / art / nodes), not just the node graph.
   const brickNodeHit = (e) => {
-    if (
-      !['select', 'brick-path'].includes(s.tool) ||
-      s.selection?.kind !== 'movables' ||
-      !['nodes', 'behavior'].includes(s.inspectorTab)
-    )
-      return null;
+    if (!['select', 'brick-path'].includes(s.tool) || s.selection?.kind !== 'movables') return null;
     const brick = tileItem(s.selection);
-    if (!brick || Motion.groupMembers(r, brick).some((member) => member.locked)) return null;
-    const p = world(e);
-    return Motion.nodes(brick)
-      .map((node, index) => ({ node, index }))
-      .reverse()
-      .find(
-        ({ node }) =>
-          p.x >= node.x &&
-          p.x <= node.x + 1 &&
-          p.y >= node.y &&
-          p.y <= node.y + 1 &&
-          (node.x !== brick.x || node.y !== brick.y),
-      );
+    if (!brick || memberLocked(r, brick)) return null;
+    return brickPathNodeAt(brick, world(e));
+  };
+  // While Space is held all brick paths are visible, so a hit resolves its owner
+  // per brick instead of assuming the inspector selection.
+  const peekBrickNodeHit = (e) => {
+    if (!s.roomPathPeek || !['select', 'marquee'].includes(s.tool)) return null;
+    return brickPathNodeHit(
+      r,
+      world(e),
+      s.selection?.kind === 'movables' ? s.selection.id : null,
+    );
   };
   const regionHit = (e) => {
     if (s.tool !== 'select' || !['zones', 'platforms'].includes(s.selection?.kind)) return null;
@@ -640,6 +720,14 @@ function render(app) {
       inspector(app, r, setTool);
       return;
     }
+    const peekNode = !e.shiftKey && peekBrickNodeHit(e);
+    if (peekNode) {
+      s.brickNodeOwner = peekNode.brick.id;
+      s.brickNodeIndex = peekNode.index;
+      stroke.brickNode = { brick: peekNode.brick, index: peekNode.index };
+      inspector(app, r, setTool);
+      return;
+    }
     const teacherNode = teacherNodeHit(e);
     if (teacherNode && !e.shiftKey && s.multiSelection.length <= 1) {
       s.teacherNodeOwner = s.selection.id;
@@ -711,7 +799,7 @@ function render(app) {
       const handle = regionHit(e);
       canvas.style.cursor = handle
         ? handle.cursor
-        : nodeHit(e) || brickNodeHit(e) || teacherNodeHit(e)
+        : nodeHit(e) || brickNodeHit(e) || peekBrickNodeHit(e) || teacherNodeHit(e)
           ? 'grab'
           : s.tool === 'select'
             ? 'default'
@@ -1548,4 +1636,10 @@ function readField(f) {
   }
   return input.value;
 }
-module.exports = { render, schemaField, readField };
+module.exports = {
+  render,
+  schemaField,
+  readField,
+  selectRepresentative,
+  brickPathNodeHit,
+};

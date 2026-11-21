@@ -15,19 +15,36 @@ const actions = [
   'np-save',
   'nc-save',
 ];
-// One shared short queue for every live field. A commit re-renders the whole
+// One shared queue for every live field. A commit re-renders the whole
 // inspector, so a per-field immediate commit on blur destroys the sibling input
 // the user is already typing into (the next fill lands on a detached node).
 // Instead all edits in one quick burst are drafted, applied to the still-live
 // inputs, and committed by a single click when the queue settles. Selects and
 // checkboxes still commit on their own event.
 const DRAFT_DELAY = 180;
+// Text needs a longer pause: one repaint per word instead of one per keystroke.
+const TEXT_DRAFT_DELAY = 900;
+const NON_TEXT_TYPES = new Set(['number', 'range', 'checkbox', 'radio', 'date', 'time', 'color']);
+function textLike(input) {
+  return (
+    input.tagName === 'TEXTAREA' ||
+    (input.tagName === 'INPUT' && !NON_TEXT_TYPES.has(String(input.type || 'text').toLowerCase()))
+  );
+}
+function delayFor(input) {
+  return textLike(input) ? TEXT_DRAFT_DELAY : DRAFT_DELAY;
+}
 let pending = new Map(),
   flushTimer = null;
 function schedule(delay = DRAFT_DELAY) {
   clearTimeout(flushTimer);
   flushTimer = setTimeout(flush, delay);
 }
+// While an IME session was live the queue deliberately skipped its commit; land
+// it as soon as the last composition ends instead of waiting for another edit.
+Live.onCompositionEnd(() => {
+  if (pending.size) schedule(0);
+});
 function draft(input, host, actionId) {
   pending.set(input.id, { id: input.id, host, actionId, value: input.value, input });
 }
@@ -39,10 +56,16 @@ function flush() {
   clearTimeout(flushTimer);
   flushTimer = null;
   if (flushing) return;
+  // Never repaint over an in-flight IME composition: compositionend reschedules
+  // this commit and the candidate text stays in the live input until then.
+  if (Live.anyComposing()) return;
   const entries = [...pending.values()];
   pending = new Map();
   const live = entries.filter((entry) => entry.input?.isConnected);
   if (!live.length) return;
+  // Read the caret before the draft values are written back: assigning .value
+  // moves the caret, which is how a middle edit used to jump to the end.
+  const focus = Live.captureFocus();
   // Do not let one half-typed number block the valid drafts beside it. The
   // invalid text stays in its input as a draft and is committed on a later event.
   const valid = live.filter(
@@ -58,7 +81,6 @@ function flush() {
   if (!action) return;
   // The button handler reads every field from the current form, so the draft
   // values above are all committed in this single render pass.
-  const focus = Live.captureFocus();
   flushing = true;
   try {
     action.click();
@@ -102,6 +124,7 @@ function install(host) {
     input.dataset.liveField = '1';
     const commit = () => {
       if (!input.isConnected || button.disabled) return;
+      if (Live.anyComposing()) return;
       if (input.type === 'number' && !input.validity.valid) {
         // A half-typed number never reaches the project data.
         input.reportValidity();
@@ -111,21 +134,36 @@ function install(host) {
       button.click();
       Live.restoreFocus(focus);
     };
-    input.addEventListener('change', () => {
+    input.addEventListener('compositionstart', () => Live.beginComposition(input));
+    input.addEventListener('compositionend', () => {
+      Live.endComposition(input);
+      if (!input.isConnected || button.disabled) return;
+      draft(input, host, button.id);
+      schedule(delayFor(input));
+    });
+    input.addEventListener('change', (event) => {
       if (!input.isConnected) return;
+      if (Live.isComposing(input) || event?.isComposing || Live.anyComposing()) {
+        // Queue it and let the compositionend flush land it, instead of
+        // rebuilding the inspector under the IME candidate.
+        draft(input, host, button.id);
+        return;
+      }
       if (input.tagName === 'SELECT' || input.type === 'checkbox' || input.type === 'radio') {
         draft(input, host, button.id);
         flush();
         return;
       }
       draft(input, host, button.id);
-      schedule();
+      schedule(delayFor(input));
     });
-    // Typing applies as well (short debounce), not only blur/Enter.
-    input.addEventListener('input', () => {
+    // Typing applies as well (debounced), not only blur/Enter.
+    input.addEventListener('input', (event) => {
       if (!input.isConnected) return;
+      if (event?.isComposing || Live.isComposing(input)) return;
+      Live.noteEdit();
       draft(input, host, button.id);
-      schedule();
+      schedule(delayFor(input));
     });
     // Keep commit for programmatic flows that still dispatch change events.
     input.commitLiveField = commit;
@@ -168,7 +206,24 @@ function install(host) {
 // Real navigation, save, play and cloud/export snapshots must never strand a
 // typed draft: flush it into the store before the project is read or the page is
 // replaced. Callers only read the project afterwards, so no extra render loop.
+// The room-name/notes debounce lives in live-room-settings; flush that queue too
+// so an explicit save writes the last keystrokes of those fields.
 function flushAll() {
   flush();
+  Live.flushPending();
 }
-module.exports = { install, flushAll };
+// True while a live field has unsaved text (draft queue, pending text debounce
+// or an active IME composition). The cloud poll uses it to postpone a remote
+// rebuild instead of dropping the user's queued edit.
+function editing() {
+  return pending.size > 0 || Live.activelyEditing();
+}
+module.exports = {
+  install,
+  flushAll,
+  editing,
+  textLike,
+  delayFor,
+  DRAFT_DELAY,
+  TEXT_DRAFT_DELAY,
+};

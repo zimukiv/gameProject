@@ -100,6 +100,59 @@ class Engine {
     const rect = this.movableRect(owner);
     return { x: rect.x - owner.x * T, y: rect.y - owner.y * T };
   }
+  // World rect of any authored cell shape (entry, exit, tile, object). Grouped
+  // ports persist their authored origin in the save file; the runtime adds the
+  // owning mechanism's live offset, so drawing, overlap, re-entry and the
+  // spawn-time exit suppression all read the same geometry.
+  attachedRect(item, fallbackW = 1, fallbackH = 1) {
+    const offset = this.attachmentOffset(item);
+    return {
+      id: item.id,
+      x: item.x * T + offset.x,
+      y: item.y * T + offset.y,
+      w: (item.w || fallbackW) * T,
+      h: (item.h || fallbackH) * T,
+    };
+  }
+  entryRect(entry) {
+    return this.attachedRect(entry, 1, 1);
+  }
+  exitRect(exit) {
+    return this.attachedRect(exit, 1, 1);
+  }
+  // Off-screen rooms are frozen in roomCaches. Re-entry can still point at a
+  // grouped source exit, so resolve its offset from that room's cached movable
+  // states instead of the live destination room.
+  cachedAttachmentOffset(room, states, item) {
+    const owner = item.attachmentTo && room.movables.find((b) => b.id === item.attachmentTo);
+    if (!owner) return { x: 0, y: 0 };
+    const state = states instanceof Map ? states.get(owner.id) : states?.[owner.id];
+    if (!state) return { x: 0, y: 0 };
+    const pad = room.objects.find((o) => o.id === owner.padId);
+    let pos;
+    if (pad?.type === 'legacy.rotor') {
+      const pivot = { x: (pad.x + 0.5) * T, y: pad.y * T },
+        p = rotate((owner.x + 0.5) * T, (owner.y + 0.5) * T, pivot.x, pivot.y, state.angle || 0);
+      return { x: p.x - T / 2 - owner.x * T, y: p.y - T / 2 - owner.y * T };
+    }
+    pos = owner.motionPath
+      ? Motion.position(owner, state.pathTime || 0)
+      : {
+          x: owner.x + (owner.targetX - owner.x) * (state.progress || 0),
+          y: owner.y + (owner.targetY - owner.y) * (state.progress || 0),
+        };
+    return { x: pos.x * T - owner.x * T, y: pos.y * T - owner.y * T };
+  }
+  cachedExitRect(room, states, exit) {
+    const offset = this.cachedAttachmentOffset(room, states, exit);
+    return {
+      id: exit.id,
+      x: exit.x * T + offset.x,
+      y: exit.y * T + offset.y,
+      w: (exit.w || 1) * T,
+      h: (exit.h || 1) * T,
+    };
+  }
   worldObject(o) {
     const runtime = Registry.get(o.type).runtimePosition?.(o, this.objectStates?.get(o.id));
     if (runtime) return { ...o, x: runtime.x, y: runtime.y };
@@ -225,16 +278,16 @@ class Engine {
     this.room = ref.room;
     for (const o of this.room.objects) o.params = clone(Registry.params(this.project, o));
     this.entry = this.room.entries.find((e) => e.id === entryId) || this.room.entries[0];
-    const spawn =
-      respawn && respawn.roomId === this.room.id
-        ? respawn
-        : {
-            roomId: this.room.id,
-            entryId: this.entry.id,
-            x: this.entry.x * T + 4,
-            y: this.entry.y * T + 4,
-            face: this.entry.face || 1,
-          };
+    const fromEntry = !(respawn && respawn.roomId === this.room.id);
+    let spawn = fromEntry
+      ? {
+          roomId: this.room.id,
+          entryId: this.entry.id,
+          x: this.entry.x * T + 4,
+          y: this.entry.y * T + 4,
+          face: this.entry.face || 1,
+        }
+      : respawn;
     Object.assign(this, {
       tokens: resources.tokens,
       charges: Math.min(this.paidStockCap, Math.max(0, resources.charges || 0)),
@@ -295,6 +348,23 @@ class Engine {
       trail: [pc],
     };
     this.initializeRoom(this.roomCaches.get(id));
+    // Grouped entries live on the mechanism. The saved entry keeps its authored
+    // origin; once the target room's movable states exist, shift the default
+    // spawn (and the AI that follows it) by the live attachment offset.
+    if (fromEntry) {
+      const rect = this.entryRect(this.entry),
+        dx = rect.x - this.entry.x * T,
+        dy = rect.y - this.entry.y * T;
+      if (dx || dy) {
+        this.player.x += dx;
+        this.player.y += dy;
+        this.ai.x += dx;
+        this.ai.y += dy;
+        this.ai.trail = [center(this.player)];
+        spawn.x += dx;
+        spawn.y += dy;
+      }
+    }
     if (!this.lifeBaselines.has(id))
       this.lifeBaselines.set(id, clone(Object.fromEntries(this.objectStates)));
     this.roomTime = 0;
@@ -385,7 +455,7 @@ class Engine {
   reentryPort(p) {
     if (this.suppressedExitId) {
       const exit = this.room.exits.find((item) => item.id === this.suppressedExitId);
-      if (!exit || !overlap(p, { x: exit.x * T, y: exit.y * T, w: exit.w * T, h: exit.h * T })) {
+      if (!exit || !overlap(p, this.exitRect(exit))) {
         this.exitTriggerArmed = true;
         this.suppressedExitId = null;
       }
@@ -393,7 +463,7 @@ class Engine {
     if (!this.entryReturn) return false;
     const entry = this.room.entries.find((item) => item.id === this.entryReturn.entryId);
     if (!entry || entry.allowReturn === false) return false;
-    const inside = overlap(p, { x: entry.x * T, y: entry.y * T, w: T, h: T });
+    const inside = overlap(p, this.entryRect(entry));
     if (!inside) {
       this.entryTriggerArmed = true;
       return false;
@@ -407,11 +477,16 @@ class Engine {
     }
     const from = this.room.id,
       entryId = entry.id,
+      sourceExit = this.cachedExitRect(
+        source,
+        this.roomCaches.get(source.id)?.movables,
+        exit,
+      ),
       spawn = {
         roomId: source.id,
         exitId: exit.id,
-        x: exit.x * T + Math.max(2, (exit.w * T - 24) / 2),
-        y: (exit.y + exit.h) * T - 30,
+        x: sourceExit.x + Math.max(2, (sourceExit.w - 24) / 2),
+        y: sourceExit.y + sourceExit.h - 30,
         face: exit.x <= 1 ? 1 : exit.x + exit.w >= source.cols - 1 ? -1 : 1,
       };
     this.loadRoom(
@@ -856,16 +931,21 @@ class Engine {
         const exit = this.room.objects.find(
           (o) => o.type === 'common.portalOut' && o.params.routeId === entry.params.routeId,
         );
+        if (!exit) continue;
+        // Both the trigger radius and the destination come from the same
+        // attachment-aware rect the renderer uses, so a grouped portal pair
+        // follows its mechanism and never teleports to the authored origin.
+        const enter = center(this.objectRect(entry)),
+          leave = center(this.objectRect(exit));
         if (
-          exit &&
           !a.teleported.includes(entry.params.routeId) &&
           !a.warning &&
           a.processing <= 0 &&
-          Math.hypot(a.x - (entry.x + 0.5) * T, a.y - (entry.y + 0.5) * T) < 48
+          Math.hypot(a.x - enter.x, a.y - enter.y) < 48
         ) {
           a.warning = {
             remaining: 0.65,
-            to: { x: (exit.x + 0.5) * T, y: (exit.y + 0.5) * T },
+            to: { x: leave.x, y: leave.y },
             id: entry.params.routeId,
           };
           a.teleported.push(entry.params.routeId);
@@ -907,11 +987,12 @@ class Engine {
   simulateAI(oId, near = true) {
     const o = this.room.objects.find((o) => o.id === oId);
     if (!o) return;
+    const world = this.worldObject(o);
     this.ai.id = o.aiId || this.room.aiId || this.course.aiId;
     this.ai.active = true;
     this.ai.processing = 30;
-    this.ai.x = (o.x + 0.5) * T + (near ? 20 : 500);
-    this.ai.y = o.y * T - 12;
+    this.ai.x = (world.x + 0.5) * T + (near ? 20 : 500);
+    this.ai.y = world.y * T - 12;
     this.emit('test-ai', { id: oId, near });
   }
   update(dt, input = {}) {
@@ -1151,7 +1232,7 @@ class Engine {
       if (
         this.exitTriggerArmed &&
         this.exitCooldown === 0 &&
-        overlap(p, { x: exit.x * T, y: exit.y * T, w: exit.w * T, h: exit.h * T })
+        overlap(p, this.exitRect(exit))
       ) {
         // 统一地图兼容层：先查项目级全局连接，再回落到原 course.connections，
         // 因此跨原大关连接可运行，旧数据不做迁移也能原样运行。

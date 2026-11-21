@@ -81,6 +81,11 @@ function bind(app, host, options = {}) {
   target.querySelectorAll('[data-room-card]').forEach((el) => {
     el.onclick = (e) => {
       if (e.target.closest('button, select')) return;
+      // A card drag that assigned/reordered ends with a click; ignore it.
+      if (performance.now() < (app.state.roomTabClickAfter || 0)) {
+        e.preventDefault();
+        return;
+      }
       const owner = GraphLayout.locate(app.store.project, el.dataset.roomCard);
       if (!owner) return;
       if (e.ctrlKey || e.metaKey) {
@@ -105,6 +110,7 @@ function bind(app, host, options = {}) {
     };
     el.ondblclick = (e) => {
       if (e.target.closest('button, select')) return;
+      if (performance.now() < (app.state.roomTabClickAfter || 0)) return;
       enter(app, el.dataset.roomCard);
     };
   });

@@ -2608,3 +2608,220 @@ body.planning main {
 .room-current-name {
   color: #cfe3f3;
 }
+/* Drag the bottom edge of the room thumbnail strip to resize its row. The
+   height is a local editor preference (localStorage), never project data. */
+.room-strip-resize {
+  height: 9px;
+  margin: 2px -12px -4px;
+  cursor: ns-resize;
+  touch-action: none;
+  border-radius: 0 0 4px 4px;
+  background: linear-gradient(to bottom, transparent 3px, #2a4154 3px, #2a4154 6px, transparent 6px);
+}
+.room-strip-resize:hover,
+.room-strip-resize.dragging,
+.room-strip-resize:focus-visible {
+  outline: none;
+  background: linear-gradient(to bottom, transparent 3px, #70d9dd 3px, #70d9dd 6px, transparent 6px);
+}
+.room-thumb-selector[style*='--room-strip-height'] .room-thumb-strip {
+  height: var(--room-strip-height);
+  overflow-y: auto;
+  align-items: flex-start;
+}
+/* Drag a card onto a group tab to assign, or onto another card to reorder the
+   group only. Project order is never rewritten by these gestures. */
+.room-strip-item.room-card-dragging,
+.room-strip-item.room-card-dragging:hover {
+  opacity: 0.55;
+  cursor: grabbing;
+}
+.room-filter.group-tab-drop {
+  border-color: #70d9dd !important;
+  outline: 2px solid #70d9dd;
+  outline-offset: 1px;
+  background: #18313b;
+}
+.room-strip-item.room-card-drop-before {
+  box-shadow: inset 3px 0 #8befe0;
+}
+.room-strip-item.room-card-drop-after {
+  box-shadow: inset -3px 0 #8befe0;
+}
+/* Route map sidebar: per-group / ungrouped overview and named-group quick panel. */
+#graph-inspector {
+  min-width: 0;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+#graph-inspector.compact {
+  width: auto;
+}
+.group-overview,
+.group-quick {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #24384a;
+}
+.group-overview h3,
+.group-quick h3 {
+  margin: 0;
+  font-size: 13px;
+  color: #9fd8cf;
+}
+.group-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.group-quick-actions button {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+.group-quick-actions .group-quick-toggle {
+  flex: 1;
+  min-height: 32px;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.group-overview-group,
+.group-quick-section {
+  min-width: 0;
+  padding: 4px 6px;
+  border: 1px solid #24384a;
+  border-radius: 6px;
+  background: #0f1c29;
+}
+.group-overview-group > summary,
+.group-quick-section > summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 2px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 12px;
+  color: #cfe3f3;
+}
+.group-overview-group > summary::-webkit-details-marker,
+.group-quick-section > summary::-webkit-details-marker {
+  display: none;
+}
+.group-overview-group > summary::before,
+.group-quick-section > summary::before {
+  content: '▸';
+  color: #7f9ab0;
+  font-size: 10px;
+}
+.group-overview-group[open] > summary::before,
+.group-quick-section[open] > summary::before {
+  content: '▾';
+}
+.group-overview-dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--group-color, #2a4154);
+}
+.group-overview-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.group-overview-group summary small,
+.group-quick-section summary small {
+  color: #7f9ab0;
+  font-size: 10px;
+}
+.group-quick-list {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  max-height: min(46vh, 340px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 2px;
+}
+.group-quick-room {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  padding: 5px 8px;
+  text-align: left;
+  background: #10202e;
+  border: 1px solid #2a4154;
+  border-radius: 6px;
+  color: #cfe3f3;
+  font-size: 12px;
+  cursor: pointer;
+}
+.group-quick-room:hover {
+  border-color: #4d84a6;
+}
+.group-quick-room.in {
+  border-color: #70d9dd;
+  background: #14283a;
+}
+.group-quick-room.static {
+  border-style: dashed;
+  background: transparent;
+  cursor: default;
+}
+@media (max-width: 850px) {
+  #graph-inspector {
+    max-height: none;
+  }
+  .group-quick-list {
+    max-height: 220px;
+  }
+  .group-overview,
+  .group-quick {
+    min-width: 0;
+  }
+}
+.group-quick-mark {
+  width: 14px;
+  color: #70d9dd;
+}
+.group-quick-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.group-quick-index {
+  color: #7f9ab0;
+  font-size: 11px;
+}
+/* Fullscreen room editing (F11): only tools, canvas and inspector stay. */
+.room-shell.fullscreen,
+.room-shell.fullscreen:has(.room-thumb-selector) {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  height: auto;
+  padding: 8px 12px 12px;
+  background: #0a1320;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 8px;
+}
+.room-shell.fullscreen .room-title,
+.room-shell.fullscreen .room-thumb-selector {
+  display: none;
+}
+body.room-fullscreen > header,
+body.room-fullscreen > #status {
+  display: none;
+}
+body.room-fullscreen main {
+  padding: 0;
+  height: 100vh;
+}

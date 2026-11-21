@@ -1,6 +1,11 @@
 // Independent room records in R2: no revisions, branches, graph parents or workspace mutations.
-export async function roomLibrary(request, env, workspace, route, { json, manifest, sha, canonical, fail, reply }) {
-  const prefix = workspace + '/rooms/';
+export async function roomLibrary(request, env, workspace, route, { json, manifest, sha, canonical, fail, reply, github }) {
+  const generation = workspace === env.ROOMLAB_GITHUB_WORKSPACE_SHA256
+    ? env.ROOMLAB_ROOM_LIBRARY_GENERATION
+    : null;
+  const prefix = generation && /^[a-z0-9-]{1,48}$/.test(generation)
+    ? workspace + '/rooms-' + generation + '/'
+    : workspace + '/rooms/';
   if (route === 'rooms' && request.method === 'GET') {
     const cursor = new URL(request.url).searchParams.get('cursor') || undefined;
     const page = await env.BUCKET.list({prefix, limit:100, cursor, include:['customMetadata']});
@@ -20,12 +25,18 @@ export async function roomLibrary(request, env, workspace, route, { json, manife
     if(await sha(new TextEncoder().encode(canonical(unsigned)))!==r.id || await sha(new TextEncoder().encode(canonical(r.files)))!==r.fingerprint) fail('房间清单校验失败');
     const projectFile=r.files.find(f=>f.path==='project.json');
     if(!projectFile || projectFile.size>32*1024*1024) fail('房间数据过大');
+    const sizes = github && await github.chunkSizes([...new Set(r.files.flatMap(f=>f.chunks.map(c=>c.hash)))]);
     for(const f of r.files) for(const c of f.chunks) {
-      const head=await env.BUCKET.head(workspace+'/'+c.hash);
+      const head=github ? {size:sizes.get(c.hash)} : await env.BUCKET.head(workspace+'/'+c.hash);
       if(!head || head.size!==c.size) fail('请先上传完整房间素材',422);
     }
     const bytes=new Uint8Array(projectFile.size);let offset=0;
-    for(const c of projectFile.chunks){const object=await env.BUCKET.get(workspace+'/'+c.hash);const data=new Uint8Array(await object.arrayBuffer());if(await sha(data)!==c.hash) fail('房间内容校验失败');bytes.set(data,offset);offset+=data.length;}
+    for(const c of projectFile.chunks){
+      const object=github ? null : await env.BUCKET.get(workspace+'/'+c.hash);
+      const data=github ? await github.readChunk(c.hash) : object && new Uint8Array(await object.arrayBuffer());
+      if(!data || await sha(data)!==c.hash) fail('房间内容校验失败');
+      bytes.set(data,offset);offset+=data.length;
+    }
     if(await sha(bytes)!==projectFile.hash) fail('房间内容校验失败');
     let project;try{project=JSON.parse(new TextDecoder().decode(bytes));}catch{fail('房间格式无效');}
     if(project.courses?.length!==1 || project.courses[0].rooms?.length!==1) fail('请上传单个房间');

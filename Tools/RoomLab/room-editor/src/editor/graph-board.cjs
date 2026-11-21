@@ -326,8 +326,27 @@ function mount(app) {
   }
   watchDpr();
   canvas.onpointerdown = (e) => {
-    if (![0, 1].includes(e.button)) return;
+    if (![0, 1, 2].includes(e.button)) return;
     e.preventDefault();
+    const groupId = app.state.graphQuickGroupId;
+    if (e.button === 2 || (e.button === 0 && groupId)) {
+      if (!groupId) return;
+      const place = GraphLayout.hitPlace(places, point(e));
+      if (!place) return;
+      const add = e.button === 0;
+      app.store.change(() => {
+        const update = add ? Org.assign : Org.unassign;
+        app.store.project.roomOrganization = update(
+          Org.ensure(app.store.project),
+          groupId,
+          [place.room.id],
+        );
+      });
+      app.message(add ? '已加入分组，可撤销。' : '已从分组移出，可撤销。');
+      draw();
+      renderInspector(app);
+      return;
+    }
     if (e.button === 1) {
       pan = { point: pixel(e), x: view.x, y: view.y };
       canvas.setPointerCapture(e.pointerId);
@@ -379,6 +398,7 @@ function mount(app) {
       drag = {
         place,
         start: p,
+        moved: false,
         origin: { x: place.room.graph?.x || 0, y: place.room.graph?.y || 0 },
         before: app.store.snapshot(),
       };
@@ -408,6 +428,8 @@ function mount(app) {
       draw();
     }
     if (drag) {
+      if (!drag.moved && Math.hypot(p.x - drag.start.x, p.y - drag.start.y) > 4)
+        drag.moved = true;
       const global = {
           x: GraphLayout.snap(
             drag.place.offset.x + drag.origin.x + p.x - drag.start.x,
@@ -463,6 +485,7 @@ function mount(app) {
       app.store.commit(before);
     }
   };
+  canvas.oncontextmenu = (e) => e.preventDefault();
   canvas.onpointercancel = canvas.onlostpointercapture = () => {
     wire = null;
     pan = null;
@@ -515,9 +538,11 @@ function renderInspector(app) {
   if (!host) return;
   host.classList.toggle('compact', !selection);
   if (!selection) {
-    // No huge empty sidebar: a one-line prompt instead of a course breakdown.
-    host.innerHTML =
-      '<p class="inspector-empty muted">点击房间查看说明与操作；☆ 收藏，分组用于整理。</p>';
+    // Named group -> quick panel. No named group -> collapsible per-group lists
+    // plus one ungrouped bucket, so the sidebar is useful without a selection.
+    const quick = OrgUI.quickGroupMarkup(app);
+    host.innerHTML = quick || '<p class="inspector-empty muted">点击房间查看说明与操作；☆ 收藏，分组用于整理。</p>';
+    OrgUI.bindQuickGroup(app, host);
     return;
   }
   if (selection.kind === 'room') {
@@ -528,9 +553,10 @@ function renderInspector(app) {
       return;
     }
     const { course, room } = owner;
-    host.innerHTML = `<h2>${esc(room.name)}</h2><div class="inspector-fav-row">${OrgUI.starMarkup(app, room.id)}<span class="muted">${room.cols}×${room.rows} · ${room.entries.length} 入 / ${room.exits.length} 出</span></div>${field('名称', 'graph-name', room.name)}${area('备注', 'graph-notes', room.notes)}<div class="inspector-groups"><span class="muted">分组</span>${OrgUI.groupControlMarkup(app, [room.id])}</div><div class="actions"><button id="graph-rename">保存说明</button><button id="graph-edit" class="primary">编辑房间</button><button id="graph-export-room">导出</button><button data-room-clipboard-copy disabled>复制整房</button><button data-room-clipboard-paste disabled>粘贴整房</button><button id="graph-copy">原位复制</button><button id="graph-delete" class="danger">删除</button></div>`;
+    host.innerHTML = `<h2>${esc(room.name)}</h2><div class="inspector-fav-row">${OrgUI.starMarkup(app, room.id)}<span class="muted">${room.cols}×${room.rows} · ${room.entries.length} 入 / ${room.exits.length} 出</span></div>${field('名称', 'graph-name', room.name)}${area('备注', 'graph-notes', room.notes)}<div class="inspector-groups"><span class="muted">分组</span>${OrgUI.groupControlMarkup(app, [room.id])}</div><div class="actions"><button id="graph-rename">保存说明</button><button id="graph-edit" class="primary">编辑房间</button><button id="graph-export-room">导出</button><button data-room-clipboard-copy disabled>复制整房</button><button data-room-clipboard-paste disabled>粘贴整房</button><button id="graph-copy">原位复制</button><button id="graph-delete" class="danger">删除</button></div>${OrgUI.quickGroupMarkup(app)}`;
     OrgUI.bindStars(app, host);
     OrgUI.bindGroupControls(app, host);
+    OrgUI.bindQuickGroup(app, host);
     $('graph-rename').onclick = () =>
       app.store.change(() => {
         room.name = $('graph-name').value.trim() || room.name;

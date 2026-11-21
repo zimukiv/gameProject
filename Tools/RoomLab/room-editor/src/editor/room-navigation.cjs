@@ -23,6 +23,36 @@ const UNGROUPED = '未分组';
 // touch the project, the cloud protocol or the home page's own picker key.
 // It is its own key so the two fold switches remember independent states.
 const COLLAPSE_KEY = 'roomlab-room-strip-collapsed';
+// Dragging the bottom edge of the thumbnail strip resizes its row. Like the
+// fold switch this is an editor preference in localStorage; it never touches
+// the project, the cloud protocol or the home page picker. null = auto height.
+const STRIP_HEIGHT_KEY = 'roomlab-room-strip-height',
+  MIN_STRIP_HEIGHT = 64,
+  MAX_STRIP_HEIGHT = 420;
+function clampStripHeight(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const height = Math.round(Number(value));
+  if (!Number.isFinite(height)) return null;
+  return Math.max(MIN_STRIP_HEIGHT, Math.min(MAX_STRIP_HEIGHT, height));
+}
+function stripHeight(app) {
+  if (app.state.roomStripHeight !== undefined) return app.state.roomStripHeight;
+  try {
+    app.state.roomStripHeight = clampStripHeight(localStorage.getItem(STRIP_HEIGHT_KEY));
+  } catch {
+    app.state.roomStripHeight = null;
+  }
+  return app.state.roomStripHeight;
+}
+function persistStripHeight(app, value) {
+  const height = clampStripHeight(value);
+  app.state.roomStripHeight = height;
+  try {
+    if (height === null) localStorage.removeItem(STRIP_HEIGHT_KEY);
+    else localStorage.setItem(STRIP_HEIGHT_KEY, String(height));
+  } catch {}
+  return height;
+}
 function stripCollapsed(app) {
   if (app.state.roomStripCollapsed === undefined) {
     try {
@@ -153,12 +183,11 @@ function bindBreadcrumbs(app) {
 // Thumbnail selector bar. Filter chips come from the shared organisation UI so
 // favourites/groups are exactly the same objects as on the home page.
 function strip(app) {
-  const filter = OrgUI.filterValue(app),
-    ids = new Set(Org.filterRoomIds(app.store.project, filter)),
-    visible = app.store.project.courses.flatMap((course) =>
-      course.rooms.filter((room) => ids.has(room.id)).map((room) => ({ course, room })),
-    );
+  // A group filter renders `group.roomIds` order; filtering the project arrays
+  // would silently restore project order and hide the group's own sequence.
+  const visible = OrgUI.orderedRooms(app);
   const collapsed = stripCollapsed(app),
+    height = stripHeight(app),
     org = Org.ensure(app.store.project),
     cards = visible
       .map(({ course, room }) => {
@@ -178,7 +207,10 @@ function strip(app) {
   // Only the space-hungry thumbnail row folds away; the "房间选择 N / 展开收起"
   // entry and the compact filter chips stay reachable while folded, so room
   // filtering never becomes a dead end.
-  return `<div class="room-thumb-selector${collapsed ? ' collapsed' : ''}" aria-label="房间缩略图选择栏"><div class="room-strip-head"><button id="room-strip-toggle" class="room-strip-toggle" aria-expanded="${!collapsed}" aria-controls="room-thumb-strip" title="${collapsed ? '展开房间缩略图栏' : '收起房间缩略图栏，释放画布高度'}"><span class="room-strip-count">房间选择 ${visible.length}</span><span class="room-strip-caret" aria-hidden="true">${collapsed ? '▸ 展开' : '▾ 收起'}</span></button></div>${OrgUI.filtersMarkup(app)}<div class="room-thumb-strip" id="room-thumb-strip">${cards || '<p class="room-strip-empty muted">此筛选下没有房间。</p>'}</div></div>`;
+  const resize = collapsed
+    ? ''
+    : `<div class="room-strip-resize" id="room-strip-resize" role="separator" aria-orientation="horizontal" aria-label="拖动调整房间缩略图栏高度" aria-valuemin="${MIN_STRIP_HEIGHT}" aria-valuemax="${MAX_STRIP_HEIGHT}"${height ? ` aria-valuenow="${height}"` : ''} tabindex="0" title="上下拖动调整缩略图栏高度；双击恢复自动高度"></div>`;
+  return `<div class="room-thumb-selector${collapsed ? ' collapsed' : ''}"${height ? ` style="--room-strip-height:${height}px"` : ''} aria-label="房间缩略图选择栏"><div class="room-strip-head"><button id="room-strip-toggle" class="room-strip-toggle" aria-expanded="${!collapsed}" aria-controls="room-thumb-strip" title="${collapsed ? '展开房间缩略图栏' : '收起房间缩略图栏，释放画布高度'}"><span class="room-strip-count">房间选择 ${visible.length}</span><span class="room-strip-caret" aria-hidden="true">${collapsed ? '▸ 展开' : '▾ 收起'}</span></button></div>${OrgUI.filtersMarkup(app)}<div class="room-thumb-strip" id="room-thumb-strip">${cards || '<p class="room-strip-empty muted">此筛选下没有房间。</p>'}</div>${resize}</div>`;
 }
 function paintThumbnails(app, host) {
   if (!host) return;
@@ -198,14 +230,80 @@ function paintThumbnails(app, host) {
     if (groupCanvas && color) groupCanvas.style.setProperty('--group-color', color);
   }
 }
+// Pointer drag on the bottom edge of the strip. The row height follows the
+// pointer live through a CSS variable (the canvas re-measures on the next
+// frame), and only the final height is persisted, so dragging stays cheap and
+// never rewrites the project.
+function bindStripResize(app, host) {
+  const handle = host?.querySelector('#room-strip-resize');
+  if (!handle) return;
+  const row = () => host.querySelector('.room-thumb-strip');
+  const apply = (height) => {
+    if (height === null) host.style.removeProperty('--room-strip-height');
+    else host.style.setProperty('--room-strip-height', height + 'px');
+    if (height === null) handle.removeAttribute('aria-valuenow');
+    else handle.setAttribute('aria-valuenow', String(height));
+  };
+  const current = () =>
+    stripHeight(app) ??
+    Math.round(row()?.getBoundingClientRect().height || 0) ??
+    MIN_STRIP_HEIGHT;
+  let drag = null;
+  const move = (event) => {
+    if (!drag) return;
+    event.preventDefault();
+    apply(clampStripHeight(drag.start + (event.clientY - drag.y)));
+  };
+  const finish = (event) => {
+    if (!drag) return;
+    const height = clampStripHeight(drag.start + (event.clientY - drag.y));
+    apply(height);
+    persistStripHeight(app, height);
+    drag = null;
+    handle.classList.remove('dragging');
+    if (handle.hasPointerCapture?.(event.pointerId))
+      handle.releasePointerCapture(event.pointerId);
+  };
+  handle.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    drag = { y: event.clientY, start: Math.max(MIN_STRIP_HEIGHT, current()) };
+    handle.classList.add('dragging');
+    handle.setPointerCapture?.(event.pointerId);
+  });
+  handle.addEventListener('pointermove', move);
+  handle.addEventListener('pointerup', finish);
+  handle.addEventListener('pointercancel', finish);
+  // Keyboard resizing keeps the separator reachable without a pointer.
+  handle.addEventListener('keydown', (event) => {
+    if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const base = current();
+    const next =
+      event.key === 'Home'
+        ? MIN_STRIP_HEIGHT
+        : event.key === 'End'
+          ? MAX_STRIP_HEIGHT
+          : base + (event.key === 'ArrowDown' ? 12 : -12);
+    apply(persistStripHeight(app, next));
+  });
+  // Double click (or double tap) restores the automatic thumbnail height.
+  handle.addEventListener('dblclick', () => {
+    persistStripHeight(app, null);
+    apply(null);
+  });
+}
 function bindStrip(app) {
   const host = document.querySelector('.room-thumb-selector');
   if (!host) return;
   const toggle = host.querySelector('#room-strip-toggle');
   if (toggle) toggle.onclick = () => toggleStrip(app);
+  bindStripResize(app, host);
   OrgUI.bindFilters(app, host);
   for (const button of host.querySelectorAll('[data-nav-room]'))
     button.onclick = () => {
+      // A completed drag must not also navigate to the room it ended on.
+      if (performance.now() < (app.state.roomTabClickAfter || 0)) return;
       if (button.dataset.navRoom === app.state.roomId) {
         app.state.roomFilter = app.state.roomFilter || 'all';
         app.render();
@@ -213,18 +311,10 @@ function bindStrip(app) {
       }
       navigate(app, button.dataset.navRoom);
     };
-  // Inside a group filter the thumbnails can be dragged to reorder the group,
-  // exactly like the old tab list did (rooms stay in their project arrays).
-  const groupId = String(OrgUI.filterValue(app)).replace(/^group:/, ''),
-    inGroup = Org.groupOf(Org.ensure(app.store.project), groupId);
-  if (inGroup) {
-    const stripHost = host.querySelector('.room-thumb-strip');
-    if (stripHost)
-      require('./room-tab-order.cjs').bind(app, null, stripHost, {
-        title: '按住拖动调整组内顺序',
-        move: (id, target, after) => moveInGroup(app.store.project, inGroup.id, id, target, after),
-      });
-  }
+  // Room thumbnails use the same organisation drag binder as the planning and
+  // library cards: dropping on a named group tab assigns the room; dropping on
+  // another card inside a group filter reorders that group's own list only.
+  OrgUI.bindCardDrag(app, host);
   // Folded thumbnails live inside display:none; skip painting that work and
   // repaint on the expand render instead.
   if (!stripCollapsed(app)) paintThumbnails(app, host);
@@ -234,14 +324,10 @@ const tabs = strip;
 function bindTabs(app) {
   bindStrip(app);
 }
+// Reorder inside a group only: project room arrays keep their own order, so a
+// group can show a rhythm that differs from the project sequence.
 function moveInGroup(project, groupId, id, target, after) {
-  const org = Org.ensure(project),
-    group = org.groups.find((g) => g.id === groupId);
-  if (!group || id === target || !group.roomIds.includes(id) || !group.roomIds.includes(target))
-    return;
-  group.roomIds.splice(group.roomIds.indexOf(id), 1);
-  group.roomIds.splice(group.roomIds.indexOf(target) + (after ? 1 : 0), 0, id);
-  project.roomOrganization = org;
+  project.roomOrganization = Org.moveWithinGroup(Org.ensure(project), groupId, id, target, after);
 }
 module.exports = {
   context,
@@ -257,10 +343,17 @@ module.exports = {
   strip,
   stripCollapsed,
   bindStrip,
+  bindStripResize,
   paintThumbnails,
   toggleStrip,
   expandStrip,
+  stripHeight,
+  persistStripHeight,
+  clampStripHeight,
   COLLAPSE_KEY,
+  STRIP_HEIGHT_KEY,
+  MIN_STRIP_HEIGHT,
+  MAX_STRIP_HEIGHT,
   tabs,
   bindTabs,
   moveInGroup,

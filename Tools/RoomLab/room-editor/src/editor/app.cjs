@@ -32,6 +32,8 @@ class App {
       // used by group assignment. Never persisted in the project.
       roomFilter: 'all',
       roomMulti: [],
+      // Transient Space-held mechanism-path preview in the room editor.
+      roomPathPeek: false,
     };
     try {
       this.state.roomPickerCollapsed =
@@ -88,6 +90,9 @@ class App {
       !Object.hasOwn(values, 'roomGroupId')
     )
       values = { ...values, roomGroupId: undefined };
+    // Fullscreen editing belongs to the room page only; any other route leaves
+    // it so the app chrome comes back.
+    if (route !== 'room') this.state.roomFullscreen = false;
     this.state = { ...this.state, ...values, route };
     this.state.selection = null;
     this.state.multiSelection = [];
@@ -185,6 +190,20 @@ class App {
     };
     document.addEventListener('keydown', (e) => {
       if (!this.store.hasProject || $('dialog').open) return;
+      // Fullscreen room editing works even while an inspector field is focused:
+      // F11 toggles it and Esc always leaves it.
+      if (this.state.route === 'room' && !this.game) {
+        if (e.code === 'F11') {
+          e.preventDefault();
+          this.toggleRoomFullscreen?.();
+          return;
+        }
+        if (e.code === 'Escape' && this.state.roomFullscreen) {
+          e.preventDefault();
+          this.exitRoomFullscreen?.();
+          return;
+        }
+      }
       if (e.target.closest?.('input,textarea,select')) {
         // Inside a text field the system keeps Ctrl+C/V text editing. Ctrl+S is
         // the exception: saving must not be swallowed by the focused input.
@@ -252,33 +271,63 @@ class App {
           roomCopy.paste(this);
         }
       } else if (this.state.route === 'room') {
+        // Holding Space peeks at every mechanism brick path. It is a transient
+        // view only (the real selection is untouched) and focused inputs /
+        // playtest never reach this branch.
+        if (e.code === 'Space') {
+          e.preventDefault();
+          if (!e.repeat) this.setRoomPathPeek?.(true);
+          return;
+        }
         const tools = require('./room-keys.cjs').tools;
         const tool = Object.keys(tools).find((name) => e.code === 'Key' + tools[name]);
         if (tool) this.setRoomTool?.(tool);
-        if (e.code === 'Escape') this.clearRoomSelection?.();
+        // F11 is handled by the room guard above, which also works while an
+        // inspector field is focused. Esc leaves fullscreen before it clears the
+        // canvas selection, so one press always gets the user back to the app.
+        if (e.code === 'Escape') {
+          if (this.exitRoomFullscreen?.()) {
+            e.preventDefault();
+            return;
+          }
+          this.clearRoomSelection?.();
+        }
         if (['Delete', 'Backspace'].includes(e.code)) {
           e.preventDefault();
           this.deleteRoomSelection?.();
         }
       }
     });
-    document.addEventListener('keyup', (e) => this.keys.delete(e.code));
+    document.addEventListener('keyup', (e) => {
+      this.keys.delete(e.code);
+      if (e.code === 'Space') this.setRoomPathPeek?.(false);
+    });
     window.addEventListener('blur', () => {
       if (this.game?.mode === 'playing') this.game.togglePause();
+      this.setRoomPathPeek?.(false);
       this.clearInputs();
     });
     document.addEventListener('visibilitychange', () => {
       if (document.hidden && this.game?.mode === 'playing') this.game.togglePause();
+      if (document.hidden) this.setRoomPathPeek?.(false);
       this.clearInputs();
     });
   }
   render() {
     document.body.classList.toggle('room-editing', ['room', 'play'].includes(this.state.route));
     document.body.classList.toggle('planning', this.state.route === 'home');
+    document.body.classList.toggle(
+      'room-fullscreen',
+      this.state.route === 'room' && !!this.state.roomFullscreen,
+    );
     $('app').style.height = '';
     this.currentDraw = null;
     this.setRoomTool = null;
+    this.setRoomPathPeek = null;
+    this.toggleRoomFullscreen = null;
+    this.exitRoomFullscreen = null;
     this.nodePanelRefresh = null;
+    if (this.state.route !== 'room') this.state.roomPathPeek = false;
     // The map owns a ResizeObserver, a window resize listener and a matchMedia
     // DPR watcher that all outlive its DOM node. Dispose them before the page
     // markup is replaced so a late event cannot draw into a detached canvas.

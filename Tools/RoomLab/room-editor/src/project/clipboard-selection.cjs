@@ -39,7 +39,7 @@ function groupMembers(room, kind, item) {
   if (kind === 'movables' && item.brickGroup)
     return room.movables.filter((b) => b.brickGroup === item.brickGroup);
   if (item.assemblyId)
-    return ['tiles', 'objects', 'movables', ...Native.kinds].flatMap((k) =>
+    return KINDS.flatMap((k) =>
       Native.list(room, k).filter((o) => o.assemblyId === item.assemblyId),
     );
   return [item];

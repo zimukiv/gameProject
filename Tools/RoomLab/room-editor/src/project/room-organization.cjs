@@ -188,15 +188,33 @@ function forgetRoom(org, roomId) {
   for (const group of next.groups) group.roomIds = group.roomIds.filter((id) => id !== roomId);
   return next;
 }
-// `all` -> project order (favourites are never reordered); `favorites` and
-// `group:<id>` return only matching rooms, still in project order.
+// Moves a room inside one user group without touching project order. The group
+// keeps its own ordered roomIds, so two groups (or a group and the project room
+// arrays) can show completely different orders. Pure and undo-friendly; invalid
+// targets/rooms leave the value unchanged instead of raising.
+function moveWithinGroup(org, groupId, roomId, targetId, after = false) {
+  const next = shape(org),
+    group = next.groups.find((candidate) => candidate.id === groupId);
+  if (!group || roomId === targetId) return next;
+  const from = group.roomIds.indexOf(roomId),
+    target = group.roomIds.indexOf(targetId);
+  if (from < 0 || target < 0) return next;
+  group.roomIds.splice(from, 1);
+  const at = group.roomIds.indexOf(targetId) + (after ? 1 : 0);
+  group.roomIds.splice(at, 0, roomId);
+  return next;
+}
+// `all` -> project order (favourites are never reordered); `favorites` keeps
+// project order; `group:<id>` follows the group's own roomIds order, which is
+// independent of (and can differ from) project order.
 function filterRoomIds(project, filter = 'all') {
   const all = roomIdList(project),
+    existing = new Set(all),
     org = ensure(project);
   if (filter === 'favorites') return all.filter((id) => org.favorites.includes(id));
   if (typeof filter === 'string' && filter.startsWith('group:')) {
     const group = groupOf(org, filter.slice(6));
-    return group ? all.filter((id) => group.roomIds.includes(id)) : [];
+    return group ? group.roomIds.filter((id) => existing.has(id)) : [];
   }
   return all;
 }
@@ -227,6 +245,7 @@ module.exports = {
   unassign,
   toggleRoom,
   forgetRoom,
+  moveWithinGroup,
   filterRoomIds,
   summary,
   nextGroupId,
