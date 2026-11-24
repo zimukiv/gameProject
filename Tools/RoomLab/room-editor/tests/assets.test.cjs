@@ -114,5 +114,11 @@ test('same-theme courses isolate custom assets and defaults while retaining them
   assert.deepEqual(placed.assetOverrides, { idle: custom.id });
   assert.equal(other.params.once, true);
   assert.deepEqual(other.assetOverrides, {});
-  assert.equal(Registry.params(loaded, loaded.courses[1].rooms[0].objects[0]).once, true);
+  assert.equal(
+    Registry.params(
+      loaded,
+      loaded.courses[1].rooms[0].objects.find((o) => o.type === 'calculus.integral'),
+    ).once,
+    true,
+  );
 });

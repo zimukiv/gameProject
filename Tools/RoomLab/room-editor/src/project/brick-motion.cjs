@@ -99,7 +99,38 @@ function position(brick, time) {
   }
   return { x: from.x, y: from.y };
 }
+function isMoving(brick, state) {
+  if (!state?.anim) return false;
+  if (state.anim.kind === 'path' && brick.motionPath) {
+    const time = state.pathTime || 0,
+      target = state.anim.to;
+    const next = time + Math.sign(target - time) * Math.min(0.001, Math.abs(target - time));
+    const a = position(brick, time),
+      b = position(brick, next);
+    return a.x !== b.x || a.y !== b.y;
+  }
+  if (state.anim.kind === 'angle') return state.angle !== state.anim.to;
+  return (
+    state.progress !== state.anim.to && (brick.x !== brick.targetX || brick.y !== brick.targetY)
+  );
+}
+// At a shared endpoint use the segment being entered, including reverse travel.
+function movingCollision(brick, state) {
+  if (!isMoving(brick, state)) return true;
+  if (brick.movingCollision === false) return false;
+  if (state.anim.kind !== 'path' || !brick.motionPath) return true;
+  const time = state.pathTime || 0;
+  const reverse = state.anim.to < time;
+  let end = 0;
+  for (const node of brick.motionPath) {
+    end += node.seconds;
+    if (time < end || (reverse && time === end)) return node.movingCollision !== false;
+  }
+  return true;
+}
 module.exports = {
+  movingCollision,
+  isMoving,
   modes,
   maxNodes,
   isPad,

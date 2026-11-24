@@ -4,7 +4,7 @@
 
 ## 定义与钩子
 
-定义必须包含 type（稳定命名空间）、version、name、glyph、category、courses、slots、defaults、schema。collider 为 pad/tile 或省略，trigger 为 foot/region/none。schema 支持 number（min/max）、boolean、select（values）、zone、path、text。模块版本写入项目 pluginManifest，主版本不兼容时拒绝试玩。
+定义必须包含 type（稳定命名空间）、version、name、glyph、category、courses、slots、defaults、schema。collider 为 pad/tile 或省略，trigger 为 foot/region/none；可选 defaultCollision=false 让新放置实例初始无碰撞，仍可在对象属性中覆盖；collectible=true 使对象可被接触拾取，item=true 会把拾取结果计入试玩背包；requiresItem 可指定使用时必须持有的道具类型；canTrigger(ctx,o,state) 可要求运行时条件满足后才真正触发；isSolid(ctx,o,state) 可动态切换对象当前是否具有实体；dynamicSolidity=true 时该结果优先于实例碰撞开关；runtimePosition(o,state) 可提供运行时绘制与碰撞位置，onPlayerContact(ctx,o,state) 处理玩家接触并返回 retry 表示触发死亡回退。schema 支持 number（min/max）、boolean、select（values）、zone、path、text。模块版本写入项目 pluginManifest，主版本不兼容时拒绝试玩。
 
 ```javascript
 module.exports = {
@@ -19,9 +19,9 @@ module.exports = {
 };
 ```
 
-引擎先附加 used/cooldown/firedDuringContact 等公共状态，createState 增加模块状态；每步调用 tick(ctx,o,s,dt)，符合接触、AI 条件和冷却时调用 onTrigger。isSolid 控制当前碰撞实体，surface 返回 friction/acceleration，visual 返回 slots 中状态名。所有状态必须可 JSON 克隆，不能存函数、DOM 或循环引用。
+引擎先附加 used/cooldown/firedDuringContact 等公共状态，createState 增加模块状态；每步调用 tick(ctx,o,s,dt)，符合接触、AI 条件和冷却时先调用 canTrigger，再调用 onTrigger。isSolid 控制当前碰撞实体，surface 返回 friction/acceleration，visual 返回 slots 中状态名。所有状态必须可 JSON 克隆，不能存函数、DOM 或循环引用。
 
-ctx 提供 player/ai/project/room 的运行副本，temperature(object)、setTemperature(zoneId,value)、actorOverlaps(object)、launchPlayer(x,y)、launchAI(object,range,x,y)、startRail(object)、activateAI(object)、emit(type,data)、say(message)。具体接口签名以 engine.context 为准，特殊 legacy.transformGroup 仅用于迁移兼容。
+ctx 提供 player/ai/project/room 的运行副本，temperature(object)、setTemperature(zoneId,value)、actorOverlaps(object)、launchPlayer(x,y)、launchAI(object,range,x,y)、startRail(object)、activateAI(object)、stopAI()、addScore(points,reason)、emit(type,data)、say(message)。具体接口签名以 engine.context 为准，特殊 legacy.transformGroup 仅用于迁移兼容。
 
 ## 死亡副作用
 

@@ -14,6 +14,7 @@ const {
   path = require('node:path'),
   crypto = require('node:crypto');
 const Files = require('./project-files.cjs');
+const AutoSave = require('./project-autosave.cjs');
 const root = path.resolve(__dirname, '../..'),
   testing = process.env.ROOM_EDITOR_TEST === '1',
   sessions = new Map();
@@ -67,6 +68,34 @@ function recordFile(file, project, files) {
   );
   cloud.repo.linkFile(t.id, file, project);
   return cloud.status();
+}
+// Autosave may only touch the file the user opened/associated, and only while
+// its bytes still match the hash we read. Otherwise it writes a recovery
+// snapshot under the profile and leaves the good file alone.
+function autosaveCandidate(payload, project) {
+  return AutoSave.candidateFor({
+    payload,
+    project,
+    sessions,
+    current: cloud.repo.data.trees.find((t) => t.id === cloud.repo.data.current && !t.deletedAt),
+    forced: testPath(payload),
+  });
+}
+// Keep worktree file hashes in step with an autosave write so the next tick and
+// the manual-save conflict check compare against the bytes we just wrote.
+function updateLinkedHash(file, project) {
+  const lower = file.toLowerCase(),
+    hash = fileHash(file);
+  let changed = false;
+  for (const tree of cloud.repo.data.trees) {
+    if (tree.deletedAt || !tree.localFile) continue;
+    if (tree.localFile.path.toLowerCase() !== lower) continue;
+    if (tree.projectId && tree.projectId !== project.id) continue;
+    tree.localFile.hash = hash;
+    tree.localFile.linkedAt = Date.now();
+    changed = true;
+  }
+  if (changed) cloud.repo.save();
 }
 function register() {
   ipcMain.on('cloud:renderer-ready', (event) => {
@@ -242,7 +271,33 @@ function register() {
     sessions.set(session, { file, projectId: loaded.project.id, hash: fileHash(file) });
     return { ...loaded, session, path: file, cloudStatus };
   });
-  ipcMain.handle('project:save', async (event, payload) => {
+  // "Save as" into a folder that already holds same-named artwork with different bytes is
+// recoverable: ask once, keep the old files in .project-backups, then overwrite. Autosave
+// already reports this as a soft error, so a manual save must not hard-fail either.
+function writeProjectWithAssetConfirmation(file, payload) {
+  return Files.writeProjectWithConfirmation(
+    file,
+    payload.project,
+    payload.files || [],
+    (conflicts, target) => {
+      const list = Array.isArray(conflicts) ? conflicts : [];
+      const shown = list
+        .slice(0, 6)
+        .map((item) => '· ' + (item.path || item.name))
+        .join('\n');
+      return acknowledge(
+        payload,
+        '目标目录里已有同名素材但内容不同，是否用当前工程覆盖？',
+        target +
+          '\n' +
+          shown +
+          (list.length > 6 ? '\n…共 ' + list.length + ' 个' : '') +
+          '\n覆盖前会把旧素材备份到 .project-backups；取消则请换一个目录另存。',
+      );
+    },
+  );
+}
+ipcMain.handle('project:save', async (event, payload) => {
     trusted(event);
     const saved = sessions.get(payload.session);
     const current = cloud.repo.data.trees.find((t) => t.id === cloud.repo.data.current);
@@ -287,13 +342,52 @@ function register() {
       )
         return null;
     }
-    const result = Files.writeProject(file, payload.project, payload.files || []),
-      session =
-        payload.session && sessions.has(payload.session) ? payload.session : crypto.randomUUID();
+    const session =
+      payload.session && sessions.has(payload.session) ? payload.session : crypto.randomUUID();
+    const result = await writeProjectWithAssetConfirmation(file, payload);
+    if (!result) return null;
     const complete = Files.readProject(file);
-    const cloudStatus = recordFile(file, payload.project, complete.files);
+    let cloudStatus = null;
+    try {
+      cloudStatus = recordFile(file, payload.project, complete.files);
+    } catch (error) {
+      // The project is already on disk; a cloud bookkeeping failure must not turn a
+      // finished save into "保存失败".
+      console.error('recordFile failed', error);
+      try {
+        cloudStatus = cloud.status();
+      } catch {
+        cloudStatus = null;
+      }
+    }
     sessions.set(session, { file, projectId: payload.project.id, hash: fileHash(file) });
     return { ...result, session, cloudStatus };
+  });
+  ipcMain.handle('project:autosave', async (event, payload) => {
+    trusted(event);
+    const project = payload?.project;
+    if (!project || typeof project.id !== 'string')
+      throw new Error('自动保存请求无效：缺少项目数据。');
+    const files = Array.isArray(payload.files) ? payload.files : [],
+      candidate = autosaveCandidate(payload, project),
+      result = AutoSave.autosave({
+        project,
+        files,
+        candidate,
+        recoveryRoot: path.join(app.getPath('userData'), AutoSave.RECOVERY_FOLDER),
+      });
+    if (result.ok && result.mode === 'file') {
+      const session =
+        payload.session && sessions.has(payload.session) ? payload.session : crypto.randomUUID();
+      sessions.set(session, {
+        file: result.file,
+        projectId: project.id,
+        hash: fileHash(result.file),
+      });
+      updateLinkedHash(result.file, project);
+      return { ...result, session };
+    }
+    return result;
   });
   ipcMain.handle('assets:import', async (event, payload) => {
     trusted(event);
@@ -312,6 +406,28 @@ function register() {
       if (fs.statSync(file).size > 20 * 1024 * 1024) throw new Error('素材不能超过 20 MiB');
       return { name: path.basename(file), bytes: new Uint8Array(fs.readFileSync(file)) };
     });
+  });
+  // Shared reader for room/group ZIP packages. The renderer owns validation and
+  // the import UI; main only returns the picked file's bytes.
+  ipcMain.handle('project:import-archive', async (event, payload) => {
+    trusted(event);
+    const forced = testPath(payload),
+      chosen = forced
+        ? { canceled: false, filePaths: [forced] }
+        : await dialog.showOpenDialog(window, {
+            title: '导入房间分组包',
+            properties: ['openFile'],
+            filters: [{ name: 'Room Lab 项目包', extensions: ['zip'] }],
+          });
+    if (chosen.canceled) return null;
+    const file = chosen.filePaths[0],
+      size = fs.statSync(file).size;
+    if (size > 128 * 1024 * 1024) throw new Error('分组包不能超过 128 MiB');
+    return {
+      name: path.basename(file),
+      path: file,
+      bytes: new Uint8Array(fs.readFileSync(file)),
+    };
   });
   ipcMain.handle('project:export', async (event, payload) => {
     trusted(event);
@@ -348,7 +464,7 @@ app.whenReady().then(() => {
     minHeight: 650,
     show: !testing,
     backgroundColor: '#0e1521',
-    title: 'Room Lab · 三主题大关编辑器 v3.0.0',
+    title: 'Room Lab · 房间关卡编辑器 v4.2.0',
     autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),

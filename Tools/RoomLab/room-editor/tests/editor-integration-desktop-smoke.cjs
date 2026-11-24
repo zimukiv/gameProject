@@ -45,8 +45,10 @@ const { _electron } = require(process.env.PLAYWRIGHT_MODULE || 'playwright'),
       () => window.__ROOM_LAB__.snapshot().project.nativeCampaign?.unknown?.preserve === 17,
     );
     await page.locator('[data-enter="' + c.id + '"]').click();
-    assert.equal(G.overlaps((await course()).rooms), false);
+    assert.equal(G.overlaps((await course()).rooms), true);
     assert.deepEqual((await course()).connections, c.connections);
+    await page.locator('#graph-arrange').click();
+    assert.equal(G.overlaps((await course()).rooms), false);
     await page.locator('#graph-undo').click();
     assert.equal(G.overlaps((await course()).rooms), true);
     await page.locator('#graph-redo').click();
@@ -61,7 +63,10 @@ const { _electron } = require(process.env.PLAYWRIGHT_MODULE || 'playwright'),
     const state = await snap(),
       v = state.state.graphView,
       card = (await course()).rooms[0],
-      center = { x: card.graph.x + 30, y: card.graph.y + 15 };
+      // The route map is global: a room is painted at authored room.graph plus
+      // its course offset, so the hit point must use the same global geometry.
+      offset = (state.state.courseOffsets || {})[c.id] || { x: 0, y: 0 },
+      center = { x: offset.x + card.graph.x + 30, y: offset.y + card.graph.y + 15 };
     const attrs = await page.locator('#graph').evaluate((e) => ({ w: e.width, h: e.height }));
     const pos = (x, y) => [
       graph.x + ((x * v.scale + v.x) * graph.width) / attrs.w,

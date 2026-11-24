@@ -1,20 +1,27 @@
 # v2 项目格式
 
+4.2.0 起可选顶层 `layout = {version: 1, courseOffsets: {courseId: {x, y}}}` 只描述全局路线图里各大关的整体位移，不改变任何 `room.graph`、房间内容、ID 或接线。旧的 room.graph 仍是每个大关内的排版坐标；全局位置 = room.graph + 所属大关偏移。缺少 layout 时编辑器按作者坐标推导一次并保存，旧的/第三方的项目继续可读；单房间导出包会丢弃 layout，避免来源项目的偏移带入房间包。hit 测试、拖动、适配视图和端口位置全部使用同一份全局几何。复制、粘贴、导入、覆盖继续保持原 ID 规则。
+
+4.2.0 起可选顶层 `roomOrganization = {version: 1, favorites: [roomId], groups: [{id, name, roomIds: [roomId]}]}` 是纯整理元数据：收藏与用户命名分组，仅用稳定 room ID 引用，不改变大关归属、房间顺序、ID 或任何运行时字段。分组可包含不同大关的房间，一间房可在多个分组；删除分组不删除房间，删除房间会从收藏/分组中清理。读取时丢弃已不存在的 room ID、重复 ID、空名称和畸形条目；缺少该字段的项目不会被自动写入，未知顶层字段保持不变。单房间导出包会丢弃 roomOrganization（项目级引用不外泄）；JSON/ZIP/本机恢复快照与云同步 codec 按原样往返。
 2.5.4 保存的 revision 可带 summary={projectName,courseNames,roomCount}，参与原有版本 ID 校验；项目 JSON version 不变。批量导入为所选房间分配独立内部 ID；覆盖时保留目标 room.id 和匹配端口 ID。轨迹名称仍使用 playTraces[].name，回放按已有 points[].t / break，不新增玩法状态格式。
 
 2.5.2 可选 room.playCamera 为 `{mode: "room" | "follow", cols: 30, rows: 17}`。缺省按整房显示；跟随模式宽高为 1–256 格的有限数字，缺省 30×17，实际画面按窗口比例扩展并限制在房间边缘。只参与渲染，不参与物理或路径记录。
 
 2.5.1 可选 room.artBindings 使用与 course.artBindings 相同的结构，仅覆盖当前房间美术，用于跨项目导入时保留原样。缺省时使用大关绑定。room.importSource 记录来源 ID；单房间包顶层 roomExport 记录来源及未带入运行的跨房连线。普通项目导入/导出保留这些可选字段；不参与机关逻辑。
 
-项目 JSON 的 version=2；格子世界单位为 tileSize=32。顶层有 id/name/notes/settings/courses/assets/blockDefaults/pluginManifest。稳定 ID 是连接与引用的键，不能随名称修改。旧 v1 单大关数据由 model.migrate 转换为 legacy 大关，旧机关单独隔离。
+项目 JSON 的 version=2；格子世界单位为 tileSize=32。顶层有 id/name/notes/settings/courses/assets/blockDefaults/pluginManifest，以及可选的 layout（见上）。稳定 ID 是连接与引用的键，不能随名称修改。旧 v1 单大关数据由 model.migrate 转换为 legacy 大关，旧机关单独隔离。
 
 ## 大关与房间
 
 course：id/name/kind/notes/aiId/defaultSize/artBindings/rooms/connections。此版内容 kind=physics。artBindings 为 `{blockType: {state: assetId}}`，固定地形用 common.solid。
 
-room：id/name/notes/cols/rows/graph/phase/aiId/aiPolicy/environment/tiles/entries/exits/objects/movables/zones。graph 只存接线板排布。phase=slow/fast/inherit，aiPolicy=off/start/inherit；环境 cold/hot。tiles 是整数 x/y 固定砖列表。
+room：id/name/notes/cols/rows/graph/phase/aiId/aiPolicy/environment/tiles/entries/exits/objects/movables/zones。graph 只存接线板排布，是每个大关内的作者坐标；全局路线图不改写它，只在顶层 layout 偏移之上叠加。phase=slow/fast/inherit，aiPolicy=off/start/inherit；环境 cold/hot。tiles 是整数 x/y 固定砖列表。
 
-入口：id/name/notes/x/y/face（1或-1）；出口：id/name/notes/x/y/w/h。每房至少一个入口。connection：id、from={roomId,exitId}、to={roomId,entryId}、velocity=reset/keep。接线属于大关，不跨大关。
+入口：id/name/notes/x/y/face（1或-1）/allowReturn（可选布尔，缺省 true）；出口：id/name/notes/x/y/w/h。每房至少一个入口。connection：id、from={roomId,exitId}、to={roomId,entryId}、velocity=reset/keep。接线属于大关，不跨大关。
+
+跨大关整房复制使用内存剪贴板，不新增持久化字段。粘贴时先生成单房间导出快照，再按独立房间导入规则重映射内部 ID、素材和引用；只保留两端都在该房间内的 connection，跨房 connection 由玩家重新接线。
+
+运行时过门后会记住本次到达的入口和来源出口。入口 allowReturn=false 时不执行反向返回，但正向进入不受影响。玩家离开后重新进入该入口时反向返回来源出口；该出口在玩家离开前保持休眠，避免立即再次过门。反向关系只存在于当前试玩会话和回退检查点，不写入项目或 connection。
 
 ## 功能对象
 
@@ -32,12 +39,12 @@ room.playTraces 可选，保存 `{id,name,createdAt,color,visible,points}`；点
 
 ## 死亡回退
 
-| resetPolicy | 含义 |
-| --- | --- |
-| checkpoint | 回到本次进入当前入口时的对象状态（默认） |
-| preserve | 保留当前对象的使用、计时等状态；温控板同时恢复其温度效果 |
-| initial | 当前房间对象按模块初始状态重建 |
-| life | 恢复本条命首次进入各房间时的对象状态，涉及已访问房间缓存 |
+| resetPolicy | 含义                                                     |
+| ----------- | -------------------------------------------------------- |
+| checkpoint  | 回到本次进入当前入口时的对象状态（默认）                 |
+| preserve    | 保留当前对象的使用、计时等状态；温控板同时恢复其温度效果 |
+| initial     | 当前房间对象按模块初始状态重建                           |
+| life        | 恢复本条命首次进入各房间时的对象状态，涉及已访问房间缓存 |
 
 死亡恢复当前入口的资源、计分和收集检查点；实际落地免费首冲重新可用。pause 不推进任何运行计时。AI 启动等级在跨房保留，死亡恢复入口时 AI 状态。
 
@@ -45,7 +52,7 @@ room.playTraces 可选，保存 `{id,name,createdAt,color,visible,points}`；点
 
 asset：id/name/path/mime/width/height/courseId/category/subcategory/frameWidth/frameHeight/fps/hash。category 为 terrain/mechanism/item/character/scene/unsorted；subcategory 通常为功能块 type，或同类通用 shared。分类定义见 src/assets/catalog.cjs。新增字段可选，旧 v2 数据从现有素材绑定推断分类；新导入必须归类后才作为对应方块的候选。可用素材满足 courseId 是当前大关或 common、大类匹配、子类匹配 type 或 shared。
 
-path 必须为 `assets/...` 相对路径，禁止 ..、绝对盘符及反斜杠。替换素材 ID、分类及大关归属不变，内容散列与路径改变；旧字节保留在缓存中支持撤销。ZIP 根有 project.json 及 assets/*，引用文件必须全部齐全。ZIP 解压总量限 128 MiB、单项 25 MiB；UI 导入单图限 20 MiB。
+path 必须为 `assets/...` 相对路径，禁止 ..、绝对盘符及反斜杠。替换素材 ID、分类及大关归属不变，内容散列与路径改变；旧字节保留在缓存中支持撤销。ZIP 根有 project.json 及 assets/\*，引用文件必须全部齐全。ZIP 解压总量限 128 MiB、单项 25 MiB；UI 导入单图限 20 MiB。
 
 缺失模块或主版本不一致拒绝试玩，缺图显示占位。数据越界在编辑状态警告但保留，试玩拒绝。温控关联失联提示并拒绝试玩；需要修复或选择整个房间。桌面 JSON 备份在同目录 .project-backups，替换不改外部图片。
 
@@ -57,8 +64,11 @@ path 必须为 `assets/...` 相对路径，禁止 ..、绝对盘符及反斜杠�
 
 温控采用单向控制：控制器的 zoneId 选择温控区，冰块不再绑定任何区域。冰块矩形与区域有面积重叠时按该区温度生效；重叠多个冷热区时热优先，区外取房间默认温度。初始预览和运行时共用 temperature.at。旧冰块 zoneId 导入时丢弃；兼容 v2 导出会按几何位置写入供 2.3.1 使用的参考值，新版不读取该值。多个重叠区、范围改变或新碰撞覆盖须双方使用 2.4 才能获得一致玩法。热态融冰，冷态等待 respawnDelay 并避免在玩家/AI 身上生成。
 
-云连接、实时序号、工作树与读取来源均存于项目文件以外。关卡 JSON 继续 version=2，旧 v1 沿用原迁移逻辑。
+### 4.2.0 AI 出现点（可选新增字段）
 
+`common.aiSpawn` 是非实体标记方块，只作为同房间 AI 启动板的目标位置。启动板参数 `params.aiSpawnId` 保存本房间出现点对象 ID，可缺省或置空；删除出现点、复制粘贴、整房复制、导入或读取旧存档时按对象 ID 映射重写或清除该引用。引用缺失、类型不符或指向其他房间时不影响试玩：AI 仍按旧行为在玩家旁出现。该字段为可选新增参数，旧版本编辑器读取时按未知参数保留，旧运行时忽略并保持原行为；不改 AI 出入口（portalIn/portalOut）与 routeId 语义，也不改变项目版本。
+
+云连接、实时序号、工作树与读取来源均存于项目文件以外。关卡 JSON 继续 version=2，旧 v1 沿用原迁移逻辑。
 
 ## 喷气与自定义运动参数兼容
 

@@ -1,6 +1,6 @@
 'use strict';
 const Order = require('../project/room-order.cjs');
-function bind(app, course, host) {
+function bind(app, course, host, options = {}) {
   let drag = null,
     raf;
   const buttons = [...host.querySelectorAll('[data-nav-room]')],
@@ -48,7 +48,9 @@ function bind(app, course, host) {
     raf = requestAnimationFrame(scroll);
   }
   for (const button of buttons) {
-    button.title = (button.title ? button.title + ' · ' : '') + '按住拖动调整顺序；最左为首房';
+    button.title =
+      (button.title ? button.title + ' · ' : '') +
+      (options.title || '按住拖动调整顺序；最左为首房');
     button.style.touchAction = 'pan-y';
     button.addEventListener('pointerdown', (e) => {
       if (e.button !== 0 || buttons.length < 2) return;
@@ -96,7 +98,11 @@ function bind(app, course, host) {
     clear();
     if (host.hasPointerCapture(e.pointerId)) host.releasePointerCapture(e.pointerId);
     if (action.active && action.target)
-      app.store.change(() => Order.move(course, action.id, action.target, action.after));
+      app.store.change(() =>
+        options.move
+          ? options.move(action.id, action.target, action.after)
+          : Order.move(course, action.id, action.target, action.after),
+      );
   });
   host.addEventListener('pointercancel', clear);
   host.addEventListener('lostpointercapture', clear);

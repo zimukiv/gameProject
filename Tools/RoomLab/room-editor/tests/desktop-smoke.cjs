@@ -41,7 +41,7 @@ const { _electron } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       file,
     );
     assert.deepEqual(opened.project, snap);
-    assert.equal(opened.files.length, 13);
+    assert.equal(opened.files.length, snap.assets.length);
     const updated = { ...snap, notes: '直接保存到打开的文件' };
     const overwritten = await page.evaluate(
       ({ project, session }) =>
@@ -95,16 +95,16 @@ const { _electron } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       traceFile,
     );
     assert.equal(loadedTraces.text, traceText);
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
+    await page.evaluate(() => window.__ROOM_LAB__.openCourseWorkspace());
     await page.getByRole('button', { name: '房间列表', exact: true }).click();
     await page.getByRole('button', { name: '编辑房间', exact: true }).first().click();
-    assert.equal(await page.locator('.room-tabs [data-nav-room]').count(), 3);
+    assert.equal(await page.locator('.room-thumb-selector [data-nav-room]').count(), 3);
     assert.equal(await page.locator('.block-palette [data-block-type^="physics."]').count(), 4);
     assert.equal(await page.locator('[data-block-type="common.aiStartHollow"]').count(), 0);
     assert.equal(await page.locator('#room-hints').count(), 1);
     assert.equal(await page.locator('#room-traces').count(), 1);
-    await page.locator('#back-course').click();
-    await page.getByRole('button', { name: '缩略接线板', exact: true }).click();
+    await page.locator('#crumb-project').click();
+    await page.getByRole('button', { name: '全局路线图', exact: true }).click();
     assert.equal(await page.locator('#graph-fit').count(), 1);
     const data = await app.evaluate(async ({ BrowserWindow }) =>
       (

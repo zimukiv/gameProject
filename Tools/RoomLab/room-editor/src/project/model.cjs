@@ -3,6 +3,7 @@ const { clone, uid, rotate } = require('../shared/utils.cjs');
 const RailNodes = require('./rail-nodes.cjs');
 const Traces = require('./play-traces.cjs');
 const Collision = require('./collision.cjs');
+const TeacherLinks = require('./teacher-links.cjs');
 const Limits = require('./room-limits.cjs');
 const VERSION = 2,
   TILE = 32;
@@ -23,7 +24,17 @@ function room(id, name, cols = 30, rows = 17) {
     environment: 'cold',
     graph: { x: 0, y: 0 },
     tiles: [],
-    entries: [{ id: id + '-entry', name: '默认入口', notes: '', x: 1, y: rows - 4, face: 1 }],
+    entries: [
+      {
+        id: id + '-entry',
+        name: '默认入口',
+        notes: '',
+        x: 1,
+        y: rows - 4,
+        face: 1,
+        allowReturn: true,
+      },
+    ],
     exits: [],
     objects: [],
     movables: [],
@@ -114,7 +125,7 @@ function example() {
     id: 'physics-project',
     name: '第一大关 · 物理 DDL',
     notes: '物理主题示例：速度、材料与温控。',
-    settings: { tileSize: TILE, maxDashes: 3, paidStockCap: 3, freeDashOnLand: true },
+    settings: { tileSize: TILE, maxDashes: 3, paidStockCap: 1, freeDashOnLand: true },
     courses: [
       {
         id: 'physics',
@@ -156,11 +167,31 @@ function example() {
 function themedExample() {
   return require('./themes.cjs').starter();
 }
+
 function migrate(data) {
-  if (data?.version === 2)
-    return require('./compatibility.cjs').normalize(
+  if (data?.version === 2) {
+    const project = require('./compatibility.cjs').normalize(
       Collision.normalize(RailNodes.normalize(clone(data))),
     );
+    // Optional additive organisation metadata: keep it only when present and
+    // drop stale room IDs / malformed groups. Unknown root fields stay as-is.
+    if (project.roomOrganization !== undefined) {
+      const Org = require('./room-organization.cjs');
+      project.roomOrganization = Org.sanitize(project.roomOrganization, Org.roomIdList(project));
+    }
+    // 可选项目级全局连接层：只在存在时清理结构，绝不重建或删除 courses。
+    if (project.map !== undefined) {
+      const clean = require('./map-compat.cjs').sanitize(project.map);
+      if (clean) project.map = clean;
+      else delete project.map;
+    }
+    // Explicit cross-room AI routing: keep valid bindings/wires across save/load
+    // and silently drop stale references (deleted ports, rooms or wrong types).
+    require('./ai-ports.cjs').sanitize(project);
+    // AI spawn point references: keep valid room-local markers, clear stale ids.
+    require('./ai-spawns.cjs').sanitize(project);
+    return project;
+  }
   if (data?.version !== 1 || !Array.isArray(data.rooms)) throw new Error('不支持的项目版本。');
   const p = example();
   p.id = uid('project');
@@ -329,6 +360,29 @@ function validate(p, { play = false } = {}) {
           !r.zones.some((z) => z.id === o.params.zoneId)
         )
           (play ? errors : warnings).push('温控区域关联缺失：' + o.id);
+        if (TeacherLinks.isTeacher(o)) {
+          const min = o.params?.patrolMinX,
+            max = o.params?.patrolMaxX;
+          if (
+            !Number.isInteger(min) ||
+            !Number.isInteger(max) ||
+            min < 0 ||
+            max < 0 ||
+            min >= r.cols ||
+            max >= r.cols
+          )
+            (play ? errors : warnings).push('巡查平台范围无效：' + o.id);
+          if (o.params?.checkinIds !== undefined && !Array.isArray(o.params.checkinIds))
+            errors.push('巡查老师签到绑定必须是数组：' + o.id);
+          else {
+            const ids = TeacherLinks.ids(o);
+            if (Array.isArray(o.params?.checkinIds) && ids.length !== o.params.checkinIds.length)
+              (play ? errors : warnings).push('巡查老师签到绑定有重复或无效 ID：' + o.id);
+            for (const id of ids)
+              if (!r.objects.some((item) => item.id === id && item.type === TeacherLinks.CHECKIN))
+                (play ? errors : warnings).push('巡查老师绑定的签到方块缺失：' + o.id);
+          }
+        }
         if (o.params?.path)
           for (const n of o.params.path) {
             if (n.id) checkId(n.id, '轨道子节点');
@@ -404,7 +458,34 @@ function validate(p, { play = false } = {}) {
   const native = require('./native-validation.cjs').validate(p, { play });
   errors.push(...native.errors);
   warnings.push(...native.warnings);
+  // 统一地图兼容层校验：项目级全局连接、跨原大关端口与房间索引。
+  // 旧 course.connections 与 project.courses 保持不变。
+  const compat = require('./map-compat.cjs').validate(p);
+  errors.push(...compat.errors);
+  warnings.push(...compat.warnings);
+  // Explicit AI exit/entrance wires and room bindings.
+  const aiPorts = require('./ai-ports.cjs').validate(p);
+  errors.push(...aiPorts.errors);
+  warnings.push(...aiPorts.warnings);
+  // AI spawn point bindings are advisory: a stale reference falls back to the
+  // legacy spawn position instead of blocking play.
+  const aiSpawns = require('./ai-spawns.cjs').validate(p);
+  errors.push(...aiSpawns.errors);
+  warnings.push(...aiSpawns.warnings);
   return { errors: [...new Set(errors)], warnings: [...new Set(warnings)] };
+}
+// 运行时按需校验单个房间：只把目标房间纳入 play 校验，未加载房间的
+// 缺失插件/越界不阻塞当前房间。旧 course.connections 不参与，因为运行时
+// 过门走全局连接解析，坏连接应由编辑器保存校验提示，而不是阻止进房。
+function validateRoom(p, roomId, { play = true } = {}) {
+  const ref = require('./map-compat.cjs').roomRef(p, roomId);
+  if (!ref) return { errors: ['目标房间不存在：' + roomId], warnings: [] };
+  const scoped = {
+    ...p,
+    map: undefined,
+    courses: [{ ...ref.course, rooms: [ref.room], connections: [] }],
+  };
+  return validate(scoped, { play });
 }
 function resizeRoom(r, cols, rows) {
   const next = clone(r);
@@ -423,9 +504,15 @@ function resizeRoom(r, cols, rows) {
       )
     )
       out.push({ kind: 'target', id: b.id });
-  for (const o of next.objects)
+  for (const o of next.objects) {
     for (const n of o.params?.path || [])
       if (n.x > cols || n.y > rows) out.push({ kind: 'path', id: o.id });
+    if (
+      TeacherLinks.isTeacher(o) &&
+      Math.max(o.params?.patrolMinX ?? 0, o.params?.patrolMaxX ?? 0) >= cols
+    )
+      out.push({ kind: 'teacher-range', id: o.id });
+  }
   out.push(...require('./native-compat.cjs').outOfBounds(next, cols, rows));
   return { room: next, out };
 }
@@ -445,11 +532,16 @@ function duplicateRoom(course, sourceId) {
   }
   for (const o of r.objects) {
     RailNodes.ensure(o, { newIds: true });
+    TeacherLinks.remap(o, map);
     if (o.params.zoneId) o.params.zoneId = map.get(o.params.zoneId) || o.params.zoneId;
     if (o.params.unlockPadId)
       o.params.unlockPadId = map.get(o.params.unlockPadId) || o.params.unlockPadId;
   }
   for (const b of r.movables) if (b.padId) b.padId = map.get(b.padId) || '';
+  for (const { item } of require('./block-groups.cjs').items(r))
+    if (item.attachmentTo) item.attachmentTo = map.get(item.attachmentTo) || item.attachmentTo;
+  require('./ai-ports.cjs').remapRoom(r, map);
+  require('./ai-spawns.cjs').remap(r, map);
   require('./native-compat.cjs').duplicate(r);
   return r;
 }
@@ -472,6 +564,7 @@ module.exports = {
   themedExample,
   migrate,
   validate,
+  validateRoom,
   resizeRoom,
   duplicateRoom,
   connect,

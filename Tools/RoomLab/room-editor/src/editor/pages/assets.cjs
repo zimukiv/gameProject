@@ -1,6 +1,7 @@
 'use strict';
 const A = require('../../assets/manager.cjs'),
   C = require('../../assets/catalog.cjs'),
+  Spec = require('../../assets/spec.cjs'),
   Themes = require('../../project/themes.cjs');
 const { esc, $, field, select, modal } = require('../dom.cjs');
 function folders(project, group, course, assets) {
@@ -19,20 +20,24 @@ function folders(project, group, course, assets) {
   return list;
 }
 const courseLabel = (c) => c.name + '（' + Themes.theme(c.kind).label + '）';
+// Advisory spec line for the asset library. Legacy names/sizes are shown as a
+// hint and remain fully usable; nothing here rewrites or rebinds an asset.
+function specLine(a) {
+  const info = Spec.check(a);
+  if (!info) return '';
+  const notes = [...info.issues, ...(info.warnings || [])].join('；');
+  return `<p class="asset-spec ${esc(info.status)}" title="${esc(notes || info.note || '')}">${esc(info.label)}${info.canonical ? ' · 命名 ' + esc(info.canonical) : ''}</p>`;
+}
 function render(app) {
   const p = app.store.project,
-    scope = app.state.assetCourse,
-    course = p.courses.find((c) => c.id === scope),
-    courseId = scope === 'all' || scope === 'common' ? scope : (course || app.course()).id,
-    active = p.courses.find((c) => c.id === courseId),
+    // The asset page always browses the whole project. asset.courseId is still
+    // read for compatibility/import ownership, but never hides an asset and is
+    // never rewritten here.
+    courseId = 'all',
+    active = app.course(),
     group = app.state.assetGroup || null,
     sub = app.state.assetSub || null;
-  const scoped = p.assets.filter((a) => {
-    if (courseId === 'all' || a.courseId === courseId) return true;
-    if (!active || !C.inCourse(a, active)) return false;
-    const f = C.classification(p, a);
-    return C.children(f.category, active.kind).some((v) => v.id === f.subcategory);
-  });
+  const scoped = p.assets;
   const matches = (a, g, s) => {
     const f = C.classification(p, a);
     return f.category === g && (!s || f.subcategory === s);
@@ -79,17 +84,17 @@ function render(app) {
       .join('')}</div>`;
   else {
     const items = scoped.filter((a) => matches(a, group, sub));
-    content = `<div class="asset-grid">${items.map((a) => `<article class="card asset-card"><img src="${esc(app.assetURL(a.id) || '')}" alt="${esc(a.name)}"><h3>${esc(a.name)}</h3><p>${a.width} × ${a.height} · ${A.usage(p, a.id).length} 处引用</p><p>${esc(p.courses.find((c) => c.id === a.courseId)?.name || '通用素材')}</p><div class="actions"><button data-meta="${esc(a.id)}">资料 / 归类</button><button data-replace="${esc(a.id)}">替换</button><button data-remove="${esc(a.id)}" class="danger">移除</button></div></article>`).join('')}</div>${!items.length ? '<div class="asset-empty"><h2>这个分类还没有素材</h2><p>点击「导入图片 / 图集」，新素材会直接放到当前分类。</p></div>' : ''}`;
+    content = `<div class="asset-grid">${items
+      .map(
+        (a) =>
+          `<article class="card asset-card"><img src="${esc(app.assetURL(a.id) || '')}" alt="${esc(a.name)}" loading="lazy"><h3>${esc(a.name)}</h3><p>${a.width} × ${a.height} · ${A.usage(p, a.id).length} 处引用</p>${specLine(a)}<p>${esc(p.courses.find((c) => c.id === a.courseId)?.name || '通用素材')}</p><div class="actions"><button data-meta="${esc(a.id)}">资料 / 归类</button><button data-replace="${esc(a.id)}">替换</button><button data-remove="${esc(a.id)}" class="danger">移除</button></div></article>`,
+      )
+      .join(
+        '',
+      )}</div>${!items.length ? '<div class="asset-empty"><h2>这个分类还没有素材</h2><p>点击「导入图片 / 图集」，新素材会直接放到当前分类。</p></div>' : ''}`;
   }
   $('app').innerHTML =
-    `<div class="page-title"><div><h1>项目素材库</h1><p class="muted">大关 → 大类 → 子类 → 图片。大关视图也显示适用的通用素材；新导入的图片归当前大关。</p></div><button id="add-assets" class="primary">导入图片 / 图集</button></div><div class="asset-library-toolbar">${crumbs}<select id="asset-filter" aria-label="素材所属大关"><option value="all">全部大关</option><option value="common">通用素材</option>${p.courses.map((c) => `<option value="${esc(c.id)}">${esc(courseLabel(c))}</option>`).join('')}</select></div>${group && sub ? `<p class="asset-folder-hint">当前目录：${esc(groupName)} / ${esc(subName)} · 在这里导入将自动归入此类</p>` : ''}${content}`;
-  $('asset-filter').value = courseId;
-  $('asset-filter').onchange = (e) => {
-    app.state.assetCourse = e.target.value;
-    app.state.assetGroup = null;
-    app.state.assetSub = null;
-    app.render();
-  };
+    `<div class="page-title"><div><h1>项目素材库</h1><p class="muted">按归属 → 大类 → 子类 → 图片浏览；新导入素材归当前归属，旧存档归属继续兼容。</p><p class="asset-spec-note">规范：32 PPU · 地块 32×32 · Pad 32×8 · 签到块视觉 32×32 / 碰撞 32×8 · Token 10 / 18 · 背景 512×512 · 中景 1920×360。旧素材只提示，仍可绑定使用。</p></div><button id="add-assets" class="primary">导入图片 / 图集</button></div><div class="asset-library-toolbar">${crumbs}<span class="muted">全部素材</span></div>${group && sub ? `<p class="asset-folder-hint">当前目录：${esc(groupName)} / ${esc(subName)} · 导入自动归入此类</p>` : ''}${content}`;
   $('app')
     .querySelectorAll('[data-asset-home]')
     .forEach(
@@ -171,12 +176,14 @@ function editMeta(app, a) {
   const p = app.store.project,
     f = C.classification(p, a),
     owner = p.courses.find((c) => c.id === a.courseId),
+    info = Spec.check(a),
+    specNotes = info ? [...info.issues, ...(info.warnings || [])].join('；') : '',
     scopes = [['common', '通用'], ...p.courses.map((c) => [c.id, courseLabel(c)])];
   if (!owner && a.courseId && a.courseId !== 'common')
     scopes.push([a.courseId, '原归属：' + a.courseId]);
   modal(
     '素材资料与分类',
-    `<div class="form">${field('名称', 'asset-name', a.name)}${select('所属大关', 'asset-course', a.courseId, scopes)}<div class="row">${select(
+    `<div class="form">${field('名称', 'asset-name', a.name)}${select('素材归属（旧存档兼容）', 'asset-course', a.courseId, scopes)}<div class="row">${select(
       '大类',
       'asset-category',
       f.category,
@@ -186,7 +193,7 @@ function editMeta(app, a) {
       'asset-subcategory',
       f.subcategory,
       folders(p, f.category, owner, [a]).map((s) => [s.id, s.name]),
-    )}</div><div class="row">${field('图集单帧宽（0 为整图）', 'frame-w', a.frameWidth, { type: 'number', min: 0 })}${field('图集单帧高', 'frame-h', a.frameHeight, { type: 'number', min: 0 })}</div>${field('动画 FPS', 'frame-fps', a.fps, { type: 'number', min: 1, max: 60 })}<p class="hint">${esc(A.usage(p, a.id).join('；') || '未使用')}。分类决定应用时的候选图片，已有绑定和素材 ID 保留。</p></div>`,
+    )}</div>${info ? `<div class="asset-spec-box ${esc(info.status)}"><strong>素材规范：${esc(info.label)}</strong>${info.canonical ? `<p>规范命名：${esc(info.canonical)}</p>` : ''}${info.note ? `<p>${esc(info.note)}</p>` : ''}${info.animation ? `<p>${esc(info.animation.frames + ' 帧 / ' + info.animation.fps + ' FPS' + (info.animation.holdLast ? ' · 末帧保持' : ''))}</p>` : ''}${specNotes ? `<p class="warn-text">${esc(specNotes)}（旧素材可继续使用）</p>` : ''}</div>` : ''}<div class="row">${field('图集单帧宽（0 为整图）', 'frame-w', a.frameWidth, { type: 'number', min: 0 })}${field('图集单帧高', 'frame-h', a.frameHeight, { type: 'number', min: 0 })}</div>${field('动画 FPS', 'frame-fps', a.fps, { type: 'number', min: 1, max: 60 })}<p class="hint">使用位置：${esc(A.usage(p, a.id).join('；') || '未使用')}。分类决定应用候选，已有绑定与素材 ID 保留。</p></div>`,
     [
       { label: '取消' },
       {

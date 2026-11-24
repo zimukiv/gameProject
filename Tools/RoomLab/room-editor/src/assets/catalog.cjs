@@ -15,10 +15,16 @@ function groupForType(type) {
     type.startsWith('calculus.') ||
     type.startsWith('slacker.') ||
     type.startsWith('legacy.') ||
-    ['common.aiStart', 'common.aiStartHollow', 'common.portalIn', 'common.portalOut'].includes(type)
+    [
+      'common.aiStart',
+      'common.aiStartHollow',
+      'common.assignmentSubmit',
+      'common.portalIn',
+      'common.portalOut',
+    ].includes(type)
   )
     return 'mechanism';
-  if (type.startsWith('common.')) return 'item';
+  if (type.startsWith('item.') || type.startsWith('common.')) return 'item';
   return type === 'background' ? 'scene' : 'unsorted';
 }
 function children(group, kind) {
@@ -74,7 +80,8 @@ function inCourse(a, course) {
   if (!course) return false;
   if (a.courseId === course.id) return true;
   const seed = a.id?.startsWith('seed-') && a.hash === a.id;
-  return seed && (a.id === 'seed-metal' || a.courseId === course.kind);
+  // Built-in artwork is shared by every course so cross-theme mechanisms work.
+  return seed;
 }
 function available(project, courseId, type) {
   const group = groupForType(type),

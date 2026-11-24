@@ -35,7 +35,7 @@ const assert = require('node:assert/strict'),
     await page.waitForFunction(
       () => window.__ROOM_LAB__.snapshot().project.courses[0].rooms.length === 1,
     );
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
+    await page.evaluate(() => window.__ROOM_LAB__.openCourseWorkspace());
     await page.getByRole('button', { name: '房间列表', exact: true }).click();
     await page.getByRole('button', { name: '编辑房间', exact: true }).click();
     await page.locator('#room-settings').click();
@@ -44,7 +44,11 @@ const assert = require('node:assert/strict'),
     await page.locator('#room-camera-mode').selectOption('follow');
     await page.locator('#room-camera-cols').fill('20');
     await page.locator('#room-camera-rows').fill('12');
-    await page.locator('#apply-room').click();
+    // Stage 2: the play camera applies on change (no apply button).
+    await page.locator('#room-camera-rows').dispatchEvent('change');
+    await page.waitForFunction(
+      () => !!window.__ROOM_LAB__.snapshot().project.courses[0].rooms[0].playCamera,
+    );
     const camera = await page.evaluate(
       () => window.__ROOM_LAB__.snapshot().project.courses[0].rooms[0].playCamera,
     );
@@ -85,7 +89,7 @@ const assert = require('node:assert/strict'),
     await page.locator('#room-settings').click();
     assert.equal(await page.locator('#room-camera-cols').inputValue(), '20');
     await page.locator('#room-camera-mode').selectOption('room');
-    await page.locator('#apply-room').click();
+    await page.locator('#room-camera-mode').dispatchEvent('change');
     await page.locator('#play-room').click();
     await page.waitForFunction(
       () => window.__ROOM_LAB__.snapshot().state.playView?.mode === 'room',

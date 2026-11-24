@@ -7,15 +7,20 @@
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self';"
     />
-    <title>Room Lab · 三主题大关编辑器 v3.0.0</title>
+    <title>Room Lab · 房间关卡编辑器 v4.2.0</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <header>
-      <button id="home" class="brand">ROOM LAB <small>三主题大关 / v3.0.0</small></button>
+      <button id="home" class="brand">ROOM LAB <small>房间关卡 / v4.2.0</small></button>
       <nav id="breadcrumbs"></nav>
+      <span id="autosave-status" class="autosave-status" role="status" aria-live="polite" hidden
+        >尚未自动保存</span
+      >
       <div class="header-actions" id="editor-actions" hidden>
-        <button id="save-project">保存项目</button><button id="open-cloud">☁ 工作树</button>
+        <button id="save-project" class="primary">保存项目</button
+        ><button id="cloud-room-library" class="primary">☁ 云端房间库</button
+        ><button id="open-cloud">☁ 保存同步</button>
         <div class="menu" data-menu>
           <button
             class="menu-trigger"
@@ -26,9 +31,8 @@
             项目 ▾
           </button>
           <div class="menu-panel" id="menu-project" data-menu-panel role="group" hidden>
-            <button id="new-project">新建大关</button><button id="open-project">打开项目</button
-            ><button id="save-as">另存为</button><button id="export-project">导出项目包</button
-            ><button id="export-room" disabled>导出房间</button
+            <button id="open-project">打开项目</button><button id="save-as">另存为</button
+            ><button id="import-group">导入分组</button
             ><button id="import-room">导入房间</button>
           </div>
         </div>
@@ -42,7 +46,8 @@
             工具 ▾
           </button>
           <div class="menu-panel" id="menu-tools" data-menu-panel role="group" hidden>
-            <button id="open-assets">素材库</button><button id="open-definitions">功能块</button>
+            <button id="open-assets">素材库</button><button id="open-definitions">功能块</button
+            ><button id="export-project">导出项目包</button>
           </div>
         </div>
       </div>
@@ -57,6 +62,7 @@
     </dialog>
     <input id="asset-files" type="file" accept="image/*" multiple hidden />
     <input id="room-package-file" type="file" accept=".zip" hidden />
+    <input id="group-package-file" type="file" accept=".zip" hidden />
     <script src="ui.js"></script>
   </body>
 </html>

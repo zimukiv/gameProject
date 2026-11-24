@@ -40,7 +40,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright'),
     await page.waitForFunction(() => !!window.__ROOM_LAB__?.snapshot().state.roomView);
     await page.waitForTimeout(250);
     const canvas = await page.locator('#room-canvas').boundingBox(),
-      tabs = await page.locator('.room-tabs').boundingBox();
+      tabs = await page.locator('.room-thumb-selector').boundingBox();
     assert.ok(tabs.y + tabs.height < canvas.y);
     assert.ok(canvas.height > 500);
     assert.ok(canvas.width > 1200);
@@ -84,7 +84,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright'),
       .locator('select[data-bind-type="physics.ice"][data-slot="solid"] option')
       .evaluateAll((list) => list.map((o) => o.value));
     assert.deepEqual(eligible, ['', 'seed-ice-solid', 'seed-ice-cracked']);
-    await page.getByRole('button', { name: '缩略接线板', exact: true }).click();
+    await page.getByRole('button', { name: '全局路线图', exact: true }).click();
     const graph = await page.locator('#graph').boundingBox(),
       state = await snap(),
       c = state.project.courses[0],

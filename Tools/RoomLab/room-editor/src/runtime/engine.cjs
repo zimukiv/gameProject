@@ -7,32 +7,53 @@ const Performance = require('../project/performance.cjs');
 const Temperature = require('../project/temperature.cjs');
 const Collision = require('../project/collision.cjs');
 const Motion = require('../project/brick-motion.cjs');
+const MapCompat = require('../project/map-compat.cjs');
+const AIPorts = require('../project/ai-ports.cjs');
+const AISpawns = require('../project/ai-spawns.cjs');
+const ItemState = require('./item-state.cjs');
+// 内置试玩只允许左右冲刺：水平输入优先，没有左右输入时沿当前面向。
+// 上下输入只负责跳跃 / 蹲下，不能给冲刺加入垂直分量。
 function direction(input, face) {
-  let x = Number(!!input.right) - Number(!!input.left),
-    y = input.up ? -1 : input.down ? 1 : 0;
-  if (!x && !y) x = face;
-  const len = Math.hypot(x, y);
-  return { x: x / len, y: y / len };
+  const x = Number(!!input.right) - Number(!!input.left);
+  return { x: x || (face < 0 ? -1 : 1), y: 0 };
 }
 class Engine {
-  constructor(project, courseId, roomId, entryId) {
-    const errors = M.validate(project, { play: true }).errors;
-    if (errors.length) throw new Error(errors[0]);
+  constructor(project, courseId, roomId, entryId, options = {}) {
+    // 只做项目级结构检查；房间内容（含缺失插件）延迟到 loadRoom 按目标房间校验，
+    // 避免旧存档中未试玩的房间阻塞当前房间。
+    if (
+      !project ||
+      project.version !== 2 ||
+      !Array.isArray(project.courses) ||
+      !project.courses.length
+    )
+      throw new Error('项目版本或大关列表无效。');
     this.config = Performance.resolve(project.settings);
+    this.paidStockCap = 1;
     this.project = clone(project);
     this.course = this.project.courses.find((c) => c.id === courseId) || this.project.courses[0];
-    for (const r of this.course.rooms)
-      for (const o of r.objects) {
-        const errors = Registry.validateObject(this.project, o);
-        if (errors.length) throw new Error(errors[0]);
-        o.params = clone(Registry.params(this.project, o));
-      }
     this.elapsed = 0;
     this.score = 0;
     this.deaths = 0;
     this.steals = 0;
     this.events = [];
     this.credited = new Set();
+    this.developerMode = options.developerMode === true;
+    // 项目级初始道具状态（可序列化），然后才是编辑器试玩背包：
+    //   options.playtest = { mode:'configured'|'legacy-all', items:[itemType] }
+    // 试玩背包是“进入时拥有哪些”的完整覆盖：显式配置（含空勾选）与旧版全道具
+    // 都不叠加 project.itemState.initial；只有正常成品流程使用项目初始状态。
+    this.items = ItemState.initial(this.project);
+    this.itemCollects = [];
+    const playtest = options.playtest || null;
+    if (playtest && playtest.mode === 'configured') {
+      this.items = {};
+      for (const type of playtest.items || []) this.items[type] = 1;
+    } else if (this.developerMode && (!playtest || playtest.mode === 'legacy-all')) {
+      // 旧存档兼容：房间没有 playtestItems 配置时沿用旧的“全道具”试玩。
+      this.items = {};
+      for (const definition of Registry.all()) if (definition.item) this.items[definition.type] = 1;
+    }
     this.roomCaches = new Map();
     this.lifeBaselines = new Map();
     this.courseState = {
@@ -42,9 +63,9 @@ class Engine {
       phase: 'slow',
       life: 1,
     };
-    this.loadRoom(roomId || this.course.rooms[0].id, entryId, {
+    this.loadRoom(roomId || this.course.rooms?.[0]?.id, entryId, {
       tokens: 0,
-      charges: 3,
+      charges: 0,
       recharge: 0,
       freeDash: true,
       dashCount: 0,
@@ -58,14 +79,107 @@ class Engine {
     this.message = message;
     this.messageTime = time;
   }
+  hasItem(type) {
+    return (this.items?.[type] || 0) > 0;
+  }
+  // 运行时全局道具状态接口：跨房间保留，可选快照 / 恢复。
+  itemState() {
+    return ItemState.snapshot(this);
+  }
+  restoreItemState(state) {
+    return ItemState.restore(this, state);
+  }
+  takeHalfTokens() {
+    const before = this.tokens,
+      lost = Math.ceil(before / 2);
+    this.tokens = Math.max(0, before - lost);
+    return { before, lost, remaining: this.tokens };
+  }
+  attachmentOffset(o) {
+    const owner = o.attachmentTo && this.room.movables.find((b) => b.id === o.attachmentTo);
+    if (!owner || !this.movableStates?.has(owner.id)) return { x: 0, y: 0 };
+    const rect = this.movableRect(owner);
+    return { x: rect.x - owner.x * T, y: rect.y - owner.y * T };
+  }
+  // World rect of any authored cell shape (entry, exit, tile, object). Grouped
+  // ports persist their authored origin in the save file; the runtime adds the
+  // owning mechanism's live offset, so drawing, overlap, re-entry and the
+  // spawn-time exit suppression all read the same geometry.
+  attachedRect(item, fallbackW = 1, fallbackH = 1) {
+    const offset = this.attachmentOffset(item);
+    return {
+      id: item.id,
+      x: item.x * T + offset.x,
+      y: item.y * T + offset.y,
+      w: (item.w || fallbackW) * T,
+      h: (item.h || fallbackH) * T,
+    };
+  }
+  entryRect(entry) {
+    return this.attachedRect(entry, 1, 1);
+  }
+  exitRect(exit) {
+    return this.attachedRect(exit, 1, 1);
+  }
+  // Off-screen rooms are frozen in roomCaches. Re-entry can still point at a
+  // grouped source exit, so resolve its offset from that room's cached movable
+  // states instead of the live destination room.
+  cachedAttachmentOffset(room, states, item) {
+    const owner = item.attachmentTo && room.movables.find((b) => b.id === item.attachmentTo);
+    if (!owner) return { x: 0, y: 0 };
+    const state = states instanceof Map ? states.get(owner.id) : states?.[owner.id];
+    if (!state) return { x: 0, y: 0 };
+    const pad = room.objects.find((o) => o.id === owner.padId);
+    let pos;
+    if (pad?.type === 'legacy.rotor') {
+      const pivot = { x: (pad.x + 0.5) * T, y: pad.y * T },
+        p = rotate((owner.x + 0.5) * T, (owner.y + 0.5) * T, pivot.x, pivot.y, state.angle || 0);
+      return { x: p.x - T / 2 - owner.x * T, y: p.y - T / 2 - owner.y * T };
+    }
+    pos = owner.motionPath
+      ? Motion.position(owner, state.pathTime || 0)
+      : {
+          x: owner.x + (owner.targetX - owner.x) * (state.progress || 0),
+          y: owner.y + (owner.targetY - owner.y) * (state.progress || 0),
+        };
+    return { x: pos.x * T - owner.x * T, y: pos.y * T - owner.y * T };
+  }
+  cachedExitRect(room, states, exit) {
+    const offset = this.cachedAttachmentOffset(room, states, exit);
+    return {
+      id: exit.id,
+      x: exit.x * T + offset.x,
+      y: exit.y * T + offset.y,
+      w: (exit.w || 1) * T,
+      h: (exit.h || 1) * T,
+    };
+  }
+  worldObject(o) {
+    const runtime = Registry.get(o.type).runtimePosition?.(o, this.objectStates?.get(o.id));
+    if (runtime) return { ...o, x: runtime.x, y: runtime.y };
+    const d = this.attachmentOffset(o);
+    if (!d.x && !d.y) return o;
+    return {
+      ...o,
+      x: o.x + d.x / T,
+      y: o.y + d.y / T,
+      params: o.params?.path
+        ? {
+            ...o.params,
+            path: o.params.path.map((p) => ({ ...p, x: p.x + d.x / T, y: p.y + d.y / T })),
+          }
+        : o.params,
+    };
+  }
   objectRect(o) {
+    const world = this.worldObject(o);
     return {
       id: o.id,
-      x: o.x * T,
-      y: o.y * T,
+      x: world.x * T,
+      y: world.y * T,
       w: (o.w || 1) * T,
       h: (o.h || 1) * T,
-      kind: 'object',
+      kind: o.attachmentTo ? 'movable' : 'object',
       object: o,
     };
   }
@@ -77,12 +191,21 @@ class Engine {
       room: this.room,
       temperature: (target) =>
         target.type === 'physics.ice'
-          ? Temperature.at(this.room, target, this.zoneStates, this.roomEnvironment)
+          ? Temperature.at(
+              this.room,
+              this.worldObject(target),
+              this.zoneStates,
+              this.roomEnvironment,
+            )
           : this.zoneStates.get(target.params.zoneId) || this.roomEnvironment,
       setTemperature: (zoneId, value) => {
         if (zoneId) this.zoneStates.set(zoneId, value);
         else this.roomEnvironment = value;
       },
+      hasItem: (type) => this.hasItem(type),
+      objectState: (id) => this.objectStates.get(id),
+      takeHalfTokens: () => this.takeHalfTokens(),
+      retry: (reason) => this.retry(reason),
       actorOverlaps: (target) =>
         overlap(this.player, this.objectRect(target)) ||
         (this.ai.active &&
@@ -91,6 +214,8 @@ class Engine {
       launchAI: (target, range, x, y) => this.launchAI(target, range, x, y),
       startRail: (target) => this.startRail(target),
       activateAI: (target) => this.activateAI(target),
+      stopAI: () => this.stopAI(),
+      addScore: (points, reason) => this.addScore(points, reason),
       setCheckpoint: (target) => this.setCheckpoint(target),
       transformGroup: (target, kind) => this.transformGroup(target, kind),
       emit: (type, data) => this.emit(type, data),
@@ -131,24 +256,50 @@ class Engine {
       this.movableStates = new Map(Object.entries(clone(cache.movables)));
     }
   }
-  loadRoom(id, entryId, resources, carry = null, respawn = null) {
+  loadRoom(
+    id,
+    entryId,
+    resources,
+    carry = null,
+    respawn = null,
+    returnLink = null,
+    aiRoute = null,
+  ) {
+    // 先解析并校验目标房间，失败时不改变当前房间/缓存。
+    const ref = MapCompat.roomRef(this.project, id);
+    if (!ref) throw new Error('目标房间不存在');
+    const errors = M.validateRoom(this.project, id, { play: true }).errors;
+    if (errors.length) throw new Error(errors[0]);
+    for (const o of ref.room.objects) {
+      const objectErrors = Registry.validateObject(this.project, o);
+      if (objectErrors.length) throw new Error(objectErrors[0]);
+    }
     if (this.room) this.roomCaches.set(this.room.id, this.serializeRoom());
-    this.room = this.course.rooms.find((r) => r.id === id);
-    if (!this.room) throw new Error('目标房间不存在');
+    const previousCourse = this.course;
+    this.course = ref.course;
+    // 跨原大关时运行归属跟随目标房间，AI 默认 ID 也跟随目标大关；
+    // 显式覆盖过的 aiId（不等于原大关默认值）保留。
+    if (
+      previousCourse !== this.course &&
+      (!this.courseState.aiId || this.courseState.aiId === previousCourse.aiId)
+    )
+      this.courseState.aiId = this.course.aiId;
+    this.room = ref.room;
+    for (const o of this.room.objects) o.params = clone(Registry.params(this.project, o));
     this.entry = this.room.entries.find((e) => e.id === entryId) || this.room.entries[0];
-    const spawn =
-      respawn && respawn.roomId === this.room.id
-        ? respawn
-        : {
-            roomId: this.room.id,
-            entryId: this.entry.id,
-            x: this.entry.x * T + 4,
-            y: this.entry.y * T + 4,
-            face: this.entry.face || 1,
-          };
+    const fromEntry = !(respawn && respawn.roomId === this.room.id);
+    let spawn = fromEntry
+      ? {
+          roomId: this.room.id,
+          entryId: this.entry.id,
+          x: this.entry.x * T + 4,
+          y: this.entry.y * T + 4,
+          face: this.entry.face || 1,
+        }
+      : respawn;
     Object.assign(this, {
       tokens: resources.tokens,
-      charges: resources.charges,
+      charges: Math.min(this.paidStockCap, Math.max(0, resources.charges || 0)),
       recharge: resources.recharge,
     });
     this.player = {
@@ -169,16 +320,23 @@ class Engine {
       dashCount: resources.dashCount,
       launched: false,
       launchX: 0,
+      launchHold: 0,
       rail: null,
       invulnerable: 0.4,
       crouching: false,
       support: null,
     };
+    this.entryReturn =
+      returnLink && returnLink.entryId === this.entry.id ? clone(returnLink) : null;
+    this.entryTriggerArmed = false;
+    this.exitTriggerArmed = !spawn.exitId;
+    this.suppressedExitId = spawn.exitId || null;
     if (carry && (Math.abs(carry.vx) > 1 || Math.abs(carry.vy) > 1)) {
       this.player.launched = true;
       this.player.launchX = carry.vx;
+      this.player.launchHold = Math.abs(carry.vx) > 1 ? 0.3 : 0;
     }
-    if (this.room.phase !== 'inherit') this.courseState.phase = this.room.phase;
+    if (this.room.phase !== 'inherit') this.courseState.phase = this.room.phase; // 仅旧数据兼容：新流程不按阶段切换
     if (this.room.aiPolicy === 'start') this.courseState.aiActive = true;
     const pc = center(this.player);
     this.ai = {
@@ -199,6 +357,46 @@ class Engine {
       trail: [pc],
     };
     this.initializeRoom(this.roomCaches.get(id));
+    // Grouped entries live on the mechanism. The saved entry keeps its authored
+    // origin; once the target room's movable states exist, shift the default
+    // spawn (and the AI that follows it) by the live attachment offset.
+    if (fromEntry) {
+      const rect = this.entryRect(this.entry),
+        dx = rect.x - this.entry.x * T,
+        dy = rect.y - this.entry.y * T;
+      if (dx || dy) {
+        this.player.x += dx;
+        this.player.y += dy;
+        this.ai.x += dx;
+        this.ai.y += dy;
+        this.ai.trail = [center(this.player)];
+        spawn.x += dx;
+        spawn.y += dy;
+      }
+    }
+    // Explicit cross-room AI routing: when the player took a wire whose bound
+    // AI exit is wired to an AI entrance, the carried AI materializes at that
+    // entrance — but only when the entrance really belongs to this destination
+    // room. Direct playtest starts never pass aiRoute, so they keep the normal
+    // "spawn beside the player" behavior.
+    if (aiRoute) {
+      const entrance = this.room.objects.find(
+        (o) => o.id === aiRoute.entranceId && AIPorts.isEntrance(o),
+      );
+      if (entrance) {
+        const rect = this.objectRect(entrance);
+        this.ai.x = rect.x + rect.w / 2;
+        this.ai.y = rect.y + rect.h / 2;
+        this.ai.warning = null;
+        this.ai.processing = 0.5;
+        this.ai.trail = [center(this.player)];
+        this.emit('ai-carry', {
+          exitId: aiRoute.exitId || null,
+          entranceId: entrance.id,
+          from: aiRoute.fromRoomId || null,
+        });
+      }
+    }
     if (!this.lifeBaselines.has(id))
       this.lifeBaselines.set(id, clone(Object.fromEntries(this.objectStates)));
     this.roomTime = 0;
@@ -218,9 +416,12 @@ class Engine {
       },
       score: this.score,
       credited: [...this.credited],
+      collects: (this.itemCollects || []).slice(),
+      items: clone(this.items),
       course: clone(this.courseState),
       state: this.serializeRoom(),
       spawn: clone(spawn),
+      returnLink: this.entryReturn ? clone(this.entryReturn) : null,
     };
     this.emit('room-enter', { entryId: this.entry.id });
   }
@@ -229,7 +430,7 @@ class Engine {
     for (const o of this.room.objects)
       if (o.resetPolicy === 'preserve') preserved.set(o.id, clone(this.objectStates.get(o.id)));
     this.roomCaches.set(this.room.id, this.serializeRoom());
-    for (const room of this.course.rooms) {
+    for (const { room } of MapCompat.listRooms(this.project)) {
       const cache = this.roomCaches.get(room.id),
         baseline = this.lifeBaselines.get(room.id);
       if (!cache || !baseline) continue;
@@ -244,9 +445,12 @@ class Engine {
     const cp = clone(this.checkpoint),
       roomId = this.room.id,
       entryId = this.entry.id,
-      respawn = cp.spawn;
+      respawn = cp.spawn,
+      returnLink = cp.returnLink;
     this.score = cp.score;
     this.credited = new Set(cp.credited);
+    this.itemCollects = Array.isArray(cp.collects) ? cp.collects.slice() : [];
+    this.items = clone(cp.items || {});
     this.courseState = cp.course;
     this.courseState.life++;
     const baseline = this.lifeBaselines.get(roomId);
@@ -258,7 +462,7 @@ class Engine {
     this.roomCaches.set(roomId, cp.state);
     this.lifeBaselines.clear();
     this.room = null;
-    this.loadRoom(roomId, entryId, cp.resources, null, respawn);
+    this.loadRoom(roomId, entryId, cp.resources, null, respawn, returnLink);
     for (const o of this.room.objects) {
       if (preserved.has(o.id)) this.objectStates.set(o.id, preserved.get(o.id));
       else if (o.resetPolicy === 'initial') {
@@ -279,6 +483,56 @@ class Engine {
     this.player.freeDash = true;
     this.player.dashCount = 0;
     this.say(reason + '。已恢复最近存档点。');
+  }
+  reentryPort(p) {
+    if (this.suppressedExitId) {
+      const exit = this.room.exits.find((item) => item.id === this.suppressedExitId);
+      if (!exit || !overlap(p, this.exitRect(exit))) {
+        this.exitTriggerArmed = true;
+        this.suppressedExitId = null;
+      }
+    }
+    if (!this.entryReturn) return false;
+    const entry = this.room.entries.find((item) => item.id === this.entryReturn.entryId);
+    if (!entry || entry.allowReturn === false) return false;
+    const inside = overlap(p, this.entryRect(entry));
+    if (!inside) {
+      this.entryTriggerArmed = true;
+      return false;
+    }
+    if (!this.entryTriggerArmed) return false;
+    const source = MapCompat.roomRef(this.project, this.entryReturn.roomId)?.room,
+      exit = source?.exits.find((item) => item.id === this.entryReturn.exitId);
+    if (!source || !exit) {
+      this.entryReturn = null;
+      return false;
+    }
+    const from = this.room.id,
+      entryId = entry.id,
+      sourceExit = this.cachedExitRect(source, this.roomCaches.get(source.id)?.movables, exit),
+      spawn = {
+        roomId: source.id,
+        exitId: exit.id,
+        x: sourceExit.x + Math.max(2, (sourceExit.w - 24) / 2),
+        y: sourceExit.y + sourceExit.h - 30,
+        face: exit.x <= 1 ? 1 : exit.x + exit.w >= source.cols - 1 ? -1 : 1,
+      };
+    this.loadRoom(
+      source.id,
+      source.entries[0]?.id,
+      {
+        tokens: this.tokens,
+        charges: this.charges,
+        recharge: this.recharge,
+        freeDash: this.player.freeDash,
+        dashCount: this.player.dashCount,
+      },
+      null,
+      spawn,
+    );
+    this.emit('room-change', { from, to: source.id, via: 'entry' });
+    this.emit('room-backtrack', { from, to: source.id, entryId, exitId: exit.id });
+    return true;
   }
   togglePause() {
     if (this.mode === 'playing') this.mode = 'paused';
@@ -301,7 +555,7 @@ class Engine {
         w: T,
         h: T,
         kind: 'movable',
-        active: !s.anim,
+        active: b.movingCollision === undefined ? !s.anim : Motion.movingCollision(b, s),
       };
     }
     const pos = b.motionPath
@@ -314,31 +568,36 @@ class Engine {
       w: T,
       h: T,
       kind: 'movable',
-      active: true,
+      active: Collision.inherited(this.room, b, 'movables', {}, this.movableStates),
     };
   }
   colliders() {
     const result = this.room.tiles
-      .filter((t) => Collision.enabled(t, 'tiles'))
+      .filter((t) => Collision.inherited(this.room, t, 'tiles', {}, this.movableStates))
       .map((t) => ({
         id: 'tile-' + t.x + '-' + t.y,
-        x: t.x * T,
-        y: t.y * T,
+        x: t.x * T + this.attachmentOffset(t).x,
+        y: t.y * T + this.attachmentOffset(t).y,
         w: T,
         h: T,
-        kind: 'tile',
+        kind: t.attachmentTo ? 'movable' : 'tile',
         priority: 0,
       }));
     for (const o of this.room.objects) {
       const def = Registry.get(o.type),
         s = this.objectStates.get(o.id);
-      const shape = Collision.shape(o, def);
-      if (!shape || (def.isSolid && !def.isSolid(this.context(o), o, s))) continue;
-      if (
-        ['common.coin', 'common.small', 'common.collectible'].includes(o.type) &&
-        this.credited.has(this.room.id + '/' + o.id)
-      )
-        continue;
+      const dynamicSolid =
+          def.dynamicSolidity && def.isSolid ? def.isSolid(this.context(o), o, s) : null,
+        shape =
+          dynamicSolid === null
+            ? Collision.inherited(this.room, o, 'objects', def, this.movableStates)
+              ? def.collider || 'tile'
+              : false
+            : dynamicSolid
+              ? def.collider || 'tile'
+              : false;
+      if (!shape) continue;
+      if (def.collectible && this.credited.has(this.room.id + '/' + o.id)) continue;
       const rect = this.objectRect(o);
       if (shape === 'pad') rect.h = 8;
       rect.priority = shape === 'tile' ? 2 : 1;
@@ -346,7 +605,7 @@ class Engine {
     }
     result.push(
       ...this.room.movables
-        .filter((b) => Collision.enabled(b, 'movables'))
+        .filter((b) => Collision.inherited(this.room, b, 'movables', {}, this.movableStates))
         .map((b) => ({ ...this.movableRect(b), priority: 2 }))
         .filter((b) => b.active),
     );
@@ -392,6 +651,11 @@ class Engine {
       vy: y,
       launched: true,
       launchX: x,
+      // A horizontal launch is a short burst, not a single frame: landing used
+      // to clear `launched` immediately, so the next frame's walk speed erased
+      // it. Keep the momentum for 0.3 s after a horizontal launch; vertical
+      // launches still end on landing as before.
+      launchHold: Math.abs(Number(x) || 0) > 1 ? 0.3 : 0,
       rail: null,
       dash: 0,
       grounded: false,
@@ -401,6 +665,7 @@ class Engine {
     this.player.invulnerable = Math.max(this.player.invulnerable, 0.3);
   }
   launchAI(o, range, x, y) {
+    o = this.worldObject(o);
     const pivot = { x: (o.x + 0.5) * T, y: o.y * T };
     if (this.ai.active && Math.hypot(this.ai.x - pivot.x, this.ai.y - pivot.y) <= range * T) {
       Object.assign(this.ai, {
@@ -429,21 +694,49 @@ class Engine {
       });
     }
     const pc = center(this.player);
+    // A launch pad bound to a room-local AI spawn point materializes the AI at
+    // that marker (same attachment-aware geometry as every other object). An
+    // unbound, cleared or stale reference keeps the legacy spawn beside the
+    // player, so old saves and cross-room AI routing are untouched.
+    const spawnPoint = AISpawns.target(this.room, o),
+      at = spawnPoint ? center(this.objectRect(spawnPoint)) : { x: pc.x - 165, y: pc.y };
     Object.assign(this.ai, {
       id: this.courseState.aiId,
       active: true,
       tier,
       speed: 265 + tier * 30,
       steal: 1 + tier * 2,
-      x: pc.x - 165,
-      y: pc.y,
+      x: at.x,
+      y: at.y,
       processing: 0.8,
       trail: [pc],
     });
-    this.emit('ai-start', { investment, tier, resumed });
+    this.emit('ai-start', { investment, tier, resumed, spawnId: spawnPoint?.id || null });
+  }
+  stopAI() {
+    const wasActive = this.ai.active;
+    this.courseState.aiActive = false;
+    Object.assign(this.ai, {
+      active: false,
+      flight: false,
+      vx: 0,
+      vy: 0,
+      warning: null,
+      trail: [],
+    });
+    this.aiTrail = [];
+    if (wasActive) this.emit('ai-stop', { id: this.ai.id });
+    return wasActive;
+  }
+  addScore(points, reason = '') {
+    const amount = Number(points);
+    if (!Number.isFinite(amount) || amount === 0) return 0;
+    this.score += amount;
+    this.emit('score', { amount, total: this.score, reason });
+    return amount;
   }
   startRail(o) {
-    const points = o.params.path.map((p) => ({ x: p.x * T, y: p.y * T }));
+    const points = this.worldObject(o).params.path.map((p) => ({ x: p.x * T, y: p.y * T }));
     if (points.length < 2) {
       this.say('轨道至少需要两个节点。');
       return;
@@ -469,6 +762,9 @@ class Engine {
   moveRail(dt) {
     const p = this.player,
       r = p.rail;
+    const owner = this.room.objects.find((o) => o.id === r.id);
+    if (owner?.attachmentTo)
+      r.points = this.worldObject(owner).params.path.map((n) => ({ x: n.x * T, y: n.y * T }));
     r.speed = Math.min(r.maxSpeed, r.speed + r.acceleration * dt);
     r.distance = Math.min(r.total, r.distance + r.speed * dt);
     let remaining = r.distance,
@@ -495,11 +791,29 @@ class Engine {
   fire(o) {
     const s = this.objectStates.get(o.id),
       def = Registry.get(o.type);
-    if (s.cooldown > 0 || ((o.trigger?.once || o.params.once) && s.used)) return;
+    if (def.requiresItem && !this.hasItem(def.requiresItem)) {
+      const required = Registry.get(def.requiresItem).name;
+      if (def.silentWithoutItem) {
+        // 不清屏、不刷屏：同一方块最多每 3 秒提示一次缺少前置道具。
+        if (s && !(s.hintAt > this.elapsed - 3)) {
+          s.hintAt = this.elapsed;
+          this.say('需要' + required + '才能使用' + (o.name || def.name), 2);
+          this.emit('item-needed', { id: o.id, item: def.requiresItem });
+        }
+      } else {
+        this.say('需要' + required + '才能使用' + (o.name || def.name));
+        this.emit('item-required', { id: o.id, item: def.requiresItem });
+      }
+      return false;
+    }
+    if (s.cooldown > 0 || ((o.trigger?.once || o.params.once) && s.used)) return false;
+    const context = this.context(o);
+    if (def.canTrigger && !def.canTrigger(context, o, s)) return false;
     s.used = true;
     s.cooldown = o.params.cooldown || o.trigger?.cooldown || 1;
-    def.onTrigger?.(this.context(o), o, s);
+    def.onTrigger?.(context, o, s);
     this.emit('trigger', { id: o.id, type: o.type });
+    return true;
   }
   triggerObjects(oldBottom) {
     const p = this.player;
@@ -530,16 +844,14 @@ class Engine {
         !required ||
         (this.ai.active &&
           this.ai.id === aiId &&
-          Math.hypot(this.ai.x - (o.x + 0.5) * T, this.ai.y - o.y * T) <= distance * T);
+          Math.hypot(this.ai.x - rect.x - rect.w / 2, this.ai.y - rect.y) <= distance * T);
       s.waitingAI = occupied && !ready;
-      if (ready && !s.firedDuringContact) {
-        this.fire(o);
-        s.firedDuringContact = true;
-      }
+      if (ready && !s.firedDuringContact && this.fire(o)) s.firedDuringContact = true;
     }
   }
   setCheckpoint(o) {
     if (!o || o.type !== 'common.checkpoint') return;
+    o = this.worldObject(o);
     if (this.checkpoint.spawn?.objectId === o.id) return;
     for (const other of this.room.objects) {
       if (other.type !== 'common.checkpoint') continue;
@@ -558,6 +870,8 @@ class Engine {
       },
       score: this.score,
       credited: [...this.credited],
+      collects: (this.itemCollects || []).slice(),
+      items: clone(this.items),
       course: clone(this.courseState),
       state: this.serializeRoom(),
       spawn: {
@@ -570,26 +884,34 @@ class Engine {
           : o.y * T + 4,
         face: this.player.face,
       },
+      returnLink: this.entryReturn ? clone(this.entryReturn) : null,
     };
     this.say('已记录存档点：' + (o.name || '存档点'), 2);
     this.emit('checkpoint', { id: o.id });
   }
   collect(o) {
-    const key = this.room.id + '/' + o.id;
+    const key = this.room.id + '/' + o.id,
+      def = Registry.get(o.type);
     if (this.credited.has(key)) return;
     this.credited.add(key);
-    if (o.type === 'common.collectible') this.score += 10000;
+    if (def.item) {
+      this.items[o.type] = (this.items[o.type] || 0) + 1;
+      (this.itemCollects ||= []).push(key);
+      this.emit('item-collect', { id: o.id, itemType: o.type, count: this.items[o.type] });
+    } else if (o.type === 'common.collectible') this.score += 10000;
     else {
       const n = o.type === 'common.small' ? 1 : 10;
       this.tokens += n;
-      this.recharge += n;
       this.score += n === 1 ? 100 : 1000;
-      while (this.recharge >= 10) {
-        this.recharge -= 10;
-        this.charges = Math.min(3, this.charges + 1);
+      if (this.hasItem('item.icedTea')) {
+        this.recharge += n;
+        while (this.recharge >= 10) {
+          this.recharge -= 10;
+          this.charges = Math.min(this.paidStockCap, this.charges + 1);
+        }
       }
     }
-    this.emit('collect', { id: o.id });
+    this.emit('collect', { id: o.id, objectType: o.type });
   }
   catchPlayer() {
     const a = this.ai,
@@ -606,6 +928,29 @@ class Engine {
     a.cooldown = 1.4;
     p.invulnerable = 1.3;
     this.emit('steal', { amount });
+  }
+  // The player standing near an exit that owns an explicit AI-exit binding pulls
+  // the active AI towards that AI exit instead of the player's trail. Attachment
+  // geometry is shared with drawing/triggers through objectRect()/exitRect().
+  aiRedirectTarget() {
+    const a = this.ai;
+    if (!a?.active) return null;
+    const pc = center(this.player);
+    for (const exit of this.room.exits || []) {
+      const aiExit = AIPorts.redirectExit(this.room, exit.id);
+      if (!aiExit) continue;
+      const rect = this.exitRect(exit);
+      if (
+        pc.x < rect.x - AIPorts.RANGE ||
+        pc.x > rect.x + rect.w + AIPorts.RANGE ||
+        pc.y < rect.y - AIPorts.RANGE ||
+        pc.y > rect.y + rect.h + AIPorts.RANGE
+      )
+        continue;
+      const target = center(this.objectRect(aiExit));
+      return { exitId: exit.id, aiExitId: aiExit.id, x: target.x, y: target.y };
+    }
+    return null;
   }
   updateAI(dt, colliders) {
     const a = this.ai,
@@ -640,19 +985,33 @@ class Engine {
       const tail = a.trail.at(-1);
       if (!tail || Math.hypot(tail.x - pc.x, tail.y - pc.y) > 4) a.trail.push(pc);
       for (const entry of this.room.objects.filter((o) => o.type === 'common.portalIn')) {
-        const exit = this.room.objects.find(
-          (o) => o.type === 'common.portalOut' && o.params.routeId === entry.params.routeId,
-        );
         if (
-          exit &&
+          AIPorts.connections(this.project).some(
+            (edge) => edge.to.roomId === this.room.id && edge.to.aiEntranceId === entry.id,
+          )
+        )
+          continue;
+        const exit = this.room.objects.find(
+          (o) =>
+            o.type === 'common.portalOut' &&
+            o.params.routeId === entry.params.routeId &&
+            !AIPorts.bindings(this.room).some((binding) => binding.aiExitId === o.id),
+        );
+        if (!exit) continue;
+        // Both the trigger radius and the destination come from the same
+        // attachment-aware rect the renderer uses, so a grouped portal pair
+        // follows its mechanism and never teleports to the authored origin.
+        const enter = center(this.objectRect(entry)),
+          leave = center(this.objectRect(exit));
+        if (
           !a.teleported.includes(entry.params.routeId) &&
           !a.warning &&
           a.processing <= 0 &&
-          Math.hypot(a.x - (entry.x + 0.5) * T, a.y - (entry.y + 0.5) * T) < 48
+          Math.hypot(a.x - enter.x, a.y - enter.y) < 48
         ) {
           a.warning = {
             remaining: 0.65,
-            to: { x: (exit.x + 0.5) * T, y: (exit.y + 0.5) * T },
+            to: { x: leave.x, y: leave.y },
             id: entry.params.routeId,
           };
           a.teleported.push(entry.params.routeId);
@@ -669,21 +1028,36 @@ class Engine {
           this.emit('ai-teleport');
         }
       } else if (a.processing <= 0) {
-        let distance = a.speed * dt;
-        while (distance > 0 && a.trail.length) {
-          const t = a.trail[0],
-            dx = t.x - a.x,
-            dy = t.y - a.y,
-            n = Math.hypot(dx, dy);
-          if (n <= distance) {
-            a.x = t.x;
-            a.y = t.y;
-            distance -= n;
-            a.trail.shift();
-          } else {
-            a.x += (dx / n) * distance;
-            a.y += (dy / n) * distance;
-            distance = 0;
+        const redirect = this.aiRedirectTarget();
+        if (redirect) {
+          // Bound player exit in range: head for the matching AI exit. Leaving
+          // the range simply drops this override and the trail chase resumes.
+          const dx = redirect.x - a.x,
+            dy = redirect.y - a.y,
+            n = Math.hypot(dx, dy),
+            step = a.speed * dt;
+          if (n > 0.5) {
+            const k = Math.min(1, step / n);
+            a.x += dx * k;
+            a.y += dy * k;
+          }
+        } else {
+          let distance = a.speed * dt;
+          while (distance > 0 && a.trail.length) {
+            const t = a.trail[0],
+              dx = t.x - a.x,
+              dy = t.y - a.y,
+              n = Math.hypot(dx, dy);
+            if (n <= distance) {
+              a.x = t.x;
+              a.y = t.y;
+              distance -= n;
+              a.trail.shift();
+            } else {
+              a.x += (dx / n) * distance;
+              a.y += (dy / n) * distance;
+              distance = 0;
+            }
           }
         }
       }
@@ -694,11 +1068,12 @@ class Engine {
   simulateAI(oId, near = true) {
     const o = this.room.objects.find((o) => o.id === oId);
     if (!o) return;
+    const world = this.worldObject(o);
     this.ai.id = o.aiId || this.room.aiId || this.course.aiId;
     this.ai.active = true;
     this.ai.processing = 30;
-    this.ai.x = (o.x + 0.5) * T + (near ? 20 : 500);
-    this.ai.y = o.y * T - 12;
+    this.ai.x = (world.x + 0.5) * T + (near ? 20 : 500);
+    this.ai.y = world.y * T - 12;
     this.emit('test-ai', { id: oId, near });
   }
   update(dt, input = {}) {
@@ -711,6 +1086,8 @@ class Engine {
     const p = this.player,
       wasGrounded = p.grounded,
       before = this.colliders();
+    const spikes = this.room.objects.filter((o) => o.type === 'common.spike');
+    const oldSpikes = new Map(spikes.map((o) => [o.id, this.objectRect(o)]));
     for (const o of this.room.objects) {
       const s = this.objectStates.get(o.id);
       s.cooldown = Math.max(0, s.cooldown - dt);
@@ -732,15 +1109,36 @@ class Engine {
         if (s.anim.t === 0.45) s.anim = null;
       }
     const colliders = this.colliders();
-    if (p.grounded && p.support) {
-      const old = before.find((b) => b.id === p.support),
-        now = colliders.find((b) => b.id === p.support);
-      if (old && now) {
-        p.x += now.x - old.x;
-        p.y += now.y - old.y;
-      }
+    const hazardMotion = spikes.map((o) => ({
+      before: oldSpikes.get(o.id),
+      after: this.objectRect(o),
+    }));
+    const motionResult = require('./moving-solids.cjs').transport(
+      p,
+      before,
+      colliders,
+      (actor, t) =>
+        spikes.some((o, i) => {
+          const a = hazardMotion[i].before,
+            b = hazardMotion[i].after;
+          return require('./hazards.cjs').spikeContact(actor, o, {
+            ...b,
+            x: a.x + (b.x - a.x) * t,
+            y: a.y + (b.y - a.y) * t,
+          });
+        }),
+      hazardMotion,
+    );
+    if (motionResult === 'hazard') {
+      this.retry('碰到尖刺');
+      return;
+    }
+    if (!motionResult) {
+      this.retry('被机关挤压');
+      return;
     }
     p.invulnerable = Math.max(0, p.invulnerable - dt);
+    p.launchHold = Math.max(0, (p.launchHold || 0) - dt);
     const crouch = input.down && p.grounded && !p.launched && !p.rail && p.dash <= 0;
     if (crouch && !p.crouching) {
       p.y += 10;
@@ -762,7 +1160,7 @@ class Engine {
     if (
       input.dashPressed &&
       p.dashCount < 3 &&
-      (p.freeDash || this.charges > 0) &&
+      (p.freeDash || (this.hasItem('item.icedTea') && this.charges > 0)) &&
       (!p.rail || p.rail.allowExit)
     ) {
       const d = direction(input, p.face),
@@ -854,7 +1252,7 @@ class Engine {
       p.vy = 0;
       p.grounded = true;
       p.support = b.id;
-      p.launched = false;
+      if (!p.launchHold) p.launched = false;
       if (dashing) p.dashY = 0;
     } else if (p.vy < 0)
       for (const b of colliders)
@@ -883,33 +1281,47 @@ class Engine {
       const solidContact =
         o.collision === true &&
         overlap({ x: p.x - 0.2, y: p.y - 0.2, w: p.w + 0.4, h: p.h + 0.4 }, rect);
-      if (
-        o.type === 'common.spike' &&
-        (solidContact || overlap(p, { ...rect, y: rect.y + 22, h: 10 }))
-      ) {
+      if (o.type === 'common.spike' && require('./hazards.cjs').spikeContact(p, o, rect)) {
         this.retry('碰到尖刺');
         return;
       }
       if (
-        ['common.coin', 'common.small', 'common.collectible'].includes(o.type) &&
+        Registry.get(o.type).collectible &&
         (!o.params.unlockPadId || this.objectStates.get(o.params.unlockPadId)?.hitAI) &&
         (solidContact || overlap(p, { x: rect.x + 5, y: rect.y + 5, w: 22, h: 22 }))
       )
         this.collect(o);
     }
+    for (const o of this.room.objects) {
+      const def = Registry.get(o.type),
+        state = this.objectStates.get(o.id);
+      if (!def.onPlayerContact || state.removed) continue;
+      const contact = overlap(p, this.objectRect(o));
+      if (!contact) {
+        state.playerContact = false;
+        continue;
+      }
+      if (state.playerContact) continue;
+      state.playerContact = true;
+      if (def.onPlayerContact(this.context(o), o, state) === 'retry') return;
+    }
     this.triggerObjects(oldBottom);
     this.updateAI(dt, this.colliders());
     if (this.player !== p) return;
+    if (this.reentryPort(p)) return;
     for (const exit of this.room.exits)
-      if (
-        this.exitCooldown === 0 &&
-        overlap(p, { x: exit.x * T, y: exit.y * T, w: exit.w * T, h: exit.h * T })
-      ) {
-        const edge = this.course.connections.find(
-          (w) => w.from.roomId === this.room.id && w.from.exitId === exit.id,
-        );
+      if (this.exitTriggerArmed && this.exitCooldown === 0 && overlap(p, this.exitRect(exit))) {
+        // 统一地图兼容层：先查项目级全局连接，再回落到原 course.connections，
+        // 因此跨原大关连接可运行，旧数据不做迁移也能原样运行。
+        const edge = MapCompat.resolve(this.project, this.room.id, exit.id);
         if (edge) {
-          const from = this.room.id;
+          const from = this.room.id,
+            returnLink = { roomId: from, exitId: exit.id, entryId: edge.to.entryId },
+            // Only the bound player exit of THIS wire may carry the AI. The
+            // explicit AI link must also land in the real destination room.
+            carried = this.ai.active
+              ? AIPorts.carryEntrance(this.project, this.room, exit.id, edge.to.roomId)
+              : null;
           this.loadRoom(
             edge.to.roomId,
             edge.to.entryId,
@@ -921,6 +1333,9 @@ class Engine {
               dashCount: p.dashCount,
             },
             edge.velocity === 'keep' ? { vx: p.vx, vy: p.vy } : null,
+            null,
+            returnLink,
+            carried ? { entranceId: carried.id, exitId: exit.id, fromRoomId: from } : null,
           );
           this.emit('room-change', { from, to: edge.to.roomId });
         } else {
@@ -956,7 +1371,10 @@ class Engine {
       tokens: this.tokens,
       charges: this.charges,
       recharge: this.recharge,
+      paidStockCap: this.paidStockCap,
       score: this.score,
+      developerMode: this.developerMode,
+      items: clone(this.items),
       deaths: this.deaths,
       steals: this.steals,
       elapsed: this.elapsed,

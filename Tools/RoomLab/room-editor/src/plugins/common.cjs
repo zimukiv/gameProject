@@ -14,9 +14,9 @@ function rearmAI(ctx, o, state) {
     Object.assign(state, { used: false, cooldown: 0, firedDuringContact: false, waitingAI: false });
 }
 module.exports = [
-  { ...base, type: 'common.coin', name: '大 token', glyph: 'T' },
-  { ...base, type: 'common.small', name: '小 token', glyph: '+' },
-  { ...base, type: 'common.collectible', name: '收藏品', glyph: '★' },
+  { ...base, type: 'common.coin', name: '大 token', glyph: 'T', collectible: true },
+  { ...base, type: 'common.small', name: '小 token', glyph: '+', collectible: true },
+  { ...base, type: 'common.collectible', name: '收藏品', glyph: '★', collectible: true },
   { ...base, type: 'common.spike', name: '尖刺', glyph: '^' },
   {
     ...base,
@@ -38,11 +38,21 @@ module.exports = [
     ...base,
     type: 'common.aiStart',
     name: 'AI 启动板',
-    version: '1.1.0',
+    version: '1.2.0',
     glyph: 'AI',
     collider: 'tile',
     trigger: 'foot',
-    defaults: { once: true },
+    defaults: { once: true, aiSpawnId: '' },
+    // The spawn point is a plain room-local reference; clearing it (or deleting
+    // the marker) keeps the legacy "appear beside the player" behavior.
+    schema: [
+      {
+        key: 'aiSpawnId',
+        label: 'AI 出现点',
+        kind: 'aiSpawn',
+        labels: { '': '不指定（在玩家旁出现）' },
+      },
+    ],
     afterRetry: rearmAI,
     onTrigger(ctx, o) {
       ctx.activateAI(o);
@@ -53,14 +63,62 @@ module.exports = [
     type: 'common.aiStartHollow',
     hidden: true, // v2 compatibility alias; the editor exposes one AI block with a collision switch.
     name: 'AI 启动板 · 空心',
+    version: '1.2.0',
     glyph: 'AI',
     hollow: true,
     collider: false,
     trigger: 'region',
-    defaults: { once: true },
+    defaults: { once: true, aiSpawnId: '' },
+    schema: [
+      {
+        key: 'aiSpawnId',
+        label: 'AI 出现点',
+        kind: 'aiSpawn',
+        labels: { '': '不指定（在玩家旁出现）' },
+      },
+    ],
     afterRetry: rearmAI,
     onTrigger(ctx, o) {
       ctx.activateAI(o);
+    },
+  },
+  {
+    ...base,
+    type: 'common.aiSpawn',
+    name: 'AI 出现点',
+    version: '1.0.0',
+    glyph: '◎',
+    category: '流程',
+    // Non-solid marker: it only tells a launch pad where the AI should appear.
+    collider: false,
+    nonSolid: true,
+    defaultCollision: false,
+    hollow: true,
+    trigger: 'none',
+    defaults: {},
+  },
+  {
+    ...base,
+    type: 'common.assignmentSubmit',
+    version: '1.0.0',
+    name: '提交作业',
+    glyph: '交',
+    category: '流程',
+    slots: ['idle', 'active'],
+    collider: 'pad',
+    trigger: 'foot',
+    defaults: { once: true, cooldown: 1 },
+    canTrigger(ctx) {
+      return ctx.ai.active;
+    },
+    onTrigger(ctx, o, state) {
+      ctx.stopAI();
+      ctx.addScore(50000, '提交作业');
+      ctx.say('提交作业：AI 已消失，积分 +50000');
+      ctx.emit('assignment-submit', { id: o.id, score: 50000 });
+    },
+    visual(ctx, o, state) {
+      return state.used ? 'active' : 'idle';
     },
   },
   {

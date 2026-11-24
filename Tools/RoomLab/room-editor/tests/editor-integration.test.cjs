@@ -4,6 +4,19 @@ const test = require('node:test'),
   G = require('../src/editor/graph-layout.cjs'),
   B = require('../src/project/native-bricks.cjs'),
   { fixture } = require('./helpers/native-fixture.cjs');
+test('native brick target drag covers the whole target rectangle at any zoom', () => {
+  const { r } = fixture();
+  const hit = require('../src/editor/native-draw.cjs').hitNode;
+  r.nativeCampaign.platforms = [{ id: 'target', x: 1, y: 1, w: 1, h: 1, toX: 5, toY: 4 }];
+  const ref = { kind: 'platforms', id: 'target' };
+  for (const zoom of [0.2, 1, 3]) {
+    assert.ok(hit(r, ref, { x: 5.95, y: 4.95 }, zoom));
+    assert.ok(hit(r, ref, { x: 5.05, y: 4.05 }, zoom));
+    assert.equal(hit(r, ref, { x: 6.05, y: 4.5 }, zoom), null);
+  }
+  r.nativeCampaign.platforms[0].locked = true;
+  assert.equal(hit(r, ref, { x: 5.5, y: 4.5 }, 1), null);
+});
 test('actual-size graph layout separates varied cards without touching connections or room order', () => {
   const rooms = Array.from({ length: 32 }, (_, i) => ({
     id: String(i),
@@ -79,4 +92,20 @@ test('new controller creates a valid local binding and editing target preserves 
   assert.equal(p.toY, 8.5);
   assert.equal(p.foldOnReturnAfterSwitch, 'alpha');
   assert.throws(() => B.setTarget(p, { x: r.cols, y: 0 }, r), /越界/);
+});
+test('saved room positions are preserved and only missing coordinates are initialized', () => {
+  const rooms = [
+      { id: 'a', cols: 30, rows: 17, graph: { x: 120, y: 40 } },
+      { id: 'b', cols: 30, rows: 17, graph: { x: 120, y: 40 } },
+      { id: 'c', cols: 30, rows: 17 },
+    ],
+    before = JSON.stringify(rooms),
+    positions = G.ensurePositions(rooms);
+  assert.equal(JSON.stringify(rooms), before);
+  assert.deepEqual(Object.keys(positions), ['c']);
+  assert.ok(Number.isFinite(positions.c.x) && Number.isFinite(positions.c.y));
+  const initialized = rooms.map((room) =>
+    positions[room.id] ? { ...room, graph: positions[room.id] } : room,
+  );
+  assert.deepEqual(G.ensurePositions(initialized), {});
 });

@@ -140,7 +140,7 @@ test('snapshot canonical identity ignores ZIP timestamp; assets round-trip and d
     b = C.encode(JSON.parse(JSON.stringify(p)), files);
   assert.equal(a.fingerprint, b.fingerprint);
   assert.deepEqual(C.decode(a.bytes).project, p);
-  assert.equal(C.decode(a.bytes).files.length, 9);
+  assert.equal(C.decode(a.bytes).files.length, p.assets.length);
   p.name += ' changed';
   const changed = C.encode(p, files);
   assert.notEqual(changed.fingerprint, a.fingerprint);
@@ -166,7 +166,7 @@ test('local backups survive restart; named checkpoints and restore append histor
   assert.ok(repo.data.revisions[changed]);
   const reloaded = new Repository(root);
   assert.equal(reloaded.tree().head, repo.tree().head);
-  assert.equal(reloaded.read(reloaded.tree()).files.length, 9);
+  assert.equal(reloaded.read(reloaded.tree()).files.length, p.assets.length);
 });
 test('two devices: clean download, concurrent edits preserved on a conflict branch', async () => {
   const remote = new FakeRemote(),

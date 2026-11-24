@@ -52,9 +52,12 @@ const assert = require('node:assert/strict'),
     page.on('pageerror', (e) => errors.push(e.message));
     await page.waitForFunction(() => window.__ROOM_LAB__);
     const before = await page.evaluate(() => window.__ROOM_LAB__.snapshot().project);
+    // Individual room import moved to the room library when the project menu
+    // entry became the group package importer.
+    await page.getByRole('button', { name: '房间库', exact: true }).click();
     const [chooser] = await Promise.all([
       page.waitForEvent('filechooser'),
-      (async () => { await page.locator('[data-menu-trigger]', { hasText: '项目' }).click(); return page.locator('#import-room').click(); })(),
+      page.locator('[data-room-import]').first().click(),
     ]);
     await chooser.setFiles(file);
     await page.locator('[data-room-import-index]').first().waitFor();

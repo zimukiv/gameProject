@@ -45,11 +45,11 @@ function open(app, incoming, options = {}) {
       $('dialog').close();
       if (plan.rooms.length === 1) app.go('room', { courseId, roomId: plan.rooms[0].id });
       else
-        app.go('course', {
+        app.go('home', {
           courseId,
           roomId: plan.rooms[0].id,
-          courseTab: 'graph',
-          graphSelection: { kind: 'room', id: plan.rooms[0].id },
+          planningTab: 'map',
+          graphSelection: { kind: 'room', id: plan.rooms[0].id, courseId },
         });
       app.message(
         `已导入 ${plan.rooms.length} 个房间，覆盖 ${plan.overwritten.length} 个，新增 ${plan.addedAssets} 个素材。可撤销。`,

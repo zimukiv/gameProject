@@ -56,7 +56,7 @@ const assert = require('node:assert/strict'),
     await page.keyboard.press('Enter');
     assert.equal(await page.locator('#open-project').isVisible(), true);
     await page.keyboard.press('ArrowDown');
-    assert.equal(await page.evaluate(() => document.activeElement?.id), 'new-project');
+    assert.equal(await page.evaluate(() => document.activeElement?.id), 'open-project');
     await page.keyboard.press('Escape');
     assert.equal(await page.locator('#open-project').isVisible(), false);
     assert.equal(
@@ -76,7 +76,7 @@ const assert = require('node:assert/strict'),
 
     // New courses can be created per theme without touching the existing ones.
     const before = (await snap()).project.courses;
-    await page.locator('#add-course').click();
+    await page.evaluate(() => window.__ROOM_LAB__.newCourse());
     assert.equal(await page.locator('[data-new-course-kind]').count(), 3);
     await page.locator('[data-new-course-kind="slacker"]').click();
     await page.waitForFunction(() => window.__ROOM_LAB__.snapshot().project.courses.length === 4);
@@ -85,23 +85,34 @@ const assert = require('node:assert/strict'),
     assert.deepEqual(projects.slice(0, 3), before);
     await leavePlay();
 
-    // Each theme starter room exposes only its own tools and is actually playable.
+    // Every theme starter room exposes the unified mechanism palette and remains playable.
+    const unifiedTools = [
+      'physics.jet',
+      'physics.ice',
+      'physics.thermal',
+      'physics.rail',
+      'calculus.integral',
+      'calculus.derivative',
+      'slacker.checkin',
+      'slacker.awake',
+      'slacker.teacher',
+    ];
+    const itemTools = ['item.coffee', 'item.calculator', 'item.phone', 'item.icedTea'];
     const expectations = {
-      physics: {
-        tools: ['physics.jet'],
-        absent: ['calculus.integral', 'slacker.checkin'],
-        events: [],
-      },
+      physics: { tools: unifiedTools, absent: [], events: [] },
       calculus: {
-        tools: ['calculus.integral', 'calculus.derivative'],
-        absent: ['physics.jet', 'slacker.checkin'],
+        tools: unifiedTools,
+        absent: [],
         events: ['calculus-integral', 'calculus-derivative'],
+        item: ['item.calculator', 1],
         won: true,
       },
       slacker: {
-        tools: ['slacker.checkin', 'slacker.awake'],
-        absent: ['physics.jet', 'calculus.integral'],
+        tools: unifiedTools,
+        absent: [],
         events: ['checkin', 'awake'],
+        item: ['item.coffee', 1],
+        phone: true,
         won: true,
       },
     };
@@ -110,10 +121,26 @@ const assert = require('node:assert/strict'),
       await page.locator(`[data-course="${kind}"] [data-enter]`).click();
       await page.getByRole('button', { name: '房间列表', exact: true }).click();
       await page.getByRole('button', { name: '编辑房间', exact: true }).first().click();
-      for (const type of want.tools)
+      for (const type of want.tools) {
         assert.equal(await page.locator(`[data-block-type="${type}"]`).count(), 1, kind + ' tool');
+        assert.equal(
+          await page.locator(`[data-block-type="${type}"] img`).count(),
+          1,
+          kind + ' artwork / ' + type,
+        );
+      }
+      for (const type of itemTools) {
+        assert.equal(await page.locator(`[data-block-type="${type}"]`).count(), 1, kind + ' item');
+        assert.equal(
+          await page.locator(`[data-block-type="${type}"] img`).count(),
+          1,
+          kind + ' item artwork / ' + type,
+        );
+      }
       for (const type of want.absent)
         assert.equal(await page.locator(`[data-block-type="${type}"]`).count(), 0, kind + ' leak');
+      assert.equal(await page.locator('[data-tool="movable"]').count(), 1, kind + ' movable');
+      assert.equal(await page.locator('[data-tool="zone"]').count(), 1, kind + ' thermal zone');
       await page.locator('#play-room').click();
       await page.keyboard.down('KeyD');
       await page.waitForFunction(
@@ -133,6 +160,16 @@ const assert = require('node:assert/strict'),
           game.events.some((e) => e.type === event),
           kind + ' missing event ' + event,
         );
+      if (want.item) {
+        assert.ok((game.items[want.item[0]] || 0) >= want.item[1], kind + ' inventory');
+        if (want.phone) assert.ok((game.items['item.phone'] || 0) >= 1, kind + ' phone inventory');
+        const label = { 'item.coffee': '咖啡', 'item.calculator': '计算器' }[want.item[0]];
+        assert.ok(
+          (await page.locator('#play-items').textContent()).includes(
+            label + ' ' + game.items[want.item[0]],
+          ),
+        );
+      }
       await leavePlay();
     }
 
@@ -164,7 +201,7 @@ const assert = require('node:assert/strict'),
     await page.setViewportSize({ width: 700, height: 900 });
     await page.locator('#home').click();
     await menu('项目').click();
-    assert.equal(await page.locator('#new-project').isVisible(), true);
+    assert.equal(await page.locator('#open-project').isVisible(), true);
     const box = await page.locator('#menu-project').boundingBox();
     assert.ok(box.x >= 0 && box.x + box.width <= 701, 'menu panel inside viewport');
     assert.equal(

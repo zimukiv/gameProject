@@ -34,8 +34,9 @@ const assert = require('node:assert/strict'),
     const box = await page.locator('#room-canvas').boundingBox();
     await page.mouse.click(box.x + box.width * 0.45, box.y + box.height * 0.32);
     const before = await page.evaluate(() => window.__ROOM_LAB__.snapshot().project);
-    await page.locator('[data-menu-trigger]', { hasText: '项目' }).click();
-    await page.locator('#new-project').click();
+    // 新建大关 now lives on the planning course strip, not in the project menu.
+    await page.locator('#home').click();
+    await page.evaluate(() => window.__ROOM_LAB__.newCourse());
     await page.locator('[data-new-course-kind="physics"]').click();
     assert.equal(await page.locator('#dialog').isVisible(), false);
     const appended = await page.evaluate(() => window.__ROOM_LAB__.snapshot().project);

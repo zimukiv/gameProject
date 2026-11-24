@@ -34,14 +34,25 @@ function draw(
         ctx.setLineDash([5 / scale, 4 / scale]);
       }
       if (kind === 'platforms') {
+        if (!require('../project/collision.cjs').inherited(r, o, kind))
+          ctx.setLineDash([5 / scale, 4 / scale]);
         ctx.fillStyle = color + '55';
         ctx.fillRect(b.x * 32, b.y * 32, b.w * 32, b.h * 32);
         ctx.strokeRect(b.x * 32, b.y * 32, b.w * 32, b.h * 32);
         ctx.fillStyle = color;
         if (!mini && o.label) text(o.label, b.x + 0.1, b.y + 0.65);
-        if (!mini && targets && (o.toX !== undefined || o.toY !== undefined)) {
+        if (!mini && (targets || selected) && (o.toX !== undefined || o.toY !== undefined)) {
           const x = o.toX ?? o.x,
             y = o.toY ?? o.y;
+          ctx.strokeStyle =
+            o.signal || o.switch ? signalColor(o.signal || o.switch) : colors[o.band || 'all'];
+          if (selected) {
+            ctx.save();
+            ctx.globalAlpha = 0.28;
+            ctx.fillStyle = ctx.strokeStyle;
+            ctx.fillRect(x * 32, y * 32, b.w * 32, b.h * 32);
+            ctx.restore();
+          }
           ctx.setLineDash([5 / scale, 4 / scale]);
           ctx.strokeRect(x * 32, y * 32, b.w * 32, b.h * 32);
           ctx.beginPath();
@@ -121,6 +132,13 @@ function draw(
 function hitNode(r, ref, p, scale) {
   const o = ref && N.get(r, ref);
   if (!o || o.locked) return null;
+  if (ref.kind === 'platforms' && (o.toX !== undefined || o.toY !== undefined)) {
+    const x = o.toX ?? o.x,
+      y = o.toY ?? o.y;
+    return p.x >= x && p.x <= x + (o.w || 1) && p.y >= y && p.y <= y + (o.h || 1)
+      ? { kind: ref.kind, id: ref.id, index: 0 }
+      : null;
+  }
   const points =
     ref.kind === 'patrols'
       ? o.nodes

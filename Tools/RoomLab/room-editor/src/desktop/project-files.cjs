@@ -70,7 +70,8 @@ function writeWithBackup(file, bytes) {
   fs.renameSync(temp, file);
   return { file, root };
 }
-function writeProject(file, project, files) {
+function writeProject(file, project, files, options = {}) {
+  const replaceAssets = options.replaceAssets === true;
   const errors = M.validate(project).errors;
   if (errors.length) throw new Error(errors[0]);
   const root = path.dirname(path.resolve(file));
@@ -79,8 +80,12 @@ function writeProject(file, project, files) {
     builtIns = require('../assets/seeds.cjs').restoreBuiltIns(project.assets, new Map());
   if (path.extname(file).toLowerCase() === '.zip')
     return writeWithBackup(file, Archive.pack(project, map));
-  // Preflight all collisions before writing project.json or any bytes.
-  const writes = [];
+  // Preflight all collisions before writing project.json or any bytes. A same-named
+  // asset with different bytes is reported to the caller, which may either stop
+  // (default, keeps the previous hard failure for library callers) or ask the user
+  // and save again with replaceAssets, in which case the old bytes are kept aside.
+  const writes = [],
+    conflicts = [];
   for (const a of project.assets) {
     const target = inside(root, a.path),
       exists = fs.existsSync(target),
@@ -90,12 +95,34 @@ function writeProject(file, project, files) {
       continue;
     }
     if (exists) {
-      if (sha(fs.readFileSync(target)) !== sha(bytes))
-        throw new Error('已有素材内容不同：' + a.path + '。请另存新目录或在素材库替换。');
+      if (sha(fs.readFileSync(target)) !== sha(bytes)) {
+        if (replaceAssets) writes.push({ target, bytes, replaced: true });
+        else conflicts.push({ path: a.path, name: a.name });
+        continue;
+      }
     } else writes.push({ target, bytes });
   }
+  if (conflicts.length) {
+    const error = new Error(
+      '已有素材内容不同：' +
+        conflicts[0].path +
+        '。请另存新目录、在素材库替换，或确认覆盖后重试。',
+    );
+    error.code = 'asset-conflict';
+    error.assetConflicts = conflicts;
+    throw error;
+  }
+  let backupRoot = null;
   for (const item of writes) {
     fs.mkdirSync(path.dirname(item.target), { recursive: true });
+    if (item.replaced) {
+      if (!backupRoot) {
+        backupRoot = path.join(root, '.project-backups', 'assets-' + Date.now());
+      }
+      const kept = path.join(backupRoot, path.relative(root, item.target));
+      fs.mkdirSync(path.dirname(kept), { recursive: true });
+      fs.copyFileSync(item.target, kept);
+    }
     fs.writeFileSync(item.target, item.bytes);
   }
   return writeWithBackup(
@@ -103,4 +130,17 @@ function writeProject(file, project, files) {
     JSON.stringify(require('../project/collision.cjs').portable(project), null, 2),
   );
 }
-module.exports = { inside, readProject, writeProject };
+// Confirmation-aware save used by the desktop handler: a folder that already holds
+// same-named artwork with different bytes is not a fatal error, it is one question.
+// `confirm(conflicts, file)` may be sync or async and returns whether to overwrite.
+async function writeProjectWithConfirmation(file, project, files, confirm) {
+  try {
+    return writeProject(file, project, files);
+  } catch (error) {
+    if (!error || error.code !== 'asset-conflict') throw error;
+    const accepted = typeof confirm === 'function' ? await confirm(error.assetConflicts, file) : false;
+    if (!accepted) return null;
+    return writeProject(file, project, files, { replaceAssets: true });
+  }
+}
+module.exports = { inside, readProject, writeProject, writeProjectWithConfirmation };

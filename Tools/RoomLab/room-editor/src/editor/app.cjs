@@ -2,10 +2,12 @@
 const { Store } = require('./store.cjs'),
   M = require('../project/model.cjs'),
   { esc, $, download, modal, check } = require('./dom.cjs');
-const Home = require('./pages/home.cjs'),
+const Planning = require('./pages/planning.cjs'),
   Course = require('./pages/course.cjs'),
   Room = require('./pages/room.cjs');
+const GraphLayout = require('./graph-layout.cjs');
 const Assets = require('../assets/manager.cjs'),
+  AssetSpec = require('../assets/spec.cjs'),
   Archive = require('../project/archive.cjs'),
   AssetPage = require('./pages/assets.cjs'),
   DefinitionPage = require('./pages/definitions.cjs'),
@@ -22,11 +24,22 @@ class App {
       courseId: this.store.project.courses[0].id,
       roomId: this.store.project.courses[0].rooms[0].id,
       courseTab: 'graph',
+      planningTab: 'map',
       tool: 'select',
       selection: null,
       inspectorTab: 'base',
       roomView: null,
+      // Room-first organisation state: current filter and multi-room selection
+      // used by group assignment. Never persisted in the project.
+      roomFilter: 'all',
+      roomMulti: [],
+      // Transient Space-held mechanism-path preview in the room editor.
+      roomPathPeek: false,
     };
+    try {
+      this.state.roomPickerCollapsed =
+        localStorage.getItem('roomlab-room-picker-collapsed') === 'true';
+    } catch {}
     const preview = new URL(window.location.href).searchParams;
     if (['room', 'course', 'assets'].includes(preview.get('preview'))) {
       this.store.hasProject = true;
@@ -36,6 +49,9 @@ class App {
     }
     this.currentDraw = null;
     this.assetURLs = new Map();
+    this.roomClipboard = null;
+    this.selectionClipboard = null;
+    this.selectionPasteCount = 0;
     this.game = null;
     this.keys = new Set();
     this.edges = {};
@@ -45,6 +61,9 @@ class App {
     this.bind();
     this.cloud = new (require('./cloud-controller.cjs').CloudController)(this);
     $('open-cloud').onclick = () => this.cloud.show();
+    // Minute autosave runs beside the explicit save buttons: it only writes the
+    // current project file (or a local recovery snapshot) and never the cloud.
+    this.autosave = require('./autosave.cjs').attach(this);
     this.render();
     requestAnimationFrame(() => this.frame());
   }
@@ -54,15 +73,31 @@ class App {
   room() {
     return this.store.room(this.state.courseId, this.state.roomId);
   }
+  // Room IDs are unique across the project, so a selected room always resolves
+  // to its owning course regardless of the sticky active course.
+  roomOwner(roomId) {
+    return GraphLayout.locate(this.store.project, roomId);
+  }
   go(route, values = {}) {
     if (!this.store.hasProject) return;
+    require('./live-fields.cjs').flushAll();
     if (route !== 'play' && this.game) {
       this.stopPlay(() => this.go(route, values));
       return;
     }
+    if (
+      route === 'room' &&
+      !['room', 'play'].includes(this.state.route) &&
+      !Object.hasOwn(values, 'roomGroupId')
+    )
+      values = { ...values, roomGroupId: undefined };
+    // Fullscreen editing belongs to the room page only; any other route leaves
+    // it so the app chrome comes back.
+    if (route !== 'room') this.state.roomFullscreen = false;
     this.state = { ...this.state, ...values, route };
     this.state.selection = null;
     this.state.multiSelection = [];
+    this.state.roomMulti = [];
     this.state.roomView = null;
     this.render();
   }
@@ -87,7 +122,6 @@ class App {
     require('./room-transfer.cjs').bind(this);
     require('./menus.cjs').install();
     $('home').onclick = () => this.go('home');
-    $('new-project').onclick = () => this.newCourse();
     $('open-project').onclick = () =>
       this.confirmUnsaved('打开项目', () => {
         if (window.desktopAPI) this.openNative();
@@ -116,16 +150,8 @@ class App {
     };
     $('save-project').onclick = () => this.saveNative(false);
     $('save-as').onclick = () => this.saveNative(true);
-    $('export-room').onclick = () => {
-      const id =
-        this.state.route === 'course'
-          ? this.state.graphSelection?.kind === 'room' && this.state.graphSelection.id
-          : this.state.route === 'room'
-            ? this.state.roomId
-            : null;
-      if (id) this.exportRoom(this.state.courseId, id);
-    };
     $('export-project').onclick = async () => {
+      require('./live-fields.cjs').flushAll();
       try {
         const bytes = Archive.pack(this.store.project, this.store.assetFiles);
         if (window.desktopAPI) {
@@ -146,14 +172,38 @@ class App {
       this.go('assets', { assetCourse: this.course().id, assetGroup: null, assetSub: null });
     $('open-definitions').onclick = () =>
       this.go('definitions', { definitionCourse: this.course().id });
+    // Legacy course/file management is hidden in the Tools menu, not on the
+    // room-first planning surface.
     $('asset-files').onchange = async (e) => {
       const files = [...e.target.files];
       e.target.value = '';
       await this.addAssetInputs(files.map((file) => ({ name: file.name, file })));
     };
     document.addEventListener('keydown', (e) => {
-      if (!this.store.hasProject || e.target.closest('input,textarea,select') || $('dialog').open)
+      if (!this.store.hasProject || $('dialog').open) return;
+      // Fullscreen room editing works even while an inspector field is focused:
+      // F11 toggles it and Esc always leaves it.
+      if (this.state.route === 'room' && !this.game) {
+        if (e.code === 'F11') {
+          e.preventDefault();
+          this.toggleRoomFullscreen?.();
+          return;
+        }
+        if (e.code === 'Escape' && this.state.roomFullscreen) {
+          e.preventDefault();
+          this.exitRoomFullscreen?.();
+          return;
+        }
+      }
+      if (e.target.closest?.('input,textarea,select')) {
+        // Inside a text field the system keeps Ctrl+C/V text editing. Ctrl+S is
+        // the exception: saving must not be swallowed by the focused input.
+        if ((e.ctrlKey || e.metaKey) && e.code === 'KeyS') {
+          e.preventDefault();
+          $('save-project').click();
+        }
         return;
+      }
       if (this.game) {
         if (
           [
@@ -192,34 +242,89 @@ class App {
       } else if ((e.ctrlKey || e.metaKey) && e.code === 'KeyS') {
         e.preventDefault();
         $('save-project').click();
+      } else if ((e.ctrlKey || e.metaKey) && e.code === 'KeyC') {
+        // In a room the shortcut copies the current selection; the room-wide
+        // clipboard stays on the home page (library / wiring board). Focused
+        // inputs return early above, so the system clipboard still works there.
+        const selection = require('./room-selection-clipboard.cjs'),
+          roomCopy = require('./room-clipboard.cjs');
+        if (this.state.route === 'room') {
+          if (selection.copy(this)) e.preventDefault();
+        } else if (roomCopy.copySelection(this)) e.preventDefault();
+      } else if ((e.ctrlKey || e.metaKey) && e.code === 'KeyV') {
+        const selection = require('./room-selection-clipboard.cjs'),
+          roomCopy = require('./room-clipboard.cjs');
+        if (this.state.route === 'room' && this.selectionClipboard) {
+          e.preventDefault();
+          selection.paste(this);
+        } else if (roomCopy.canPaste(this)) {
+          e.preventDefault();
+          roomCopy.paste(this);
+        }
       } else if (this.state.route === 'room') {
+        // Holding Space peeks at every mechanism brick path. It is a transient
+        // view only (the real selection is untouched) and focused inputs /
+        // playtest never reach this branch.
+        if (e.code === 'Space') {
+          e.preventDefault();
+          if (!e.repeat) this.setRoomPathPeek?.(true);
+          return;
+        }
         const tools = require('./room-keys.cjs').tools;
         const tool = Object.keys(tools).find((name) => e.code === 'Key' + tools[name]);
         if (tool) this.setRoomTool?.(tool);
-        if (e.code === 'Escape') this.clearRoomSelection?.();
+        // F11 is handled by the room guard above, which also works while an
+        // inspector field is focused. Esc leaves fullscreen before it clears the
+        // canvas selection, so one press always gets the user back to the app.
+        if (e.code === 'Escape') {
+          if (this.exitRoomFullscreen?.()) {
+            e.preventDefault();
+            return;
+          }
+          this.clearRoomSelection?.();
+        }
         if (['Delete', 'Backspace'].includes(e.code)) {
           e.preventDefault();
           this.deleteRoomSelection?.();
         }
       }
     });
-    document.addEventListener('keyup', (e) => this.keys.delete(e.code));
+    document.addEventListener('keyup', (e) => {
+      this.keys.delete(e.code);
+      if (e.code === 'Space') this.setRoomPathPeek?.(false);
+    });
     window.addEventListener('blur', () => {
       if (this.game?.mode === 'playing') this.game.togglePause();
+      this.setRoomPathPeek?.(false);
       this.clearInputs();
     });
     document.addEventListener('visibilitychange', () => {
       if (document.hidden && this.game?.mode === 'playing') this.game.togglePause();
+      if (document.hidden) this.setRoomPathPeek?.(false);
       this.clearInputs();
     });
   }
   render() {
     document.body.classList.toggle('room-editing', ['room', 'play'].includes(this.state.route));
+    document.body.classList.toggle('planning', this.state.route === 'home');
+    document.body.classList.toggle(
+      'room-fullscreen',
+      this.state.route === 'room' && !!this.state.roomFullscreen,
+    );
     $('app').style.height = '';
     this.currentDraw = null;
     this.setRoomTool = null;
+    this.setRoomPathPeek = null;
+    this.toggleRoomFullscreen = null;
+    this.exitRoomFullscreen = null;
     this.nodePanelRefresh = null;
+    if (this.state.route !== 'room') this.state.roomPathPeek = false;
+    // The map owns a ResizeObserver, a window resize listener and a matchMedia
+    // DPR watcher that all outlive its DOM node. Dispose them before the page
+    // markup is replaced so a late event cannot draw into a detached canvas.
+    require('./graph-board.cjs').dispose(this);
     $('editor-actions').hidden = !this.store.hasProject;
+    this.autosave?.renderStatus();
     if (!this.store.hasProject) {
       $('breadcrumbs').replaceChildren();
       $('app').innerHTML =
@@ -237,14 +342,21 @@ class App {
       (this.state.route !== 'home' ? ` / <button id="crumb-course">${esc(c.name)}</button>` : '') +
       (this.state.route === 'room' ? ` / <span>${esc(this.room().name)}</span>` : '');
     $('crumb-project').onclick = () => this.go('home');
-    if ($('crumb-course')) $('crumb-course').onclick = () => this.go('course');
-    if (this.state.route === 'home') Home.render(this);
+    if ($('crumb-course')) $('crumb-course').onclick = () => this.go('home');
+    if (this.state.route === 'room') {
+      const navigation = require('./room-navigation.cjs');
+      $('breadcrumbs').innerHTML = navigation.breadcrumbs(this);
+      // 顶栏「项目」明确返回路线图（不是上次停留的房间库页签）。
+      $('crumb-project').onclick = () => this.go('home', { planningTab: 'map' });
+      navigation.bindBreadcrumbs(this);
+    }
+    if (this.state.route === 'home') Planning.render(this);
     else if (this.state.route === 'course') Course.render(this);
     else if (this.state.route === 'room') Room.render(this);
     else if (this.state.route === 'play') PlayPage.render(this);
     else if (this.state.route === 'assets') AssetPage.render(this);
     else if (this.state.route === 'definitions') DefinitionPage.render(this);
-    this.updateRoomExport();
+    require('./room-clipboard.cjs').sync(this);
     if ($('back-home')) $('back-home').onclick = () => this.go('home');
     const v = M.validate(p);
     this.message(
@@ -258,20 +370,32 @@ class App {
       !!v.errors.length,
     );
   }
-  updateRoomExport() {
-    const id =
-      this.state.route === 'room'
-        ? this.state.roomId
-        : this.state.route === 'course' && this.state.graphSelection?.kind === 'room'
-          ? this.state.graphSelection.id
-          : null;
-    const room = this.course().rooms.find((r) => r.id === id);
-    $('export-room').disabled = !room;
-    $('export-room').title = room
-      ? '导出 ' + room.name + '（含素材）'
-      : '编辑房间或在接线板选择一个房间后导出';
+  // A group package is still a normal project ZIP (same archive/asset layout),
+  // so both the desktop save dialog and the browser download path are reused.
+  async exportGroup(groupId) {
+    require('./live-fields.cjs').flushAll();
+    try {
+      const project = require('../project/group-export.cjs').standalone(
+          this.store.project,
+          groupId,
+        ),
+        bytes = Archive.pack(project, this.store.assetFiles);
+      if (window.desktopAPI) {
+        const saved = await window.desktopAPI.exportArchive({
+          name: project.name + '-分组',
+          bytes,
+        });
+        if (saved) this.message('分组项目包已导出：' + saved.path);
+      } else {
+        download(project.name + '-分组.zip', bytes, 'application/zip');
+        this.message('分组已导出，包含房间、接线、AI 和所需素材。');
+      }
+    } catch (error) {
+      this.message('导出分组失败：' + error.message, true);
+    }
   }
   async exportRoom(courseId, roomId) {
+    require('./live-fields.cjs').flushAll();
     try {
       const project = require('../project/room-export.cjs').standalone(
           this.store.project,
@@ -320,18 +444,40 @@ class App {
             ? new Uint8Array(input.bytes)
             : new Uint8Array(await input.file.arrayBuffer()),
           ext = input.name.split('.').at(-1).toLowerCase(),
-          size = await Assets.dimensions(bytes, Assets.MIME[ext]);
-        await Assets.importAsset(this.store, {
+          size = await Assets.dimensions(bytes, Assets.MIME[ext]),
+          inferred = AssetSpec.infer(input.name),
+          folder = this.state.assetImportFolder || {},
+          // A canonical file name may fill the empty/unsorted destination, but
+          // an explicit folder chosen in the asset page always wins. Existing
+          // bindings are never changed implicitly by an import.
+          destination =
+            inferred && (!folder.category || folder.category === 'unsorted')
+              ? {
+                  category: inferred.category,
+                  subcategory: inferred.subcategory,
+                  courseId: this.course().id,
+                }
+              : folder,
+          frames = AssetSpec.importFrames(input.name, size.width, size.height) || {};
+        const meta = await Assets.importAsset(this.store, {
           name: input.name,
           bytes,
           ...size,
           courseId: this.course().id,
-          ...(this.state.assetImportFolder || {}),
+          ...destination,
+          frameWidth: frames.frameWidth,
+          frameHeight: frames.frameHeight,
+          fps: frames.fps,
           replaceId: this.state.replacingAssetId,
         });
         this.state.replacingAssetId = null;
+        const info = AssetSpec.check(meta);
+        this.message(
+          info?.issues?.length
+            ? `素材已导入（${info.label}；旧图可继续使用，建议按规范替换）`
+            : '素材已导入，保存/导出项目包会带上图片。',
+        );
       }
-      this.message('素材已导入，保存/导出项目包会带上图片。');
     } catch (e) {
       this.message('素材导入失败：' + e.message, true);
     }
@@ -444,12 +590,23 @@ class App {
       this.message(e.message, true);
       return;
     }
-    this.go('course', { courseId: course.id, roomId: course.rooms[0].id });
+    this.go('home', { courseId: course.id, roomId: course.rooms[0].id, planningTab: 'map' });
     this.message(
       '已新建' + require('../project/themes.cjs').theme(kind).label + '大关，其他大关与房间保留。',
     );
   }
+  // A manual save and the minute autosave must never write at the same time.
   async saveNative(saveAs = false, complete = false) {
+    this.manualSave = true;
+    try {
+      return await this.saveNativeNow(saveAs, complete);
+    } finally {
+      this.manualSave = false;
+    }
+  }
+  async saveNativeNow(saveAs = false, complete = false) {
+    // A pending typed draft is part of the project the user is about to save.
+    require('./live-fields.cjs').flushAll();
     this.store.persist();
     if (!window.desktopAPI) {
       if (complete) {
@@ -475,18 +632,13 @@ class App {
       return true;
     }
     try {
-      const current = this.cloud.currentCloudTree(this.store.project.id);
       const project = this.store.snapshot();
       const markSaved = () => {
         if (JSON.stringify(this.store.project) === JSON.stringify(project))
           this.store.dirty = false;
       };
-      if (!saveAs && !this.store.nativeSession && current && !current.localFile) {
-        const status = await this.cloud.saveCurrent();
-        markSaved();
-        this.message(status.message);
-        return true;
-      }
+      // Manual 保存项目 is local only. A cloud-only checkout has no associated
+      // local file yet, so the native save handler opens the path picker once.
       const files = this.store.project.assets
         .filter((a) => this.store.assetFiles.has(a.path))
         .map((a) => ({ path: a.path, bytes: this.store.assetFiles.get(a.path) }));
@@ -513,20 +665,31 @@ class App {
     this.edges = {};
     this.acc = 0;
   }
-  startPlay(roomId, entryId, acknowledged = false) {
+  startPlay(roomId, entryId, options = {}) {
+    const acknowledged = options.acknowledged === true;
     if (require('../project/native-compat.cjs').enabled(this.store.project) && !acknowledged) {
       modal(
         '测试版关卡 · 试玩限制',
         '<p>此处只运行原有基础机制，不执行测试版扩展平台、清醒层、信号、巡逻及存档规则。请导出后在测试版中验证完整效果。</p>',
         [
           { label: '返回编辑' },
-          { label: '仅检查基础机制', action: () => this.startPlay(roomId, entryId, true) },
+          {
+            label: '仅检查基础机制',
+            action: () => this.startPlay(roomId, entryId, { ...options, acknowledged: true }),
+          },
         ],
       );
       return;
     }
     try {
-      this.game = new Engine(this.store.project, this.course().id, roomId, entryId);
+      // 统一地图兼容层：按全局房间索引确定所属大关，跨原大关的房间也能直接试玩。
+      require('./live-fields.cjs').flushAll();
+      const owner = require('../project/map-compat.cjs').roomRef(this.store.project, roomId),
+        courseId = owner ? owner.courseId : this.course().id;
+      this.game = new Engine(this.store.project, courseId, roomId, entryId, {
+        developerMode: options.developerMode === true,
+        playtest: options.playtest || null,
+      });
       this.traceRecorder = new Recorder(this.game);
       this.clearInputs();
       this.go('play');
@@ -645,4 +808,78 @@ class App {
   }
 }
 const app = new App();
-window.__ROOM_LAB__ = { snapshot: () => app.snapshot() };
+window.__ROOM_LAB__ = {
+  snapshot: () => app.snapshot(),
+  // Test hooks: autosave is driven by a 60 s interval, so renderer/Electron
+  // acceptance can inspect its state and trigger one tick without waiting.
+  autosaveState: () => app.autosave?.state || null,
+  autosaveTick: () => app.autosave?.tick() || Promise.resolve(null),
+  // The planning screen no longer exposes course-first navigation. Legacy
+  // course workspaces/tools stay reachable from the Tools menu (and these hooks,
+  // used by older acceptance flows that still verify rules/art/room lists).
+  openCourseWorkspace: (tab = 'graph') =>
+    app.go('course', { courseId: app.state.courseId, courseTab: tab }),
+  openCourseTools: () => require('./planning-nav.cjs').courseTools(app),
+  newCourse: () => app.chooseCourse(),
+  organization: () => require('../project/room-organization.cjs').ensure(app.store.project),
+  // Accent colour used on the route map for a room: user-group colour when the
+  // room is grouped, otherwise null (legacy theme colour applies).
+  mapAccent: (roomId) =>
+    require('../project/room-organization.cjs').colorFor(
+      require('../project/room-organization.cjs').ensure(app.store.project),
+      roomId,
+    ),
+  // Read-only geometry of the route map ports in world space plus the current
+  // view transform. Acceptance tests use it to drag a real wire between two
+  // rooms of different legacy containers without guessing pixel positions.
+  wiringPorts: () => {
+    const project = app.store.project,
+      offsets = app.state.courseOffsets || GraphLayout.ensureOffsets(project).offsets,
+      places = GraphLayout.placements(project, offsets, app.state.courseId),
+      canvas = typeof document === 'undefined' ? null : document.getElementById('graph'),
+      size = app.state.graphCanvas || {};
+    // CSS-space size and DPR are returned explicitly so acceptance can convert
+    // world → client coordinates without assuming the backing store equals the
+    // CSS box (it is CSS * ratio on HiDPI displays).
+    return {
+      view: { ...(app.state.graphView || { x: 0, y: 0, scale: 1 }) },
+      cssWidth: Number(canvas?.dataset?.cssWidth) || size.cssWidth || 0,
+      cssHeight: Number(canvas?.dataset?.cssHeight) || size.cssHeight || 0,
+      dpr: Number(canvas?.dataset?.dpr) || size.dpr || 1,
+      backingWidth: canvas?.width || size.backingWidth || 0,
+      backingHeight: canvas?.height || size.backingHeight || 0,
+      places: places.map((place) => ({
+        courseId: place.courseId,
+        roomId: place.room.id,
+        exits: place.ports.exits,
+        entries: place.ports.entries,
+        // AI port handles use the same world coordinates as player ports, so a
+        // headless acceptance test can drag an AI exit -> AI entrance too.
+        aiExits: place.ports.aiExits || [],
+        aiEntries: place.ports.aiEntries || [],
+      })),
+    };
+  },
+  // Undo/redo counts (already part of snapshot) are not enough for the UI test:
+  // expose the live unified connection list for cross-container assertions.
+  mapConnections: () => require('../project/map-compat.cjs').connections(app.store.project),
+  // AI wires are deliberately a separate list, so tests (and the UI) can prove
+  // an AI drag never leaks into player wiring.
+  aiConnections: () => require('../project/ai-ports.cjs').connections(app.store.project),
+  aiWires: () => require('../project/ai-ports.cjs').connections(app.store.project),
+  mapAiConnections: () => require('../project/ai-ports.cjs').connections(app.store.project),
+  aiBindings: (roomId) => {
+    const AIPorts = require('../project/ai-ports.cjs');
+    if (roomId) {
+      const ref = AIPorts.roomRef(app.store.project, roomId);
+      return ref ? AIPorts.bindings(ref.room) : [];
+    }
+    return AIPorts.listRooms(app.store.project).flatMap(({ room }) =>
+      AIPorts.bindings(room).map((item) => ({ roomId: room.id, ...item })),
+    );
+  },
+  roomFilter: (value) => {
+    app.state.roomFilter = value || 'all';
+    app.render();
+  },
+};

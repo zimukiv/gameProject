@@ -1,5 +1,7 @@
 # 测试与验收
 
+4.2.0 第二阶段（分钟自动保存）：`node tests/autosave.test.cjs` 用注入的调度器与保存适配器验证 60 秒间隔、关闭时销毁、快照在写入前捕获、无重叠保存、等待期间编辑仍为未保存、对话框/拖动/试玩/手动保存时顺延、失败可见并在下个周期重试、恢复快照不清理未保存标记、切换项目重置基线，以及控制模块不调用任何云端动作。`node tests/project-autosave.test.cjs` 验证桌面写入器：项目身份与哈希匹配才覆盖 JSON/ZIP、只改 layout 也会保存、外部修改/文件被删/项目身份不符时只写 `RoomLabRecovery` 快照、缺素材报错且原文件字节不变、零网络写入。`node tests/save-compat.test.cjs` 验证 JSON/ZIP 保存重开保留多关卡 `room.graph`、`project.layout.courseOffsets`、未知扩展字段与稳定 ID，云端快照 codec 全字段往返且指纹清单不变，本机草稿不产生云端版本。`tests/autosave-desktop-smoke.cjs` 用隔离 profile 的实际 Electron（或 `EDITOR_EXE` 打包程序）通过 `window.__ROOM_LAB__.autosaveTick()` 触发一次自动保存，检查顶部状态、路线/页签/选择/缩放不变、云端版本与父节点不变，以及外部修改后转为恢复快照；它不会等待真实的 60 秒。`tests/cloud-panel-desktop-smoke.cjs` 同时验证「保存项目」不再推进云端分支、「保存同步」仍从上次读取版本派生。
+
 3.0.0 build3：`course-management-desktop-smoke.cjs` 验证无草稿时的启动选项、已有草稿恢复、旧单大关项目导入、右键改名、添加示例 / 空白大关，以及按大关配置素材与默认值后实际放置对象。设置 EDITOR_EXE 可验证发行包中的程序。
 
 2.5.4：`features-2.5.4-ui-smoke.cjs` 覆盖混合导入/覆盖确认、素材冲突、连线、整体撤销、标签拖动/缩放保留、回放/实际游戏暂停、退出保存全选反选和自命名；`cloud-graph-desktop-smoke.cjs` 增加名称/详情、云端多选导入及不隐式 checkout。核心测试覆盖批量原子性、端口保留、排序冲突、元数据校验与只下载项目说明、回放分段、名字与轨迹 ID 稳定性。
@@ -19,12 +21,35 @@ pnpm build
 pnpm test:ui
 pnpm test:assets
 pnpm test:play
+pnpm test:room-clipboard
+pnpm test:mirror
+pnpm test:brick-nodes
+pnpm test:assignment-submit
+pnpm test:developer-mode
+pnpm test:entry-return
+pnpm test:graph-positions
 pnpm test:desktop
 ```
+
+`test:room-clipboard` 使用真实键盘 `Ctrl+C` / `Ctrl+V` 从物理大关复制房间到高数大关，检查独立 ID、内部引用、素材解析、外部接线不复制、可重复粘贴和页面无错误。
+
+`node tests/clipboard-selection.test.cjs`（13 项）覆盖房间内框选复制的纯数据合同：相对坐标、objects/movables/zones/tiles、入口/出口与 native `platforms/patrols/signs` 的新 ID、组合/机关砖组/踏板/温控区/轨道节点内部重映射、选择集外引用清除、native 写入 `room.nativeCampaign` 而非顶层容器、组合含 native platform 时跟随、端口不复制 `course.connections`、越界在任何写入前原子拒绝。输入框获得焦点时 `app.cjs` 提前返回，系统剪贴板行为不变。
+
+`test:mirror` 检查整房左右/上下镜像的坐标、方向、路径、原生扩展对象和连续镜像恢复；设置 `EDITOR_EXE` 后通过实际 `RoomLab.exe` 验证房间属性按钮、接线不变与撤销恢复。
 
 布局预览检查：`node tests/layout-ui-smoke.cjs`。验证顶部房间栏、窗口自适应画布、收起属性、连续图标放置、帮助弹窗、三级素材分类与候选过滤、接线板缩放平移后接线/选线及窄窗口布局。核心的 layout-assets.test.cjs 检查素材范围与旧分类兼容、端口真实坐标投影。
 
 2.2 回归检查：`pnpm test:fixes`。检查实际画布绘制位置、空格命中、功能块擦除及撤销、拖动连放、两种 AI 板选择，以及试玩画布像素尺寸与窗口滚动。ai-blocks.test.cjs 验证实体/空心板实际碰撞与启动，以及电磁炮轨道实例独立性。
+
+`test:assignment-submit` 在编辑器中放置「提交作业」并检查 AI 触发后的 50000 分、AI 停止和一次性行为；设置 `EDITOR_EXE` 后对实际 `RoomLab.exe` 复验。
+
+`test:developer-mode` 验证房间编辑器试玩自动携带全部道具并显示开发模式，同时确认大关总览试玩背包为空。
+
+`test:entry-return` 验证入口返回开关默认开启、页面保存取消状态，并确认引擎不会从关闭返回的入口反向过门。
+
+`test:graph-positions` 在接线板拖动房间形成重叠排布，刷新页面后检查 `room.graph` 坐标完全保留；原生文件测试同时验证 JSON 保存/读取不会丢失房间坐标。
+
+`test:brick-nodes` 在物理和水课大关实际放置机关砖，验证「节点图」页签、按钮添加节点、右键添加节点和 `motionPath` 持久化；设置 `EDITOR_EXE` 后对实际 `RoomLab.exe` 复验。
 
 2.3.1 检查：`pnpm test:nodes` 覆盖节点图、精确坐标、排序、罗马数字、缩放后拖动、父级带动、提示开关、区域角点与温控初始状态。`pnpm test:traces` 覆盖轨迹录制、项目持久化、不同颜色同时绘制、勾选和 JSON 往返；桌面检查包含原生路径文件读写。
 
@@ -68,4 +93,3 @@ AI 死亡回归：ai-retry.test.cjs 覆盖实体/空心、三条命、快照无�
 `tests/friend-gameplay.test.cjs` 检查空心/实心存档点复活、资源和机关快照、轨道侧面触发可选及喷气碰撞独立；`friend-compatibility.test.cjs` 检查一次迁移、原数据不变、普通旧关卡不套用、导出依赖与未知模块版本保留；`zone-bounds-repair.test.cjs` 检查显式裁剪的空间交集和无交集拒绝。
 
 `tests/friend-255-ui-smoke.cjs` 通过 FRIEND_ARCHIVE 指定升级后的实际 11 房 ZIP，验证逐房启动、7 存档点和12侧触轨道保留，再用独立测试房真实按键经过存档点/重试及修改侧触开关。没有上传生产云端或修改原存档。发布后必须设置 EDITOR_EXE 对实际 RoomLab.exe 复验；保存/命名/排序/回放沿用 features-2.5.4-ui-smoke.cjs，并回归云同步/认证和旧15房存档。
-

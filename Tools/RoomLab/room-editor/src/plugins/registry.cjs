@@ -8,6 +8,8 @@ const modules = [
   require('./physics/rail.cjs'),
   require('./calculus.cjs'),
   require('./slacker.cjs'),
+  require('./items.cjs'),
+  require('./teacher.cjs'),
   require('./common.cjs'),
   require('./legacy.cjs'),
 ].flat();
@@ -27,7 +29,11 @@ function get(type) {
   );
 }
 function list(kind = 'physics') {
-  return modules.filter((d) => !d.hidden && (d.courses.includes(kind) || d.courses.includes('*')));
+  return modules.filter((d) => {
+    if (d.hidden) return false;
+    if (kind === 'legacy') return d.courses.includes('legacy') || d.courses.includes('*');
+    return !d.courses.includes('legacy');
+  });
 }
 function params(project, object) {
   const explicit = { ...project.blockDefaults?.[object.type]?.params, ...object.params };
@@ -58,12 +64,18 @@ function courseDefaults(project, course, type) {
 }
 function instantiate(project, type, id, x, y, course) {
   const d = get(type);
+  project.pluginManifest ||= {};
+  if (!project.pluginManifest[type]) project.pluginManifest[type] = d.version;
   const config = courseDefaults(project, course, type);
-  const values = clone(
-    course?.blockDefaults?.[type]
-      ? params(project, { type, params: config.params })
-      : { ...d.defaults, ...config.params },
-  );
+  // Project-global defaults are the base; a legacy course.blockDefaults still
+  // inherits over them without any write-back into the old course object.
+  const values = clone(params(project, { type, params: config.params }));
+  if (type === 'slacker.teacher') {
+    const configured = config.params || {};
+    if (!Object.hasOwn(configured, 'patrolMinX')) values.patrolMinX = x;
+    if (!Object.hasOwn(configured, 'patrolMaxX'))
+      values.patrolMaxX = Math.min((course?.defaultSize?.cols || x + 4) - 1, x + 4);
+  }
   if (type === 'physics.rail') {
     if (!values.path?.length) values.path = clone(d.defaults.path);
     const first = values.path[0],
@@ -85,7 +97,7 @@ function instantiate(project, type, id, x, y, course) {
     y,
     w: 1,
     h: 1,
-    collision: true,
+    collision: d.defaultCollision !== false,
     params: values,
     trigger: {
       mode: d.trigger || 'foot',
@@ -96,7 +108,7 @@ function instantiate(project, type, id, x, y, course) {
     },
     aiId: null,
     assetOverrides: Object.fromEntries(
-      Object.entries(course?.blockDefaults?.[type]?.assets || {}).filter(([, id]) => id),
+      Object.entries(config.assets || {}).filter(([, id]) => id),
     ),
     resetPolicy: 'checkpoint',
   });
@@ -112,7 +124,7 @@ function validateObject(project, o) {
       errors.push(def.name + ' / ' + f.label + ' 参数无效');
     if (f.kind === 'boolean' && typeof value !== 'boolean') errors.push(f.label + ' 必须为布尔值');
     if (f.kind === 'select' && !f.values.includes(value)) errors.push(f.label + ' 选项无效');
-    if (['zone', 'text'].includes(f.kind) && typeof value !== 'string')
+    if (['zone', 'aiSpawn', 'text'].includes(f.kind) && typeof value !== 'string')
       errors.push(f.label + ' 需要字符串');
     if (
       f.kind === 'path' &&

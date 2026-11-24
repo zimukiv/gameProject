@@ -22,46 +22,44 @@ class Store {
         }
       }
     } catch (e) {}
-    const seed = seeds({
-      allThemes: this.project.courses.some((c) => ['calculus', 'slacker'].includes(c.kind)),
-    });
-    for (const [key, value] of seed.files) this.assetFiles.set(key, value);
-    if (!this.hasProject && !this.project.assets.length) {
-      this.project.assets = seed.assets;
-      for (const course of this.project.courses)
-        course.artBindings = {
-          ...(seed.themeBindings[course.kind] || seed.bindings),
-          ...course.artBindings,
-        };
-    }
-    this.restoreBuiltIns();
+    this.seedAllCourseArt(seeds({ allThemes: true }));
     Assets.hydrate(this).then(() => this.notify());
   }
   restoreBuiltIns() {
     restoreBuiltIns(this.project.assets, this.assetFiles);
   }
-  seedCourseArt(course) {
-    const seed = seeds({ allThemes: true });
-    const bindings = seed.themeBindings[course.kind];
-    if (!bindings) return;
-    const ids = new Set(Object.values(bindings).flatMap((slots) => Object.values(slots)));
-    for (const asset of seed.assets.filter((a) => ids.has(a.id))) {
+  seedCourseArt(course, seed = seeds({ allThemes: true })) {
+    if (!course || !['physics', 'calculus', 'slacker'].includes(course.kind)) return;
+    const bindings = seed.allBindings || seed.bindings;
+    for (const asset of seed.assets) {
       if (this.project.assets.some((a) => a.id === asset.id || a.path === asset.path)) continue;
-      this.project.assets.push(asset);
-      this.assetFiles.set(asset.path, seed.files.get(asset.path));
+      this.project.assets.push(M.clone(asset));
+      this.assetFiles.set(asset.path, seed.files.get(asset.path)?.slice());
     }
     this.restoreBuiltIns();
+    course.artBindings ||= {};
     const available = new Set(this.project.assets.map((a) => a.id));
     for (const [type, slots] of Object.entries(bindings)) {
-      if (Object.values(slots).every((id) => available.has(id))) course.artBindings[type] = slots;
+      if (!Object.values(slots).every((id) => available.has(id))) continue;
+      course.artBindings[type] = {
+        ...M.clone(slots),
+        ...(course.artBindings[type] || {}),
+      };
     }
+  }
+  seedAllCourseArt(seed = seeds({ allThemes: true })) {
+    for (const course of this.project.courses) this.seedCourseArt(course, seed);
+    this.restoreBuiltIns();
   }
   newThemedProject() {
     const project = M.themedExample();
     const seed = seeds({ allThemes: true });
     project.id = M.uid('project');
-    project.assets = seed.assets;
-    for (const course of project.courses) course.artBindings = seed.themeBindings[course.kind];
+    // New room-first projects share one neutral default name. Saved projects and
+    // the author's example archives keep their own titles untouched.
+    project.name = '统一地图示例';
+    project.assets = M.clone(seed.assets);
+    for (const course of project.courses) course.artBindings = M.clone(seed.allBindings);
     for (const [path, bytes] of seed.files) this.assetFiles.set(path, bytes);
     this.load(project);
     this.history.clear();
@@ -75,17 +73,19 @@ class Store {
   snapshot() {
     return M.clone(this.project);
   }
-  commit(before) {
-    if (this.history.commit(before, this.project)) {
+  commit(before, merge = null) {
+    if (this.history.commit(before, this.project, merge)) {
       this.dirty = true;
       this.persist();
     }
     this.notify();
   }
-  change(fn) {
+  // merge: { key, window } lets live inputs collapse a burst of edits into one
+  // undo step instead of one step per keystroke.
+  change(fn, merge = null) {
     const before = this.snapshot();
     fn(this.project);
-    this.commit(before);
+    this.commit(before, merge);
   }
   load(data) {
     const next = M.migrate(data),
@@ -93,7 +93,7 @@ class Store {
     if (errors.length) throw new Error(errors.join('\n'));
     const before = this.snapshot();
     this.project = next;
-    this.restoreBuiltIns();
+    this.seedAllCourseArt();
     this.hasProject = true;
     this.nativeSession = null;
     this.commit(before);

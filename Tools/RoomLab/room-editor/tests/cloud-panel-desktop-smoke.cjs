@@ -114,18 +114,15 @@ const assert = require('node:assert/strict'),
     const current = page.locator('[data-cloud-node].current');
     await current.filter({ hasText: '首次上传' }).waitFor();
     assert.equal(branches.size, 1);
-    const [branch, first] = [...branches][0];
+    const [branch] = [...branches][0];
     await close();
+    const cloudHead = branches.get(branch);
     await page.locator('#project-settings').click();
-    await page.locator('#project-notes').fill('普通保存推进当前分支');
+    await page.locator('#project-notes').fill('只本地保存，不上传');
     await page.locator('#dialog-actions .primary').click();
-    await page.locator('#save-project').click();
-    await page.locator('#status').filter({ hasText: '已保存到当前云端分支' }).waitFor();
-    assert.equal(branches.size, 1);
-    assert.notEqual(branches.get(branch), first);
-    assert.equal(revisions.get(branches.get(branch)).parent, first);
-    const cloudHead = branches.get(branch),
-      localDir = await fs.mkdtemp(path.join(os.tmpdir(), 'roomlab-local-save-')),
+    // 保存项目 is local-only: a cloud-only checkout has no local file yet, so the
+    // first manual save chooses a path instead of committing the current branch.
+    const localDir = await fs.mkdtemp(path.join(os.tmpdir(), 'roomlab-local-save-')),
       localFile = path.join(localDir, 'project.json');
     await page.evaluate(
       (testPath) =>
@@ -136,11 +133,13 @@ const assert = require('node:assert/strict'),
         }),
       localFile,
     );
+    assert.equal(JSON.parse(await fs.readFile(localFile, 'utf8')).notes, '只本地保存，不上传');
+    assert.equal(branches.get(branch), cloudHead, 'a local save never advances the cloud branch');
+    const writes = calls.filter(([method]) => method !== 'GET').length;
     // Refresh the editor's association exactly as it would on opening the panel after restoring a draft.
     await page.locator('#open-cloud').click();
     await current.waitFor();
     await close();
-    const writes = calls.filter(([method]) => method !== 'GET').length;
     await page.locator('#project-settings').click();
     await page.locator('#project-notes').fill('只写回本地');
     await page.locator('#dialog-actions .primary').click();
@@ -151,8 +150,18 @@ const assert = require('node:assert/strict'),
     await new Promise((resolve) => setTimeout(resolve, 1500));
     assert.equal(calls.filter(([method]) => method !== 'GET').length, writes);
     assert.equal(branches.get(branch), cloudHead);
+    // 保存同步 stays the explicit cloud action and still derives from the last read version.
+    await page.locator('#open-cloud').click();
+    await page.locator('#cloud-version-name').fill('本地保存后同步');
+    await page.locator('#cloud-sync').click();
+    await current.filter({ hasText: '本地保存后同步' }).waitFor();
+    // A manual sync uploads a child branch; the previously read version stays the parent.
+    const synced = [...branches].find(([, head]) => head !== cloudHead);
+    assert.ok(synced, '保存同步 created a cloud revision');
+    assert.equal(revisions.get(synced[1]).parent, cloudHead);
+    await close();
     console.log(
-      'PASS: cloud-only Save advances its branch; local Save writes the file without a remote write',
+      'PASS: 保存项目 stays local (no automatic branch advance); 保存同步 remains the explicit cloud action',
     );
   } finally {
     // This is the isolated test window; it may intentionally still contain a broken draft.

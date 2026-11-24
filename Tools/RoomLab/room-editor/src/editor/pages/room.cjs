@@ -1,16 +1,26 @@
 'use strict';
 const M = require('../../project/model.cjs'),
+  MapCompat = require('../../project/map-compat.cjs'),
+  AIPorts = require('../../project/ai-ports.cjs'),
   Registry = require('../../plugins/registry.cjs'),
   D = require('../draw.cjs'),
+  DPR = require('../canvas-dpr.cjs'),
   { esc, $, field, area, select, check, modal } = require('../dom.cjs');
 const { clamp } = require('../../shared/utils.cjs');
 const Palette = require('../palette.cjs');
 const TraceManager = require('../trace-manager.cjs');
 const CameraPanel = require('../room-camera-panel.cjs');
 const Collision = require('../../project/collision.cjs');
+const TeacherLinks = require('../../project/teacher-links.cjs'),
+  TeacherRoute = require('../../project/teacher-route.cjs'),
+  TeacherPanel = require('../teacher-node-panel.cjs');
+const AiSpawns = require('../../project/ai-spawns.cjs');
 const Temperature = require('../../project/temperature.cjs');
 const Limits = require('../../project/room-limits.cjs');
+const Mirror = require('../../project/room-mirror.cjs');
+const PlaytestItems = require('../../project/playtest-items.cjs');
 const Select = require('../../project/selection.cjs');
+const Groups = require('../../project/block-groups.cjs');
 const Nodes = require('../../project/rail-nodes.cjs'),
   NodePanel = require('../rail-node-panel.cjs'),
   Motion = require('../../project/brick-motion.cjs'),
@@ -22,29 +32,90 @@ const Native = require('../../project/native-compat.cjs'),
   NativeDraw = require('../native-draw.cjs');
 const brickRef = (brick) => ({ kind: 'movables', id: brick.id });
 const RoomKeys = require('../room-keys.cjs');
-const nodeTools = ['path', 'brick-path', 'native-target'];
+const nodeTools = ['path', 'brick-path', 'teacher-path', 'native-target'];
+// Fullscreen room editing: the shell takes over the window and only the tools,
+// canvas and inspector stay visible (title bar, thumbnail strip, app header and
+// status bar are hidden by CSS). The flag is editor state only; F11 toggles it
+// and Esc leaves it. It is never written into the project.
+function toggleFullscreen(app) {
+  if (app.state.route !== 'room') return;
+  app.state.roomFullscreen = !app.state.roomFullscreen;
+  document.body.classList.toggle('room-fullscreen', app.state.roomFullscreen);
+  app.render();
+}
+function exitFullscreen(app) {
+  if (!app.state.roomFullscreen) return false;
+  app.state.roomFullscreen = false;
+  document.body.classList.remove('room-fullscreen');
+  app.render();
+  return true;
+}
 function expandGroups(room, refs) {
   return Select.combine(
     [],
     refs.flatMap((ref) =>
-      ref.kind === 'movables'
-        ? Motion.groupMembers(room, Select.get(room, ref)).map(brickRef)
-        : [ref],
+      Select.get(room, ref)?.assemblyId
+        ? Groups.members(room, Select.get(room, ref)).map((v) => v.ref)
+        : ref.kind === 'movables'
+          ? Motion.groupMembers(room, Select.get(room, ref)).map(brickRef)
+          : [ref],
     ),
   );
 }
+// Whole-group editing keeps a single representative selected. A brick group and
+// a mixed assembly are both addressed through it, so clicking any member can
+// still start a group-wide drag while the inspector shows one stable entity.
 function selectRepresentative(room, state) {
-  if (state.selection?.kind !== 'movables') return;
-  const representative = Motion.representative(
-    Motion.groupMembers(room, Select.get(room, state.selection)),
-  );
+  const ref = state.selection;
+  if (!ref) return;
+  const item = Select.get(room, ref);
+  if (!item) return;
+  if (item.assemblyId) {
+    const representative = Groups.representative(room, item);
+    if (representative) state.selection = representative;
+    return;
+  }
+  if (ref.kind !== 'movables') return;
+  const representative = Motion.representative(Motion.groupMembers(room, item));
   if (representative) state.selection = brickRef(representative);
+}
+function memberLocked(room, brick) {
+  if (Motion.groupMembers(room, brick).some((member) => member.locked)) return true;
+  return !!brick.assemblyId && Groups.members(room, brick).some(({ item }) => item.locked);
+}
+function brickPathNodeAt(brick, point) {
+  return Motion.nodes(brick)
+    .map((node, index) => ({ node, index }))
+    .reverse()
+    .find(
+      ({ node }) =>
+        point.x >= node.x &&
+        point.x <= node.x + 1 &&
+        point.y >= node.y &&
+        point.y <= node.y + 1 &&
+        (node.x !== brick.x || node.y !== brick.y),
+    );
+}
+// Space-peek hit testing: every mechanism brick owns its nodes, so a point can
+// resolve to a different brick than the current inspector selection. Locked
+// members (of the brick group or the mixed assembly) are never draggable.
+function brickPathNodeHit(room, point, selectedId = null) {
+  const owners = room.movables
+    .slice()
+    .sort((a, b) => Number(b.id === selectedId) - Number(a.id === selectedId));
+  for (const brick of owners) {
+    if (memberLocked(room, brick)) continue;
+    const hit = brickPathNodeAt(brick, point);
+    if (hit) return { brick, node: hit.node, index: hit.index };
+  }
+  return null;
 }
 function render(app) {
   let r = app.room();
   const c = app.course(),
     s = app.state;
-  if (!s.selection && ['brick-bind', 'brick-path'].includes(s.tool)) s.tool = 'select';
+  if (!s.selection && ['brick-bind', 'brick-path', 'teacher-path'].includes(s.tool))
+    s.tool = 'select';
   s.multiSelection = (s.multiSelection || []).filter((ref) => Select.get(r, ref));
   selectRepresentative(r, s);
   if (s.keyHints === undefined) {
@@ -55,7 +126,7 @@ function render(app) {
     }
   }
   $('app').innerHTML =
-    `<div class="room-shell ${s.keyHints ? 'show-key-hints' : ''}"><div class="room-title"><div><h1>${esc(r.name)}</h1><span class="room-size-tag">${r.cols} × ${r.rows} 格</span></div><div class="actions"><button id="back-course">接线板</button><button id="room-traces">试玩路径</button><button id="room-help">⌨ 按键说明</button><button id="room-hints" aria-pressed="${s.keyHints}">按键提示</button><button id="toggle-inspector">${s.inspectorHidden ? '显示属性' : '收起属性'}</button><button id="play-room" aria-label="试玩此房" class="primary">▶ 试玩此房</button></div></div><div class="room-tabs" aria-label="本大关房间"><span class="room-tabs-label">${esc(c.name)} / 房间</span><div>${c.rooms.map((v) => `<button data-nav-room="${esc(v.id)}" aria-current="${v.id === r.id ? 'page' : 'false'}" class="${v.id === r.id ? 'active' : ''}" title="${esc(v.notes)}">${esc(v.name)}</button>`).join('')}</div></div><div class="room-workspace ${s.inspectorHidden ? 'inspector-hidden' : ''}"><section class="panel canvas-panel room-canvas-panel"><div class="room-toolstrip"><div class="actions"><button data-tool="select">↖ 选择<span class="key-hint" aria-hidden="true">${RoomKeys.tools.select}</span></button><button data-tool="marquee">▧ 框选<span class="key-hint" aria-hidden="true">${RoomKeys.tools.marquee}</span></button><button data-tool="erase">⌫ 擦除<span class="key-hint" aria-hidden="true">${RoomKeys.tools.erase}</span></button><button id="undo">撤销<span class="key-hint" aria-hidden="true">Ctrl Z</span></button><button id="redo">重做<span class="key-hint" aria-hidden="true">Ctrl Y</span></button></div><div class="actions"><button id="fit-room">适应房间</button><label class="check"><input id="targets" type="checkbox" checked>关联目标</label></div></div><div class="block-palette" aria-label="方块选择栏">${Palette.render(app, c)}</div><div class="canvas-heading"><span id="tool-label"></span><span><span id="room-pointer"></span> · <span id="room-zoom"></span></span></div><div class="canvas-wrap"><canvas id="room-canvas" width="960" height="540" tabindex="0" aria-label="房间编辑画布"></canvas></div></section><aside class="panel inspector form" id="room-inspector"></aside></div></div>`;
+    `<div class="room-shell ${s.keyHints ? 'show-key-hints' : ''}${s.roomFullscreen ? ' fullscreen' : ''}"><div class="room-title"><div><h1>${esc(r.name)}</h1><span class="room-size-tag">${r.cols} × ${r.rows} 格</span></div><div class="actions"><button id="room-traces">试玩路径</button><button id="room-help">⌨ 按键说明</button><button id="block-help">▦ 方块说明</button><button id="room-hints" aria-pressed="${s.keyHints}">按键提示</button><button id="toggle-inspector">${s.inspectorHidden ? '显示属性' : '收起属性'}</button><button id="play-room" aria-label="试玩此房" class="primary">▶ 试玩此房</button></div></div>${require('../room-navigation.cjs').strip(app)}<div class="room-workspace ${s.inspectorHidden ? 'inspector-hidden' : ''}"><section class="panel canvas-panel room-canvas-panel"><div class="room-toolstrip"><div class="actions"><button data-tool="select">↖ 选择<span class="key-hint" aria-hidden="true">${RoomKeys.tools.select}</span></button><button data-tool="marquee">▧ 框选<span class="key-hint" aria-hidden="true">${RoomKeys.tools.marquee}</span></button><button data-tool="erase">⌫ 擦除<span class="key-hint" aria-hidden="true">${RoomKeys.tools.erase}</span></button><button id="undo">撤销<span class="key-hint" aria-hidden="true">Ctrl Z</span></button><button id="redo">重做<span class="key-hint" aria-hidden="true">Ctrl Y</span></button></div><div class="actions"><button id="room-fullscreen" aria-pressed="${!!s.roomFullscreen}" title="全屏编辑：只保留工具、画布与属性面板（F11 切换，Esc 退出）">${s.roomFullscreen ? '⤡ 退出全屏' : '⛶ 全屏'}</button><button id="fit-room">适应房间</button><label class="check"><input id="targets" type="checkbox" checked>关联目标</label><label class="check" title="显示方块碰撞范围。尖刺圆为素材规范参考范围"><input id="show-collision" type="checkbox"${s.showCollision ? ' checked' : ''}>碰撞箱</label></div></div><div class="block-palette" aria-label="方块选择栏">${Palette.render(app, c)}</div><div class="canvas-heading"><span id="tool-label"></span><span><span id="room-pointer"></span> · <span id="room-zoom"></span></span></div><div class="canvas-wrap"><canvas id="room-canvas" width="960" height="540" tabindex="0" aria-label="房间编辑画布"></canvas></div></section><aside class="panel inspector form" id="room-inspector"></aside></div></div>`;
   if (Native.active(app.store.project, app.course())) {
     const bar = document.createElement('div');
     bar.className = 'native-toolbar actions';
@@ -83,8 +154,11 @@ function render(app) {
     s.inspectorHidden = false;
     app.render();
   };
-  $('back-course').onclick = () => app.go('course');
-  $('play-room').onclick = () => app.startPlay(r.id);
+  $('play-room').onclick = () =>
+    app.startPlay(r.id, undefined, {
+      developerMode: true,
+      playtest: PlaytestItems.resolve(r),
+    });
   $('room-traces').onclick = () => TraceManager.open(app, r.id);
   $('undo').onclick = () => app.store.undo();
   $('redo').onclick = () => app.store.redo();
@@ -108,32 +182,37 @@ function render(app) {
     app.render();
   };
   $('room-help').onclick = () =>
-    modal(
-      require('../../project/themes.cjs').theme(c.kind).label + ' · 按键说明',
-      RoomKeys.help(c.kind, Native.active(app.store.project, c)),
-      [{ label: '知道了' }],
-    );
+    modal('按键说明', RoomKeys.help(c.kind, Native.active(app.store.project, c)), [
+      { label: '知道了' },
+    ]);
   $('undo').disabled = !app.store.history.past.length;
   $('redo').disabled = !app.store.history.future.length;
-  $('app')
-    .querySelectorAll('[data-nav-room]')
-    .forEach((b) => (b.onclick = () => app.go('room', { roomId: b.dataset.navRoom })));
-  require('../room-tab-order.cjs').bind(app, c, $('app').querySelector('.room-tabs > div'));
+  require('../room-navigation.cjs').bindTabs(app);
+  $('block-help').onclick = () => require('../block-guide.cjs').open(app);
   const canvas = $('room-canvas'),
     ctx = canvas.getContext('2d');
   let stroke = null,
-    hover = null;
+    hover = null,
+    dprRatio = 1;
+  const cssSize = () => ({
+    width: Number(canvas.dataset.cssWidth) || canvas.width,
+    height: Number(canvas.dataset.cssHeight) || canvas.height,
+  });
   const fit = () => {
-    s.roomView = D.fit(r, canvas.width, canvas.height, 22);
+    const size = cssSize();
+    // View transform stays in CSS pixels; the backing store carries the extra
+    // device pixels, so map thumbnails and the editor canvas are sharp.
+    s.roomView = D.fit(r, size.width, size.height, 22);
   };
   function size() {
     $('app').style.height =
       Math.max(500, window.innerHeight - $('app').getBoundingClientRect().top) + 'px';
     const width = Math.max(200, Math.round(canvas.clientWidth)),
       height = Math.max(200, Math.round(canvas.clientHeight));
-    if (canvas.width !== width || canvas.height !== height) {
-      canvas.width = width;
-      canvas.height = height;
+    if (canvas.dataset.cssWidth !== String(width) || canvas.dataset.cssHeight !== String(height)) {
+      dprRatio = DPR.prepare(canvas, width, height, window.devicePixelRatio, {
+        fixed: false,
+      }).ratio;
     }
   }
   size();
@@ -143,20 +222,35 @@ function render(app) {
   }
   app.currentDraw = () => {
     size();
-    D.drawRoom(ctx, app.store.project, c, r, {
-      view: s.roomView,
-      selection: s.selection,
-      selections: expandGroups(
+    DPR.apply(ctx, dprRatio);
+    // Space-peek borrows the ordinary multi-selection paint pass for every
+    // mechanism brick's path but never touches s.selection / s.multiSelection.
+    const selections = expandGroups(
         r,
         s.multiSelection.length ? s.multiSelection : s.selection ? [s.selection] : [],
       ),
+      peek = !!s.roomPathPeek;
+    D.drawRoom(ctx, app.store.project, c, r, {
+      view: s.roomView,
+      dpr: dprRatio,
+      selection: s.selection,
+      selections: peek
+        ? Select.combine([], [...selections, ...r.movables.map(brickRef)])
+        : selections,
       selectedRailNodeId: s.railNodeId,
       nativeBand: s.nativeBand || 'all',
-      selectedBrickNodeIndex: s.brickNodeOwner === s.selection?.id ? s.brickNodeIndex : null,
+      peekBrickPaths: peek,
+      selectedBrickNodeOwner: s.brickNodeOwner || null,
+      selectedBrickNodeIndex:
+        s.brickNodeOwner && (peek || s.brickNodeOwner === s.selection?.id)
+          ? s.brickNodeIndex
+          : null,
       hover,
       targets: $('targets')?.checked,
+      collisionBoxes: !!s.showCollision,
       assetURL: (id) => app.assetURL(id),
     });
+    require('../motion-timeline.cjs').draw(app, r, ctx, s.roomView);
     if (
       stroke?.marquee ||
       (['bind', 'native-bind'].includes(stroke?.rightAction) && stroke.moved)
@@ -194,9 +288,9 @@ function render(app) {
     if (!['select', 'marquee'].includes(value)) s.multiSelection = [];
     $('tool-label').textContent =
       value === 'brick-bind'
-        ? '点击机关砖绑定或解绑 · Z 结束'
-        : ['brick-path', 'native-target'].includes(value)
-          ? '点击格子添加一个节点 · 添加后返回原工具'
+        ? '点击机关砖或签到板绑定/解绑 · Z 结束'
+        : ['brick-path', 'teacher-path', 'native-target'].includes(value)
+          ? '点击或右键格子添加一个节点 · 添加后返回原工具'
           : value === 'path'
             ? '点击添加一个节点 · 添加后返回原工具'
             : value === 'object'
@@ -226,6 +320,7 @@ function render(app) {
       .forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tool === value)));
     canvas.style.cursor = value === 'select' ? 'default' : 'crosshair';
     $('quick-bind-bricks')?.setAttribute('aria-pressed', String(value === 'brick-bind'));
+    $('quick-bind-checkins')?.setAttribute('aria-pressed', String(value === 'brick-bind'));
   };
   $('app')
     .querySelectorAll('[data-tool]')
@@ -240,14 +335,26 @@ function render(app) {
         }),
     );
   $('fit-room').onclick = fit;
-  setTool(s.tool || 'select');
-  const pixel = (e) => {
-    const rect = canvas.getBoundingClientRect();
-    return {
-      x: ((e.clientX - rect.left) * canvas.width) / rect.width,
-      y: ((e.clientY - rect.top) * canvas.height) / rect.height,
+  const collisionToggle = $('show-collision');
+  if (collisionToggle)
+    collisionToggle.onchange = () => {
+      s.showCollision = collisionToggle.checked;
+      app.currentDraw?.();
     };
+  $('room-fullscreen').onclick = () => toggleFullscreen(app);
+  // App-level F11 / Esc dispatch into these; they stay null on other pages.
+  app.toggleRoomFullscreen = () => toggleFullscreen(app);
+  app.exitRoomFullscreen = () => exitFullscreen(app);
+  // App-level Space dispatch into the transient all-paths preview. Releasing the
+  // key only hides the overlay: no selection, project or history state changes.
+  app.setRoomPathPeek = (active) => {
+    const next = !!active;
+    if (!!s.roomPathPeek === next) return;
+    s.roomPathPeek = next;
+    app.currentDraw?.();
   };
+  setTool(s.tool || 'select');
+  const pixel = (e) => DPR.pointer(canvas, e.clientX, e.clientY);
   const cell = (e) => {
     const p = pixel(e);
     return {
@@ -281,24 +388,36 @@ function render(app) {
           return { owner: o, node: n };
     return null;
   };
-  const brickNodeHit = (e) => {
+  const teacherNodeHit = (e) => {
     if (
-      !['select', 'brick-path'].includes(s.tool) ||
-      s.selection?.kind !== 'movables' ||
+      !['select', 'teacher-path'].includes(s.tool) ||
+      s.selection?.kind !== 'objects' ||
       !['nodes', 'behavior'].includes(s.inspectorTab)
     )
       return null;
-    const brick = tileItem(s.selection);
-    if (!brick || Motion.groupMembers(r, brick).some((member) => member.locked)) return null;
+    const teacher = tileItem(s.selection);
+    if (!TeacherLinks.isTeacher(teacher) || teacher.locked) return null;
     const p = world(e);
-    return Motion.nodes(brick)
+    return TeacherRoute.nodes(teacher)
       .map((node, index) => ({ node, index }))
       .reverse()
       .find(
-        ({ node }) =>
-          Math.hypot(node.x + 0.5 - p.x, node.y + 0.5 - p.y) * 32 * s.roomView.scale <= 10 &&
-          (node.x !== brick.x || node.y !== brick.y),
+        ({ node }) => Math.abs(node.x + 0.5 - p.x) <= 0.55 && Math.abs(node.y + 0.5 - p.y) <= 0.55,
       );
+  };
+  // The selected mechanism brick's trajectory stays directly draggable on every
+  // inspector tab (base / behavior / links / art / nodes), not just the node graph.
+  const brickNodeHit = (e) => {
+    if (!['select', 'brick-path'].includes(s.tool) || s.selection?.kind !== 'movables') return null;
+    const brick = tileItem(s.selection);
+    if (!brick || memberLocked(r, brick)) return null;
+    return brickPathNodeAt(brick, world(e));
+  };
+  // While Space is held all brick paths are visible, so a hit resolves its owner
+  // per brick instead of assuming the inspector selection.
+  const peekBrickNodeHit = (e) => {
+    if (!s.roomPathPeek || !['select', 'marquee'].includes(s.tool)) return null;
+    return brickPathNodeHit(r, world(e), s.selection?.kind === 'movables' ? s.selection.id : null);
   };
   const regionHit = (e) => {
     if (s.tool !== 'select' || !['zones', 'platforms'].includes(s.selection?.kind)) return null;
@@ -333,6 +452,15 @@ function render(app) {
   }
   function paint(pos, tool = s.tool) {
     if (tool === 'brick-bind') {
+      const owner = tileItem(s.selection);
+      if (TeacherLinks.isTeacher(owner)) {
+        const checkins = Select.box(r, pos, pos)
+          .filter((ref) => ref.kind === 'objects')
+          .map((ref) => Select.get(r, ref))
+          .filter((o) => o?.type === TeacherLinks.CHECKIN);
+        TeacherLinks.toggle(r, owner, checkins);
+        return;
+      }
       if (Native.active(app.store.project, c) && Motion.isPad(tileItem(s.selection))) {
         const p = tileItem(s.selection),
           bricks = Select.box(r, pos, pos)
@@ -358,6 +486,25 @@ function render(app) {
         } catch (e) {
           stroke.error = e.message;
         }
+      return;
+    }
+    if (tool === 'teacher-path') {
+      const teacher = s.selection?.kind === 'objects' && tileItem(s.selection);
+      if (!TeacherLinks.isTeacher(teacher)) {
+        stroke.error = '请先选中巡查老师，再添加路线节点。';
+        return;
+      }
+      if (teacher.locked || !TeacherRoute.inRoom(pos, r.cols, r.rows)) return;
+      try {
+        TeacherRoute.add(teacher, pos);
+      } catch (e) {
+        stroke.error = e.message;
+        return;
+      }
+      s.teacherNodeOwner = teacher.id;
+      s.teacherNodeIndex = TeacherRoute.nodes(teacher).length - 1;
+      s.inspectorTab = 'nodes';
+      stroke.nodeAdded = true;
       return;
     }
     if (tool === 'brick-path') {
@@ -393,6 +540,14 @@ function render(app) {
       return;
     }
     if (s.tool === 'erase') {
+      const grouped = hits(pos).find((ref) => Select.get(r, ref)?.assemblyId);
+      if (grouped) {
+        const refs = expandGroups(r, [grouped]);
+        if (refs.some((ref) => Select.get(r, ref)?.locked)) return;
+        Select.remove(c, r, refs);
+        s.selection = null;
+        return;
+      }
       r.tiles = r.tiles.filter((t) => t.x !== pos.x || t.y !== pos.y);
       const covers = (o) =>
         pos.x >= o.x && pos.x < o.x + (o.w || 1) && pos.y >= o.y && pos.y < o.y + (o.h || 1);
@@ -407,6 +562,7 @@ function render(app) {
       r.movables = r.movables.filter((b) => !gone.has(b));
       for (const b of r.movables) if (removed.has(b.padId)) b.padId = '';
       for (const o of r.objects) if (removed.has(o.params?.unlockPadId)) o.params.unlockPadId = '';
+      AiSpawns.cleanup(r);
       s.selection = null;
       return;
     }
@@ -417,6 +573,7 @@ function render(app) {
         notes: '',
         ...pos,
         face: 1,
+        allowReturn: true,
       };
       r.entries.push(entry);
       s.selection = { kind: 'entries', id: entry.id };
@@ -508,17 +665,21 @@ function render(app) {
       rightAction =
         e.button === 2 &&
         !e.shiftKey &&
-        (Motion.isPad(owner)
-          ? Native.active(app.store.project, c)
-            ? 'native-bind'
-            : 'bind'
-          : owner?.type === 'physics.rail'
-            ? 'path'
-            : owner && s.selection.kind === 'platforms'
-              ? 'native-target'
-              : c.kind === 'calculus' && owner && s.selection.kind === 'movables'
-                ? 'brick-path'
-                : null);
+        (TeacherLinks.isTeacher(owner)
+          ? s.tool === 'teacher-path'
+            ? 'teacher-path'
+            : 'teacher-bind'
+          : Motion.isPad(owner)
+            ? Native.active(app.store.project, c)
+              ? 'native-bind'
+              : 'bind'
+            : owner?.type === 'physics.rail'
+              ? 'path'
+              : owner && s.selection.kind === 'platforms'
+                ? 'native-target'
+                : owner && s.selection.kind === 'movables'
+                  ? 'brick-path'
+                  : null);
     if (
       e.button !== 0 &&
       e.button !== 1 &&
@@ -558,6 +719,22 @@ function render(app) {
       s.brickNodeOwner = s.selection.id;
       s.brickNodeIndex = brickNode.index;
       stroke.brickNode = { brick: tileItem(s.selection), index: brickNode.index };
+      inspector(app, r, setTool);
+      return;
+    }
+    const peekNode = !e.shiftKey && peekBrickNodeHit(e);
+    if (peekNode) {
+      s.brickNodeOwner = peekNode.brick.id;
+      s.brickNodeIndex = peekNode.index;
+      stroke.brickNode = { brick: peekNode.brick, index: peekNode.index };
+      inspector(app, r, setTool);
+      return;
+    }
+    const teacherNode = teacherNodeHit(e);
+    if (teacherNode && !e.shiftKey && s.multiSelection.length <= 1) {
+      s.teacherNodeOwner = s.selection.id;
+      s.teacherNodeIndex = teacherNode.index;
+      stroke.teacherNode = { teacher: tileItem(s.selection), index: teacherNode.index };
       inspector(app, r, setTool);
       return;
     }
@@ -624,7 +801,7 @@ function render(app) {
       const handle = regionHit(e);
       canvas.style.cursor = handle
         ? handle.cursor
-        : nodeHit(e) || brickNodeHit(e)
+        : nodeHit(e) || brickNodeHit(e) || peekBrickNodeHit(e) || teacherNodeHit(e)
           ? 'grab'
           : s.tool === 'select'
             ? 'default'
@@ -681,6 +858,20 @@ function render(app) {
       }
       return;
     }
+    if (stroke.teacherNode) {
+      const { teacher, index } = stroke.teacherNode;
+      if (stroke.moved && TeacherRoute.inRoom(pos, r.cols, r.rows)) {
+        const path = TeacherRoute.nodes(teacher).map((n, i) =>
+          i === index ? { ...n, x: pos.x, y: pos.y } : n,
+        );
+        try {
+          TeacherRoute.apply(teacher, path);
+        } catch {
+          /* keep the last valid grid position while dragging */
+        }
+      }
+      return;
+    }
     if (stroke.resize) {
       const zone = Native.get(r, stroke.resize);
       Object.assign(zone, Regions.resize(stroke.resize.origin, stroke.resize.corner, world(e), r));
@@ -703,7 +894,14 @@ function render(app) {
           r.tiles.some((t) => t !== o && t.x === o.x + dx && t.y === o.y + dy)
         )
           return;
-        if (s.selection.kind === 'movables' && o.brickGroup) {
+        if (o.assemblyId) {
+          Select.move(
+            r,
+            Groups.members(r, o).map((v) => v.ref),
+            dx,
+            dy,
+          );
+        } else if (s.selection.kind === 'movables' && o.brickGroup) {
           const members = Motion.groupMembers(r, o);
           if (members.some((member) => member.locked)) return;
           Select.move(r, members.map(brickRef), dx, dy);
@@ -711,6 +909,7 @@ function render(app) {
           Native.move(s.selection.kind, o, dx, dy);
         else if (s.selection.kind === 'movables') Motion.moveOwner(o, o.x + dx, o.y + dy);
         else if (o.type === 'physics.rail') Nodes.moveOwner(o, o.x + dx, o.y + dy);
+        else if (TeacherLinks.isTeacher(o)) TeacherRoute.moveOwner(o, o.x + dx, o.y + dy);
         else {
           o.x += dx;
           o.y += dy;
@@ -752,7 +951,15 @@ function render(app) {
       const { rightAction, before, start, moved } = stroke;
       if (event.type === 'pointerup') {
         const end = cell(event);
-        if (rightAction === 'native-bind') {
+        if (rightAction === 'teacher-bind') {
+          const refs = Select.box(r, start, moved ? end : start).filter(
+              (ref) => ref.kind === 'objects',
+            ),
+            checkins = refs
+              .map((ref) => Select.get(r, ref))
+              .filter((o) => o?.type === TeacherLinks.CHECKIN);
+          TeacherLinks.toggle(r, tileItem(s.selection), checkins);
+        } else if (rightAction === 'native-bind') {
           const bricks = Select.box(r, start, moved ? end : start)
             .filter((ref) => ref.kind === 'platforms')
             .map((ref) => Select.get(r, ref));
@@ -771,7 +978,8 @@ function render(app) {
           for (const brick of bricks) brick.padId = binding;
         } else if (!moved) {
           paint(start, rightAction);
-          if (stroke.nodeAdded && rightAction === 'brick-path') s.inspectorTab = 'nodes';
+          if (stroke.nodeAdded && ['brick-path', 'teacher-path'].includes(rightAction))
+            s.inspectorTab = 'nodes';
         }
       }
       const error = stroke.error;
@@ -847,10 +1055,17 @@ function inspector(app, r, setTool) {
     o = ref && D.findItem(r, ref);
   if (ref && Native.kinds.includes(ref.kind) && app.state.multiSelection.length <= 1) {
     NativePanel.entity(app, r, ref, host, setTool);
+    require('../moving-collision-control.cjs').install(app, r, ref, o, host);
+    installGroupControls(app, r, o, host);
+    require('../live-fields.cjs').install(host);
+    require('../motion-timeline.cjs').install(app, r, host);
     return;
   }
   baseInspector(app, r, setTool);
-  if (app.state.multiSelection.length > 1) return;
+  if (app.state.multiSelection.length > 1) {
+    require('../motion-timeline.cjs').install(app, r, host);
+    return;
+  }
   if (o) {
     if (
       Native.active(app.store.project, app.course()) &&
@@ -864,6 +1079,19 @@ function inspector(app, r, setTool) {
     }
     NativePanel.rulesPanel(app, r, o, host);
   } else NativePanel.room(app, r, host);
+  installGroupControls(app, r, o, host);
+  require('../moving-collision-control.cjs').install(app, r, ref, o, host);
+  if (o) require('../live-fields.cjs').install(host);
+  require('../motion-timeline.cjs').install(app, r, host);
+}
+function installGroupControls(app, r, o, host) {
+  if (!o?.assemblyId) return;
+  const members = Groups.members(r, o);
+  host.insertAdjacentHTML(
+    'afterbegin',
+    `<p class="hint">组合 · ${members.length} 块 · 方块保留各自碰撞与触发</p><button id="dissolve-assembly">解散组合</button>`,
+  );
+  $('dissolve-assembly').onclick = () => app.store.change(() => Groups.dissolve(r, o));
 }
 function baseInspector(app, r, setTool) {
   app.nodePanelRefresh = null;
@@ -877,12 +1105,12 @@ function baseInspector(app, r, setTool) {
     tab = s.inspectorTab || 'base';
   if (s.multiSelection.length > 1) {
     const bricks = s.multiSelection.map((item) => item.kind === 'movables' && Select.get(r, item)),
-      canGroup =
-        app.course().kind === 'calculus' && bricks.every((brick) => brick && !brick.brickGroup),
+      canGroup = bricks.every((brick) => brick && !brick.brickGroup),
       samePad = canGroup && bricks.every((brick) => brick.padId === bricks[0].padId),
       pads = r.objects.filter(Motion.isPad);
     host.innerHTML = `<h2>已选中 ${s.multiSelection.length} 项</h2>
       <p class="hint">拖动任一选中项可整体移动。Shift 左键追加，Shift 右键反选。</p>
+      ${s.multiSelection.every((ref) => Groups.kinds.includes(ref.kind)) ? '<button id="group-mixed" class="apply">组合方块（有机关砖时随砖运动）</button>' : ''}
       ${
         canGroup
           ? `${select('整组绑定踏板', 'group-pad', samePad ? bricks[0].padId : '', [
@@ -898,6 +1126,19 @@ function baseInspector(app, r, setTool) {
     $('delete-selection').onclick = () =>
       removeSelection(app, r, expandGroups(r, s.multiSelection));
     $('clear-selection').onclick = () => app.clearRoomSelection();
+    if ($('group-mixed'))
+      $('group-mixed').onclick = () => {
+        try {
+          app.store.change(() => {
+            s.selection = Groups.create(r, expandGroups(r, s.multiSelection));
+            s.multiSelection = [];
+            s.inspectorTab = s.selection.kind === 'movables' ? 'nodes' : 'base';
+            setTool('select');
+          });
+        } catch (e) {
+          app.message(e.message, true);
+        }
+      };
     if (canGroup) {
       $('group-bricks').disabled = bricks.some((brick) => brick.locked);
       $('group-bricks').onclick = () => {
@@ -921,68 +1162,62 @@ function baseInspector(app, r, setTool) {
   }
   if (!o) {
     s.selection = null;
+    // 试玩进入背包：图标 + 勾选，道具清单来自 Registry 的 item 定义。
+    // 显式配置（room.playtestItems）优先；缺失时保持旧存档“全道具”兼容行为。
+    const playtest = PlaytestItems.read(r),
+      catalog = PlaytestItems.catalog(),
+      selected = new Set(playtest.items),
+      playtestMode = playtest.configured ? 'explicit' : 'legacy';
     host.innerHTML = `<h2>房间属性</h2>${field('名称', 'room-name', r.name)}${area('备注', 'room-notes', r.notes)}<div class="row">${field('列数', 'room-cols', r.cols, { type: 'number', min: 6, max: Limits.MAX_COLS })}${field('行数', 'room-rows', r.rows, { type: 'number', min: 5, max: Limits.MAX_ROWS })}</div>${select(
-      '阶段',
-      'room-phase',
-      r.phase,
+      'AI 入房策略',
+      'room-ai-policy',
+      r.aiPolicy,
       [
-        ['inherit', '继承'],
-        ['slow', '慢节奏'],
-        ['fast', '快节奏'],
+        ['inherit', '继承全局状态'],
+        ['off', '本房关闭'],
+        ['start', '本房立即启动'],
       ],
-    )}${select('AI 入房策略', 'room-ai-policy', r.aiPolicy, [
-      ['inherit', '继承大关状态'],
-      ['off', '本房关闭'],
-      ['start', '本房立即启动'],
-    ])}${field('AI ID 覆盖（空白继承大关）', 'room-ai-id', r.aiId || '')}${['calculus', 'slacker'].includes(app.course().kind) ? '' : select('默认温度', 'room-env', r.environment, ['cold', 'hot'])}${CameraPanel.render(r)}<button class="apply primary" id="apply-room">应用房间设置</button><p class="hint">缩小时保留越界对象，不自动裁剪。试玩视角独立保存于本房间。</p>`;
-    CameraPanel.bind();
-    $('apply-room').onclick = () => {
-      const cols = Number($('room-cols').value),
-        rows = Number($('room-rows').value);
-      if (!Limits.valid(cols, rows)) {
-        app.message(Limits.description, true);
-        return;
-      }
-      let playCamera;
-      try {
-        playCamera = CameraPanel.read();
-      } catch (e) {
-        app.message(e.message, true);
-        return;
-      }
-      const values = {
-        name: $('room-name').value.trim() || r.name,
-        notes: $('room-notes').value,
-        phase: $('room-phase').value,
-        aiPolicy: $('room-ai-policy').value,
-        aiId: $('room-ai-id').value.trim() || null,
-        environment: $('room-env')?.value ?? r.environment,
-        playCamera,
-      };
-      const result = M.resizeRoom(r, cols, rows),
-        apply = () =>
-          app.store.change(() => {
-            Object.assign(r, result.room, values);
-          });
-      if (result.out.length)
-        modal(
-          '缩小房间：越界预览',
-          `<p>${result.out.length} 个元素或目标将越界，数据保留并标红，试玩前需移回。</p><ul>${result.out
-            .slice(0, 30)
-            .map((x) => `<li>${esc(x.kind)} · ${esc(x.id)}</li>`)
-            .join('')}</ul>`,
-          [
-            { label: '取消，先移动对象' },
-            { label: '保留越界并应用', primary: true, action: apply },
-          ],
-        );
-      else apply();
+    )}${field('AI ID（空白继承全局）', 'room-ai-id', r.aiId || '')}${['calculus', 'slacker'].includes(app.course().kind) ? '' : select('默认温度', 'room-env', r.environment, ['cold', 'hot'])}<h3>试玩进入背包</h3>${select(
+      '背包来源',
+      'room-playtest-mode',
+      playtestMode,
+      [
+        ['legacy', '兼容旧版：全部道具（旧存档行为）'],
+        ['explicit', '显式配置：仅勾选的道具'],
+      ],
+    )}<div class="playtest-items" id="room-playtest-items">${catalog
+      .map(
+        (item) =>
+          `<label class="check" title="${esc(item.name)}"><input type="checkbox" data-playtest-item="${esc(item.type)}"${selected.has(item.type) ? ' checked' : ''}${playtestMode === 'legacy' ? ' disabled' : ''}> ${esc(item.glyph)} ${esc(item.name)}</label>`,
+      )
+      .join(
+        '',
+      )}</div><p class="hint">显式配置覆盖项目初始道具，空选即不带；仅影响编辑器试玩，旧存档默认全道具。</p>${CameraPanel.render(r)}<div class="row mirror-actions"><button class="apply" id="mirror-horizontal" title="整房左右镜像，保留对象 ID 与接线">↔ 左右镜像</button><button class="apply" id="mirror-vertical" title="整房上下镜像，保留对象 ID 与接线">↕ 上下镜像</button></div><p class="hint">修改即时生效，非法值不写入。缩小时保留越界对象；镜像会翻转布局、路径和方向，可撤销。</p>`;
+    const syncPlaytestMode = () =>
+      document.querySelectorAll('[data-playtest-item]').forEach((box) => {
+        box.disabled = $('room-playtest-mode').value === 'legacy';
+      });
+    $('room-playtest-mode').onchange = syncPlaytestMode;
+    const mirror = (axis, label) => {
+      const next = Mirror.mirrorRoom(r, axis);
+      app.store.change(() => {
+        Object.assign(r, next);
+        s.selection = null;
+        s.multiSelection = [];
+        s.railNodeId = null;
+      });
+      app.message(label + '完成；对象 ID 与接线已保留，可使用撤销恢复。');
     };
+    $('mirror-horizontal').onclick = () => mirror('horizontal', '左右镜像');
+    $('mirror-vertical').onclick = () => mirror('vertical', '上下镜像');
+    CameraPanel.bind();
+    require('../live-room-settings.cjs').install(app, r);
     return;
   }
   const d = ref.kind === 'objects' ? Registry.get(o.type) : null,
-    brickMotion = ref.kind === 'movables' && app.course().kind === 'calculus',
-    hasNodes = d?.type === 'physics.rail' || brickMotion;
+    brickMotion = ref.kind === 'movables',
+    teacherMotion = TeacherLinks.isTeacher(o),
+    hasNodes = d?.type === 'physics.rail' || brickMotion || teacherMotion;
   host.innerHTML = `<h2>${esc(d?.name || { entries: '入口', exits: '出口', zones: '温控区域', movables: '机关砖', tiles: '固定砖' }[ref.kind])}</h2><div class="inspector-tabs ${hasNodes ? 'with-nodes' : ''}">${[
     ['base', '基础'],
     ['behavior', '行为'],
@@ -1004,7 +1239,7 @@ function baseInspector(app, r, setTool) {
   );
   const body = $('object-form');
   const brickGroup = brickMotion && o.brickGroup ? Motion.groupMembers(r, o) : [];
-  if (brickGroup.length) {
+  if (brickGroup.length && !o.assemblyId) {
     body.insertAdjacentHTML(
       'beforebegin',
       `<p class="hint">机关砖组 · ${brickGroup.length} 块 · 代表砖 (${o.x}, ${o.y})</p>
@@ -1012,8 +1247,18 @@ function baseInspector(app, r, setTool) {
     );
     $('ungroup-bricks').onclick = () =>
       app.store.change(() => {
-        for (const brick of brickGroup) delete brick.brickGroup;
+        if (o.assemblyId) Groups.dissolve(r, o);
+        else for (const brick of brickGroup) delete brick.brickGroup;
       });
+  }
+  if (TeacherLinks.isTeacher(o)) {
+    const count = TeacherLinks.checkins(r, o).length;
+    body.insertAdjacentHTML(
+      'beforebegin',
+      `<button id="quick-bind-checkins" class="apply" style="border-color:#e7b867" aria-pressed="${s.tool === 'brick-bind'}">快捷绑定签到 · ${count} 块</button>`,
+    );
+    $('quick-bind-checkins').onclick = () =>
+      setTool(s.tool === 'brick-bind' ? 'select' : 'brick-bind');
   }
   if (Motion.isPad(o)) {
     const color = Motion.colorFor(r, o.id),
@@ -1036,17 +1281,21 @@ function baseInspector(app, r, setTool) {
       o.locked = e.target.checked;
     });
   if (tab === 'base') {
-    body.innerHTML = `${ref.kind !== 'tiles' ? field('名称', 'object-name', o.name || d?.name || '') : ''}${ref.kind !== 'tiles' ? area('备注', 'object-notes', o.notes || '') : ''}<div class="row">${field('列 X', 'object-x', o.x, { type: 'number' })}${field('行 Y', 'object-y', o.y, { type: 'number' })}</div>${o.w ? `<div class="row">${field('宽（格）', 'object-w', o.w, { type: 'number', min: 1 })}${field('高（格）', 'object-h', o.h, { type: 'number', min: 1 })}</div>` : ''}<button id="apply-object" class="apply primary">应用位置与说明</button><button id="delete-object" class="apply danger">删除对象</button>`;
-    if (['tiles', 'objects', 'movables'].includes(ref.kind)) {
+    body.innerHTML = `${ref.kind !== 'tiles' ? field('名称', 'object-name', o.name || d?.name || '') : ''}${ref.kind !== 'tiles' ? area('备注', 'object-notes', o.notes || '') : ''}<div class="row">${field('列 X', 'object-x', o.x, { type: 'number' })}${field('行 Y', 'object-y', o.y, { type: 'number' })}</div>${o.w ? `<div class="row">${field('宽（格）', 'object-w', o.w, { type: 'number', min: 1 })}${field('高（格）', 'object-h', o.h, { type: 'number', min: 1 })}</div>` : ''}<button id="apply-object" class="apply primary">应用位置与说明</button><button id="delete-object" class="apply danger">删除对象</button>${AiSpawns.isSpawn(o) ? '<p class="hint">非实体标记：不参与碰撞，仅供同房间的 AI 启动板选择出现位置。删除后绑定自动清除。</p>' : ''}`;
+    if (['tiles', 'objects', 'movables'].includes(ref.kind) && !AiSpawns.isSpawn(o)) {
       body.insertAdjacentHTML(
         'beforeend',
-        check('碰撞实体', 'object-collision', Collision.enabled(o, ref.kind, d || {})) +
+        check(
+          o.assemblyId || o.brickGroup ? '组合碰撞实体（由代表元控制）' : '碰撞实体',
+          'object-collision',
+          Collision.inherited(r, o, ref.kind, d || {}),
+        ) +
           '<p class="hint">关闭后可穿过方块，边界显示为虚线。触发体积独立，进入触发范围仍可启动机关。</p>',
       );
       $('object-collision').onchange = (e) => {
         const enabled = e.target.checked;
         app.store.change(() => {
-          o.collision = enabled;
+          Collision.owner(r, o, ref.kind).item.collision = enabled;
         });
       };
     }
@@ -1056,7 +1305,14 @@ function baseInspector(app, r, setTool) {
     $('apply-object').onclick = () =>
       app.store.change(() => {
         if (o.locked || brickGroup.some((brick) => brick.locked)) return;
-        if (o.type === 'physics.rail')
+        if (o.assemblyId)
+          Select.move(
+            r,
+            Groups.members(r, o).map((v) => v.ref),
+            Number($('object-x').value) - o.x,
+            Number($('object-y').value) - o.y,
+          );
+        else if (o.type === 'physics.rail')
           Nodes.moveOwner(o, Number($('object-x').value), Number($('object-y').value));
         else if (brickGroup.length)
           Select.move(
@@ -1068,8 +1324,13 @@ function baseInspector(app, r, setTool) {
         else if (ref.kind === 'movables')
           Motion.moveOwner(o, Number($('object-x').value), Number($('object-y').value));
         else {
-          o.x = Number($('object-x').value);
-          o.y = Number($('object-y').value);
+          const dx = Number($('object-x').value) - o.x;
+          if (TeacherLinks.isTeacher(o))
+            TeacherRoute.moveOwner(o, Number($('object-x').value), Number($('object-y').value));
+          else {
+            o.x = Number($('object-x').value);
+            o.y = Number($('object-y').value);
+          }
         }
         if (ref.kind === 'tiles') {
           ref.x = o.x;
@@ -1088,12 +1349,8 @@ function baseInspector(app, r, setTool) {
         removeSelection(app, r, brickGroup.map(brickRef));
         return;
       }
-      const linked =
-        ref.kind === 'entries'
-          ? app.course().connections.filter((w) => w.to.entryId === o.id)
-          : ref.kind === 'exits'
-            ? app.course().connections.filter((w) => w.from.exitId === o.id)
-            : [];
+      const isPort = ['entries', 'exits'].includes(ref.kind),
+        linked = isPort ? MapCompat.portLinks(app.store.project, o.id) : [];
       if (ref.kind === 'entries' && r.entries.length === 1) {
         app.message('每间房至少一个入口', true);
         return;
@@ -1104,8 +1361,12 @@ function baseInspector(app, r, setTool) {
           else r[ref.kind] = r[ref.kind].filter((v) => v.id !== o.id);
           if (ref.kind === 'objects') {
             for (const brick of r.movables) if (brick.padId === o.id) brick.padId = '';
+            TeacherLinks.cleanup(r);
+            AiSpawns.cleanup(r);
           }
-          app.course().connections = app.course().connections.filter((v) => !linked.includes(v));
+          // Project-level cross-room wires are shadowed from the legacy store;
+          // clean both so a deleted port cannot leave a dangling global edge.
+          if (isPort) MapCompat.forgetPort(app.store.project, o.id);
           s.selection = null;
         });
       if (linked.length)
@@ -1119,6 +1380,10 @@ function baseInspector(app, r, setTool) {
     NodePanel.render(app, o, r, body, setTool);
   } else if (brickMotion && ['nodes', 'behavior'].includes(tab)) {
     BrickPanel.render(app, o, r, body, setTool);
+  } else if (teacherMotion && tab === 'nodes') {
+    // The node graph owns the 节点 tab only; 行为 keeps the legacy plugin schema
+    // (patrol bounds / speed) editable so old saves stay adjustable without a path.
+    TeacherPanel.render(app, o, r, body, setTool);
   } else if (tab === 'behavior') {
     if (d) {
       const p = Registry.params(app.store.project, o);
@@ -1130,6 +1395,9 @@ function baseInspector(app, r, setTool) {
           .filter((f) => d.type !== 'physics.rail' || f.kind !== 'path')
           .map((f) => schemaField(f, p[f.key], r))
           .join('') +
+        (d.schema.some((f) => f.kind === 'aiSpawn')
+          ? '<p class="hint">绑定的 AI 出现点只在本房间内生效；不指定或出现点被删除时，沿用旧行为在玩家旁出现。</p>'
+          : '') +
         select('死亡回退', 'reset-policy', o.resetPolicy, [
           'checkpoint',
           'preserve',
@@ -1249,17 +1517,91 @@ function baseInspector(app, r, setTool) {
         }
         app.store.change(() => Object.assign(o, { targetX: x, targetY: y, padId }));
       };
+    } else if (ref.kind === 'objects' && TeacherLinks.isTeacher(o)) {
+      const bound = new Set(TeacherLinks.ids(o)),
+        checkins = r.objects.filter((item) => item.type === TeacherLinks.CHECKIN);
+      body.innerHTML =
+        '<p class="hint">勾选本房签到方块；全部激活后巡查老师消失。也可选中老师后使用「快捷绑定签到」，在画布点击或框选签到板。</p>' +
+        (checkins.length
+          ? checkins
+              .map((item, index) =>
+                check(
+                  (item.name || '签到板') + ' · ' + item.x + ', ' + item.y,
+                  'teacher-checkin-' + index,
+                  bound.has(item.id),
+                ),
+              )
+              .join('')
+          : '<p class="muted">本房还没有签到方块。</p>');
+      body.querySelectorAll('[id^="teacher-checkin-"]').forEach((input, index) => {
+        input.dataset.teacherCheckin = checkins[index].id;
+        input.onchange = () => {
+          const ids = [...body.querySelectorAll('[data-teacher-checkin]')]
+            .filter((item) => item.checked)
+            .map((item) => item.dataset.teacherCheckin);
+          app.store.change(() => TeacherLinks.set(o, ids));
+        };
+      });
+    } else if (ref.kind === 'objects' && AIPorts.isExit(o)) {
+      // Selected AI exit: choose the same-room player exit it belongs to. The
+      // binding only records ids; the AI exit object (including params.routeId)
+      // is never rewritten, so legacy same-room portals keep working.
+      const bound = AIPorts.bindings(r).find((item) => item.aiExitId === o.id)?.exitId || '';
+      body.innerHTML =
+        select('绑定玩家出口', 'ai-exit-binding', bound, [
+          ['', '未绑定（仅使用地图 AI 连线）'],
+          ...r.exits.map((exit) => [
+            exit.id,
+            (exit.name || '出口') + ' · ' + exit.x + ', ' + exit.y,
+          ]),
+        ]) +
+        '<p class="hint">玩家靠近绑定出口时，AI 会走向这个出口。在路线图将紫色 AI 出口连到玩家目标房间的紫色 AI 入口。</p>' +
+        '' +
+        field('对应 AI ID（空白继承全局）', 'object-ai', o.aiId || '') +
+        '<p class="hint">仅登记 ID，不在编辑器配置 AI 技能。距离量到机关。</p><button id="save-ai-id" class="apply">应用关联</button>';
+      $('ai-exit-binding').onchange = () => {
+        app.store.change(() => {
+          const exitId = $('ai-exit-binding').value;
+          if (exitId) AIPorts.bind(r, exitId, o.id);
+          else AIPorts.unbind(r, o.id);
+        });
+        app.message('AI 出口绑定已保存，可撤销；传送路径 ID 保持不变。');
+      };
+      $('save-ai-id').onclick = () =>
+        app.store.change(() => {
+          o.aiId = $('object-ai').value.trim() || null;
+        });
     } else if (ref.kind === 'objects') {
       body.innerHTML =
-        field('对应 AI ID（空白继承大关）', 'object-ai', o.aiId || '') +
+        field('对应 AI ID（空白继承全局）', 'object-ai', o.aiId || '') +
         '<p class="hint">仅登记 ID，不在编辑器配置 AI 技能。距离量到机关。</p><button id="save-ai-id" class="apply">应用关联</button>';
       $('save-ai-id').onclick = () =>
         app.store.change(() => {
           o.aiId = $('object-ai').value.trim() || null;
         });
     } else if (ref.kind === 'exits') {
+      const bound = AIPorts.bindingFor(r, o.id) || '',
+        aiExits = (r.objects || []).filter(AIPorts.isExit);
       body.innerHTML =
-        '<p class="hint">在大关接线板，从此出口拖线到目标房间入口。</p><button id="go-wiring" class="apply">打开接线板</button>';
+        select('绑定 AI 出口', 'player-exit-ai-binding', bound, [
+          ['', '不绑定 AI 出口'],
+          ...aiExits.map((aiExit) => [
+            aiExit.id,
+            (aiExit.name || 'AI 出口') + ' · ' + aiExit.x + ', ' + aiExit.y,
+          ]),
+        ]) +
+        '<p class="hint">绑定后，玩家从这个出口离开时 AI 会前往该 AI 出口，再按路线图上的紫色 AI 连线进入目标房间的 AI 入口。绑定不修改 AI 出口的传送路径 ID（routeId），玩家接线保持不变。' +
+        (aiExits.length ? '' : ' 本房还没有 AI 出口，请先在房间放置 common.portalOut。') +
+        '</p>' +
+        '<p class="hint">玩家接线仍在路线图：从此出口拖线到目标房间入口。</p><button id="go-wiring" class="apply">打开接线板</button>';
+      $('player-exit-ai-binding').onchange = () => {
+        app.store.change(() => {
+          const aiExitId = $('player-exit-ai-binding').value;
+          if (aiExitId) AIPorts.bind(r, o.id, aiExitId);
+          else AIPorts.unbind(r, o.id);
+        });
+        app.message('玩家出口的 AI 绑定已保存，可撤销；玩家接线未改变。');
+      };
       $('go-wiring').onclick = () => app.go('course', { courseTab: 'graph' });
     } else if (ref.kind === 'entries') {
       body.innerHTML =
@@ -1267,28 +1609,39 @@ function baseInspector(app, r, setTool) {
           [1, '向右'],
           [-1, '向左'],
         ]) +
+        check('允许从此入口返回连接的出口', 'entry-allow-return', o.allowReturn !== false) +
+        '<p class="hint">关闭后，正向进入仍正常，但离开并再次触碰该入口不会返回来源出口。</p>' +
         '<button id="save-entry" class="apply">应用入口</button><button id="play-entry" class="apply">从此入口试玩</button>';
       $('save-entry').onclick = () =>
         app.store.change(() => {
           o.face = Number($('entry-face').value);
+          o.allowReturn = $('entry-allow-return').checked;
         });
-      $('play-entry').onclick = () => app.startPlay(r.id, o.id);
+      $('play-entry').onclick = () =>
+        app.startPlay(r.id, o.id, {
+          developerMode: true,
+          playtest: PlaytestItems.resolve(r),
+        });
     } else body.innerHTML = '<p class="hint">此对象没有额外关联。</p>';
   } else app.renderObjectArt(o, d, body);
 }
 function removeSelection(app, r, refs) {
+  refs = expandGroups(r, refs);
   if (!refs.length) return;
   const course = app.course(),
     ids = new Set(
       refs.filter((ref) => ['entries', 'exits'].includes(ref.kind)).map((ref) => ref.id),
     );
-  const wires = course.connections.filter((w) => ids.has(w.from.exitId) || ids.has(w.to.entryId));
+  const wires = MapCompat.portLinks(app.store.project, [...ids]);
   const apply = () => {
     try {
       if (r.entries.every((e) => refs.some((ref) => ref.kind === 'entries' && ref.id === e.id)))
         throw Error('每间房至少保留一个入口。');
       app.store.change(() => {
         Select.remove(course, r, refs);
+        // Same unified port cleanup as the single delete: both stores, so
+        // project-level cross-room edges cannot dangle after a batch delete.
+        MapCompat.forgetPorts(app.store.project, [...ids]);
         app.state.multiSelection = [];
         app.state.selection = null;
       });
@@ -1320,6 +1673,14 @@ function schemaField(f, value, r) {
     );
   if (f.kind === 'zone')
     return select(f.label, id, value, [['', '整个房间'], ...r.zones.map((z) => [z.id, z.name])]);
+  if (f.kind === 'aiSpawn')
+    return select(f.label, id, value, [
+      ['', '不指定：沿用旧行为（在玩家旁出现）'],
+      ...AiSpawns.spawns(r).map((o) => [
+        o.id,
+        (o.name || 'AI 出现点') + '（' + o.x + ', ' + o.y + '）',
+      ]),
+    ]);
   if (f.kind === 'path') return area(f.label, id, JSON.stringify(value || []));
   return field(f.label, id, value);
 }
@@ -1338,4 +1699,10 @@ function readField(f) {
   }
   return input.value;
 }
-module.exports = { render, schemaField, readField };
+module.exports = {
+  render,
+  schemaField,
+  readField,
+  selectRepresentative,
+  brickPathNodeHit,
+};

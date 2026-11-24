@@ -1,5 +1,43 @@
 # Room Lab 架构
 
+4.2.0 分钟自动保存（第二阶段）：`editor/autosave.cjs` 的 `Autosave` 只负责 60 秒节拍与状态机（不可变快照、无重叠、顺延、失败重试、`tick()` 可注入调度器），`attach(app)` 把 `#autosave-status`、App 状态与保存适配器接起来；它不依赖 DOM 之外的全局，也不调用任何云端动作。桌面保存适配器走 `preload.autosaveProject → main.cjs 的 project:autosave`：`desktop/project-autosave.cjs` 的 `candidateFor` 只认可“当前打开会话（项目 ID 相同）”或“当前工作树关联文件”，`autosave` 再要求磁盘哈希等于上次读取的哈希，成功时用 `project-files.writeProject`（素材预检 + 原子替换 + `.project-backups`）覆盖；身份/哈希不符、没有文件、素材冲突或缺失时只写 `userData/RoomLabRecovery/<项目 ID>/project.json`（含素材，备份保留最近 5 份）并返回冲突或错误，绝不静默覆盖。自动保存不调用 `repo.draft/put/manualSave`，因此不产生云端版本、工作树或父节点变化；只有成功写入用户项目文件且期间没有新编辑时才清除 `store.dirty`。浏览器没有 `autosaveProject` 时只刷新 localStorage 草稿与 IndexedDB 素材，不触发下载。`保存项目` 只写本机（云端版本第一次手动保存选择路径），云端版本仍由 `保存同步` 创建。
+
+4.2.0 规划界面重做（第一阶段）：全局路线图 = `editor/graph-layout.cjs`（唯一几何来源）。`card(room)` 对每间房使用同一 `CELL_SIZE`（真实 cols×rows，不按卡片宽度归一化），`portAt/ports` 用同一投影把入口/出口钉在实际格子；`placements(project, offsets, activeCourseId)` 返回全部大关全部房间的全局位置，`hitPlace`、`placeBounds`、`fitPlaces`、`toLocal` 都只吃这份数据，绘制（`draw.cjs` 的 `drawGraph`）也只读它，因此绘制、命中、端口和「查看全部」不会漂移。项目顶层新增可选 `layout.courseOffsets`：全局位置 = 作者 `room.graph` + 所属大关偏移。`ensureOffsets` 只在缺少偏移时为重叠的大关推导右移偏移并写回项目（不进入撤销历史、不改 `room.graph`）；已有偏移原样优先，删除大关时清掉该键。拖动房间写回所属大关的 `room.graph`（`toLocal`），选中项按项目内唯一 room id 解析所属大关（`locate`），导出 / 整房复制 / 云端上传因此始终落到正确的大关。`canConnect` 明确拒绝跨大关接线，接线仍是 `course.connections`。`editor/pages/planning.cjs` 是新的规划页（默认 `planningTab='map'`），`editor/planning-nav.cjs` 管页签、大关条、大关右键/⋯菜单与工具，`editor/graph-board.cjs` 是地图交互（拖动、缩放、平移、吸附、端口拖线、检查器、整理/撤销/重做），`editor/room-library-panel.cjs` 是主房间入口（缩略图 + 名称 + 备注，可按全部/单大关筛选）。旧 `pages/home.cjs` 删除；`pages/course.cjs` 保留大关工作区（规则 / 美术绑定 / 全局路线图 / 房间列表），复用同一地图与房间库。`index.html` 的「项目」菜单只保留 打开项目 / 另存为 / 导出房间 / 导入房间，云端房间库移到主工具栏，「工具」菜单保留并承接项目导出。自动保存策略见上一条第二阶段说明；`build/` 仍由 `scripts/build.cjs`（esbuild）生成。
+
+4.2.0：入口 `allowReturn` 缺省为 true；`runtime/engine.cjs` 的 `reentryPort` 仅在该字段显式为 false 时禁止反向返回，正向 connection 和入口本身保持可用。旧入口缺失字段时按 true 解释，不自动改写旧项目。
+
+4.2.0：`runtime/engine.cjs` 接受 `developerMode`。房间编辑器的「试玩此房」和入口试玩传入该选项，启动时按 Registry 的 `item` 定义注入全部道具；大关总览试玩不传选项，保持空背包。
+
+4.2.0：`plugins/common.cjs` 的 `common.assignmentSubmit` 使用 `canTrigger` 等待 AI 追逐，再用 `stopAI()` 清除当前 AI、跨房 `aiActive` 和追踪轨迹，并用 `addScore(50000)` 计分。插件默认一次性，避免重复得分。
+
+4.1.1：`editor/graph-layout.cjs` 的 `ensurePositions` 只补齐缺失的 `room.graph`，不再自动覆盖有效坐标；接线板拖动仍写入项目历史并随草稿、JSON/ZIP 与云同步保存。手动「整理排布」仍调用 `arrange`。
+
+4.1.1：`project/room-mirror.cjs` 提供整房 horizontal/vertical 镜像。矩形对象按 `cols - x - w` / `rows - y - h` 翻转，路径中心点按 `cols - x` / `rows - y` 翻转，机关砖和轨迹节点按格翻转；入口朝向、喷气方向、速度向量、巡查左右边界、旋转角和轨道出射角同步按轴变换。对象 ID、项目格式和跨房 connection 不变，镜像操作作为一次撤销事务。
+
+4.1.1：`editor/pages/room.cjs` 对 movables 统一提供「节点图」页签、画布 `brick-path` 工具、右键加点和多选编组，不再按 `course.kind === calculus` 过滤。机关砖路径数据仍由 `project/brick-motion.cjs` 管理，项目格式不变。
+
+4.1.1：`plugins/physics/ice.cjs` 声明 `dynamicSolidity: true`，使 `runtime/engine.cjs` 的碰撞生成优先读取冰块 `isSolid()` 状态。冰块融化或热区切换为 `solid: false` 时不再生成隐形 collider，冷态再生成后恢复碰撞。
+
+4.1.0：`runtime/engine.cjs` 记录每次正向过门的来源房间、出口和目标入口。玩家离开目标入口后重新进入时，运行时反向加载来源房间并落在对应出口；该出口先休眠到玩家离开，避免重复过门。返回关系同时写入当前回退检查点，但不改变项目 v2、接线或云同步格式。
+
+4.1.0：整房剪贴板位于 `editor/room-clipboard.cjs`：`project/room-export` 生成含素材文件的单房间快照，`project/room-import-batch` 在目标大关按独立房间重映射内部引用并合并素材。剪贴板仅存在当前 App 内存；跨房 connection 不属于房间快照，粘贴后需要重新接线。
+
+4.0.0：新增 `plugins/items.cjs` 四种可拾取道具和试玩背包；`requiresItem` 将计算器、手机、咖啡与积分/求导、签到、清醒板联动，`assets/seeds` 增加道具与巡查老师内置素材。`plugins/teacher.cjs` 提供移动、签到绑定、接触扣 token/死亡规则；`project/teacher-links.cjs` 统一绑定、删除清理和房间复制重映射；`runtime/engine.cjs` 增加运行时位置、玩家接触、背包和动态 token 操作。项目格式仍为 v2。
+
+3.1.0：`plugins/registry.list` 对 physics/calculus/slacker 三类普通大关返回统一机关库，legacy 继续隔离。`editor/palette` 在全部普通大关提供机关砖和温控区域；`assets/seeds` 提供三主题合并绑定，`assets/catalog` 只共享 `seed-*` 内置素材，用户自定义素材仍按大关隔离。`editor/store` 为旧项目和新大关补齐内置素材及缺失绑定，但保留已有绑定优先。项目格式、房间结构、试玩和云同步协议不变。
+
+3.0.0 build19：`cloud/room-library` 仅上传 `room-export.standalone` 的单房间快照；通过独立 rooms API 存取，不调用 Repository draft/put/create。服务端 room-library.mjs 将清单与摘要存入密钥散列隔离的 R2 rooms 前缀，复用内容分块而不写入 D1 revisions/branches。编辑器 cloud-room-library 提供无连线节点图，导入仍走 room-import-dialog/batch，云密钥不进入页面 URL 或项目文件。
+
+3.0.0 build18：`motionPath[].movingCollision` 缺省 true，由砖级 `movingCollision` 总开关覆盖。`brick-motion.movingCollision` 根据当前时间和方向确定运动段；字段随节点保存／排序并由 `applyGroupPath` 传递。节点行使用独立 checkbox，避开选择按钮嵌套及 live-fields 自动提交。`project/motion-preview` 只读收集框选／绑定路线、计算累计时间与位置；`editor/motion-timeline` 管理临时 UI 时钟和半透明绘制，原始项目不修改。旧机关路径使用相同 easing，原生双态平台仅线性布局预览，真实触发顺序由运行时负责。
+
+3.0.0 build17：机关砖 `movingCollision` 缺省为 true，与总开关 `collision` 独立；`brick-motion.isMoving` 检查路径当前是否产生位移，运行时仅在移动期间省略该砖的实体。附着物按自身设置计算；停止时恢复实体并处理端点重叠。旧旋转机关未写入此字段时保留历史碰撞规则。
+
+3.0.0 build16：`project/block-groups.cjs` 使用房间内 `assemblyId` 组织混合方块，非机关砖用 `attachmentTo` 引用机关砖代表 ID。编辑状态只保存原坐标；运行时 `attachmentOffset` / `worldObject` / `objectRect` 计算随动偏移，不写回原存档，死亡与缓存沿用代表砖状态。动态图形、实体、尖刺触发均采用偏移，动态尖刺按子步插值检查。房间复制重映射 owner，删除与解散清理关系。Unity 原生平台仍不由内置试玩模拟，游戏端需要另行消费新附着字段。
+
+`editor/live-fields.cjs` 将既有属性提交逻辑绑定到 change 事件，复用校验与撤销事务，隐藏原应用按钮；时间步进控件同样触发 change。房间设置等不属于方块属性的确认流程保留。
+
+`runtime/moving-solids.cjs` 对机关砖前后碰撞盒做最大 4 像素步长的主动推动检查。推动途中先通过 `runtime/hazards.cjs` 检查尖刺；build16 起，仅搬运方向前方的实体阻挡或主动推动轴上的对向夹压才报告挤压死亡。浮点边界与普通侧面接触先分离，不以任意重叠作为死亡依据。engine 执行原有死亡重生流程；玩家自身速度积分继续由 engine 负责。框选终点预览为纯绘制，不写入存档。
+
 3.0.0 build12：`project/native-compat.cjs` 负责测试版扩展数据访问、移动、身份、信号重命名和导入规则；`native-validation.cjs` 对照 NativeReworkValidation 校验。`editor/native-panel.cjs` 与 `native-draw.cjs` 仅承担编辑和绘制，不运行游戏机制。原 `nativeCampaign` / `rework` 格式原地保留，项目仍是 v2；`contact-auto-v1` 的 `authoredCourses` 物理课程跳过扩展规则。内置试玩需先确认运行限制。
 
 3.0.0 build3：`Store.hasProject` 区分未开始和有效本地草稿，`load` 建立可恢复草稿；未开始时不备份占位示例。大关的 `blockDefaults` 按大关 ID 隔离，`Registry.instantiate` 将参数和选定素材写入新对象。现有对象沿用自己的参数与 v2 项目级默认值。素材按具体大关、通用或内置主题模板解析。
@@ -22,30 +60,31 @@ Electron 主进程：src/desktop/main.cjs
        → Engine → plugin registry → physics / common
 ```
 
-| 改动目标 | 入口与职责 |
-| --- | --- |
-| 项目、迁移、尺寸、端口验证 | src/project/model.cjs |
-| 包含素材的 ZIP 项目包 | src/project/archive.cjs |
-| 素材导入、替换、稳定 ID、浏览器字节缓存 | src/assets/manager.cjs |
-| 素材大类/子类、旧分类推断、绑定候选过滤 | src/assets/catalog.cjs |
-| 一键放置图标栏 | src/editor/palette.cjs |
-| 轨道子节点身份、顺序、父级移动与兼容 | src/project/rail-nodes.cjs |
-| 节点图管理及相对位置预览 | src/editor/rail-node-panel.cjs |
-| 区域四角缩放几何 | src/editor/region-handles.cjs |
-| 试玩轨迹采样、路径文件及管理 UI | src/project/play-traces.cjs、src/editor/trace-manager.cjs |
-| 温控初始状态统一解析 | src/project/temperature.cjs |
-| 示例素材 | src/assets/seeds.cjs |
-| 插件注册、默认值、参数验证 | src/plugins/registry.cjs |
-| 喷气、冰块、温控、电磁轨道 | src/plugins/physics/*.cjs，各一模块 |
-| 收集、危险、AI 启动与传送 | src/plugins/common.cjs |
-| 兼容 v1 机关 | src/plugins/legacy.cjs，独立隔离 |
-| 运动、碰撞、资源、AI、回退 | src/runtime/engine.cjs |
-| 路由、文件流程、输入与固定步长循环 | src/editor/app.cjs |
-| 项目存储与撤销 | src/editor/store.cjs、history.cjs |
-| 大关接线、房间、素材、定义、外观、试玩 UI | src/editor/pages/*.cjs |
-| 静态及运行绘制 | src/editor/draw.cjs |
-| 桌面弹窗、路径校验、JSON 备份 | src/desktop/*.cjs |
-| 构建、生成参数文档、示例、便携发布 | scripts/*.cjs |
+| 改动目标                                  | 入口与职责                                                |
+| ----------------------------------------- | --------------------------------------------------------- |
+| 项目、迁移、尺寸、端口验证                | src/project/model.cjs                                     |
+| 包含素材的 ZIP 项目包                     | src/project/archive.cjs                                   |
+| 素材导入、替换、稳定 ID、浏览器字节缓存   | src/assets/manager.cjs                                    |
+| 素材大类/子类、旧分类推断、绑定候选过滤   | src/assets/catalog.cjs                                    |
+| 一键放置图标栏                            | src/editor/palette.cjs                                    |
+| 轨道子节点身份、顺序、父级移动与兼容      | src/project/rail-nodes.cjs                                |
+| 节点图管理及相对位置预览                  | src/editor/rail-node-panel.cjs                            |
+| 区域四角缩放几何                          | src/editor/region-handles.cjs                             |
+| 试玩轨迹采样、路径文件及管理 UI           | src/project/play-traces.cjs、src/editor/trace-manager.cjs |
+| 温控初始状态统一解析                      | src/project/temperature.cjs                               |
+| 示例素材                                  | src/assets/seeds.cjs                                      |
+| 插件注册、默认值、参数验证                | src/plugins/registry.cjs                                  |
+| 喷气、冰块、温控、电磁轨道                | src/plugins/physics/\*.cjs，各一模块                      |
+| 收集、危险、AI 启动与传送                 | src/plugins/common.cjs                                    |
+| 兼容 v1 机关                              | src/plugins/legacy.cjs，独立隔离                          |
+| 运动、碰撞、资源、AI、回退                | src/runtime/engine.cjs                                    |
+| 路由、文件流程、输入与固定步长循环        | src/editor/app.cjs                                        |
+| 项目存储与撤销                            | src/editor/store.cjs、history.cjs                         |
+| 分钟自动保存节拍/状态与桌面写入、恢复快照 | src/editor/autosave.cjs、src/desktop/project-autosave.cjs |
+| 大关接线、房间、素材、定义、外观、试玩 UI | src/editor/pages/\*.cjs                                   |
+| 静态及运行绘制                            | src/editor/draw.cjs                                       |
+| 桌面弹窗、路径校验、JSON 备份             | src/desktop/\*.cjs                                        |
+| 构建、生成参数文档、示例、便携发布        | scripts/\*.cjs                                            |
 
 ## 数据流
 
@@ -54,7 +93,7 @@ Electron 主进程：src/desktop/main.cjs
    候选图片由 catalog.available 统一过滤，两个应用入口共用规则；库浏览按大类/子类展开。没有分类的旧数据只做引用推断，保持原文件兼容。
 3. 试玩克隆项目并校验，引擎读参数注册表，120 Hz 固定步长更新。方块通过 createState/tick/onTrigger 等钩子参与；UI 只渲染快照。
 4. 进入出口按 from.roomId/exitId 查接线，在目标命名入口生成玩家。资源、AI 等级继承；房间状态缓存，当前入口形成检查点。
-5. JSON 保存由主进程处理选定路径，写入素材后备份原 JSON，再临时文件替换。ZIP 包必须包含引用的所有素材。原生会话按已选择文件和项目 ID 绑定。
+5. JSON 保存由主进程处理选定路径，写入素材后备份原 JSON，再临时文件替换。ZIP 包必须包含引用的所有素材。原生会话按已选择文件和项目 ID 绑定。分钟自动保存复用同一写入器：只有会话/关联文件的项目 ID 与磁盘哈希一致才覆盖，否则写 `RoomLabRecovery` 快照；它不创建云端版本或工作树，只有写入用户项目文件且期间无新编辑时才清除未保存标记。
 
 ## 修改方法
 
@@ -69,8 +108,6 @@ Electron 主进程：src/desktop/main.cjs
 即时协作每秒交换一次状态，8 秒心跳超时；草稿与不可变版本分表。仅明确保存产生版本；以工作树 readRevision（最后读取的云端版本）为父，新建分支。编辑器接收更新前对本轮新输入再做三方合并，同字段冲突先保留草稿并暂停发布。试玩使用进入时的引擎快照，编辑草稿仍同步，退出试玩后显示新内容。
 
 碰撞开关与旧 AI 别名兼容在 `src/project/collision.cjs`，绘制、运行时及序列化共用。温度解析在 `temperature.at`，按空间重叠影响冰块，热优先；控制器单向控制温控区，冰块没有区域关联。
-
-
 
 ## 2.4.1 工作树与文件关联
 

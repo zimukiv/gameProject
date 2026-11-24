@@ -37,12 +37,19 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     await page.goto(
       'file:///' + path.resolve(__dirname, '../build/index.html').replace(/\\/g, '/'),
     );
-    assert.equal((await snap()).project.courses.length, 1);
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
-    const rect = await page.locator('#graph').boundingBox();
+    await page.locator('#start-new').click();
+    assert.equal((await snap()).project.courses.length, 3);
+    await page.evaluate(() => window.__ROOM_LAB__.openCourseWorkspace());
+    const rect = await page.locator('#graph').boundingBox(),
+      dims = await page.locator('#graph').evaluate((node) => ({
+        w: node.width,
+        h: node.height,
+      })),
+      // World → screen through the shared global route-map view.
+      view = (await snap()).state.graphView;
     const point = (x, y) => ({
-      x: rect.x + (x / 1120) * rect.width,
-      y: rect.y + (y / 650) * rect.height,
+      x: rect.x + ((x * view.scale + view.x) * rect.width) / dims.w,
+      y: rect.y + ((y * view.scale + view.y) * rect.height) / dims.h,
     });
     let a = point(100, 110),
       b = point(135, 135);
@@ -73,7 +80,15 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     await page.locator('#room-name').fill('喷气测试房');
     await page.locator('#room-notes').fill('维护备注：确认喷气后跳到上层');
     await page.locator('#room-cols').fill('34');
-    await page.getByRole('button', { name: '应用房间设置', exact: true }).click();
+    // Stage 2: room properties apply as you edit them; there is no apply button.
+    await page.locator('#room-name').dispatchEvent('change');
+    await page.locator('#room-notes').dispatchEvent('change');
+    await page.locator('#room-cols').dispatchEvent('change');
+    await page.waitForFunction(
+      () =>
+        window.__ROOM_LAB__.snapshot().project.courses[0].rooms[0].cols === 34 &&
+        window.__ROOM_LAB__.snapshot().project.courses[0].rooms[0].name === '喷气测试房',
+    );
     assert.equal((await snap()).project.courses[0].rooms[0].cols, 34);
     assert.equal((await snap()).project.courses[0].rooms[0].name, '喷气测试房');
     const original = (await snap()).project.courses[0].rooms[0].tiles.length;
@@ -83,8 +98,10 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     await page.getByRole('button', { name: '撤销', exact: true }).click();
     assert.equal((await snap()).project.courses[0].rooms[0].tiles.length, original);
     await page.locator('#room-cols').fill('16');
-    await page.getByRole('button', { name: '应用房间设置', exact: true }).click();
-    await page.getByRole('button', { name: '保留越界并应用', exact: true }).click();
+    await page.locator('#room-cols').dispatchEvent('change');
+    await page.waitForFunction(
+      () => window.__ROOM_LAB__.snapshot().project.courses[0].rooms[0].cols === 16,
+    );
     const shrunk = await snap();
     assert.equal(shrunk.project.courses[0].rooms[0].cols, 16);
     assert.equal(shrunk.project.courses[0].rooms[0].exits[0].x, 28);
@@ -104,7 +121,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
     const reopened = await snap();
     assert.equal(reopened.project.courses[0].rooms[0].name, '喷气测试房');
     assert.equal(reopened.project.courses[0].rooms[0].cols, 34);
-    await page.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
+    await page.evaluate(() => window.__ROOM_LAB__.openCourseWorkspace());
     await page.screenshot({
       path: path.resolve(__dirname, '../test-output/phase2.png'),
       fullPage: true,

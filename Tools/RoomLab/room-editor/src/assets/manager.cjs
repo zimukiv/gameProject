@@ -28,6 +28,9 @@ async function importAsset(
     replaceId = null,
     category = 'unsorted',
     subcategory = 'unsorted',
+    frameWidth = 0,
+    frameHeight = 0,
+    fps = 6,
   },
 ) {
   const ext = name.split('.').at(-1).toLowerCase();
@@ -49,9 +52,9 @@ async function importAsset(
     subcategory: old
       ? require('./catalog.cjs').classification(store.project, old).subcategory
       : subcategory,
-    frameWidth: old?.frameWidth || 0,
-    frameHeight: old?.frameHeight || 0,
-    fps: old?.fps || 6,
+    frameWidth: old?.frameWidth || Number(frameWidth) || 0,
+    frameHeight: old?.frameHeight || Number(frameHeight) || 0,
+    fps: old?.fps || Number(fps) || 6,
     hash: digest,
   };
   store.assetFiles.set(path, new Uint8Array(bytes));

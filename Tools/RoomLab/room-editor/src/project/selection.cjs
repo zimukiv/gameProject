@@ -32,6 +32,18 @@ function combine(previous, incoming, mode = 'replace') {
   return [...result.values()];
 }
 function move(room, refs, dx, dy) {
+  const originalTiles = refs
+    .filter((ref) => ref.kind === 'tiles')
+    .map((ref) => ({ ref, item: get(room, ref) }));
+  const Groups = require('./block-groups.cjs');
+  refs = combine(
+    [],
+    refs.flatMap((ref) => {
+      const item = get(room, ref);
+      return item?.assemblyId ? Groups.members(room, item).map((v) => v.ref) : [ref];
+    }),
+  );
+  if (refs.some((ref) => get(room, ref)?.assemblyId && get(room, ref)?.locked)) return false;
   if (
     refs.some((ref) => {
       const item = get(room, ref);
@@ -52,6 +64,7 @@ function move(room, refs, dx, dy) {
   );
   if ([...selected].some((t) => stationary.has(t.x + dx + ',' + (t.y + dy)))) return false;
   for (const { ref, item } of members) {
+    if (require('./teacher-links.cjs').isTeacher(item)) require('./teacher-links.cjs').move(item, dx);
     if (Native.kinds.includes(ref.kind)) Native.move(ref.kind, item, dx, dy);
     else if (item.type === 'physics.rail') Nodes.moveOwner(item, item.x + dx, item.y + dy);
     else if (ref.kind === 'movables') Motion.moveOwner(item, item.x + dx, item.y + dy);
@@ -64,6 +77,11 @@ function move(room, refs, dx, dy) {
       ref.y = item.y;
     }
   }
+  for (const { ref, item } of originalTiles)
+    if (item) {
+      ref.x = item.x;
+      ref.y = item.y;
+    }
   return true;
 }
 function remove(course, room, refs) {
@@ -86,9 +104,12 @@ function remove(course, room, refs) {
     (w) => !gone.has(w.from.exitId) && !gone.has(w.to.entryId),
   );
   for (const b of room.movables) if (gone.has(b.padId)) b.padId = '';
+  require('./block-groups.cjs').cleanup(room);
   for (const o of room.objects) {
     if (gone.has(o.params?.unlockPadId)) o.params.unlockPadId = '';
     if (gone.has(o.params?.zoneId)) o.params.zoneId = '';
   }
+  require('./teacher-links.cjs').cleanup(room);
+  require('./ai-spawns.cjs').cleanup(room);
 }
-module.exports = { key, get, box, combine, move, remove };
+module.exports = { kinds, key, get, box, combine, move, remove };

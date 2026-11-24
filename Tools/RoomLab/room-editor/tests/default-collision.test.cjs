@@ -4,12 +4,13 @@ const { test } = require('node:test'),
   M = require('../src/project/model.cjs'),
   R = require('../src/plugins/registry.cjs'),
   Collision = require('../src/project/collision.cjs');
-test('every new palette block starts solid while old explicit ghost settings remain unchanged', () => {
+test('new palette blocks follow their definition collision default while explicit settings remain unchanged', () => {
   const p = M.example();
   for (const d of R.list('physics')) {
     const o = R.instantiate(p, d.type, 'new-' + d.type, 5, 6);
-    assert.equal(o.collision, true, d.type);
-    assert.equal(Collision.enabled(o, 'objects', d), true);
+    const solid = d.defaultCollision !== false;
+    assert.equal(o.collision, solid, d.type);
+    assert.equal(Collision.enabled(o, 'objects', d), solid);
   }
   const old = p.courses[0].rooms[0].objects[0];
   old.collision = false;

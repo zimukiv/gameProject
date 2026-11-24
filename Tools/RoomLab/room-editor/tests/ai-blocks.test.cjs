@@ -39,3 +39,49 @@ test('new rail blocks have independent editable paths', () => {
   assert.equal(b.params.path.length, length);
   assert.equal(Registry.get('physics.rail').defaults.path.length, length);
 });
+test('assignment submission waits for an active chase, removes AI and awards 50000 once', () => {
+  const p = M.example(),
+    r = p.courses[0].rooms[0],
+    submit = M.object('submit-assignment', 'common.assignmentSubmit', 2, 12);
+  submit.collision = false;
+  r.aiPolicy = 'inherit';
+  r.objects = [submit];
+  const g = new Engine(p),
+    stand = () =>
+      Object.assign(g.player, {
+        x: submit.x * 32 + 3,
+        y: submit.y * 32 + 2,
+        vx: 0,
+        vy: 0,
+        grounded: false,
+      }),
+    leave = () => Object.assign(g.player, { x: 32, y: 32, vx: 0, vy: 0 });
+  stand();
+  g.update(1 / 120);
+  assert.equal(g.score, 0);
+  assert.equal(
+    g.objectStates.get(submit.id).used,
+    false,
+    'inactive AI does not consume the device',
+  );
+
+  Object.assign(g.ai, { active: true, id: 'chase-ai', trail: [{ x: 1, y: 2 }] });
+  g.courseState.aiActive = true;
+  g.aiTrail = [{ x: 1, y: 2 }];
+  g.update(1 / 120);
+  assert.equal(g.score, 50000);
+  assert.equal(g.ai.active, false);
+  assert.equal(g.courseState.aiActive, false);
+  assert.equal(g.ai.trail.length, 0);
+  assert.equal(g.aiTrail.length, 0);
+  assert.equal(g.objectStates.get(submit.id).used, true);
+  assert.equal(g.events.filter((event) => event.type === 'ai-stop').length, 1);
+  assert.ok(g.events.some((event) => event.type === 'assignment-submit' && event.score === 50000));
+
+  leave();
+  g.update(1 / 120);
+  stand();
+  g.objectStates.get(submit.id).cooldown = 0;
+  g.update(1 / 120);
+  assert.equal(g.score, 50000, 'once-only device cannot farm score');
+});

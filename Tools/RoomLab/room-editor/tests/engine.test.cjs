@@ -45,29 +45,58 @@ test('physics course connects all three rooms through jet, ice creation and acce
   assert.ok(g.events.some((e) => e.type === 'rail-end'));
   assert.ok(g.score >= 60000);
 });
-test('first dash is free, total dash count is three, landing restores one free dash only', () => {
+test('without iced tea only the free dash is available', () => {
   const g = new Engine(M.example(), 'physics');
   g.player.x = 600;
   g.player.y = 80;
   g.player.grounded = false;
   step(g, { right: true, dashPressed: true });
-  assert.equal(g.charges, 3);
+  assert.equal(g.charges, 0);
   assert.equal(g.player.freeDash, false);
-  step(g, { up: true, dashPressed: true });
-  step(g, { left: true, dashPressed: true });
-  assert.equal(g.charges, 1);
-  assert.equal(g.player.dashCount, 3);
   const count = g.events.filter((e) => e.type === 'dash').length;
-  step(g, { dashPressed: true });
+  step(g, { left: true, dashPressed: true });
   assert.equal(g.events.filter((e) => e.type === 'dash').length, count);
+  assert.equal(g.player.dashCount, 1);
   Object.assign(g.player, { x: 40, y: 420, vy: 0, dash: 0, grounded: false });
   step(g);
   assert.equal(g.player.freeDash, true);
   assert.equal(g.player.dashCount, 0);
-  assert.equal(g.charges, 1);
   step(g, { right: true, dashPressed: true });
   step(g);
   assert.equal(g.player.freeDash, false, 'standing contact does not refresh per frame');
+});
+
+test('iced tea lets tokens charge paid dashes and enables the second dash', () => {
+  const g = new Engine(M.example(), 'physics'),
+    small = M.object('tea-small', 'common.small', 3, 3),
+    large = M.object('tea-large', 'common.coin', 4, 3);
+  g.items['item.icedTea'] = 1;
+  for (let i = 0; i < 9; i++) g.collect({ ...small, id: 'tea-small-' + i });
+  assert.equal(g.charges, 0);
+  assert.equal(g.recharge, 9);
+  g.collect(large);
+  assert.equal(g.charges, 1);
+  assert.equal(g.recharge, 9);
+  g.collect({ ...large, id: 'tea-large-cap' });
+  assert.equal(g.charges, 1);
+  assert.equal(g.paidStockCap, 1);
+  Object.assign(g.player, { x: 600, y: 80, grounded: false, freeDash: true, dashCount: 0 });
+  step(g, { right: true, dashPressed: true });
+  assert.equal(g.charges, 1);
+  step(g, { down: true, left: true, dashPressed: true });
+  assert.equal(g.charges, 0);
+  assert.equal(g.player.dashCount, 2);
+  assert.equal(g.player.dashX, -1);
+  assert.equal(g.player.dashY, 0);
+});
+
+test('tokens do not charge paid dashes without iced tea', () => {
+  const g = new Engine(M.example(), 'physics'),
+    large = M.object('no-tea-large', 'common.coin', 3, 3);
+  g.collect(large);
+  assert.equal(g.tokens, 10);
+  assert.equal(g.charges, 0);
+  assert.equal(g.recharge, 0);
 });
 test('dash replaces old momentum and has no gravity until finished', () => {
   const g = new Engine(M.example());
@@ -79,6 +108,55 @@ test('dash replaces old momentum and has no gravity until finished', () => {
   assert.equal(g.player.vy, 0);
   step(g, {}, 15);
   assert.ok(g.player.vy > 0);
+});
+test('built-in dash is horizontal only: left/right input wins, vertical input adds no lift', () => {
+  const cases = [
+    { input: { up: true }, face: 1, x: 1, label: 'pure up uses facing' },
+    { input: { down: true }, face: -1, x: -1, label: 'pure down uses facing' },
+    { input: { up: true, right: true }, face: -1, x: 1, label: 'up + right stays right' },
+    { input: { down: true, left: true }, face: 1, x: -1, label: 'down + left stays left' },
+    { input: { right: true }, face: -1, x: 1, label: 'right wins over facing' },
+    { input: { left: true }, face: 1, x: -1, label: 'left wins over facing' },
+    { input: {}, face: -1, x: -1, label: 'no input uses facing' },
+  ];
+  for (const item of cases) {
+    const g = new Engine(M.example());
+    Object.assign(g.player, {
+      x: 600,
+      y: 80,
+      vx: 40,
+      vy: 40,
+      grounded: false,
+      freeDash: true,
+      dashCount: 0,
+      face: item.face,
+    });
+    step(g, { ...item.input, dashPressed: true });
+    assert.ok(g.player.dash > 0, item.label);
+    assert.equal(g.player.dashX, item.x, item.label);
+    assert.equal(g.player.dashY, 0, item.label);
+    assert.equal(g.player.vy, 0, item.label);
+    assert.equal(g.player.y, 80, item.label);
+  }
+});
+test('dash ends and normal horizontal movement resumes', () => {
+  const g = new Engine(M.example());
+  Object.assign(g.player, {
+    x: 40,
+    y: 420,
+    vx: 0,
+    vy: 0,
+    grounded: false,
+    freeDash: true,
+    dashCount: 0,
+    face: 1,
+  });
+  step(g, { right: true, dashPressed: true });
+  assert.equal(g.player.dashX, 1);
+  step(g, { right: true }, 40);
+  assert.equal(g.player.dash, 0);
+  assert.ok(g.player.vx > 0, 'right movement resumes after the dash');
+  assert.ok(g.player.x > 40);
 });
 test('ice accumulates separate visits and cold regenerates a new zero-timer instance', () => {
   const g = new Engine(M.example(), 'physics', 'ice-room');
@@ -107,6 +185,30 @@ test('ice material retains sliding velocity instead of instantly stopping', () =
   Object.assign(g.player, { x: 176, y: 420, grounded: true, support: 'ice-5', vx: 220, vy: 0 });
   step(g, {}, 20);
   assert.ok(g.player.vx > 80 && g.player.vx < 220);
+});
+test('melted ice state removes its collider and restores it when the ice regenerates', () => {
+  const g = new Engine(M.example(), 'physics', 'ice-room'),
+    ice = g.room.objects.find((o) => o.id === 'ice-5'),
+    state = g.objectStates.get(ice.id);
+  cold(g);
+  assert.equal(state.solid, true);
+  ice.params.respawnDelay = 0;
+  g.zoneStates.set('cold-zone', 'hot');
+  step(g);
+  assert.equal(state.solid, false);
+  assert.ok(g.events.some((e) => e.type === 'ice-melt' && e.id === ice.id && e.reason === 'heat'));
+  assert.equal(
+    g.colliders().some((c) => c.id === ice.id),
+    false,
+  );
+  g.zoneStates.set('cold-zone', 'cold');
+  Object.assign(g.player, { x: 600, y: 100, vx: 0, vy: 0 });
+  step(g);
+  assert.equal(state.solid, true);
+  assert.equal(
+    g.colliders().some((c) => c.id === ice.id),
+    true,
+  );
 });
 test('AI distance is measured to the device and a player already waiting can trigger it', () => {
   const p = M.example(),
@@ -141,7 +243,7 @@ test('AI activation and ID persist into another fast room and retry restores ent
   assert.equal(g.room.id, 'rail-room');
   assert.equal(g.ai.active, true);
   assert.equal(g.tokens, 12);
-  assert.equal(g.charges, 2);
+  assert.equal(g.charges, 1);
 });
 test('entering a named port uses its position and face rather than a global spawn', () => {
   const p = M.example(),
@@ -151,6 +253,62 @@ test('entering a named port uses its position and face rather than a global spaw
   assert.equal(g.player.x, 644);
   assert.equal(g.player.y, 228);
   assert.equal(g.player.face, -1);
+});
+test('re-entering an arrival entry returns to the source room exit', () => {
+  const g = new Engine(M.example(), 'physics'),
+    source = g.room,
+    exit = source.exits[0];
+  Object.assign(g.player, { x: exit.x * 32 + 4, y: exit.y * 32 + 4, vx: 0, vy: 0 });
+  g.exitCooldown = 0;
+  step(g);
+  assert.equal(g.room.id, 'ice-room');
+  assert.deepEqual(g.entryReturn, {
+    roomId: 'jet-room',
+    exitId: 'jet-exit',
+    entryId: 'ice-room-entry',
+  });
+
+  const entry = g.room.entries[0];
+  step(g, {}, 4);
+  assert.equal(g.room.id, 'ice-room', 'spawning on the entry must not immediately backtrack');
+  Object.assign(g.player, {
+    x: (entry.x + 2) * 32 + 4,
+    y: entry.y * 32 + 4,
+    vx: 0,
+    vy: 0,
+  });
+  step(g);
+  Object.assign(g.player, { x: entry.x * 32 + 4, y: entry.y * 32 + 4, vx: 0, vy: 0 });
+  step(g);
+
+  assert.equal(g.room.id, 'jet-room');
+  assert.equal(g.entryReturn, null);
+  assert.ok(g.player.x >= exit.x * 32 && g.player.x < (exit.x + 1) * 32);
+  assert.equal(g.player.face, -1);
+  assert.ok(
+    g.events.some(
+      (e) =>
+        e.type === 'room-backtrack' && e.entryId === 'ice-room-entry' && e.exitId === 'jet-exit',
+    ),
+  );
+
+  step(g, {}, 90);
+  assert.equal(
+    g.room.id,
+    'jet-room',
+    'the restored exit must be disarmed until the player leaves it',
+  );
+  Object.assign(g.player, {
+    x: (exit.x - 2) * 32 + 4,
+    y: exit.y * 32 + 4,
+    vx: 0,
+    vy: 0,
+  });
+  step(g);
+  Object.assign(g.player, { x: exit.x * 32 + 4, y: exit.y * 32 + 4, vx: 0, vy: 0 });
+  g.exitCooldown = 0;
+  step(g);
+  assert.equal(g.room.id, 'ice-room');
 });
 test('rail starts at zero, accelerates and can be detached by a free dash', () => {
   const g = new Engine(M.example(), 'physics', 'rail-room'),
@@ -162,7 +320,7 @@ test('rail starts at zero, accelerates and can be detached by a free dash', () =
   assert.ok(speed > 0 && speed < o.params.maxSpeed);
   step(g, { dashPressed: true, right: true });
   assert.equal(g.player.rail, null);
-  assert.equal(g.charges, 3);
+  assert.equal(g.charges, 0);
 });
 test('pause freezes ice timer, controller cooldown, AI and player', () => {
   const g = new Engine(M.example(), 'physics', 'ice-room');
@@ -209,4 +367,32 @@ test('preserve thermal policy retains its temperature effect after death', () =>
   g.retry();
   assert.equal(g.objectStates.get('thermal-b').used, true);
   assert.equal(g.zoneStates.get('cold-zone'), 'cold');
+});
+test('an entry can opt out of returning to the connected source exit', () => {
+  const p = M.example();
+  p.courses[0].rooms[1].entries[0].allowReturn = false;
+  const g = new Engine(p, 'physics'),
+    source = g.room,
+    exit = source.exits[0];
+  Object.assign(g.player, { x: exit.x * 32 + 4, y: exit.y * 32 + 4, vx: 0, vy: 0 });
+  g.exitCooldown = 0;
+  step(g);
+  assert.equal(g.room.id, 'ice-room');
+  assert.ok(g.entryReturn);
+  const entry = g.room.entries[0];
+  step(g, {}, 4);
+  Object.assign(g.player, {
+    x: (entry.x + 2) * 32 + 4,
+    y: entry.y * 32 + 4,
+    vx: 0,
+    vy: 0,
+  });
+  step(g);
+  Object.assign(g.player, { x: entry.x * 32 + 4, y: entry.y * 32 + 4, vx: 0, vy: 0 });
+  step(g);
+  assert.equal(g.room.id, 'ice-room');
+  assert.equal(
+    g.events.some((event) => event.type === 'room-backtrack'),
+    false,
+  );
 });

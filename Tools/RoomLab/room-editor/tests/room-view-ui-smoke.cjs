@@ -13,7 +13,7 @@ const assert = require('node:assert/strict'),
   try {
     const p = await app.firstWindow();
     await p.waitForFunction(() => window.__ROOM_LAB__);
-    await p.getByRole('button', { name: '进入大关 →', exact: true }).first().click();
+    await p.evaluate(() => window.__ROOM_LAB__.openCourseWorkspace());
     await p.getByRole('button', { name: '房间列表', exact: true }).click();
     await p.getByRole('button', { name: '编辑房间', exact: true }).first().click();
     const snap = () => p.evaluate(() => window.__ROOM_LAB__.snapshot());
@@ -71,7 +71,11 @@ const assert = require('node:assert/strict'),
     await p.mouse.click(q.x, q.y);
     await p.locator('#room-cols').fill('256');
     await p.locator('#room-rows').fill('256');
-    await p.locator('#apply-room').click();
+    // Stage 2: size applies on change instead of via an apply button.
+    await p.locator('#room-rows').dispatchEvent('change');
+    await p.waitForFunction(
+      () => window.__ROOM_LAB__.snapshot().project.courses[0].rooms[0].cols === 256,
+    );
     await preserved();
     assert.equal((await snap()).project.courses[0].rooms[0].cols, 256);
     await p.locator('#fit-room').click();

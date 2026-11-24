@@ -9,6 +9,7 @@ const base = {
   slots: ['idle', 'active'],
   collider: 'pad',
   trigger: 'foot',
+  requiresItem: 'item.calculator',
 };
 module.exports = [
   {
