@@ -3,9 +3,19 @@
 // 旧存档的 `project.courses` 仍是房间归属 / 规则 / 素材绑定的唯一容器，
 // 本模块只在它之上提供“项目级全局视图”：全局房间索引、全局连接与校验。
 // 不删除、不改写 course，也不重排 course.connections。
+const { clone } = require('../shared/utils.cjs');
 const VERSION = 1,
   FIELD = 'map',
   MAX_ROOMS = 12 * 64;
+// Optional per-wire metadata (labels, imported annotations, future fields) is
+// preserved through sanitize/migrate. Without this a group round trip would keep
+// velocity but silently drop every other wire field.
+function wireExtra(raw) {
+  const out = {};
+  for (const [key, value] of Object.entries(raw))
+    if (!['id', 'from', 'to', 'velocity', 'source'].includes(key)) out[key] = clone(value);
+  return out;
+}
 
 function listRooms(project) {
   const rooms = [];
@@ -29,6 +39,7 @@ function normalizeConnection(raw, defaults = {}) {
     from: { courseId: from.courseId || null, roomId: from.roomId, exitId: from.exitId },
     to: { courseId: to.courseId || null, roomId: to.roomId, entryId: to.entryId },
     velocity: raw.velocity === 'keep' ? 'keep' : 'reset',
+    ...wireExtra(raw),
     source: defaults.source || 'course',
     ...defaults.extra,
   };

@@ -11,7 +11,7 @@ function render(room) {
       ['room', '完整房间'],
       ['follow', '自适应跟随'],
     ],
-  )}<div class="row">${field('默认视野宽（格）', 'room-camera-cols', c.cols, { type: 'number', min: 1, max: 256, step: 0.5 })}${field('默认视野高（格）', 'room-camera-rows', c.rows, { type: 'number', min: 1, max: 256, step: 0.5 })}</div><p class="hint">跟随模式按设定范围显示并跟随玩家，窗口变动时自动适配，多出的方向可看到更多内容；小房间完整显示。此设置只影响试玩。</p></details>`;
+  )}<div class="row">${field('默认视野宽（格）', 'room-camera-cols', c.cols, { type: 'number', min: 1, max: 256, step: 0.5 })}${field('默认视野高（格）', 'room-camera-rows', c.rows, { type: 'number', min: 1, max: 256, step: 0.5 })}</div><p class="hint">跟随模式按设定范围跟随玩家，窗口自动适配；小房间完整显示。仅影响试玩。</p></details>`;
 }
 function bind() {
   const update = () => {

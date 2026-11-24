@@ -44,7 +44,7 @@ test('project and tools menus keep legacy management reachable', () => {
   assert.deepEqual(menuIds('menu-project'), [
     'open-project',
     'save-as',
-    'export-room',
+    'import-group',
     'import-room',
   ]);
   assert.deepEqual(menuIds('menu-tools'), ['open-assets', 'open-definitions', 'export-project']);

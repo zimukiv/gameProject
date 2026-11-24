@@ -113,7 +113,7 @@ function externalClear(data, kind, internal, map) {
     if (internal.has(data.attachmentTo)) data.attachmentTo = map.get(data.attachmentTo);
     else delete data.attachmentTo;
   if (data.params) {
-    for (const key of ['unlockPadId', 'zoneId', 'padId']) {
+    for (const key of ['unlockPadId', 'zoneId', 'padId', 'aiSpawnId']) {
       const value = data.params[key];
       if (!value) continue;
       if (internal.has(value)) data.params[key] = map.get(value);

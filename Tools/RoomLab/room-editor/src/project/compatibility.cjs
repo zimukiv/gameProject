@@ -32,7 +32,7 @@ function normalize(project) {
             o.trigger = { ...o.trigger, mode: 'region' };
           }
       }
-    project.pluginManifest['slacker.awake'] = '1.2.0';
+    project.pluginManifest['slacker.awake'] = '1.3.0';
   }
   if (
     objects.some((o) => o.type === 'common.checkpoint') &&

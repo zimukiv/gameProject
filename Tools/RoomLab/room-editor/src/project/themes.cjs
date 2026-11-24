@@ -35,7 +35,7 @@ const PLUGIN_VERSIONS = {
   'calculus.integral': '1.0.0',
   'calculus.derivative': '1.0.0',
   'slacker.checkin': '1.1.0',
-  'slacker.awake': '1.2.0',
+  'slacker.awake': '1.3.0',
   'item.coffee': '1.0.0',
   'item.calculator': '1.0.0',
   'item.phone': '1.0.0',
@@ -211,8 +211,9 @@ function demonstrationRooms(course, stem = course.id) {
       M.object(practice.id + '-checkin-2', 'slacker.checkin', 16, 12),
     ];
 
-    challenge.name = '03 清醒练习 · 四向加速';
-    challenge.notes = '从上下左右任一方向进入清醒板，都会沿进入方向获得加速；横向穿过可快速抵达出口。';
+    challenge.name = '03 清醒练习 · 八向加速';
+    challenge.notes =
+      '从上下左右或斜向进入清醒板，都会沿进入的 45° 方向加速；横向穿过可快速抵达出口。';
     challenge.tiles = [];
     M.floor(challenge, 0, challenge.cols - 1, 12);
     challenge.objects = [

@@ -188,6 +188,8 @@ function migrate(data) {
     // Explicit cross-room AI routing: keep valid bindings/wires across save/load
     // and silently drop stale references (deleted ports, rooms or wrong types).
     require('./ai-ports.cjs').sanitize(project);
+    // AI spawn point references: keep valid room-local markers, clear stale ids.
+    require('./ai-spawns.cjs').sanitize(project);
     return project;
   }
   if (data?.version !== 1 || !Array.isArray(data.rooms)) throw new Error('不支持的项目版本。');
@@ -465,6 +467,11 @@ function validate(p, { play = false } = {}) {
   const aiPorts = require('./ai-ports.cjs').validate(p);
   errors.push(...aiPorts.errors);
   warnings.push(...aiPorts.warnings);
+  // AI spawn point bindings are advisory: a stale reference falls back to the
+  // legacy spawn position instead of blocking play.
+  const aiSpawns = require('./ai-spawns.cjs').validate(p);
+  errors.push(...aiSpawns.errors);
+  warnings.push(...aiSpawns.warnings);
   return { errors: [...new Set(errors)], warnings: [...new Set(warnings)] };
 }
 // 运行时按需校验单个房间：只把目标房间纳入 play 校验，未加载房间的
@@ -534,6 +541,7 @@ function duplicateRoom(course, sourceId) {
   for (const { item } of require('./block-groups.cjs').items(r))
     if (item.attachmentTo) item.attachmentTo = map.get(item.attachmentTo) || item.attachmentTo;
   require('./ai-ports.cjs').remapRoom(r, map);
+  require('./ai-spawns.cjs').remap(r, map);
   require('./native-compat.cjs').duplicate(r);
   return r;
 }

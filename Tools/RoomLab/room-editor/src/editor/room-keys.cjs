@@ -14,7 +14,7 @@ const common = [
   ['Delete / Esc', '删除所选 / 清空选择'],
   ['Ctrl＋Z / Ctrl＋Y', '撤销 / 重做'],
   ['Ctrl＋C / Ctrl＋V', '复制所选 / 在原位偏移处粘贴所选（框选对象、机关砖、地形、温控区）'],
-  ['A/D / 空格 / Shift / R / Esc', '试玩移动 / 跳跃 / 冲刺 / 重试 / 暂停'],
+  ['A/D、←/→ / 空格 / Shift / R / Esc', '左右移动·冲刺方向 / 跳跃 / 左右冲刺 / 重试 / 暂停'],
 ];
 const themes = {
   physics: [

@@ -10,6 +10,15 @@
 // destination room, but only through an AI entrance that really lives there.
 // Legacy same-room portalIn/portalOut pairs (routeId) stay untouched: they are
 // only used when nothing explicit is bound.
+const { clone } = require('../shared/utils.cjs');
+// Keep optional AI-wire metadata through migration/sanitize, exactly like the
+// player-wire store does.
+function wireExtra(raw) {
+  const out = {};
+  for (const [key, value] of Object.entries(raw))
+    if (!['id', 'from', 'to', 'source'].includes(key)) out[key] = clone(value);
+  return out;
+}
 const EXIT = 'common.portalOut',
   ENTRANCE = 'common.portalIn',
   RANGE = 96,
@@ -206,6 +215,7 @@ function normalizeWire(raw, defaults = {}) {
       `${from.roomId}:${aiExitId}->${to.roomId}:${aiEntranceId}`,
     from: { courseId: from.courseId || null, roomId: from.roomId, aiExitId },
     to: { courseId: to.courseId || null, roomId: to.roomId, aiEntranceId },
+    ...wireExtra(raw),
     source: defaults.source || 'map',
   };
 }
@@ -472,6 +482,8 @@ module.exports = {
   sanitizeRoom,
   remapRoom,
   normalizeWire,
+  stores,
+  rawWires,
   connections,
   aiConnections: connections,
   wires: connections,

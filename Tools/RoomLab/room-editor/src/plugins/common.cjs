@@ -38,11 +38,21 @@ module.exports = [
     ...base,
     type: 'common.aiStart',
     name: 'AI 启动板',
-    version: '1.1.0',
+    version: '1.2.0',
     glyph: 'AI',
     collider: 'tile',
     trigger: 'foot',
-    defaults: { once: true },
+    defaults: { once: true, aiSpawnId: '' },
+    // The spawn point is a plain room-local reference; clearing it (or deleting
+    // the marker) keeps the legacy "appear beside the player" behavior.
+    schema: [
+      {
+        key: 'aiSpawnId',
+        label: 'AI 出现点',
+        kind: 'aiSpawn',
+        labels: { '': '不指定（在玩家旁出现）' },
+      },
+    ],
     afterRetry: rearmAI,
     onTrigger(ctx, o) {
       ctx.activateAI(o);
@@ -53,15 +63,39 @@ module.exports = [
     type: 'common.aiStartHollow',
     hidden: true, // v2 compatibility alias; the editor exposes one AI block with a collision switch.
     name: 'AI 启动板 · 空心',
+    version: '1.2.0',
     glyph: 'AI',
     hollow: true,
     collider: false,
     trigger: 'region',
-    defaults: { once: true },
+    defaults: { once: true, aiSpawnId: '' },
+    schema: [
+      {
+        key: 'aiSpawnId',
+        label: 'AI 出现点',
+        kind: 'aiSpawn',
+        labels: { '': '不指定（在玩家旁出现）' },
+      },
+    ],
     afterRetry: rearmAI,
     onTrigger(ctx, o) {
       ctx.activateAI(o);
     },
+  },
+  {
+    ...base,
+    type: 'common.aiSpawn',
+    name: 'AI 出现点',
+    version: '1.0.0',
+    glyph: '◎',
+    category: '流程',
+    // Non-solid marker: it only tells a launch pad where the AI should appear.
+    collider: false,
+    nonSolid: true,
+    defaultCollision: false,
+    hollow: true,
+    trigger: 'none',
+    defaults: {},
   },
   {
     ...base,

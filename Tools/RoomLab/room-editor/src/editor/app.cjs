@@ -7,6 +7,7 @@ const Planning = require('./pages/planning.cjs'),
   Room = require('./pages/room.cjs');
 const GraphLayout = require('./graph-layout.cjs');
 const Assets = require('../assets/manager.cjs'),
+  AssetSpec = require('../assets/spec.cjs'),
   Archive = require('../project/archive.cjs'),
   AssetPage = require('./pages/assets.cjs'),
   DefinitionPage = require('./pages/definitions.cjs'),
@@ -149,16 +150,6 @@ class App {
     };
     $('save-project').onclick = () => this.saveNative(false);
     $('save-as').onclick = () => this.saveNative(true);
-    $('export-room').onclick = () => {
-      const id =
-        this.state.route === 'room'
-          ? this.state.roomId
-          : this.state.graphSelection?.kind === 'room'
-            ? this.state.graphSelection.id
-            : null;
-      const owner = id && this.roomOwner(id);
-      if (owner) this.exportRoom(owner.course.id, owner.room.id);
-    };
     $('export-project').onclick = async () => {
       require('./live-fields.cjs').flushAll();
       try {
@@ -365,7 +356,6 @@ class App {
     else if (this.state.route === 'play') PlayPage.render(this);
     else if (this.state.route === 'assets') AssetPage.render(this);
     else if (this.state.route === 'definitions') DefinitionPage.render(this);
-    this.updateRoomExport();
     require('./room-clipboard.cjs').sync(this);
     if ($('back-home')) $('back-home').onclick = () => this.go('home');
     const v = M.validate(p);
@@ -380,20 +370,29 @@ class App {
       !!v.errors.length,
     );
   }
-  updateRoomExport() {
-    const id =
-      this.state.route === 'room'
-        ? this.state.roomId
-        : this.state.graphSelection?.kind === 'room'
-          ? this.state.graphSelection.id
-          : null;
-    const owner = id && this.roomOwner(id),
-      room = owner?.room,
-      course = owner?.course;
-    $('export-room').disabled = !room;
-    $('export-room').title = room
-      ? '导出 ' + course.name + ' / ' + room.name + '（含素材）'
-      : '编辑房间或在地图上选择一个房间后导出';
+  // A group package is still a normal project ZIP (same archive/asset layout),
+  // so both the desktop save dialog and the browser download path are reused.
+  async exportGroup(groupId) {
+    require('./live-fields.cjs').flushAll();
+    try {
+      const project = require('../project/group-export.cjs').standalone(
+          this.store.project,
+          groupId,
+        ),
+        bytes = Archive.pack(project, this.store.assetFiles);
+      if (window.desktopAPI) {
+        const saved = await window.desktopAPI.exportArchive({
+          name: project.name + '-分组',
+          bytes,
+        });
+        if (saved) this.message('分组项目包已导出：' + saved.path);
+      } else {
+        download(project.name + '-分组.zip', bytes, 'application/zip');
+        this.message('分组已导出，包含房间、接线、AI 和所需素材。');
+      }
+    } catch (error) {
+      this.message('导出分组失败：' + error.message, true);
+    }
   }
   async exportRoom(courseId, roomId) {
     require('./live-fields.cjs').flushAll();
@@ -445,18 +444,40 @@ class App {
             ? new Uint8Array(input.bytes)
             : new Uint8Array(await input.file.arrayBuffer()),
           ext = input.name.split('.').at(-1).toLowerCase(),
-          size = await Assets.dimensions(bytes, Assets.MIME[ext]);
-        await Assets.importAsset(this.store, {
+          size = await Assets.dimensions(bytes, Assets.MIME[ext]),
+          inferred = AssetSpec.infer(input.name),
+          folder = this.state.assetImportFolder || {},
+          // A canonical file name may fill the empty/unsorted destination, but
+          // an explicit folder chosen in the asset page always wins. Existing
+          // bindings are never changed implicitly by an import.
+          destination =
+            inferred && (!folder.category || folder.category === 'unsorted')
+              ? {
+                  category: inferred.category,
+                  subcategory: inferred.subcategory,
+                  courseId: this.course().id,
+                }
+              : folder,
+          frames = AssetSpec.importFrames(input.name, size.width, size.height) || {};
+        const meta = await Assets.importAsset(this.store, {
           name: input.name,
           bytes,
           ...size,
           courseId: this.course().id,
-          ...(this.state.assetImportFolder || {}),
+          ...destination,
+          frameWidth: frames.frameWidth,
+          frameHeight: frames.frameHeight,
+          fps: frames.fps,
           replaceId: this.state.replacingAssetId,
         });
         this.state.replacingAssetId = null;
+        const info = AssetSpec.check(meta);
+        this.message(
+          info?.issues?.length
+            ? `素材已导入（${info.label}；旧图可继续使用，建议按规范替换）`
+            : '素材已导入，保存/导出项目包会带上图片。',
+        );
       }
-      this.message('素材已导入，保存/导出项目包会带上图片。');
     } catch (e) {
       this.message('素材导入失败：' + e.message, true);
     }

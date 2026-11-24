@@ -686,6 +686,7 @@ p {
   background: #101925;
   border-radius: 4px;
   margin-bottom: 9px;
+  image-rendering: pixelated;
 }
 .asset-card p {
   margin: 4px 0;
@@ -720,6 +721,54 @@ p {
   object-fit: contain;
   margin-right: 8px;
   vertical-align: middle;
+  image-rendering: pixelated;
+}
+.asset-spec {
+  display: block;
+  margin: 3px 0;
+  font-size: 10px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.asset-spec.ok {
+  color: #8fd8bd;
+}
+.asset-spec.legacy {
+  color: #e0bd7d;
+}
+.asset-spec.warn,
+.warn-text {
+  color: #e5a272;
+}
+.asset-spec-note {
+  margin: 6px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.asset-spec-box {
+  display: block;
+  margin: 8px 0;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font-size: 11px;
+}
+.asset-spec-box.ok {
+  border-color: #3f7663;
+}
+.asset-spec-box.legacy {
+  border-color: #7a633f;
+}
+.asset-spec-box.warn {
+  border-color: #8a563a;
+}
+.asset-spec-box p {
+  margin: 3px 0;
+  color: var(--muted);
+}
+.folder-preview img {
+  image-rendering: pixelated;
 }
 dialog {
   background: var(--panel);
@@ -2616,13 +2665,25 @@ body.planning main {
   cursor: ns-resize;
   touch-action: none;
   border-radius: 0 0 4px 4px;
-  background: linear-gradient(to bottom, transparent 3px, #2a4154 3px, #2a4154 6px, transparent 6px);
+  background: linear-gradient(
+    to bottom,
+    transparent 3px,
+    #2a4154 3px,
+    #2a4154 6px,
+    transparent 6px
+  );
 }
 .room-strip-resize:hover,
 .room-strip-resize.dragging,
 .room-strip-resize:focus-visible {
   outline: none;
-  background: linear-gradient(to bottom, transparent 3px, #70d9dd 3px, #70d9dd 6px, transparent 6px);
+  background: linear-gradient(
+    to bottom,
+    transparent 3px,
+    #70d9dd 3px,
+    #70d9dd 6px,
+    transparent 6px
+  );
 }
 .room-thumb-selector[style*='--room-strip-height'] .room-thumb-strip {
   height: var(--room-strip-height);
@@ -2673,7 +2734,8 @@ body.planning main {
 }
 .group-quick-actions {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: 6px;
 }
 .group-quick-actions button {

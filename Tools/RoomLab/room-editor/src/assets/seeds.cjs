@@ -1,5 +1,6 @@
 'use strict';
 const { strToU8 } = require('fflate');
+const Spec = require('./spec.cjs');
 let builtIns;
 function restoreBuiltIns(assets, files) {
   builtIns ||= seeds({ allThemes: true });
@@ -136,6 +137,94 @@ function seeds({ allThemes = false } = {}) {
       ),
     ],
     [
+      'spike',
+      '尖刺 · 占位',
+      svg(
+        '#263b50',
+        '<path d="M5 55L11 21l5 12 6-22 6 22 5-12 6 34z" fill="#9ebdb5" stroke="#172238" stroke-width="1"/>',
+      ),
+    ],
+    [
+      'token-small',
+      '小 token · 占位',
+      svg(
+        '#d49a40',
+        '<path d="M10 10h44v44H10z" fill="#f6ebc8" stroke="#172238" stroke-width="2"/>',
+      ),
+    ],
+    [
+      'token-big',
+      '大 token · 占位',
+      svg(
+        '#3a9a9a',
+        '<circle cx="32" cy="32" r="24" fill="#b8f2f0" stroke="#172238" stroke-width="2"/><path d="M32 15l5 12 13 1-10 9 3 13-11-7-11 7 3-13-10-9 13-1z" fill="#74d9d9"/>',
+      ),
+    ],
+    [
+      'aistart',
+      'AI 启动板 · 占位',
+      svg(
+        '#466b73',
+        '<rect x="8" y="8" width="48" height="48" fill="#74d9d9" stroke="#172238" stroke-width="2"/><path d="M22 23l18 9-18 9z" fill="#172238"/>',
+      ),
+    ],
+    [
+      'aistart-hollow',
+      'AI 启动板 · 空心占位',
+      svg(
+        'none',
+        '<rect x="8" y="8" width="48" height="48" fill="none" stroke="#74d9d9" stroke-width="2" stroke-dasharray="5 4"/><path d="M22 23l18 9-18 9z" fill="none" stroke="#74d9d9" stroke-width="2"/>',
+      ),
+    ],
+    [
+      'checkpoint-idle',
+      '存档点 · 待机',
+      svg(
+        '#46505f',
+        '<path d="M18 54V12h28v42" fill="#9ebdb5" stroke="#172238" stroke-width="1"/><path d="M24 22h16M24 30h12" stroke="#466b73" stroke-width="3"/>',
+      ),
+    ],
+    [
+      'checkpoint-active',
+      '存档点 · 激活',
+      svg(
+        '#46505f',
+        '<path d="M18 54V12h28v42" fill="#d49a40" stroke="#172238" stroke-width="1"/><path d="M24 22h16M24 30h12" stroke="#f6ebc8" stroke-width="3"/>',
+      ),
+    ],
+    [
+      'portal-in',
+      '传送入口 · 占位',
+      svg(
+        '#263b50',
+        '<ellipse cx="32" cy="34" rx="18" ry="24" fill="#74d9d9" stroke="#172238" stroke-width="2"/><path d="M22 20l20 14-20 14z" fill="#172238"/>',
+      ),
+    ],
+    [
+      'portal-out',
+      '传送出口 · 占位',
+      svg(
+        '#263b50',
+        '<ellipse cx="32" cy="34" rx="18" ry="24" fill="#183a44" stroke="#74d9d9" stroke-width="2"/><path d="M42 20L22 34l20 14z" fill="#b8f2f0"/>',
+      ),
+    ],
+    [
+      'bg-far',
+      '远景坐标格 · 占位（512×512）',
+      svg(
+        '#9ebdb5',
+        '<path d="M0 16h64M0 32h64M0 48h64M16 0v64M32 0v64M48 0v64" stroke="#8aa9a5" stroke-width="1"/><path d="M8 8h4v4H8zM40 24h4v4h-4zM20 44h4v4h-4z" fill="#c9b78a"/>',
+      ),
+    ],
+    [
+      'bg-mid',
+      '中景曲线 · 占位（1920×360）',
+      svg(
+        'none',
+        '<path d="M0 32h40v-16h40v32h40v-16h40v24h40v-24h40v16h40v-32h40v48h40v-16h40v16h40v-24h40v32h40v-16h40v16h40" fill="none" stroke="#172238" stroke-width="2"/><path d="M0 50h40v-8h40v16h40v-8h40v12h40v-12h40v8h40v-16h40v24h40v-8h40v8h40v-12h40v16h40v-8h40v8h40" fill="none" stroke="#466b73" stroke-width="1"/>',
+      ),
+    ],
+    [
       'coffee',
       '咖啡',
       svg(
@@ -169,13 +258,47 @@ function seeds({ allThemes = false } = {}) {
     ],
   ];
   const itemIds = new Set(['coffee', 'calculator', 'phone', 'iced-tea']),
-    commonIds = new Set(['metal', 'submit-assignment']);
+    commonIds = new Set([
+      'metal',
+      'submit-assignment',
+      'spike',
+      'token-small',
+      'token-big',
+      'common-spike',
+      'aistart',
+      'aistart-hollow',
+      'checkpoint-idle',
+      'checkpoint-active',
+      'portal-in',
+      'portal-out',
+      'bg-far',
+      'bg-mid',
+    ]),
+    // Seed ids stay stable (old saves reference them), but their canvases and
+    // metadata follow the Demo artwork specification so built-in previews match
+    // the calibrated art targets.
+    typeById = {
+      metal: 'common.solid',
+      'submit-assignment': 'common.assignmentSubmit',
+      'slacker-teacher': 'slacker.teacher',
+      spike: 'common.spike',
+      'common-spike': 'common.spike',
+      'token-small': 'common.small',
+      'token-big': 'common.coin',
+      aistart: 'common.aiStart',
+      'aistart-hollow': 'common.aiStartHollow',
+      'checkpoint-idle': 'common.checkpoint',
+      'checkpoint-active': 'common.checkpoint',
+      'portal-in': 'common.portalIn',
+      'portal-out': 'common.portalOut',
+      'bg-far': 'background',
+      'bg-mid': 'backgroundMid',
+    };
   const files = new Map(),
     assets = items
       .filter(([id]) => allThemes || !/^(calculus|slacker)-/.test(id))
       .map(([id, name, data]) => {
         const path = 'assets/seed-' + id + '.svg';
-        files.set(path, strToU8(data));
         const isItem = itemIds.has(id),
           isCommon = commonIds.has(id),
           theme = isCommon
@@ -186,23 +309,33 @@ function seeds({ allThemes = false } = {}) {
                 ? 'slacker'
                 : 'physics',
           head = id.split('-')[0],
-          tail = id.slice(id.indexOf('-') + 1);
+          tail = id.slice(id.indexOf('-') + 1),
+          type =
+            typeById[id] ||
+            (isItem
+              ? 'item.' + (id === 'iced-tea' ? 'icedTea' : id)
+              : theme + '.' + (theme === 'physics' ? head : tail)),
+          spec = Spec.forType(type),
+          width = spec?.canvas.width || 64,
+          height = spec?.canvas.height || 64;
+        const calibrated =
+          width === 64 && height === 64
+            ? data
+            : data.replace(
+                '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"',
+                `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"`,
+              );
+        files.set(path, strToU8(calibrated));
         return {
           id: 'seed-' + id,
           name,
           path,
           mime: 'image/svg+xml',
-          width: 64,
-          height: 64,
+          width,
+          height,
           courseId: isCommon ? 'common' : theme,
-          category: isItem ? 'item' : id === 'metal' ? 'terrain' : 'mechanism',
-          subcategory: isItem
-            ? 'item.' + (id === 'iced-tea' ? 'icedTea' : id)
-            : id === 'metal'
-              ? 'common.solid'
-              : id === 'submit-assignment'
-                ? 'common.assignmentSubmit'
-                : theme + '.' + (theme === 'physics' ? head : tail),
+          category: Spec.categoryForType(type),
+          subcategory: type,
           frameWidth: 0,
           frameHeight: 0,
           fps: 6,

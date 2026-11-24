@@ -110,5 +110,6 @@ function remove(course, room, refs) {
     if (gone.has(o.params?.zoneId)) o.params.zoneId = '';
   }
   require('./teacher-links.cjs').cleanup(room);
+  require('./ai-spawns.cjs').cleanup(room);
 }
 module.exports = { kinds, key, get, box, combine, move, remove };

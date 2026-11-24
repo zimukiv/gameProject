@@ -247,9 +247,7 @@ test('slacker check-in records visits and awake accelerates in the entry directi
   assert.equal(passed.player.vx, liveAwake.params.speed);
   assert.equal(passed.player.vy, 0);
   assert.ok(
-    passed.events.some(
-      (e) => e.type === 'awake' && e.direction?.x === 1 && e.direction?.y === 0,
-    ),
+    passed.events.some((e) => e.type === 'awake' && e.direction?.x === 1 && e.direction?.y === 0),
   );
 });
 
@@ -269,7 +267,7 @@ test('awake 1.0 and 1.1 projects migrate to solid defaults and preserve later ov
   assert.equal(migratedAwake.collision, true);
   assert.equal(migratedAwake.trigger.mode, 'region');
   assert.equal(migratedAwake.y, 11);
-  assert.equal(migrated.pluginManifest['slacker.awake'], '1.2.0');
+  assert.equal(migrated.pluginManifest['slacker.awake'], '1.3.0');
   migratedAwake.collision = false;
   const reopened = M.migrate(migrated),
     reopenedAwake = reopened.courses
@@ -288,7 +286,7 @@ test('awake 1.0 and 1.1 projects migrate to solid defaults and preserve later ov
       .find((course) => course.kind === 'slacker')
       .rooms[0].objects.find((o) => o.type === 'slacker.awake');
   assert.equal(migratedPriorAwake.collision, true);
-  assert.equal(migratedPrior.pluginManifest['slacker.awake'], '1.2.0');
+  assert.equal(migratedPrior.pluginManifest['slacker.awake'], '1.3.0');
 });
 
 test('both theme example routes cross all three rooms without retries', () => {

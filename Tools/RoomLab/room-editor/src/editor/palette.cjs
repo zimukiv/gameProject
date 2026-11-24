@@ -30,6 +30,7 @@ function card(app, course, { tool, type, label, glyph, hint }) {
       'slacker.teacher': '巡查老师',
       'common.aiStart': 'AI 启动板',
       'common.aiStartHollow': 'AI 空心',
+      'common.aiSpawn': 'AI 出现点',
       'common.assignmentSubmit': '提交作业',
     }[type] || label;
   return `<button class="block-card" ${type ? `data-block-type="${esc(type)}"` : `data-tool="${tool}"`} aria-label="${esc(tool === 'tile' ? '▦ 地形' : label)}" title="${esc(hint || label)}" aria-pressed="false"><span class="block-icon">${url ? `<img src="${esc(url)}" alt="">` : esc(glyph)}</span><span>${esc(short)}</span></button>`;

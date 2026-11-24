@@ -9,13 +9,13 @@ const Collision = require('../project/collision.cjs');
 const Motion = require('../project/brick-motion.cjs');
 const MapCompat = require('../project/map-compat.cjs');
 const AIPorts = require('../project/ai-ports.cjs');
+const AISpawns = require('../project/ai-spawns.cjs');
 const ItemState = require('./item-state.cjs');
+// 内置试玩只允许左右冲刺：水平输入优先，没有左右输入时沿当前面向。
+// 上下输入只负责跳跃 / 蹲下，不能给冲刺加入垂直分量。
 function direction(input, face) {
-  let x = Number(!!input.right) - Number(!!input.left),
-    y = input.up ? -1 : input.down ? 1 : 0;
-  if (!x && !y) x = face;
-  const len = Math.hypot(x, y);
-  return { x: x / len, y: y / len };
+  const x = Number(!!input.right) - Number(!!input.left);
+  return { x: x || (face < 0 ? -1 : 1), y: 0 };
 }
 class Engine {
   constructor(project, courseId, roomId, entryId, options = {}) {
@@ -256,7 +256,15 @@ class Engine {
       this.movableStates = new Map(Object.entries(clone(cache.movables)));
     }
   }
-  loadRoom(id, entryId, resources, carry = null, respawn = null, returnLink = null, aiRoute = null) {
+  loadRoom(
+    id,
+    entryId,
+    resources,
+    carry = null,
+    respawn = null,
+    returnLink = null,
+    aiRoute = null,
+  ) {
     // 先解析并校验目标房间，失败时不改变当前房间/缓存。
     const ref = MapCompat.roomRef(this.project, id);
     if (!ref) throw new Error('目标房间不存在');
@@ -501,11 +509,7 @@ class Engine {
     }
     const from = this.room.id,
       entryId = entry.id,
-      sourceExit = this.cachedExitRect(
-        source,
-        this.roomCaches.get(source.id)?.movables,
-        exit,
-      ),
+      sourceExit = this.cachedExitRect(source, this.roomCaches.get(source.id)?.movables, exit),
       spawn = {
         roomId: source.id,
         exitId: exit.id,
@@ -690,18 +694,24 @@ class Engine {
       });
     }
     const pc = center(this.player);
+    // A launch pad bound to a room-local AI spawn point materializes the AI at
+    // that marker (same attachment-aware geometry as every other object). An
+    // unbound, cleared or stale reference keeps the legacy spawn beside the
+    // player, so old saves and cross-room AI routing are untouched.
+    const spawnPoint = AISpawns.target(this.room, o),
+      at = spawnPoint ? center(this.objectRect(spawnPoint)) : { x: pc.x - 165, y: pc.y };
     Object.assign(this.ai, {
       id: this.courseState.aiId,
       active: true,
       tier,
       speed: 265 + tier * 30,
       steal: 1 + tier * 2,
-      x: pc.x - 165,
-      y: pc.y,
+      x: at.x,
+      y: at.y,
       processing: 0.8,
       trail: [pc],
     });
-    this.emit('ai-start', { investment, tier, resumed });
+    this.emit('ai-start', { investment, tier, resumed, spawnId: spawnPoint?.id || null });
   }
   stopAI() {
     const wasActive = this.ai.active;
@@ -975,12 +985,17 @@ class Engine {
       const tail = a.trail.at(-1);
       if (!tail || Math.hypot(tail.x - pc.x, tail.y - pc.y) > 4) a.trail.push(pc);
       for (const entry of this.room.objects.filter((o) => o.type === 'common.portalIn')) {
-        if (AIPorts.connections(this.project).some(
-          (edge) => edge.to.roomId === this.room.id && edge.to.aiEntranceId === entry.id,
-        )) continue;
+        if (
+          AIPorts.connections(this.project).some(
+            (edge) => edge.to.roomId === this.room.id && edge.to.aiEntranceId === entry.id,
+          )
+        )
+          continue;
         const exit = this.room.objects.find(
-          (o) => o.type === 'common.portalOut' && o.params.routeId === entry.params.routeId
-            && !AIPorts.bindings(this.room).some((binding) => binding.aiExitId === o.id),
+          (o) =>
+            o.type === 'common.portalOut' &&
+            o.params.routeId === entry.params.routeId &&
+            !AIPorts.bindings(this.room).some((binding) => binding.aiExitId === o.id),
         );
         if (!exit) continue;
         // Both the trigger radius and the destination come from the same
@@ -1295,11 +1310,7 @@ class Engine {
     if (this.player !== p) return;
     if (this.reentryPort(p)) return;
     for (const exit of this.room.exits)
-      if (
-        this.exitTriggerArmed &&
-        this.exitCooldown === 0 &&
-        overlap(p, this.exitRect(exit))
-      ) {
+      if (this.exitTriggerArmed && this.exitCooldown === 0 && overlap(p, this.exitRect(exit))) {
         // 统一地图兼容层：先查项目级全局连接，再回落到原 course.connections，
         // 因此跨原大关连接可运行，旧数据不做迁移也能原样运行。
         const edge = MapCompat.resolve(this.project, this.room.id, exit.id);
@@ -1308,10 +1319,9 @@ class Engine {
             returnLink = { roomId: from, exitId: exit.id, entryId: edge.to.entryId },
             // Only the bound player exit of THIS wire may carry the AI. The
             // explicit AI link must also land in the real destination room.
-            carried =
-              this.ai.active
-                ? AIPorts.carryEntrance(this.project, this.room, exit.id, edge.to.roomId)
-                : null;
+            carried = this.ai.active
+              ? AIPorts.carryEntrance(this.project, this.room, exit.id, edge.to.roomId)
+              : null;
           this.loadRoom(
             edge.to.roomId,
             edge.to.entryId,

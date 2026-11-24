@@ -56,12 +56,12 @@ function filtersMarkup(app) {
         group.roomIds.length ? `<small>${group.roomIds.length}</small>` : '',
       ).replace(
         '<button ',
-        `<button data-group-tab="${esc(group.id)}" title="分组「${esc(group.name)}」：把房间卡片拖到这里加入；在分组视图内拖动卡片可调整组内顺序" `,
+        `<button data-group-tab="${esc(group.id)}" title="分组「${esc(group.name)}」：拖入房间加入；组内拖动可排序" `,
       ),
     )
     .join(
       '',
-    )}<span class="room-filter-tools"><button id="group-new" title="新建房间分组（跨大关）">＋ 分组</button><button id="group-manage" title="重命名 / 删除分组">⋯</button></span></div>`;
+    )}<span class="room-filter-tools"><button id="group-new" title="新建分组（可跨大关）">＋ 分组</button><button id="group-manage" title="重命名 / 删除分组">⋯</button></span></div>`;
 }
 function filteredRoomIds(app) {
   return Org.filterRoomIds(app.store.project, filterValue(app));
@@ -103,7 +103,7 @@ function groupNamesMarkup(app, roomId) {
   return groups
     .map(
       (group) =>
-        `<button class="group-chip" data-group-remove="${esc(group.id)}" data-room="${esc(roomId)}" title="从「${esc(group.name)}」移出（房间与分组都保留）">${esc(group.name)} ×</button>`,
+        `<button class="group-chip" data-group-remove="${esc(group.id)}" data-room="${esc(roomId)}" title="从「${esc(group.name)}」移出（不删房间）">${esc(group.name)} ×</button>`,
     )
     .join('');
 }
@@ -117,11 +117,11 @@ function groupControlMarkup(app, targetIds, options = {}) {
     ? Org.groupsContaining(org, single)
         .map(
           (group) =>
-            `<button class="group-chip" data-group-remove="${esc(group.id)}" data-room="${esc(single)}" title="移出分组（不删除房间）">${esc(group.name)} ×</button>`,
+            `<button class="group-chip" data-group-remove="${esc(group.id)}" data-room="${esc(single)}" title="移出分组（不删房间）">${esc(group.name)} ×</button>`,
         )
         .join('')
     : `<span class="muted">已选 ${ids.length} 间房</span>`;
-  const select = `<select data-group-select ${ids.length ? '' : 'disabled'} title="把所选房间加入分组；分组与房间可来自不同大关"><option value="">${ids.length ? '加入分组…' : '先选择房间'}</option>${org.groups.map((group) => `<option value="${esc(group.id)}">${esc(group.name)}</option>`).join('')}</select>`;
+  const select = `<select data-group-select ${ids.length ? '' : 'disabled'} title="加入分组（可跨大关）"><option value="">${ids.length ? '加入分组…' : '先选择房间'}</option>${org.groups.map((group) => `<option value="${esc(group.id)}">${esc(group.name)}</option>`).join('')}</select>`;
   return `<div class="group-control" ${scope} data-group-targets="${esc(ids.join(' '))}">${groups}${select}<button data-group-new title="新建分组并放入所选房间">＋</button></div>`;
 }
 function bindGroupControls(app, host, targetsFor) {
@@ -178,7 +178,9 @@ const cardAt = (x, y) => {
   return cardId(target?.closest?.(CARD_SELECTOR));
 };
 function clearDropMarks(host) {
-  for (const node of host.querySelectorAll('.group-tab-drop, .room-card-drop-before, .room-card-drop-after'))
+  for (const node of host.querySelectorAll(
+    '.group-tab-drop, .room-card-drop-before, .room-card-drop-after',
+  ))
     node.classList.remove('group-tab-drop', 'room-card-drop-before', 'room-card-drop-after');
 }
 function activeGroupId(app) {
@@ -208,9 +210,7 @@ function bindCardDrag(app, host) {
       if (event.button !== 0) return;
       // A card may itself be a button (room-page thumbnails): only nested
       // interactive controls opt out of dragging, not the card element.
-      const interactive = event.target.closest(
-        'button, a, input, select, textarea, [data-fav]',
-      );
+      const interactive = event.target.closest('button, a, input, select, textarea, [data-fav]');
       if (interactive && interactive !== card) return;
       drag = { x: event.clientX, y: event.clientY, active: false, id: roomId };
     });
@@ -237,9 +237,7 @@ function bindCardDrag(app, host) {
       const box = target?.getBoundingClientRect?.();
       if (target && box)
         target.classList.add(
-          event.clientX > box.x + box.width / 2
-            ? 'room-card-drop-after'
-            : 'room-card-drop-before',
+          event.clientX > box.x + box.width / 2 ? 'room-card-drop-after' : 'room-card-drop-before',
         );
     });
     const finish = (event) => {
@@ -321,7 +319,7 @@ function groupsOverviewMarkup(app) {
     ungrouped.map(staticRoomRow).join(''),
     '所有房间都已分组。',
   )}</details>`;
-  return `<section class="group-overview"><h3>房间分组</h3><p class="inspector-empty muted">点击房间查看说明与操作；分组列表可折叠。</p>${sections.join('')}${ungroupedSection}</section>`;
+  return `<section class="group-overview"><h3>房间分组</h3><p class="inspector-empty muted">选择房间查看操作；分组列表可折叠。</p>${sections.join('')}${ungroupedSection}</section>`;
 }
 // A named group is active (or the selected room belongs to one): keep the quick
 // panel, but split the collapsible lists into in-group and not-in-group. Left
@@ -333,7 +331,7 @@ function quickGroupMarkup(app, groupId, options = {}) {
     inGroup = group.roomIds.map((id) => rooms.find((room) => room.id === id)).filter(Boolean),
     rest = rooms.filter((room) => !group.roomIds.includes(room.id)),
     active = app.state.graphQuickGroupId === group.id;
-  return `<section class="group-quick" data-group-quick="${esc(group.id)}"><h3>快捷分组 · ${esc(group.name)}</h3><div class="group-quick-actions"><button class="group-quick-toggle${active ? ' primary' : ''}" data-graph-quick-toggle="${esc(group.id)}" aria-pressed="${active}">${active ? '退出路线图快捷模式' : '在路线图上快捷增减'}</button>${active ? '<span class="badge">快捷模式</span>' : ''}</div><details class="group-quick-section" open><summary>组内房间 <small>${inGroup.length}</small></summary>${quickList(
+  return `<section class="group-quick" data-group-quick="${esc(group.id)}"><h3>快捷分组 · ${esc(group.name)}</h3><div class="group-quick-actions"><button class="group-quick-toggle${active ? ' primary' : ''}" data-graph-quick-toggle="${esc(group.id)}" aria-pressed="${active}">${active ? '退出路线图快捷模式' : '在路线图上快捷增减'}</button><button data-group-export="${esc(group.id)}"${group.roomIds.length ? '' : ' disabled'} title="导出整个分组（房间、组内顺序、接线与素材）">导出分组</button>${active ? '<span class="badge">快捷模式</span>' : ''}</div><details class="group-quick-section" open><summary>组内房间 <small>${inGroup.length}</small></summary>${quickList(
     inGroup.map((room) => quickRoomRow(room, group)).join(''),
     '还没有房间，左键点击下方房间加入。',
   )}</details><details class="group-quick-section"><summary>未加入 <small>${rest.length}</small></summary>${quickList(
@@ -349,6 +347,9 @@ function bindQuickGroup(app, host) {
       app.state.graphQuickGroupId = app.state.graphQuickGroupId === groupId ? null : groupId;
       app.render();
     };
+  }
+  for (const button of host.querySelectorAll('[data-group-export]')) {
+    button.onclick = () => app.exportGroup?.(button.dataset.groupExport);
   }
   for (const button of host.querySelectorAll('[data-group-quick-room]')) {
     const groupId = button.dataset.groupQuickGroup,
@@ -375,7 +376,7 @@ function promptGroupName(app, title, value, onSave) {
   };
   modal(
     title,
-    `<div class="form">${field('分组名称（仅用于整理，不改变大关归属）', 'group-name-input', value)}</div>`,
+    `<div class="form">${field('分组名称（不改变大关归属）', 'group-name-input', value)}</div>`,
     [{ label: '取消' }, { label: '保存', primary: true, close: false, action: save }],
   );
   const input = $('group-name-input');
@@ -425,12 +426,12 @@ function manageGroups(app) {
   const rows = org.groups
     .map(
       (group, index) =>
-        `<div class="group-row" data-group-row="${esc(group.id)}"><input type="color" data-group-color="${esc(group.id)}" value="${esc(Org.groupColor(group, index))}" title="分组颜色（新界面按此着色，不改变大关归属）"><button data-group-pick="${esc(group.id)}" class="group-name" title="筛选此分组">${esc(group.name)}</button><span class="muted">${group.roomIds.length} 间房</span><button data-group-rename="${esc(group.id)}">重命名</button><button data-group-delete="${esc(group.id)}" class="danger">删除</button></div>`,
+        `<div class="group-row" data-group-row="${esc(group.id)}"><input type="color" data-group-color="${esc(group.id)}" value="${esc(Org.groupColor(group, index))}" title="分组颜色（不改变大关归属）"><button data-group-pick="${esc(group.id)}" class="group-name" title="筛选此分组">${esc(group.name)}</button><span class="muted">${group.roomIds.length} 间房</span><button data-group-rename="${esc(group.id)}">重命名</button><button data-group-delete="${esc(group.id)}" class="danger">删除</button></div>`,
     )
     .join('');
   modal(
     '分组管理',
-    `<p class="hint">分组只用于整理；可以跨大关，删除分组不会删除房间。分组颜色用于新的房间缩略界面（旧主题色只作兼容适配）。</p>${rows || '<p class="muted">还没有分组。</p>'}<div class="actions"><button id="group-here-new">＋ 新建分组</button></div>`,
+    `<p class="hint">分组仅用于整理，可跨大关；删除分组不删房间。颜色用于房间缩略界面。</p>${rows || '<p class="muted">还没有分组。</p>'}<div class="actions"><button id="group-here-new">＋ 新建分组</button></div>`,
     [{ label: '关闭' }],
   );
   for (const input of document.querySelectorAll('[data-group-color]'))

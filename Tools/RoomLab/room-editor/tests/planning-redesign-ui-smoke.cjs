@@ -94,7 +94,7 @@ const root = path.resolve(__dirname, '..'),
       await page
         .locator('#menu-project button')
         .evaluateAll((nodes) => nodes.map((node) => node.textContent.trim())),
-      ['打开项目', '另存为', '导出房间', '导入房间'],
+      ['打开项目', '另存为', '导出房间', '导入分组'],
     );
     await page.keyboard.press('Escape');
 

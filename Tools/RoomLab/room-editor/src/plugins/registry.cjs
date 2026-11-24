@@ -124,7 +124,7 @@ function validateObject(project, o) {
       errors.push(def.name + ' / ' + f.label + ' 参数无效');
     if (f.kind === 'boolean' && typeof value !== 'boolean') errors.push(f.label + ' 必须为布尔值');
     if (f.kind === 'select' && !f.values.includes(value)) errors.push(f.label + ' 选项无效');
-    if (['zone', 'text'].includes(f.kind) && typeof value !== 'string')
+    if (['zone', 'aiSpawn', 'text'].includes(f.kind) && typeof value !== 'string')
       errors.push(f.label + ' 需要字符串');
     if (
       f.kind === 'path' &&

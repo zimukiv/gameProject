@@ -14,6 +14,7 @@ const Collision = require('../../project/collision.cjs');
 const TeacherLinks = require('../../project/teacher-links.cjs'),
   TeacherRoute = require('../../project/teacher-route.cjs'),
   TeacherPanel = require('../teacher-node-panel.cjs');
+const AiSpawns = require('../../project/ai-spawns.cjs');
 const Temperature = require('../../project/temperature.cjs');
 const Limits = require('../../project/room-limits.cjs');
 const Mirror = require('../../project/room-mirror.cjs');
@@ -80,10 +81,7 @@ function selectRepresentative(room, state) {
 }
 function memberLocked(room, brick) {
   if (Motion.groupMembers(room, brick).some((member) => member.locked)) return true;
-  return (
-    !!brick.assemblyId &&
-    Groups.members(room, brick).some(({ item }) => item.locked)
-  );
+  return !!brick.assemblyId && Groups.members(room, brick).some(({ item }) => item.locked);
 }
 function brickPathNodeAt(brick, point) {
   return Motion.nodes(brick)
@@ -128,7 +126,7 @@ function render(app) {
     }
   }
   $('app').innerHTML =
-    `<div class="room-shell ${s.keyHints ? 'show-key-hints' : ''}${s.roomFullscreen ? ' fullscreen' : ''}"><div class="room-title"><div><h1>${esc(r.name)}</h1><span class="room-size-tag">${r.cols} × ${r.rows} 格</span></div><div class="actions"><button id="room-traces">试玩路径</button><button id="room-help">⌨ 按键说明</button><button id="block-help">▦ 方块说明</button><button id="room-hints" aria-pressed="${s.keyHints}">按键提示</button><button id="toggle-inspector">${s.inspectorHidden ? '显示属性' : '收起属性'}</button><button id="play-room" aria-label="试玩此房" class="primary">▶ 试玩此房</button></div></div>${require('../room-navigation.cjs').strip(app)}<div class="room-workspace ${s.inspectorHidden ? 'inspector-hidden' : ''}"><section class="panel canvas-panel room-canvas-panel"><div class="room-toolstrip"><div class="actions"><button data-tool="select">↖ 选择<span class="key-hint" aria-hidden="true">${RoomKeys.tools.select}</span></button><button data-tool="marquee">▧ 框选<span class="key-hint" aria-hidden="true">${RoomKeys.tools.marquee}</span></button><button data-tool="erase">⌫ 擦除<span class="key-hint" aria-hidden="true">${RoomKeys.tools.erase}</span></button><button id="undo">撤销<span class="key-hint" aria-hidden="true">Ctrl Z</span></button><button id="redo">重做<span class="key-hint" aria-hidden="true">Ctrl Y</span></button></div><div class="actions"><button id="room-fullscreen" aria-pressed="${!!s.roomFullscreen}" title="全屏编辑：只保留工具、画布与属性面板（F11 切换，Esc 退出）">${s.roomFullscreen ? '⤡ 退出全屏' : '⛶ 全屏'}</button><button id="fit-room">适应房间</button><label class="check"><input id="targets" type="checkbox" checked>关联目标</label></div></div><div class="block-palette" aria-label="方块选择栏">${Palette.render(app, c)}</div><div class="canvas-heading"><span id="tool-label"></span><span><span id="room-pointer"></span> · <span id="room-zoom"></span></span></div><div class="canvas-wrap"><canvas id="room-canvas" width="960" height="540" tabindex="0" aria-label="房间编辑画布"></canvas></div></section><aside class="panel inspector form" id="room-inspector"></aside></div></div>`;
+    `<div class="room-shell ${s.keyHints ? 'show-key-hints' : ''}${s.roomFullscreen ? ' fullscreen' : ''}"><div class="room-title"><div><h1>${esc(r.name)}</h1><span class="room-size-tag">${r.cols} × ${r.rows} 格</span></div><div class="actions"><button id="room-traces">试玩路径</button><button id="room-help">⌨ 按键说明</button><button id="block-help">▦ 方块说明</button><button id="room-hints" aria-pressed="${s.keyHints}">按键提示</button><button id="toggle-inspector">${s.inspectorHidden ? '显示属性' : '收起属性'}</button><button id="play-room" aria-label="试玩此房" class="primary">▶ 试玩此房</button></div></div>${require('../room-navigation.cjs').strip(app)}<div class="room-workspace ${s.inspectorHidden ? 'inspector-hidden' : ''}"><section class="panel canvas-panel room-canvas-panel"><div class="room-toolstrip"><div class="actions"><button data-tool="select">↖ 选择<span class="key-hint" aria-hidden="true">${RoomKeys.tools.select}</span></button><button data-tool="marquee">▧ 框选<span class="key-hint" aria-hidden="true">${RoomKeys.tools.marquee}</span></button><button data-tool="erase">⌫ 擦除<span class="key-hint" aria-hidden="true">${RoomKeys.tools.erase}</span></button><button id="undo">撤销<span class="key-hint" aria-hidden="true">Ctrl Z</span></button><button id="redo">重做<span class="key-hint" aria-hidden="true">Ctrl Y</span></button></div><div class="actions"><button id="room-fullscreen" aria-pressed="${!!s.roomFullscreen}" title="全屏编辑：只保留工具、画布与属性面板（F11 切换，Esc 退出）">${s.roomFullscreen ? '⤡ 退出全屏' : '⛶ 全屏'}</button><button id="fit-room">适应房间</button><label class="check"><input id="targets" type="checkbox" checked>关联目标</label><label class="check" title="显示方块碰撞范围。尖刺圆为素材规范参考范围"><input id="show-collision" type="checkbox"${s.showCollision ? ' checked' : ''}>碰撞箱</label></div></div><div class="block-palette" aria-label="方块选择栏">${Palette.render(app, c)}</div><div class="canvas-heading"><span id="tool-label"></span><span><span id="room-pointer"></span> · <span id="room-zoom"></span></span></div><div class="canvas-wrap"><canvas id="room-canvas" width="960" height="540" tabindex="0" aria-label="房间编辑画布"></canvas></div></section><aside class="panel inspector form" id="room-inspector"></aside></div></div>`;
   if (Native.active(app.store.project, app.course())) {
     const bar = document.createElement('div');
     bar.className = 'native-toolbar actions';
@@ -249,6 +247,7 @@ function render(app) {
           : null,
       hover,
       targets: $('targets')?.checked,
+      collisionBoxes: !!s.showCollision,
       assetURL: (id) => app.assetURL(id),
     });
     require('../motion-timeline.cjs').draw(app, r, ctx, s.roomView);
@@ -336,6 +335,12 @@ function render(app) {
         }),
     );
   $('fit-room').onclick = fit;
+  const collisionToggle = $('show-collision');
+  if (collisionToggle)
+    collisionToggle.onchange = () => {
+      s.showCollision = collisionToggle.checked;
+      app.currentDraw?.();
+    };
   $('room-fullscreen').onclick = () => toggleFullscreen(app);
   // App-level F11 / Esc dispatch into these; they stay null on other pages.
   app.toggleRoomFullscreen = () => toggleFullscreen(app);
@@ -397,8 +402,7 @@ function render(app) {
       .map((node, index) => ({ node, index }))
       .reverse()
       .find(
-        ({ node }) =>
-          Math.abs(node.x + 0.5 - p.x) <= 0.55 && Math.abs(node.y + 0.5 - p.y) <= 0.55,
+        ({ node }) => Math.abs(node.x + 0.5 - p.x) <= 0.55 && Math.abs(node.y + 0.5 - p.y) <= 0.55,
       );
   };
   // The selected mechanism brick's trajectory stays directly draggable on every
@@ -413,11 +417,7 @@ function render(app) {
   // per brick instead of assuming the inspector selection.
   const peekBrickNodeHit = (e) => {
     if (!s.roomPathPeek || !['select', 'marquee'].includes(s.tool)) return null;
-    return brickPathNodeHit(
-      r,
-      world(e),
-      s.selection?.kind === 'movables' ? s.selection.id : null,
-    );
+    return brickPathNodeHit(r, world(e), s.selection?.kind === 'movables' ? s.selection.id : null);
   };
   const regionHit = (e) => {
     if (s.tool !== 'select' || !['zones', 'platforms'].includes(s.selection?.kind)) return null;
@@ -562,6 +562,7 @@ function render(app) {
       r.movables = r.movables.filter((b) => !gone.has(b));
       for (const b of r.movables) if (removed.has(b.padId)) b.padId = '';
       for (const o of r.objects) if (removed.has(o.params?.unlockPadId)) o.params.unlockPadId = '';
+      AiSpawns.cleanup(r);
       s.selection = null;
       return;
     }
@@ -1191,7 +1192,7 @@ function baseInspector(app, r, setTool) {
       )
       .join(
         '',
-      )}</div><p class="hint">显式配置是进入时的完整背包，覆盖项目初始道具；空勾选即不带道具。只影响编辑器“试玩此房 / 从此入口试玩”，旧存档无配置时沿用全道具试玩。正常成品流程不会注入试玩背包。</p>${CameraPanel.render(r)}<div class="row mirror-actions"><button class="apply" id="mirror-horizontal" title="整房左右镜像，保留对象 ID 与接线">↔ 左右镜像</button><button class="apply" id="mirror-vertical" title="整房上下镜像，保留对象 ID 与接线">↕ 上下镜像</button></div><p class="hint">名称、说明、尺寸、AI、试玩背包与视角修改后即时生效，半输入或非法值不会写入。缩小时保留越界对象并提示一次，不自动裁剪；镜像会同步翻转布局、路径和方向，可撤销。</p>`;
+      )}</div><p class="hint">显式配置覆盖项目初始道具，空选即不带；仅影响编辑器试玩，旧存档默认全道具。</p>${CameraPanel.render(r)}<div class="row mirror-actions"><button class="apply" id="mirror-horizontal" title="整房左右镜像，保留对象 ID 与接线">↔ 左右镜像</button><button class="apply" id="mirror-vertical" title="整房上下镜像，保留对象 ID 与接线">↕ 上下镜像</button></div><p class="hint">修改即时生效，非法值不写入。缩小时保留越界对象；镜像会翻转布局、路径和方向，可撤销。</p>`;
     const syncPlaytestMode = () =>
       document.querySelectorAll('[data-playtest-item]').forEach((box) => {
         box.disabled = $('room-playtest-mode').value === 'legacy';
@@ -1280,8 +1281,8 @@ function baseInspector(app, r, setTool) {
       o.locked = e.target.checked;
     });
   if (tab === 'base') {
-    body.innerHTML = `${ref.kind !== 'tiles' ? field('名称', 'object-name', o.name || d?.name || '') : ''}${ref.kind !== 'tiles' ? area('备注', 'object-notes', o.notes || '') : ''}<div class="row">${field('列 X', 'object-x', o.x, { type: 'number' })}${field('行 Y', 'object-y', o.y, { type: 'number' })}</div>${o.w ? `<div class="row">${field('宽（格）', 'object-w', o.w, { type: 'number', min: 1 })}${field('高（格）', 'object-h', o.h, { type: 'number', min: 1 })}</div>` : ''}<button id="apply-object" class="apply primary">应用位置与说明</button><button id="delete-object" class="apply danger">删除对象</button>`;
-    if (['tiles', 'objects', 'movables'].includes(ref.kind)) {
+    body.innerHTML = `${ref.kind !== 'tiles' ? field('名称', 'object-name', o.name || d?.name || '') : ''}${ref.kind !== 'tiles' ? area('备注', 'object-notes', o.notes || '') : ''}<div class="row">${field('列 X', 'object-x', o.x, { type: 'number' })}${field('行 Y', 'object-y', o.y, { type: 'number' })}</div>${o.w ? `<div class="row">${field('宽（格）', 'object-w', o.w, { type: 'number', min: 1 })}${field('高（格）', 'object-h', o.h, { type: 'number', min: 1 })}</div>` : ''}<button id="apply-object" class="apply primary">应用位置与说明</button><button id="delete-object" class="apply danger">删除对象</button>${AiSpawns.isSpawn(o) ? '<p class="hint">非实体标记：不参与碰撞，仅供同房间的 AI 启动板选择出现位置。删除后绑定自动清除。</p>' : ''}`;
+    if (['tiles', 'objects', 'movables'].includes(ref.kind) && !AiSpawns.isSpawn(o)) {
       body.insertAdjacentHTML(
         'beforeend',
         check(
@@ -1361,6 +1362,7 @@ function baseInspector(app, r, setTool) {
           if (ref.kind === 'objects') {
             for (const brick of r.movables) if (brick.padId === o.id) brick.padId = '';
             TeacherLinks.cleanup(r);
+            AiSpawns.cleanup(r);
           }
           // Project-level cross-room wires are shadowed from the legacy store;
           // clean both so a deleted port cannot leave a dangling global edge.
@@ -1393,6 +1395,9 @@ function baseInspector(app, r, setTool) {
           .filter((f) => d.type !== 'physics.rail' || f.kind !== 'path')
           .map((f) => schemaField(f, p[f.key], r))
           .join('') +
+        (d.schema.some((f) => f.kind === 'aiSpawn')
+          ? '<p class="hint">绑定的 AI 出现点只在本房间内生效；不指定或出现点被删除时，沿用旧行为在玩家旁出现。</p>'
+          : '') +
         select('死亡回退', 'reset-policy', o.resetPolicy, [
           'checkpoint',
           'preserve',
@@ -1541,21 +1546,15 @@ function baseInspector(app, r, setTool) {
       // Selected AI exit: choose the same-room player exit it belongs to. The
       // binding only records ids; the AI exit object (including params.routeId)
       // is never rewritten, so legacy same-room portals keep working.
-      const bound =
-        AIPorts.bindings(r).find((item) => item.aiExitId === o.id)?.exitId || '';
+      const bound = AIPorts.bindings(r).find((item) => item.aiExitId === o.id)?.exitId || '';
       body.innerHTML =
-        select(
-          '绑定玩家出口',
-          'ai-exit-binding',
-          bound,
-          [
-            ['', '未绑定（仅使用地图 AI 连线）'],
-            ...r.exits.map((exit) => [
-              exit.id,
-              (exit.name || '出口') + ' · ' + exit.x + ', ' + exit.y,
-            ]),
-          ],
-        ) +
+        select('绑定玩家出口', 'ai-exit-binding', bound, [
+          ['', '未绑定（仅使用地图 AI 连线）'],
+          ...r.exits.map((exit) => [
+            exit.id,
+            (exit.name || '出口') + ' · ' + exit.x + ', ' + exit.y,
+          ]),
+        ]) +
         '<p class="hint">玩家靠近绑定出口时，AI 会走向这个出口。在路线图将紫色 AI 出口连到玩家目标房间的紫色 AI 入口。</p>' +
         '' +
         field('对应 AI ID（空白继承全局）', 'object-ai', o.aiId || '') +
@@ -1584,18 +1583,13 @@ function baseInspector(app, r, setTool) {
       const bound = AIPorts.bindingFor(r, o.id) || '',
         aiExits = (r.objects || []).filter(AIPorts.isExit);
       body.innerHTML =
-        select(
-          '绑定 AI 出口',
-          'player-exit-ai-binding',
-          bound,
-          [
-            ['', '不绑定 AI 出口'],
-            ...aiExits.map((aiExit) => [
-              aiExit.id,
-              (aiExit.name || 'AI 出口') + ' · ' + aiExit.x + ', ' + aiExit.y,
-            ]),
-          ],
-        ) +
+        select('绑定 AI 出口', 'player-exit-ai-binding', bound, [
+          ['', '不绑定 AI 出口'],
+          ...aiExits.map((aiExit) => [
+            aiExit.id,
+            (aiExit.name || 'AI 出口') + ' · ' + aiExit.x + ', ' + aiExit.y,
+          ]),
+        ]) +
         '<p class="hint">绑定后，玩家从这个出口离开时 AI 会前往该 AI 出口，再按路线图上的紫色 AI 连线进入目标房间的 AI 入口。绑定不修改 AI 出口的传送路径 ID（routeId），玩家接线保持不变。' +
         (aiExits.length ? '' : ' 本房还没有 AI 出口，请先在房间放置 common.portalOut。') +
         '</p>' +
@@ -1679,6 +1673,14 @@ function schemaField(f, value, r) {
     );
   if (f.kind === 'zone')
     return select(f.label, id, value, [['', '整个房间'], ...r.zones.map((z) => [z.id, z.name])]);
+  if (f.kind === 'aiSpawn')
+    return select(f.label, id, value, [
+      ['', '不指定：沿用旧行为（在玩家旁出现）'],
+      ...AiSpawns.spawns(r).map((o) => [
+        o.id,
+        (o.name || 'AI 出现点') + '（' + o.x + ', ' + o.y + '）',
+      ]),
+    ]);
   if (f.kind === 'path') return area(f.label, id, JSON.stringify(value || []));
   return field(f.label, id, value);
 }

@@ -54,7 +54,7 @@ test('without iced tea only the free dash is available', () => {
   assert.equal(g.charges, 0);
   assert.equal(g.player.freeDash, false);
   const count = g.events.filter((e) => e.type === 'dash').length;
-  step(g, { up: true, dashPressed: true });
+  step(g, { left: true, dashPressed: true });
   assert.equal(g.events.filter((e) => e.type === 'dash').length, count);
   assert.equal(g.player.dashCount, 1);
   Object.assign(g.player, { x: 40, y: 420, vy: 0, dash: 0, grounded: false });
@@ -83,9 +83,11 @@ test('iced tea lets tokens charge paid dashes and enables the second dash', () =
   Object.assign(g.player, { x: 600, y: 80, grounded: false, freeDash: true, dashCount: 0 });
   step(g, { right: true, dashPressed: true });
   assert.equal(g.charges, 1);
-  step(g, { up: true, dashPressed: true });
+  step(g, { down: true, left: true, dashPressed: true });
   assert.equal(g.charges, 0);
   assert.equal(g.player.dashCount, 2);
+  assert.equal(g.player.dashX, -1);
+  assert.equal(g.player.dashY, 0);
 });
 
 test('tokens do not charge paid dashes without iced tea', () => {
@@ -106,6 +108,55 @@ test('dash replaces old momentum and has no gravity until finished', () => {
   assert.equal(g.player.vy, 0);
   step(g, {}, 15);
   assert.ok(g.player.vy > 0);
+});
+test('built-in dash is horizontal only: left/right input wins, vertical input adds no lift', () => {
+  const cases = [
+    { input: { up: true }, face: 1, x: 1, label: 'pure up uses facing' },
+    { input: { down: true }, face: -1, x: -1, label: 'pure down uses facing' },
+    { input: { up: true, right: true }, face: -1, x: 1, label: 'up + right stays right' },
+    { input: { down: true, left: true }, face: 1, x: -1, label: 'down + left stays left' },
+    { input: { right: true }, face: -1, x: 1, label: 'right wins over facing' },
+    { input: { left: true }, face: 1, x: -1, label: 'left wins over facing' },
+    { input: {}, face: -1, x: -1, label: 'no input uses facing' },
+  ];
+  for (const item of cases) {
+    const g = new Engine(M.example());
+    Object.assign(g.player, {
+      x: 600,
+      y: 80,
+      vx: 40,
+      vy: 40,
+      grounded: false,
+      freeDash: true,
+      dashCount: 0,
+      face: item.face,
+    });
+    step(g, { ...item.input, dashPressed: true });
+    assert.ok(g.player.dash > 0, item.label);
+    assert.equal(g.player.dashX, item.x, item.label);
+    assert.equal(g.player.dashY, 0, item.label);
+    assert.equal(g.player.vy, 0, item.label);
+    assert.equal(g.player.y, 80, item.label);
+  }
+});
+test('dash ends and normal horizontal movement resumes', () => {
+  const g = new Engine(M.example());
+  Object.assign(g.player, {
+    x: 40,
+    y: 420,
+    vx: 0,
+    vy: 0,
+    grounded: false,
+    freeDash: true,
+    dashCount: 0,
+    face: 1,
+  });
+  step(g, { right: true, dashPressed: true });
+  assert.equal(g.player.dashX, 1);
+  step(g, { right: true }, 40);
+  assert.equal(g.player.dash, 0);
+  assert.ok(g.player.vx > 0, 'right movement resumes after the dash');
+  assert.ok(g.player.x > 40);
 });
 test('ice accumulates separate visits and cold regenerates a new zero-timer instance', () => {
   const g = new Engine(M.example(), 'physics', 'ice-room');

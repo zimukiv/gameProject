@@ -102,21 +102,10 @@ const call = (p, name, data) =>
     });
     await page.getByRole('button', { name: '关闭', exact: true }).click();
     await page.evaluate(() => window.__ROOM_LAB__.openCourseWorkspace());
-    await page.getByRole('button', { name: '房间列表', exact: true }).click();
-    await page.getByRole('button', { name: '编辑房间', exact: true }).first().click();
-    assert.equal(await page.locator('#export-room').isEnabled(), true);
     const file = path.resolve(__dirname, '../test-output/单房间导出-UI.zip');
     await app.evaluate(({ dialog }, file) => {
       dialog.showSaveDialog = async () => ({ canceled: false, filePath: file });
     }, file);
-    await page.locator('[data-menu-trigger]', { hasText: '项目' }).click();
-    await page.locator('#export-room').click();
-    await page.waitForFunction(() =>
-      document.querySelector('#status')?.textContent.includes('单房间项目包已导出'),
-    );
-    const exported = Archive.unpack(fs.readFileSync(file));
-    assert.equal(exported.project.courses[0].rooms.length, 1);
-    assert.equal(exported.project.courses[0].rooms[0].id, 'jet-room');
     await page.locator('#crumb-project').click();
     await page.getByRole('button', { name: '全局路线图', exact: true }).click();
     // Select a room node through the same hit testing used by the designer.
@@ -133,7 +122,6 @@ const call = (p, name, data) =>
       box.y + ((view.y + (r.graph.y + card.height / 2) * view.scale) * box.height) / dims.h,
     );
     await page.locator('#graph-export-room').waitFor();
-    assert.equal(await page.locator('#export-room').isEnabled(), true);
     await page.locator('#graph-export-room').click();
     await page.waitForFunction(() =>
       document.querySelector('#status')?.textContent.includes('单房间项目包已导出'),

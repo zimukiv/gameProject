@@ -246,6 +246,49 @@ function intersects(a, b, gap = 0) {
     a.y + a.height + gap > b.y
   );
 }
+// ---- Board marquee / multi-room drag ---------------------------------------
+// The board's left-drag marquee and its multi-room move share these helpers, so
+// hit selection and the applied delta always agree with the painted geometry.
+function placeRect(place) {
+  return { x: place.x, y: place.y, width: place.width, height: place.height };
+}
+function rectBetween(from, to) {
+  return {
+    x: Math.min(from.x, to.x),
+    y: Math.min(from.y, to.y),
+    width: Math.abs(to.x - from.x),
+    height: Math.abs(to.y - from.y),
+  };
+}
+// Rooms whose card intersects the rectangle. An intersection (not containment)
+// matches the usual marquee expectation when only part of a room is swept.
+function placesInRect(list, from, to) {
+  const rect = rectBetween(from, to);
+  return (list || []).filter((place) => intersects(placeRect(place), rect));
+}
+// Snap the whole selection with one delta taken from the primary room, so every
+// member keeps its exact relative position on the grid.
+function selectionDelta(places, ids, dx, dy, snapEnabled = true, primaryId = null) {
+  const selected = new Set(ids || []),
+    primary =
+      (primaryId &&
+        (places || []).find((place) => place.room.id === primaryId && selected.has(primaryId))) ||
+      (places || []).find((place) => selected.has(place.room.id));
+  if (!snapEnabled || !primary) return { x: dx, y: dy };
+  return {
+    x: snap(primary.x + dx, true) - primary.x,
+    y: snap(primary.y + dy, true) - primary.y,
+  };
+}
+// Apply one global delta to every captured entry and convert each result back
+// into its owner course's authored coordinate space.
+function movePlaces(entries, dx, dy) {
+  return (entries || []).map((entry) => ({
+    roomId: entry.room.id,
+    courseId: entry.courseId,
+    graph: toLocal(entry, entry.x + dx, entry.y + dy),
+  }));
+}
 function courseBounds(course) {
   const rooms = course?.rooms?.length ? course.rooms : [];
   if (!rooms.length) return null;
@@ -396,6 +439,11 @@ module.exports = {
   bounds,
   fit,
   placeKey,
+  placeRect,
+  rectBetween,
+  placesInRect,
+  selectionDelta,
+  movePlaces,
   offsetOf,
   localRect,
   courseBounds,

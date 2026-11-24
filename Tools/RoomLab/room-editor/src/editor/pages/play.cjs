@@ -23,7 +23,7 @@ function render(app) {
   $('play-help').onclick = () =>
     modal(
       '试玩按键说明',
-      '<table class="table"><tr><td>A/D 或 ←/→</td><td>左右移动</td></tr><tr><td>空格 / W / ↑</td><td>跳跃</td></tr><tr><td>S / ↓</td><td>蹲下 / 向下冲刺方向</td></tr><tr><td>方向 + Shift</td><td>冲刺</td></tr><tr><td>R / Esc</td><td>重试本房 / 暂停继续</td></tr></table><p>实心 AI 板踩上触发；空心 AI 板经过触发。经过存档点后会更新复活位置，重试时从最近存档点继续。每次实际落地刷新一次免费首冲，计入三次上限。持有冰红茶时，token 每满 10 点充能一次付费库存，库存上限 1 次；没有冰红茶时不能进行二段冲刺。</p>',
+      '<table class="table"><tr><td>A/D 或 ←/→</td><td>左右移动 · 冲刺方向</td></tr><tr><td>空格 / W / ↑</td><td>跳跃</td></tr><tr><td>S / ↓</td><td>蹲下</td></tr><tr><td>Shift</td><td>左右冲刺（无左右输入时沿当前面向）</td></tr><tr><td>R / Esc</td><td>重试 / 暂停</td></tr></table><p>实心 AI 板踩上触发，空心经过触发；存档点会更新复活位置。每次落地获得一次免费冲刺，计入每轮 3 次上限；冰红茶让 token 每满 10 点充能一次付费冲刺（库存上限 1），没有冰红茶不能二段冲刺。</p>',
       [{ label: '知道了' }],
     );
   const canvas = $('play-canvas'),
@@ -99,9 +99,7 @@ function refresh(app) {
       .map(([type, count]) => Registry.get(type).name + ' ' + count)
       .join(' · ') || '—';
   $('play-note').textContent =
-    g.messageTime > 0
-      ? g.message
-      : '踩板触发；免费首冲计入三次上限。冰红茶可让 token 为二段冲刺充能。';
+    g.messageTime > 0 ? g.message : '踩板触发；免费首冲计入三次上限；冰红茶可为二段冲刺充能。';
   $('play-ai').textContent =
     'AI ID：' + g.ai.id + ' / ' + (g.ai.active ? '已启动（跨房继承）' : '未启动');
   $('play-environment').textContent =

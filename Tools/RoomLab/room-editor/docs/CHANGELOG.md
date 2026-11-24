@@ -1,5 +1,42 @@
 # 更新与阶段验收
 
+## 2026-11-23 · 4.2.0 · AI 出现点与启动板绑定（未打包）
+
+- 新增房间工具栏方块 `common.aiSpawn`「AI 出现点」（`src/plugins/common.cjs`）：非实体标记，`trigger: none`、`collider: false`、`nonSolid: true`、`defaultCollision: false`；`Collision.normalize/portable` 与 `Collision.enabled` 同时强制非实体，即使旧存档或手改文件带 `collision: true` 也不会进入运行时碰撞列表。编辑器隐藏该方块的碰撞开关。
+- AI 启动板 `common.aiStart` 与空心 `common.aiStartHollow` 升到 1.2.0，新增 `params.aiSpawnId`（schema 类型 `aiSpawn`）：属性「行为」下拉列出本房间出现点，并保留空选项表示取消/不指定。引用只在本房间内解析，启动板与出现对象仍是普通房间对象，不改 AI 出入口（portalIn/portalOut / AI 连接）语义。
+- 运行时：`Engine.activateAI` 在存在有效绑定时把 AI 位置设为出现点 `objectRect` 中心（与跨房 AI 入口同一套 attachment 几何），否则保持旧行为 `玩家中心 x-165`；空心板与重试后再启动同样生效。事件 `ai-start` 增加 `spawnId` 便于追踪，未绑定为 `null`。
+- 关联图示：房间画布对“启动板 → 出现点”复用巡查老师/签到那套虚线关联线（`src/editor/draw.cjs`），受「关联目标」开关约束，选中任一端时高亮；出现点与启动板属性页都有回退说明。
+- ID 语义复用现有重映射机制：框选复制粘贴（`clipboard-selection.cjs` 将 `aiSpawnId` 纳入内部引用；只粘贴一端时丢弃外部引用而不是改绑）、选择/擦除/属性删除（`selection.cjs` 与房间页清理失效引用）、整房复制（`model.duplicateRoom` 调用 `AiSpawns.remap` 重映射双端）、镜像（ID 不变，绑定随对象一起翻转）、房间/分组导入（沿用通用 ID 映射）、旧存档读取（`model.migrate` 的 `AiSpawns.sanitize` 清除悬空引用）。`model.validate` 对失效引用只给 warning，不阻塞试玩。
+- 素材规范同步：`assets/spec.cjs` 增加 `common.aiSpawn` 画布/槽位/碰撞描述与规范文件名 `common_aispawn.png`；未新增 seed 占位素材，画布回退绘制虚线标记。`docs/BLOCK_CATALOG.md`、`docs/PROJECT_FORMAT.md` 同步新增可选字段与兼容边界；项目格式仍为 v2。
+- 测试：新增 `tests/ai-spawn.test.cjs` 11 项，覆盖非实体与碰撞兜底、属性下拉与取消、同房/跨房/错类型校验、实心与空心触发位置、未绑定/失效回退旧位置、删除清理、整房复制与导入重映射、复制粘贴内部/外部引用、镜像、画布虚线关联、保存读取清理与 warning；`ai-blocks`、`runtime-ai-ports`、`ai-ports`、`ai-ports-map`、`collision`、`save-compat`、`compatibility`、`room-mirror`、`room-import(-batch)`、`model`、`asset-spec`、`editor-integration`、`clipboard-selection`、`block-groups`、`engine`、`map-compat`、`teacher`、`themes` 等其余 76 个核心测试文件逐个直接运行全部通过。
+- 构建：`node scripts/build.cjs` 在本沙箱仍因 `spawn EPERM` 无法拉起 esbuild，改用仓库内原生 `esbuild.exe` 直接重建 `build/ui.js` 并复制 `build/index.html`、`build/style.css`。上游核对 `node scripts/check-upstream.cjs` 仍因 `spawnSync git EPERM` 无法联网核验，沿用此前已确认的 GitHub main / build16 基线。未打包、未发布、未 push，未改云端或用户存档；本沙箱禁止 GUI，真实 Electron/Playwright UI 冒烟未执行。
+
+## 2026-11-22 · 4.2.0 · 清醒板八向切入（未打包）
+
+- 清醒板 `slacker.awake` 升级为 1.3.0：切入速度按 45° 分为八向（右、右下、下、左下、左、左上、上、右上），用进入速度的方向量化，斜向速度保持 `speed` 总大小；右方扇区为 `-22.5° ≤ θ < +22.5°`，`+22.5°` 边界归右下，保证每个角度只落在一个方向。
+- 零速（包括只有面向标记的静止玩家）不再回退到“面向”伪造方向：`canTrigger` 直接拒绝，玩家必须在有真实切入速度时才触发；站在无实体清醒板内不会自行加速，一旦移动即按移动方向触发一次。
+- 咖啡解锁时保持非实体：玩家可从任意一侧或斜向穿过并触发一次机关冲刺；未解锁时仍是整格实体阻挡，走不进去、不会触发。冲刺沿用 `launchPlayer`，不读写 Shift 手动冲刺的库存、`charges`、`freeDash` 或 `dashCount`；不改项目格式 v2 与旧存档字段。
+- 每次接触只触发一次：持续重叠即使超过 3 秒冷却也不会重复，只有离开区域后再次进入才重新触发；方向仍由进入速度决定，不新增持久状态。
+- 编辑器文案同步（方块说明、水课第三示例房名与说明）；`docs/BLOCK_CATALOG.md` 版本同步。
+- 测试：新增 `tests/awake-eight-way.test.cjs` 8 项，覆盖八方向速度、`-22.5°/+22.5°` 边界、零速、锁定实体、咖啡穿越（左/右/上方进入）、持续重叠与离开再触发、手动冲刺隔离；`awake-coffee-frames` 8 项、`themes` 13 项、`asset-spec` 9 项、`engine` 19 项均通过（本沙箱 `node --test` 因 `spawn EPERM` 无法启动子进程，改为逐文件直接运行）。未打包、未发布、未 push。
+
+## 2026-11-22 · 4.2.0 · 内置试玩左右冲刺与冗余界面文案精简（未打包）
+
+- 内置试玩冲刺只保留水平方向（`src/runtime/engine.cjs` 的 `direction`）：A/D 或 ←/→ 优先，没有左右输入时沿当前面向；W/↑、S/↓ 不再给冲刺增加垂直分量。跳跃、蹲下、免费/付费冲刺、落地刷新、每轮次数上限、冰红茶充能、旧存档/重放与其他机关、AI 运动均未改动。
+- 试玩按键说明、房间编辑按键提示与 README 同步：Shift 为左右冲刺，S/↓ 只蹲下；无左右输入时沿当前面向。
+- 精简素材库/外观、房间属性、路线图分组与试玩帮助文案：删除重复说明并缩短长段落，保留关键状态、操作说明和 `aria-label` / `title` 无障碍标签；未改数据字段、项目格式 v2 或发布包。
+- 上游核对：`node scripts/check-upstream.cjs` 在本沙箱因 `spawnSync git EPERM` 无法执行；沿用此前已确认的 GitHub main / build11 无增量基线与本地 build14，未改云端、Unity，未打包或发布。
+- 测试：`tests/engine.test.cjs` 新增“纯上/下、斜向、左右输入优先、无输入沿面向”和“冲刺结束恢复移动”用例，直接 `node tests/engine.test.cjs` 19 项通过；`tests/play-ui-smoke.cjs` 改为 D + Shift 并校验帮助文案。`build/ui.js` 用仓库内原生 esbuild 直接重建（`node scripts/build.cjs` 被 `spawn EPERM` 拒绝）。`node --test` 与 Playwright/Electron UI 冒烟未执行：本机无 `playwright`，且本任务禁止 GUI。
+
+## 2026-11-22 · 4.2.0 · Demo 素材规范 v1 编辑器侧校准（未打包）
+
+- 新增 `src/assets/spec.cjs` 作为素材规范唯一来源：32 PPU / 32×32 格、640×360 世界与 3× 到 1920×1080、相机 Size 5.625、角色 32×64（脚底 8px、Pivot 0.5/0.125）、角色动作帧数与 FPS、Pad 32×8、签到块视觉 32×32/碰撞底部 32×8、Token 10/18、尖刺美术参考伤害圆半径 11、背景 512×512、中景 1920×360。只读描述，不改项目格式、绑定或旧存档。
+- 素材库与外观/定义素材槽显示规范尺寸、规范命名与动画帧率；旧图尺寸或命名不符只提示、仍可继续绑定和渲染，不会静默改名、重绑或自动替换。导入规范文件名时可在未分类目录自动归类；角色图集按 32×64（灰尘 32×32）和动作 FPS 推断单帧，`_00` 这类两位帧号按整图导入；显式选择的目录始终优先。
+- 内置占位素材按规范校准画布（地形/冰 32×32，喷气/温控/电磁/积分/求导/清醒 32×8，签到 32×32，Token 10/18，尖刺 32×32，背景 512×512 与中景 1920×360），并补充未绑定的背景、Token、尖刺、存档点、传送门、AI 启动板占位，方便按规范接入；所有 seed ID 与相对路径保持不变，旧项目按原绑定继续解析。
+- 房间画布预览：PNG/占位图使用最近邻（关闭平滑）；Pad 与校准后的清醒板视觉按底部 32×8 绘制，签到块保持 32×32，Token 不放大；工具栏新增「碰撞箱」开关，单独显示实际碰撞——Pad 与签到块为底部 32×8、尖刺为半径 11 的伤害圆、实体为整格。清醒板当前插件碰撞仍是整格，预览如实显示，不把共享玩法伪装成已改。视觉框、选择框与碰撞提示分开表达，运行时共享玩法未改。
+- 未改 Unity、外部 Demo、云端协议或本地用户项目/素材；未打包、未发布。
+- 验证：新增 `tests/asset-spec.test.cjs` 9 项；75 个核心 `tests/*.test.cjs` 直接逐文件执行全部通过。`node --test` 在本沙箱因 `spawn EPERM` 无法启动子进程；`node scripts/build.cjs` 同样被 esbuild 子进程限制拒绝，改用仓库内原生 esbuild 可执行文件直接生成 `build/ui.js`、`build/index.html`、`build/style.css`。真实 Electron/Playwright UI 冒烟未执行。
+
 ## 2026-11-20 · 4.2.0 build7 · 房间缩略图栏可折叠（未打包）
 
 - 房间编辑页的缩略图选择栏（`.room-thumb-selector`，`src/editor/room-navigation.cjs`）新增折叠开关：默认展开；折叠只隐藏占高度的缩略图横栏，保留「房间选择 N / 展开收起」入口与紧凑筛选行，画布释放出缩略栏的高度；展开后重新绘制按 `devicePixelRatio` 缩放的高清缩略图。按钮为 `aria-expanded` / `aria-controls` 语义按钮（`#room-strip-toggle`），可键盘操作。

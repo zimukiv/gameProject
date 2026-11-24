@@ -115,7 +115,7 @@ function wires(project, places, activeCourseId) {
   return list;
 }
 function markup(app) {
-  return `<div class="graph-layout planning-map"><div class="panel graph-panel"><div class="graph-controls"><span>全部房间</span><span class="badge ai-ports-legend" data-ai-legend="1" title="AI 出口和 AI 入口只连接 AI 连线，与玩家出口/入口接线互不影响">AI 出口 → AI 入口</span><div class="actions"><span id="graph-zoom"></span><label class="check" title="拖动房间时对齐房间格网格"><input id="graph-snap" type="checkbox" checked>吸附</label><button id="graph-fit">全部</button><button id="graph-focus-selection" title="聚焦当前分组或所选房间，其他房间仍然显示">聚焦所选</button><button id="graph-reset">100%</button><details class="graph-help"><summary title="操作说明">？</summary><div class="help-body">滚轮缩放 · 中键/空白拖动平移 · 拖动房间排布 · 双击进入 · 从出口拖到任意房间的入口接线。紫色「AI 出」/「AI 入」是独立 AI 端口：从 AI 出口拖到任意房间的 AI 入口即可跨课程接线，不改变玩家接线。点击紫色 AI 连线后可在右侧删除。金色★为收藏房间。</div></details></div></div><div class="graph-canvas-wrap"><canvas id="graph" width="1120" height="650" aria-label="项目路线图：全部房间分布、玩家端口与 AI 端口"></canvas></div></div><aside class="panel form" id="graph-inspector"></aside></div>`;
+  return `<div class="graph-layout planning-map"><div class="panel graph-panel"><div class="graph-controls"><span>全部房间</span><span class="badge ai-ports-legend" data-ai-legend="1" title="AI 出口和 AI 入口只连接 AI 连线，与玩家出口/入口接线互不影响">AI 出口 → AI 入口</span><div class="actions"><span id="graph-zoom"></span><label class="check" title="拖动房间时对齐房间格网格"><input id="graph-snap" type="checkbox" checked>吸附</label><button id="graph-fit">全部</button><button id="graph-focus-selection" title="聚焦当前分组或所选房间，其他房间仍然显示">聚焦所选</button><button id="graph-reset">100%</button><details class="graph-help"><summary title="操作说明">？</summary><div class="help-body">滚轮缩放 · 中键平移 · 拖空白框选 · 拖动已选房间整体移动 · 双击进入 · 从出口拖线到入口。紫色「AI 出」/「AI 入」只连 AI 线，不影响玩家接线；点击紫色 AI 连线可在右侧删除。金色★为收藏房间。</div></details></div></div><div class="graph-canvas-wrap"><canvas id="graph" width="1120" height="650" aria-label="项目路线图：全部房间分布、玩家端口与 AI 端口"></canvas></div></div><aside class="panel form" id="graph-inspector"></aside></div>`;
 }
 // The view transform is expressed in CSS/layout pixels. Only the backing store
 // is multiplied by the device ratio; the canvas is pinned to the measured CSS
@@ -230,11 +230,35 @@ function mount(app) {
   }
   let drag = null,
     wire = null,
-    pan = null;
+    pan = null,
+    marquee = null;
   const pixel = (e) => CanvasDpr.pointer(canvas, e.clientX, e.clientY);
   const point = (e) => {
     const p = pixel(e);
     return { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
+  };
+  // Selection is one state for both click and marquee: a single room keeps the
+  // historical {kind:'room'} shape, while a multi-room sweep stores {kind:'rooms'}.
+  const selectionIds = () => {
+    const selection = app.state.graphSelection;
+    if (selection?.kind === 'rooms') return [...new Set(selection.ids || [])];
+    return selection?.kind === 'room' && selection.id ? [selection.id] : [];
+  };
+  const setRoomSelection = (ids) => {
+    const unique = [];
+    for (const id of ids || [])
+      if (!unique.includes(id) && places.some((place) => place.room.id === id)) unique.push(id);
+    if (!unique.length) {
+      app.state.graphSelection = null;
+      return;
+    }
+    if (unique.length === 1)
+      app.state.graphSelection = {
+        kind: 'room',
+        id: unique[0],
+        courseId: places.find((place) => place.room.id === unique[0]).courseId,
+      };
+    else app.state.graphSelection = { kind: 'rooms', ids: unique };
   };
   // Ports come straight from the shared placement geometry, so a marker is
   // always grabbable exactly where it is painted.
@@ -261,6 +285,7 @@ function mount(app) {
       view,
       activeCourseId,
       favorites,
+      marquee ? { marquee: { from: marquee.from, to: marquee.to } } : null,
     );
     const zoom = $('graph-zoom');
     if (zoom) zoom.textContent = Math.round(view.scale * 100) + '%';
@@ -273,24 +298,24 @@ function mount(app) {
     Object.assign(view, GraphLayout.fitPlaces(places, cssSize().width, cssSize().height));
     draw();
   };
-  $('graph-focus-selection').onclick = () => {
-    const selected =
-      app.state.graphSelection?.kind === 'room'
-        ? places.find((place) => place.room.id === app.state.graphSelection.id)
-        : null;
-    const groupId = /^group:(.+)$/.exec(app.state.roomFilter || '')?.[1];
-    const groupRoomIds = groupId
-      ? new Set(Org.ensure(project).groups.find((group) => group.id === groupId)?.roomIds || [])
-      : null;
-    const own = selected
-      ? [selected]
-      : groupRoomIds
-        ? places.filter((place) => groupRoomIds.has(place.room.id))
-        : places;
+  const focusPlaces = (own) =>
     Object.assign(
       view,
       GraphLayout.fitPlaces(own.length ? own : places, cssSize().width, cssSize().height),
     );
+  $('graph-focus-selection').onclick = () => {
+    const selectedIds = selectionIds(),
+      selected = places.filter((place) => selectedIds.includes(place.room.id));
+    const groupId = /^group:(.+)$/.exec(app.state.roomFilter || '')?.[1];
+    const groupRoomIds = groupId
+      ? new Set(Org.ensure(project).groups.find((group) => group.id === groupId)?.roomIds || [])
+      : null;
+    const own = selected.length
+      ? selected
+      : groupRoomIds
+        ? places.filter((place) => groupRoomIds.has(place.room.id))
+        : places;
+    focusPlaces(own);
     draw();
   };
   canvas.onwheel = (e) => {
@@ -367,11 +392,9 @@ function mount(app) {
       const add = e.button === 0;
       app.store.change(() => {
         const update = add ? Org.assign : Org.unassign;
-        app.store.project.roomOrganization = update(
-          Org.ensure(app.store.project),
-          groupId,
-          [place.room.id],
-        );
+        app.store.project.roomOrganization = update(Org.ensure(app.store.project), groupId, [
+          place.room.id,
+        ]);
       });
       app.message(add ? '已加入分组，可撤销。' : '已从分组移出，可撤销。');
       draw();
@@ -444,21 +467,34 @@ function mount(app) {
     }
     const place = GraphLayout.hitPlace(places, p);
     if (place) {
-      app.state.graphSelection = { kind: 'room', id: place.room.id, courseId: place.courseId };
+      // Clicking one member of a marquee selection drags the whole set; clicking
+      // any other room starts a fresh single-room selection.
+      const current = selectionIds(),
+        ids = current.includes(place.room.id) ? current : [place.room.id];
+      setRoomSelection(ids);
       drag = {
-        place,
+        origins: ids
+          .map((id) => places.find((candidate) => candidate.room.id === id))
+          .filter(Boolean)
+          .map((candidate) => ({ ...candidate })),
+        primaryId: place.room.id,
         start: p,
         moved: false,
-        origin: { x: place.room.graph?.x || 0, y: place.room.graph?.y || 0 },
         before: app.store.snapshot(),
       };
       draw();
       renderInspector(app);
       return;
     }
+    // Left drag on empty board space is the room marquee. Middle-drag panning is
+    // handled above and keeps working exactly as before.
+    if (e.button === 0) {
+      marquee = { from: p, to: p, moved: false, additive: !!e.shiftKey };
+      canvas.style.cursor = 'crosshair';
+      draw();
+      return;
+    }
     app.state.graphSelection = null;
-    pan = { point: pixel(e), x: view.x, y: view.y };
-    canvas.style.cursor = 'grabbing';
     draw();
     renderInspector(app);
   };
@@ -470,9 +506,18 @@ function mount(app) {
       draw();
       return;
     }
+    if (marquee) {
+      marquee.to = point(e);
+      if (
+        !marquee.moved &&
+        Math.hypot(marquee.to.x - marquee.from.x, marquee.to.y - marquee.from.y) > 3
+      )
+        marquee.moved = true;
+      draw();
+      return;
+    }
     const p = point(e);
-    const hovered =
-      portAt(p, ['aiExits', 'exits']) || portAt(p, ['aiEntries', 'entries']);
+    const hovered = portAt(p, ['aiExits', 'exits']) || portAt(p, ['aiEntries', 'entries']);
     canvas.title = hovered
       ? (hovered.node.kind === 'ai' ? 'AI ' : '') + (hovered.node.label || '')
       : '';
@@ -481,21 +526,21 @@ function mount(app) {
       draw();
     }
     if (drag) {
-      if (!drag.moved && Math.hypot(p.x - drag.start.x, p.y - drag.start.y) > 4)
-        drag.moved = true;
-      const global = {
-          x: GraphLayout.snap(
-            drag.place.offset.x + drag.origin.x + p.x - drag.start.x,
-            snapEnabled(),
-          ),
-          y: GraphLayout.snap(
-            drag.place.offset.y + drag.origin.y + p.y - drag.start.y,
-            snapEnabled(),
-          ),
-        },
-        // Authored coordinates stay in the owner course's space.
-        local = GraphLayout.toLocal(drag.place, global.x, global.y);
-      drag.place.room.graph = { x: local.x, y: local.y };
+      if (!drag.moved && Math.hypot(p.x - drag.start.x, p.y - drag.start.y) > 4) drag.moved = true;
+      // One snapped delta for the entire set keeps every relative offset intact.
+      const delta = GraphLayout.selectionDelta(
+          drag.origins,
+          drag.origins.map((entry) => entry.room.id),
+          p.x - drag.start.x,
+          p.y - drag.start.y,
+          snapEnabled(),
+          drag.primaryId,
+        ),
+        moved = GraphLayout.movePlaces(drag.origins, delta.x, delta.y);
+      for (const item of moved) {
+        const entry = drag.origins.find((candidate) => candidate.room.id === item.roomId);
+        if (entry) entry.room.graph = item.graph;
+      }
       draw();
     }
   };
@@ -503,6 +548,21 @@ function mount(app) {
     if (pan) {
       pan = null;
       canvas.style.cursor = 'default';
+      return;
+    }
+    if (marquee) {
+      const current = marquee;
+      marquee = null;
+      canvas.style.cursor = 'default';
+      if (current.moved) {
+        const picked = GraphLayout.placesInRect(places, current.from, current.to).map(
+            (place) => place.room.id,
+          ),
+          base = current.additive ? selectionIds() : [];
+        setRoomSelection([...base, ...picked]);
+      } else if (!current.additive) setRoomSelection([]);
+      draw();
+      renderInspector(app);
       return;
     }
     if (wire) {
@@ -564,6 +624,7 @@ function mount(app) {
   canvas.onpointercancel = canvas.onlostpointercapture = () => {
     wire = null;
     pan = null;
+    marquee = null;
     canvas.style.cursor = 'default';
     if (drag) {
       const before = drag.before;
@@ -606,7 +667,6 @@ function dispose(app) {
   state.graphCanvas = null;
 }
 function renderInspector(app) {
-  app.updateRoomExport();
   const host = $('graph-inspector'),
     project = app.store.project,
     selection = app.state.graphSelection;
@@ -616,7 +676,8 @@ function renderInspector(app) {
     // Named group -> quick panel. No named group -> collapsible per-group lists
     // plus one ungrouped bucket, so the sidebar is useful without a selection.
     const quick = OrgUI.quickGroupMarkup(app);
-    host.innerHTML = quick || '<p class="inspector-empty muted">点击房间查看说明与操作；☆ 收藏，分组用于整理。</p>';
+    host.innerHTML =
+      quick || '<p class="inspector-empty muted">选择房间查看操作；☆ 收藏，分组仅用于整理。</p>';
     OrgUI.bindQuickGroup(app, host);
     return;
   }
@@ -642,6 +703,25 @@ function renderInspector(app) {
     $('graph-copy').onclick = () => duplicate(app, course, room);
     $('graph-delete').onclick = () => remove(app, course, room);
     require('./room-clipboard.cjs').sync(app);
+  } else if (selection.kind === 'rooms') {
+    const ids = [...new Set(selection.ids || [])].filter((id) => GraphLayout.locate(project, id));
+    if (ids.length < 2) {
+      const owner = ids[0] && GraphLayout.locate(project, ids[0]);
+      app.state.graphSelection = owner
+        ? { kind: 'room', id: owner.room.id, courseId: owner.course.id }
+        : null;
+      renderInspector(app);
+      return;
+    }
+    host.innerHTML = `<h2>已选 ${ids.length} 间房</h2><p class="hint">拖动任一选中房间会整体移动，相对位置与接线不变；空白处左键拖框重选，中键仍是平移。</p><div class="inspector-groups"><span class="muted">分组</span>${OrgUI.groupControlMarkup(app, ids)}</div><div class="actions"><button id="graph-focus-multi">聚焦所选</button></div>`;
+    OrgUI.bindGroupControls(app, host);
+    $('graph-focus-multi').onclick = () => {
+      const own = places.filter((place) => ids.includes(place.room.id));
+      if (own.length) {
+        Object.assign(view, GraphLayout.fitPlaces(own, cssSize().width, cssSize().height));
+        draw();
+      }
+    };
   } else if (
     selection.kind === 'ai-wire' ||
     selection.wireKind === 'ai' ||
@@ -663,7 +743,7 @@ function renderInspector(app) {
       sourceObject = (fromOwner?.room.objects || []).find(
         (object) => object.id === edge.from.aiExitId,
       );
-    host.innerHTML = `<h2>AI 连接</h2><p class="hint"><span class="badge">AI 端口</span> ${esc(fromOwner?.room.name || edge.from.roomId)} 的 AI 出口 → ${esc(toOwner?.room.name || edge.to.roomId)} 的 AI 入口${cross ? ' <span class="badge">跨原课程</span>' : ''}<br>AI 连线只决定 AI 进入目标房间时使用哪个 AI 入口，不改变玩家出口/入口接线。${sourceObject?.params?.routeId ? ' 原传送路径 ID（routeId）保持为 ' + esc(sourceObject.params.routeId) + '。' : ''}</p><p class="muted">AI 出口：${esc(edge.from.aiExitId)} · AI 入口：${esc(edge.to.aiEntranceId)}</p><div class="actions"><button id="ai-wire-delete" class="danger">删除 AI 连线</button></div>`;
+    host.innerHTML = `<h2>AI 连接</h2><p class="hint"><span class="badge">AI 端口</span> ${esc(fromOwner?.room.name || edge.from.roomId)} 的 AI 出口 → ${esc(toOwner?.room.name || edge.to.roomId)} 的 AI 入口${cross ? ' <span class="badge">跨原课程</span>' : ''}<br>AI 连线只决定 AI 进入目标房间的入口，不改变玩家接线。${sourceObject?.params?.routeId ? ' 原 routeId 保持为 ' + esc(sourceObject.params.routeId) + '。' : ''}</p><p class="muted">AI 出口：${esc(edge.from.aiExitId)} · AI 入口：${esc(edge.to.aiEntranceId)}</p><div class="actions"><button id="ai-wire-delete" class="danger">删除 AI 连线</button></div>`;
     $('ai-wire-delete').onclick = () =>
       app.store.change(() => {
         AIPorts.disconnect(app.store.project, edge.id);

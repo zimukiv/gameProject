@@ -368,6 +368,28 @@ function register() {
       return { name: path.basename(file), bytes: new Uint8Array(fs.readFileSync(file)) };
     });
   });
+  // Shared reader for room/group ZIP packages. The renderer owns validation and
+  // the import UI; main only returns the picked file's bytes.
+  ipcMain.handle('project:import-archive', async (event, payload) => {
+    trusted(event);
+    const forced = testPath(payload),
+      chosen = forced
+        ? { canceled: false, filePaths: [forced] }
+        : await dialog.showOpenDialog(window, {
+            title: '导入房间分组包',
+            properties: ['openFile'],
+            filters: [{ name: 'Room Lab 项目包', extensions: ['zip'] }],
+          });
+    if (chosen.canceled) return null;
+    const file = chosen.filePaths[0],
+      size = fs.statSync(file).size;
+    if (size > 128 * 1024 * 1024) throw new Error('分组包不能超过 128 MiB');
+    return {
+      name: path.basename(file),
+      path: file,
+      bytes: new Uint8Array(fs.readFileSync(file)),
+    };
+  });
   ipcMain.handle('project:export', async (event, payload) => {
     trusted(event);
     const forced = testPath(payload),

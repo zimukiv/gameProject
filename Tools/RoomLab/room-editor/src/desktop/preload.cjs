@@ -7,6 +7,7 @@ contextBridge.exposeInMainWorld('desktopAPI', {
   autosaveProject: (payload) => invoke('project:autosave', payload),
   importAssets: (payload) => invoke('assets:import', payload),
   exportArchive: (payload) => invoke('project:export', payload),
+  importArchive: (payload) => invoke('project:import-archive', payload),
   exportTraces: (payload) => invoke('traces:export', payload),
   importTraces: (payload) => invoke('traces:import', payload),
   cloud: (name, data) => invoke('cloud:action', { name, data }),

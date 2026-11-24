@@ -1,6 +1,9 @@
 'use strict';
 const { clone } = require('../shared/utils.cjs');
 function enabled(o, kind = 'objects', definition = {}) {
+  // Marker blocks (e.g. the AI spawn point) are never solid, even when an old or
+  // hand-edited save still carries collision:true on them.
+  if (definition?.nonSolid) return false;
   return typeof o.collision === 'boolean'
     ? o.collision
     : kind === 'tiles' || kind === 'movables' || kind === 'platforms' || !!definition.collider;
@@ -37,6 +40,8 @@ function normalize(p) {
           o.collision = false;
           o.assetOverrides = { ...c.artBindings?.['common.aiStartHollow'], ...o.assetOverrides };
         }
+        // The AI spawn point is a marker, never a solid block.
+        if (o.type === 'common.aiSpawn') o.collision = false;
       }
   return p;
 }
@@ -52,6 +57,7 @@ function portable(project) {
           o.type = 'common.aiStartHollow';
           o.trigger = { ...o.trigger, mode: 'region' };
         }
+        if (o.type === 'common.aiSpawn') o.collision = false;
       }
   return require('./compatibility.cjs').normalize(p);
 }

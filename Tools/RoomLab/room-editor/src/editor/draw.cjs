@@ -8,6 +8,8 @@ const GraphLayout = require('./graph-layout.cjs');
 const Temperature = require('../project/temperature.cjs');
 const Collision = require('../project/collision.cjs');
 const TeacherLinks = require('../project/teacher-links.cjs');
+const AiSpawns = require('../project/ai-spawns.cjs');
+const AssetSpec = require('../assets/spec.cjs');
 function ghostBorder(ctx, rect) {
   ctx.save();
   ctx.lineWidth = 3;
@@ -85,6 +87,58 @@ function drawImage(ctx, url, rect, asset, time = 0) {
   } else ctx.drawImage(image, rect.x, rect.y, rect.w, rect.h);
   return true;
 }
+// Draw at the calibrated canvas size when the asset (or its built-in
+// placeholder) follows the specification. Legacy artwork keeps the full cell so
+// old saves do not suddenly squash or hide their images.
+function objectVisualRect(o, asset, def) {
+  const x = o.x * T,
+    y = o.y * T,
+    w = (o.w || 1) * T,
+    h = (o.h || 1) * T,
+    size = AssetSpec.visualSize(o.type, asset);
+  if (!size) return { x, y, w, h };
+  if (size.width === w && size.height === h) return { x, y, w, h };
+  // Pads and the calibrated awake/check-in visuals sit on the cell bottom.
+  if (size.height === 8 && size.width === T) return { x, y: y + h - 8, w: T, h: 8 };
+  return {
+    x: x + (w - size.width) / 2,
+    y: y + (h - size.height) / 2,
+    w: size.width,
+    h: size.height,
+  };
+}
+// Collision hints are deliberately separate from the artwork rectangle: a
+// 32x32 check-in board shows its bottom 32x8 pad, spikes show their 11px damage
+// circle, and solid cells show their full cell box.
+function drawCollisionHint(ctx, o, def, solid, scale) {
+  const shape = AssetSpec.collisionShape(o.type, def, o);
+  if (!shape.kind || (!solid && shape.kind !== 'circle')) return;
+  const x = o.x * T,
+    y = o.y * T,
+    w = (o.w || 1) * T,
+    h = (o.h || 1) * T;
+  ctx.save();
+  ctx.lineWidth = Math.max(1, 2 / scale);
+  ctx.setLineDash([Math.max(2, 4 / scale), Math.max(2, 3 / scale)]);
+  if (shape.kind === 'circle') {
+    const direction = shape.direction,
+      cx = direction === 'right' ? x : direction === 'left' ? x + w : x + w / 2,
+      cy = direction === 'up' ? y + h : direction === 'down' ? y : y + h / 2;
+    ctx.strokeStyle = '#f08a68';
+    ctx.beginPath();
+    ctx.arc(cx, cy, shape.radius, 0, Math.PI * 2);
+    ctx.stroke();
+  } else if (shape.anchor === 'bottom') {
+    ctx.fillStyle = '#74d9d922';
+    ctx.fillRect(x + 0.5, y + h - shape.height + 0.5, T - 1, shape.height - 1);
+    ctx.strokeStyle = '#9be7d6';
+    ctx.strokeRect(x + 0.5, y + h - shape.height + 0.5, T - 1, shape.height - 1);
+  } else {
+    ctx.strokeStyle = '#9be7d6';
+    ctx.strokeRect(x + 1, y + 1, w - 2, h - 2);
+  }
+  ctx.restore();
+}
 function miniature(ctx, r, x, y, w, h, padding = 4) {
   const v = fit(r, w, h, padding);
   ctx.save();
@@ -129,6 +183,7 @@ function drawRoom(
     targets = true,
     assetURL = () => null,
     grid = true,
+    collisionBoxes = false,
     nativeBand = 'all',
     dpr = 1,
   } = {},
@@ -144,10 +199,14 @@ function drawRoom(
   ctx.fillStyle = '#09121d';
   ctx.fillRect(0, 0, w, h);
   ctx.save();
+  // Pixel-art previews use nearest-neighbour sampling at every zoom level.
+  ctx.imageSmoothingEnabled = false;
   ctx.translate(v.x, v.y);
   ctx.scale(v.scale, v.scale);
-  const bg = course.artBindings?.background,
-    backgroundAsset = project.assets.find((a) => a.id === bg);
+  const bg =
+    course.artBindings?.background ||
+    (project.assets.some((a) => a.id === 'seed-bg-far') ? 'seed-bg-far' : null);
+  const backgroundAsset = project.assets.find((a) => a.id === bg);
   if (
     !drawImage(ctx, assetURL(bg), { x: 0, y: 0, w: r.cols * T, h: r.rows * T }, backgroundAsset)
   ) {
@@ -265,12 +324,13 @@ function drawRoom(
             : d.slots[0],
       id = assetId(project, course, o, slot),
       a = project.assets.find((a) => a.id === id);
-    const rect = {
-      x: o.x * T,
-      y: o.y * T,
-      w: (o.w || 1) * T,
-      h: (o.h || 1) * T,
-    };
+    const cellRect = {
+        x: o.x * T,
+        y: o.y * T,
+        w: (o.w || 1) * T,
+        h: (o.h || 1) * T,
+      },
+      rect = objectVisualRect(o, a, d);
     if (d.collectible && game?.credited?.has(r.id + '/' + o.id)) continue;
     if (game && state.removed) continue;
     const checkpoint = o.type === 'common.checkpoint',
@@ -305,7 +365,7 @@ function drawRoom(
         glyph,
         rect.x + rect.w / 2,
         rect.y + rect.h * 0.7,
-        o.type === 'physics.thermal' ? 17 : 20,
+        rect.h <= 10 ? 9 : o.type === 'physics.thermal' ? 17 : 20,
         checkpoint
           ? slot === 'active'
             ? '#fff0b0'
@@ -342,7 +402,8 @@ function drawRoom(
           ? Collision.inherited(r, o, 'objects', d, game.movableStates) &&
             (!d.isSolid || d.isSolid(game.context(o), o, state))
           : Collision.inherited(r, o, 'objects', d, game?.movableStates);
-    if (!solid) ghostBorder(ctx, rect);
+    if (!solid) ghostBorder(ctx, cellRect);
+    if (collisionBoxes) drawCollisionHint(ctx, o, d, solid, v.scale);
     if (o.type === 'physics.ice' && game)
       text(
         ctx,
@@ -356,7 +417,7 @@ function drawRoom(
     if (!game && (o.x < 0 || o.y < 0 || o.x + (o.w || 1) > r.cols || o.y + (o.h || 1) > r.rows)) {
       ctx.strokeStyle = '#f17f77';
       ctx.lineWidth = 2;
-      ctx.strokeRect(rect.x, rect.y, rect.w, rect.h);
+      ctx.strokeRect(cellRect.x, cellRect.y, cellRect.w, cellRect.h);
       ctx.lineWidth = 1;
     }
     if (o.params?.path) {
@@ -407,9 +468,7 @@ function drawRoom(
         ];
         ctx.setLineDash([6, 4]);
         ctx.beginPath();
-        points.forEach((p, i) =>
-          i ? ctx.lineTo(p.x * T, p.y * T) : ctx.moveTo(p.x * T, p.y * T),
-        );
+        points.forEach((p, i) => (i ? ctx.lineTo(p.x * T, p.y * T) : ctx.moveTo(p.x * T, p.y * T)));
         ctx.stroke();
         ctx.setLineDash([]);
         points.forEach((p, i) => {
@@ -449,6 +508,31 @@ function drawRoom(
           );
           ctx.setLineDash([]);
         }
+      ctx.restore();
+    }
+  // Launch pad -> AI spawn point: reuse the same dashed association link as the
+  // teacher/check-in binding so the authored reference is visible on the canvas.
+  if (!game)
+    for (const launchpad of r.objects.filter((o) => AiSpawns.isLaunchpad(o))) {
+      const spawn = AiSpawns.target(r, launchpad);
+      if (!spawn) continue;
+      const selected = [selection, ...selections].some(
+        (s) => s?.kind === 'objects' && (s.id === launchpad.id || s.id === spawn.id),
+      );
+      if (!targets && !selected) continue;
+      ctx.save();
+      ctx.strokeStyle = selected ? '#c9a8ff' : '#b79cff88';
+      ctx.lineWidth = 2 / v.scale;
+      ctx.setLineDash([5, 4]);
+      line(
+        ctx,
+        (launchpad.x + (launchpad.w || 1) / 2) * T,
+        (launchpad.y + (launchpad.h || 1) / 2) * T,
+        (spawn.x + (spawn.w || 1) / 2) * T,
+        (spawn.y + (spawn.h || 1) / 2) * T,
+        ctx.strokeStyle,
+      );
+      ctx.setLineDash([]);
       ctx.restore();
     }
   for (const [index, trace] of (traces || r.playTraces || []).entries())
@@ -724,7 +808,17 @@ function drawGraph(
   view = { x: 0, y: 0, scale: 1 },
   activeCourseId = null,
   favorites = null,
+  overlay = null,
 ) {
+  // Single-room and marquee multi-room selection both paint the same ring; the
+  // old {kind:'room'} shape stays valid for callers and old saves.
+  const selectedIds = new Set(
+    selected?.kind === 'rooms'
+      ? selected.ids || []
+      : selected?.kind === 'room' && selected.id
+        ? [selected.id]
+        : [],
+  );
   ctx.fillStyle = '#0c1622';
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   ctx.save();
@@ -733,7 +827,7 @@ function drawGraph(
   graphGrid(ctx, view);
   for (const place of places) {
     const body = place.layout.body,
-      active = selected?.kind === 'room' && selected.id === place.room.id,
+      active = selectedIds.has(place.room.id),
       favorite = !!favorites && favorites.has(place.room.id);
     // The room itself is the thumbnail: no card shell, no note block.
     ctx.save();
@@ -820,6 +914,24 @@ function drawGraph(
     for (const p of place.ports.aiEntries || []) graphPortMarker(ctx, p, true, view.scale);
     for (const p of place.ports.aiExits || []) graphPortMarker(ctx, p, false, view.scale);
   }
+  if (overlay?.marquee) {
+    const from = overlay.marquee.from,
+      to = overlay.marquee.to;
+    if (from && to) {
+      const x = Math.min(from.x, to.x),
+        y = Math.min(from.y, to.y),
+        width = Math.abs(to.x - from.x),
+        height = Math.abs(to.y - from.y);
+      ctx.save();
+      ctx.fillStyle = 'rgba(255, 232, 167, 0.12)';
+      ctx.fillRect(x, y, width, height);
+      ctx.setLineDash([6 / Math.max(view.scale, 0.001), 4 / Math.max(view.scale, 0.001)]);
+      ctx.strokeStyle = '#ffe8a7';
+      ctx.lineWidth = 1.5 / Math.max(view.scale, 0.001);
+      ctx.strokeRect(x, y, width, height);
+      ctx.restore();
+    }
+  }
   ctx.restore();
 }
 module.exports = {
@@ -833,4 +945,6 @@ module.exports = {
   graphCurve,
   drawGraph,
   assetId,
+  objectVisualRect,
+  drawCollisionHint,
 };

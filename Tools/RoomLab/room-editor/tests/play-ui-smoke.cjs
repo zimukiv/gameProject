@@ -109,9 +109,12 @@ const assert = require('node:assert/strict'),
     await page.waitForFunction(() => window.__ROOM_LAB__.snapshot().game?.developerMode === true);
     assert.equal(await page.locator('#play-paid').textContent(), '○');
     assert.equal(await page.locator('.developer-mode').count(), 1);
-    await page.keyboard.down('KeyW');
+    await page.locator('#play-help').click();
+    assert.match(await page.locator('#dialog-content').textContent(), /左右冲刺/);
+    await page.getByRole('button', { name: '知道了', exact: true }).click();
+    await page.keyboard.down('KeyD');
     await page.keyboard.press('ShiftLeft');
-    await page.keyboard.up('KeyW');
+    await page.keyboard.up('KeyD');
     await page.waitForFunction(() =>
       window.__ROOM_LAB__.snapshot().game.events.some((e) => e.type === 'dash' && e.free),
     );
