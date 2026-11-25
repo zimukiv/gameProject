@@ -3,6 +3,9 @@ const M = require('../project/model.cjs'),
   Registry = require('../plugins/registry.cjs'),
   { clone, overlap, center, clamp, rotate } = require('../shared/utils.cjs');
 const T = 32;
+// A room entry or a respawn reveals the AI after this many seconds, so the player
+// gets a moment to read the room instead of being chased the instant it loads.
+const AI_SPAWN_DELAY = 2;
 const Performance = require('../project/performance.cjs');
 const Temperature = require('../project/temperature.cjs');
 const Collision = require('../project/collision.cjs');
@@ -354,6 +357,7 @@ class Engine {
       vy: 0,
       warning: null,
       teleported: [],
+      spawnDelay: 0,
       trail: [pc],
     };
     this.initializeRoom(this.roomCaches.get(id));
@@ -396,6 +400,7 @@ class Engine {
       this.placeAiAtEntrance(checkpointEntrance);
       this.emit('ai-entrance-spawn', { entranceId: checkpointEntrance.id, roomId: id });
     }
+    this.scheduleAiSpawn();
     if (!this.lifeBaselines.has(id))
       this.lifeBaselines.set(id, clone(Object.fromEntries(this.objectStates)));
     this.roomTime = 0;
@@ -714,6 +719,7 @@ class Engine {
     // so switching the AI on inside such a room starts it at the checkpoint.
     const entrance = spawnPoint ? null : this.aiEntranceForRoom();
     if (entrance) this.placeAiAtEntrance(entrance);
+    this.scheduleAiSpawn();
     this.emit('ai-start', {
       investment,
       tier,
@@ -739,12 +745,30 @@ class Engine {
     const rect = this.objectRect(entrance);
     Object.assign(this.ai, {
       x: rect.x + rect.w / 2,
-      y: rect.y + rect.h / 2,
+      // One tile above the marker: standing exactly on it buries the AI in the
+      // checkpoint art and makes it look like part of the scenery.
+      y: rect.y + rect.h / 2 - T,
       warning: null,
       processing: 0.5,
       trail: [center(this.player)],
     });
     return rect;
+  }
+  // Seconds the AI waits before it appears. settings.aiSpawnDelay may override the
+  // built-in two seconds; 0 restores the immediate reveal.
+  aiSpawnDelay() {
+    const value = Number(this.project.settings?.aiSpawnDelay);
+    return Number.isFinite(value) && value >= 0 ? value : AI_SPAWN_DELAY;
+  }
+  scheduleAiSpawn() {
+    if (!this.ai) return 0;
+    if (!this.ai.active) {
+      this.ai.spawnDelay = 0;
+      return 0;
+    }
+    this.ai.spawnDelay = this.aiSpawnDelay();
+    this.emit('ai-spawn-scheduled', { delay: this.ai.spawnDelay, roomId: this.room?.id || null });
+    return this.ai.spawnDelay;
   }
   stopAI() {
     const wasActive = this.ai.active;
@@ -755,6 +779,7 @@ class Engine {
       vx: 0,
       vy: 0,
       warning: null,
+      spawnDelay: 0,
       trail: [],
     });
     this.aiTrail = [];
@@ -991,6 +1016,15 @@ class Engine {
     a.processing = Math.max(0, a.processing - dt);
     a.cooldown = Math.max(0, a.cooldown - dt);
     if (!a.active) return;
+    if (a.spawnDelay > 0) {
+      a.spawnDelay = Math.max(0, a.spawnDelay - dt);
+      if (a.spawnDelay === 0) {
+        a.processing = 0.5;
+        a.trail = [center(this.player)];
+        this.emit('ai-spawn', { roomId: this.room.id });
+      }
+      return;
+    }
     if (a.flight) {
       const old = a.y + 14;
       a.vy = Math.min(this.config.maxFall, a.vy + this.config.gravity * dt);

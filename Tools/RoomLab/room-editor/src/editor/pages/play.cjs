@@ -101,7 +101,14 @@ function refresh(app) {
   $('play-note').textContent =
     g.messageTime > 0 ? g.message : '踩板触发；免费首冲计入三次上限；冰红茶可为二段冲刺充能。';
   $('play-ai').textContent =
-    'AI ID：' + g.ai.id + ' / ' + (g.ai.active ? '已启动（跨房继承）' : '未启动');
+    'AI ID：' +
+    g.ai.id +
+    ' / ' +
+    (g.ai.active
+      ? g.ai.spawnDelay > 0
+        ? '刷新中 ' + g.ai.spawnDelay.toFixed(1) + 's'
+        : '已启动（跨房继承）'
+      : '未启动');
   $('play-environment').textContent =
     '温度：' +
     [...g.zoneStates].map(([key, value]) => key + '=' + value).join('；') +

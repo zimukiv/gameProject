@@ -105,6 +105,7 @@ function activate(engine) {
   engine.ai.processing = 0;
   engine.ai.warning = null;
   engine.ai.teleported = [];
+  engine.ai.spawnDelay = 0;
   engine.ai.trail = [{ x: engine.player.x + 12, y: engine.player.y + 14 }];
 }
 function standOn(engine, exit) {
@@ -172,7 +173,8 @@ test('player wire carries active AI through the explicitly linked AI entrance on
   const entrance = g.room.objects.find((o) => o.id === 'b-in'),
     rect = g.objectRect(entrance);
   assert.equal(g.ai.x, rect.x + rect.w / 2);
-  assert.equal(g.ai.y, rect.y + rect.h / 2);
+  assert.equal(g.ai.y, rect.y + rect.h / 2 - 32, 'one tile above the entrance');
+  assert.ok(g.ai.spawnDelay > 0, 'the refresh is scheduled, not instant');
   assert.ok(g.events.some((e) => e.type === 'ai-carry'));
 });
 
@@ -185,7 +187,7 @@ test('the wired AI entrance is the room checkpoint, even through another exit', 
   assert.equal(g.room.id, 'b1');
   const rect = g.objectRect(g.room.objects.find((o) => o.id === 'b-in'));
   assert.equal(g.ai.x, rect.x + rect.w / 2, 'checkpoint entry');
-  assert.equal(g.ai.y, rect.y + rect.h / 2);
+  assert.equal(g.ai.y, rect.y + rect.h / 2 - 32, 'one tile above the entrance');
   assert.equal(g.events.some((e) => e.type === 'ai-carry'), false, 'not a wire carry');
   assert.ok(g.events.some((e) => e.type === 'ai-entrance-spawn'));
 });
@@ -211,10 +213,10 @@ test('a direct start with an active AI uses the checkpoint; an inactive AI stays
   const entrance = direct.room.objects.find((o) => o.id === 'b-in'),
     rect = direct.objectRect(entrance),
     centerX = rect.x + rect.w / 2,
-    centerY = rect.y + rect.h / 2;
+    centerY = rect.y + rect.h / 2 - 32;
   assert.equal(direct.ai.active, true, 'aiPolicy start activates the AI');
   assert.equal(direct.ai.x, centerX, 'a direct start uses the wired entrance');
-  assert.equal(direct.ai.y, centerY);
+  assert.equal(direct.ai.y, centerY, 'one tile above the entrance');
 
   const { p: p2, a } = fixture(),
     inactive = new Engine(p2, 'c1', 'a1');
@@ -274,7 +276,7 @@ test('respawn and walk-back keep an active AI at the entrance checkpoint', () =>
   assert.equal(g.room.id, 'b1');
   const entrance = () => {
     const rect = g.objectRect(g.room.objects.find((o) => o.id === 'b-in'));
-    return { x: rect.x + rect.w / 2, y: rect.y + rect.h / 2 };
+    return { x: rect.x + rect.w / 2, y: rect.y + rect.h / 2 - 32 };
   };
   assert.deepEqual([g.ai.x, g.ai.y], [entrance().x, entrance().y], 'wire carry');
 
@@ -315,5 +317,39 @@ test('switching the AI on inside the room starts it at the wired entrance', () =
   g.activateAI(pad);
   assert.equal(g.ai.active, true);
   assert.equal(g.ai.x, rect.x + rect.w / 2, 'activation honours the entrance');
-  assert.equal(g.ai.y, rect.y + rect.h / 2);
+  assert.equal(g.ai.y, rect.y + rect.h / 2 - 32, 'one tile above the entrance');
+  assert.ok(g.ai.spawnDelay > 0, 'activation also waits before the AI appears');
+});
+
+test('the refreshed AI waits two seconds and stays put, one tile above the entrance', () => {
+  const { p, a } = fixture(),
+    g = new Engine(p, 'c1', 'a1');
+  activate(g);
+  standOn(g, a.exits[0]);
+  g.update(1 / 60, {});
+  assert.equal(g.room.id, 'b1');
+  const rect = g.objectRect(g.room.objects.find((o) => o.id === 'b-in'));
+  assert.ok(g.ai.spawnDelay > 1.9, 'a fresh room schedules the refresh');
+  assert.equal(g.ai.y, rect.y + rect.h / 2 - 32);
+
+  const before = { x: g.ai.x, y: g.ai.y };
+  Object.assign(g.player, { x: 40, y: 40, vx: 0, vy: 0 });
+  g.updateAI(0.5, g.colliders());
+  assert.deepEqual([g.ai.x, g.ai.y], [before.x, before.y], 'no chase while refreshing');
+  assert.ok(g.ai.spawnDelay > 0);
+
+  g.updateAI(g.ai.spawnDelay + 0.01, g.colliders());
+  assert.equal(g.ai.spawnDelay, 0, 'the wait finishes');
+  assert.ok(g.events.some((e) => e.type === 'ai-spawn'));
+});
+
+test('settings.aiSpawnDelay = 0 reveals the AI immediately again', () => {
+  const { p, a } = fixture();
+  p.settings.aiSpawnDelay = 0;
+  const g = new Engine(p, 'c1', 'a1');
+  activate(g);
+  standOn(g, a.exits[0]);
+  g.update(1 / 60, {});
+  assert.equal(g.room.id, 'b1');
+  assert.equal(g.ai.spawnDelay, 0, 'no wait when the delay is zero');
 });

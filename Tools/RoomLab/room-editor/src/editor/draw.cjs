@@ -593,7 +593,7 @@ function drawRoom(
       ctx.fillRect(p.x, p.y, p.w, p.h);
       text(ctx, '@', p.x + p.w / 2, p.y + p.h - 5, p.crouching ? 16 : 23, '#08131e', 'center');
     }
-    if (game.ai.active) {
+    if (game.ai.active && !(game.ai.spawnDelay > 0)) {
       ctx.fillStyle = '#edae73';
       ctx.fillRect(game.ai.x - 22, game.ai.y - 14, 44, 28);
       text(ctx, '[AI]', game.ai.x, game.ai.y + 5, 15, '#21150c', 'center');

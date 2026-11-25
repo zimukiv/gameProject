@@ -76,7 +76,7 @@ path 必须为 `assets/...` 相对路径，禁止 ..、绝对盘符及反斜杠�
 
 physics.jet 2.0 支持 direction（up/down/left/right/custom）和 force。明确 direction/force 优先于旧 launchX/launchY；custom 保持任意横纵速度。读取和导出为方向模式补齐等效横纵速度，不删除已有扩展字段，旧 1.x 向量项目仍可运行。超过旧硬范围的数值及 2.0 manifest 需要协作双方升级。
 
-功能模块数值 schema 的 min/max 作为建议，输入及运行验证只要求有限数字；房间边界、引用、唯一 ID 和素材路径继续校验。settings.performance 采用 speed/gravity/jump/maxFall/dashSpeed/dashDeceleration/dashTime/coyote/buffer，缺少值用内置默认。settings.aiEntranceMode 控制 AI 入口语义：缺省（或 checkpoint）把「被 AI 连线指向的入口」当作该房间 AI 的存档点——房间每次加载（首次进入、回头再进、死亡复活、读档恢复）都把激活的 AI 放在入口，房间内启动 AI 也用它；onWire 恢复旧规则，只有从绑定出口过门才把 AI 送到入口。温控 initial 兼容为 initialState，显式新字段优先。
+功能模块数值 schema 的 min/max 作为建议，输入及运行验证只要求有限数字；房间边界、引用、唯一 ID 和素材路径继续校验。settings.performance 采用 speed/gravity/jump/maxFall/dashSpeed/dashDeceleration/dashTime/coyote/buffer，缺少值用内置默认。settings.aiSpawnDelay 控制 AI 刷新延迟（秒，缺省 2；0 = 进入房间/复活后立即出现，延迟期间 AI 不移动也不绘制）。 settings.aiEntranceMode 控制 AI 入口语义：缺省（或 checkpoint）把「被 AI 连线指向的入口」当作该房间 AI 的存档点——房间每次加载（首次进入、回头再进、死亡复活、读档恢复）都把激活的 AI 放在入口，房间内启动 AI 也用它；onWire 恢复旧规则，只有从绑定出口过门才把 AI 送到入口。温控 initial 兼容为 initialState，显式新字段优先。
 
 ## 路径生命编号与位置锁定（2.4.2）
 
