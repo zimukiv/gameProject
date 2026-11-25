@@ -1,5 +1,14 @@
 # 更新与阶段验收
 
+## 2026-11-25 · 4.2.0 build19 · AI 入口改为房间 AI 存档点
+
+- 反馈：只有第一次进入房间时 AI 会出现在入口；之后死亡复活、回头再进都回到玩家身边。
+- 原因：``loadRoom`` 仅在「从绑定出口过门且 AI 激活」时收到 ``aiRoute``（``engine.cjs:1320-1338``），而 ``retry()``（465）与回头入口 ``reentryPort()``（520）都不传该参数，AI 于是回到「玩家左侧 165px」的默认出生点。
+- 修复：新增 ``aiEntranceForRoom()`` / ``placeAiAtEntrance()``；房间每次加载都把激活的 AI 放在被 AI 连线指向的 ``common.portalIn``；``activateAI()`` 在没有绑定 AI 出现点时同样使用该入口。默认 ``settings.aiEntranceMode='checkpoint'``，旧行为可用 ``'onWire'`` 还原。
+- 测试：``tests/runtime-ai-ports.test.cjs`` 覆盖「另一扇门进入 / 直接试玩 / 死亡复活 / 回头再进 / 房间内启动 AI」五种路径，并保留旧模式回归；编辑器单测 436 项通过。
+- 打包：``release/RoomLab-4.2.0-win-x64-build19``。
+
+
 ## 2026-11-23 · 4.2.0 · AI 出现点与启动板绑定（未打包）
 
 - 新增房间工具栏方块 `common.aiSpawn`「AI 出现点」（`src/plugins/common.cjs`）：非实体标记，`trigger: none`、`collider: false`、`nonSolid: true`、`defaultCollision: false`；`Collision.normalize/portable` 与 `Collision.enabled` 同时强制非实体，即使旧存档或手改文件带 `collision: true` 也不会进入运行时碰撞列表。编辑器隐藏该方块的碰撞开关。

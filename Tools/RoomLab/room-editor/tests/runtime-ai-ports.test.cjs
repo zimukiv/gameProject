@@ -176,9 +176,24 @@ test('player wire carries active AI through the explicitly linked AI entrance on
   assert.ok(g.events.some((e) => e.type === 'ai-carry'));
 });
 
-test('an unrelated player exit never uses the explicit AI entrance', () => {
+test('the wired AI entrance is the room checkpoint, even through another exit', () => {
   const { p, a } = fixture({ secondExit: true }),
     g = new Engine(p, 'c1', 'a1');
+  activate(g);
+  standOn(g, a.exits[1]);
+  g.update(1 / 60, {});
+  assert.equal(g.room.id, 'b1');
+  const rect = g.objectRect(g.room.objects.find((o) => o.id === 'b-in'));
+  assert.equal(g.ai.x, rect.x + rect.w / 2, 'checkpoint entry');
+  assert.equal(g.ai.y, rect.y + rect.h / 2);
+  assert.equal(g.events.some((e) => e.type === 'ai-carry'), false, 'not a wire carry');
+  assert.ok(g.events.some((e) => e.type === 'ai-entrance-spawn'));
+});
+
+test("aiEntranceMode 'onWire' keeps the legacy rule: only the bound exit carries the AI", () => {
+  const { p, a } = fixture({ secondExit: true });
+  p.settings.aiEntranceMode = 'onWire';
+  const g = new Engine(p, 'c1', 'a1');
   activate(g);
   standOn(g, a.exits[1]);
   g.update(1 / 60, {});
@@ -189,17 +204,17 @@ test('an unrelated player exit never uses the explicit AI entrance', () => {
   assert.equal(g.events.some((e) => e.type === 'ai-carry'), false);
 });
 
-test('direct playtest starts and inactive AI never appear at a linked entrance', () => {
-  const { p } = fixture(),
-    direct = new Engine(p, 'c2', 'b1');
-  direct.courseState.aiActive = true;
-  direct.ai.active = true;
+test('a direct start with an active AI uses the checkpoint; an inactive AI stays beside the player', () => {
+  const { p } = fixture();
+  p.courses[1].rooms[0].aiPolicy = 'start';
+  const direct = new Engine(p, 'c2', 'b1');
   const entrance = direct.room.objects.find((o) => o.id === 'b-in'),
     rect = direct.objectRect(entrance),
     centerX = rect.x + rect.w / 2,
     centerY = rect.y + rect.h / 2;
-  assert.notEqual(direct.ai.x, centerX, 'a direct start spawns beside the player');
-  assert.notEqual(direct.ai.y, centerY);
+  assert.equal(direct.ai.active, true, 'aiPolicy start activates the AI');
+  assert.equal(direct.ai.x, centerX, 'a direct start uses the wired entrance');
+  assert.equal(direct.ai.y, centerY);
 
   const { p: p2, a } = fixture(),
     inactive = new Engine(p2, 'c1', 'a1');
@@ -248,4 +263,57 @@ test('a wired AI entrance does not act as a local teleporter on direct start', (
   game.ai.y = rect.y + rect.h / 2;
   game.updateAI(0.7, game.colliders());
   assert.equal(game.events.some((event) => event.type === 'ai-teleport'), false);
+});
+
+test('respawn and walk-back keep an active AI at the entrance checkpoint', () => {
+  const { p, a } = fixture(),
+    g = new Engine(p, 'c1', 'a1');
+  activate(g);
+  standOn(g, a.exits[0]);
+  g.update(1 / 60, {});
+  assert.equal(g.room.id, 'b1');
+  const entrance = () => {
+    const rect = g.objectRect(g.room.objects.find((o) => o.id === 'b-in'));
+    return { x: rect.x + rect.w / 2, y: rect.y + rect.h / 2 };
+  };
+  assert.deepEqual([g.ai.x, g.ai.y], [entrance().x, entrance().y], 'wire carry');
+
+  // Respawning after a death is the path that used to drop the AI back beside the
+  // player, because retry() never passed an aiRoute.
+  Object.assign(g.ai, { x: 0, y: 0 });
+  g.retry('test');
+  assert.deepEqual([g.ai.x, g.ai.y], [entrance().x, entrance().y], 'respawn returns to it');
+
+  // Walking back into the room (loadRoom without aiRoute) behaves the same way.
+  Object.assign(g.ai, { x: 0, y: 0 });
+  g.loadRoom('b1', 'b1-entry', resources(), null, null);
+  assert.deepEqual([g.ai.x, g.ai.y], [entrance().x, entrance().y], 're-entry returns to it');
+});
+
+test("aiEntranceMode 'onWire' keeps respawn beside the player", () => {
+  const { p, a } = fixture();
+  p.settings.aiEntranceMode = 'onWire';
+  const g = new Engine(p, 'c1', 'a1');
+  activate(g);
+  standOn(g, a.exits[0]);
+  g.update(1 / 60, {});
+  assert.equal(g.room.id, 'b1');
+  const rect = g.objectRect(g.room.objects.find((o) => o.id === 'b-in'));
+  Object.assign(g.ai, { x: 0, y: 0 });
+  g.retry('test');
+  assert.notEqual(g.ai.x, rect.x + rect.w / 2, 'legacy mode keeps the old spawn');
+});
+
+test('switching the AI on inside the room starts it at the wired entrance', () => {
+  const { p } = fixture();
+  const b = p.courses[1].rooms[0];
+  const pad = obj('b-start', 'common.aiStart', 3, 14, {});
+  b.objects.push(pad);
+  const g = new Engine(p, 'c2', 'b1');
+  const rect = g.objectRect(b.objects.find((o) => o.id === 'b-in'));
+  assert.notEqual(g.ai.active, true, 'starts inactive in a direct playtest');
+  g.activateAI(pad);
+  assert.equal(g.ai.active, true);
+  assert.equal(g.ai.x, rect.x + rect.w / 2, 'activation honours the entrance');
+  assert.equal(g.ai.y, rect.y + rect.h / 2);
 });

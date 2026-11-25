@@ -374,28 +374,27 @@ class Engine {
         spawn.y += dy;
       }
     }
-    // Explicit cross-room AI routing: when the player took a wire whose bound
-    // AI exit is wired to an AI entrance, the carried AI materializes at that
-    // entrance — but only when the entrance really belongs to this destination
-    // room. Direct playtest starts never pass aiRoute, so they keep the normal
-    // "spawn beside the player" behavior.
+    // The wired AI entrance doubles as the AI's checkpoint: whenever this room
+    // loads — first entry, walk-back, respawn after a death, checkpoint restore —
+    // an active AI starts at the entrance instead of beside the player, so those
+    // paths agree with the first arrival. settings.aiEntranceMode = 'onWire'
+    // restores the older rule where only the explicitly bound exit carries it.
+    const checkpointEntrance = this.ai.active ? this.aiEntranceForRoom(id) : null;
     if (aiRoute) {
       const entrance = this.room.objects.find(
         (o) => o.id === aiRoute.entranceId && AIPorts.isEntrance(o),
       );
       if (entrance) {
-        const rect = this.objectRect(entrance);
-        this.ai.x = rect.x + rect.w / 2;
-        this.ai.y = rect.y + rect.h / 2;
-        this.ai.warning = null;
-        this.ai.processing = 0.5;
-        this.ai.trail = [center(this.player)];
+        this.placeAiAtEntrance(entrance);
         this.emit('ai-carry', {
           exitId: aiRoute.exitId || null,
           entranceId: entrance.id,
           from: aiRoute.fromRoomId || null,
         });
       }
+    } else if (checkpointEntrance) {
+      this.placeAiAtEntrance(checkpointEntrance);
+      this.emit('ai-entrance-spawn', { entranceId: checkpointEntrance.id, roomId: id });
     }
     if (!this.lifeBaselines.has(id))
       this.lifeBaselines.set(id, clone(Object.fromEntries(this.objectStates)));
@@ -711,7 +710,41 @@ class Engine {
       processing: 0.8,
       trail: [pc],
     });
-    this.emit('ai-start', { investment, tier, resumed, spawnId: spawnPoint?.id || null });
+    // A pad without its own AI spawn marker still honours the wired AI entrance,
+    // so switching the AI on inside such a room starts it at the checkpoint.
+    const entrance = spawnPoint ? null : this.aiEntranceForRoom();
+    if (entrance) this.placeAiAtEntrance(entrance);
+    this.emit('ai-start', {
+      investment,
+      tier,
+      resumed,
+      spawnId: spawnPoint?.id || null,
+      entranceId: entrance?.id || null,
+    });
+  }
+  // The AI entrance wired to this room, or null when the project asks for the
+  // legacy wire-only behaviour or no wire targets this room.
+  aiEntranceForRoom(roomId = this.room?.id) {
+    if ((this.project.settings?.aiEntranceMode || 'checkpoint') === 'onWire') return null;
+    if (!this.room || this.room.id !== roomId) return null;
+    const edge = AIPorts.connections(this.project).find(
+      (item) => item.to?.roomId === roomId && item.to.aiEntranceId,
+    );
+    if (!edge) return null;
+    return (
+      this.room.objects.find((o) => o.id === edge.to.aiEntranceId && AIPorts.isEntrance(o)) || null
+    );
+  }
+  placeAiAtEntrance(entrance) {
+    const rect = this.objectRect(entrance);
+    Object.assign(this.ai, {
+      x: rect.x + rect.w / 2,
+      y: rect.y + rect.h / 2,
+      warning: null,
+      processing: 0.5,
+      trail: [center(this.player)],
+    });
+    return rect;
   }
   stopAI() {
     const wasActive = this.ai.active;
