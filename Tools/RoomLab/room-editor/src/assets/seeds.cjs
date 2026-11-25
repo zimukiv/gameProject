@@ -6,9 +6,13 @@ function restoreBuiltIns(assets, files) {
   builtIns ||= seeds({ allThemes: true });
   for (const asset of assets) {
     if (files.has(asset.path)) continue;
-    const original = builtIns.assets.find((item) => item.id === asset.id);
-    if (original && asset.path === original.path && asset.hash === original.hash)
-      files.set(asset.path, builtIns.files.get(asset.path).slice());
+    // 完全一致的内置素材，或房间里的"带前缀副本"（asset-xxxx-seed-yyy.svg）：
+    // 副本的 id/路径都变了，但声明的 hash 仍是内置素材的伪哈希，据此回退。
+    const original =
+      builtIns.assets.find(
+        (item) => item.id === asset.id && asset.path === item.path && asset.hash === item.hash,
+      ) || builtIns.assets.find((item) => item.hash === asset.hash);
+    if (original) files.set(asset.path, builtIns.files.get(original.path).slice());
   }
   return files;
 }

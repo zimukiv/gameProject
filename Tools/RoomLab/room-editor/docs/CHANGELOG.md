@@ -1,5 +1,14 @@
 # 更新与阶段验收
 
+## 2026-11-25 · 4.2.0 build21 · 云备份不再因内置素材的"带前缀副本"失败
+
+- 反馈：用编辑器打开关卡时提示 ``草稿备份失败：Error invoking remote method 'cloud:action': Error: 备份缺少素材：冰块 · 完整``。
+- 根因：``cloud/codec.cjs encode()`` 依赖 ``assets/seeds.cjs restoreBuiltIns()`` 回退内置素材，而该函数只认「id、路径、哈希三者都与内置完全一致」的素材；关卡里大量素材是房间内的**带前缀副本**（``assets/asset-xxxx-seed-ice-solid.svg``，id 变成 ``asset-xxxx``、路径也变了，但声明的 hash 仍是内置伪哈希 ``seed-ice-solid``），于是回退不到字节 → 备份编码抛错。
+- 修复：``restoreBuiltIns`` 在严格匹配之外，增加**按伪哈希回退**（副本的 hash 与内置一致即视为内置内容），因此本地保存/导出/云备份/试玩包导出等所有编码路径一并修好；自定义美术（hash 不同）不会被替换。
+- 测试：``tests/assets.test.cjs`` 新增「带前缀副本可被云备份编码」用例；编辑器单测 439 项通过。用真实 39 房关卡实测：49/49 素材全部回退成功、0 缺失，``encode`` 返回 files=50。
+- 打包：``release/RoomLab-4.2.0-win-x64-build21``。
+
+
 ## 2026-11-25 · 4.2.0 build20 · AI 刷新时机与落点（进房/复活后 2 秒，存档点上方一格）
 
 - 反馈：跨房间刷新太快、每个房间进入应等 2 秒再刷新；有 AI 存档点的房间死亡后应等 2 秒并刷新在存档点上方一格。

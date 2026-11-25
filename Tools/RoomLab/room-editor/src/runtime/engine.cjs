@@ -670,8 +670,14 @@ class Engine {
   }
   launchAI(o, range, x, y) {
     o = this.worldObject(o);
-    const pivot = { x: (o.x + 0.5) * T, y: o.y * T };
-    if (this.ai.active && Math.hypot(this.ai.x - pivot.x, this.ai.y - pivot.y) <= range * T) {
+    // 只有真正站在喷气口正上方的 AI 才会被弹（曾用 range 半径，紧跟身后的 AI 会一起飞）。
+    const width = Math.max(1, o.w || 1),
+      centerX = (o.x + width / 2) * T,
+      top = o.y * T;
+    const onPad =
+      Math.abs(this.ai.x - centerX) <= (width / 2 + 0.6) * T &&
+      Math.abs(this.ai.y + 14 - top) <= 0.9 * T;
+    if (this.ai.active && onPad) {
       Object.assign(this.ai, {
         flight: true,
         vx: x,

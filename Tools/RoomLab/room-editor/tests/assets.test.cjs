@@ -122,3 +122,24 @@ test('same-theme courses isolate custom assets and defaults while retaining them
     true,
   );
 });
+
+test('cloud backup restores a prefixed copy of a built-in seed', () => {
+  const Codec = require('../src/cloud/codec.cjs'),
+    p = M.example(),
+    seed = seeds({ allThemes: true }),
+    original = seed.assets.find((a) => a.id === 'seed-ice-solid');
+  p.assets = [
+    {
+      ...original,
+      id: 'asset-test-room-1',
+      path: 'assets/asset-test-room-1-seed-ice-solid.svg',
+      name: original.name,
+    },
+  ];
+  const snapshot = Codec.encode(p, []);
+  assert.equal(snapshot.files.length, 2, 'project.json + the artwork');
+  assert.ok(
+    snapshot.files.some((f) => f.path === 'assets/asset-test-room-1-seed-ice-solid.svg' && f.size > 0),
+    'the prefixed copy must be included with the built-in bytes',
+  );
+});
