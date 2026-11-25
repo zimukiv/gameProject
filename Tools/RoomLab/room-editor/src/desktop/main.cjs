@@ -271,7 +271,33 @@ function register() {
     sessions.set(session, { file, projectId: loaded.project.id, hash: fileHash(file) });
     return { ...loaded, session, path: file, cloudStatus };
   });
-  ipcMain.handle('project:save', async (event, payload) => {
+  // "Save as" into a folder that already holds same-named artwork with different bytes is
+// recoverable: ask once, keep the old files in .project-backups, then overwrite. Autosave
+// already reports this as a soft error, so a manual save must not hard-fail either.
+function writeProjectWithAssetConfirmation(file, payload) {
+  return Files.writeProjectWithConfirmation(
+    file,
+    payload.project,
+    payload.files || [],
+    (conflicts, target) => {
+      const list = Array.isArray(conflicts) ? conflicts : [];
+      const shown = list
+        .slice(0, 6)
+        .map((item) => '· ' + (item.path || item.name))
+        .join('\n');
+      return acknowledge(
+        payload,
+        '目标目录里已有同名素材但内容不同，是否用当前工程覆盖？',
+        target +
+          '\n' +
+          shown +
+          (list.length > 6 ? '\n…共 ' + list.length + ' 个' : '') +
+          '\n覆盖前会把旧素材备份到 .project-backups；取消则请换一个目录另存。',
+      );
+    },
+  );
+}
+ipcMain.handle('project:save', async (event, payload) => {
     trusted(event);
     const saved = sessions.get(payload.session);
     const current = cloud.repo.data.trees.find((t) => t.id === cloud.repo.data.current);
@@ -316,11 +342,24 @@ function register() {
       )
         return null;
     }
-    const result = Files.writeProject(file, payload.project, payload.files || []),
-      session =
-        payload.session && sessions.has(payload.session) ? payload.session : crypto.randomUUID();
+    const session =
+      payload.session && sessions.has(payload.session) ? payload.session : crypto.randomUUID();
+    const result = await writeProjectWithAssetConfirmation(file, payload);
+    if (!result) return null;
     const complete = Files.readProject(file);
-    const cloudStatus = recordFile(file, payload.project, complete.files);
+    let cloudStatus = null;
+    try {
+      cloudStatus = recordFile(file, payload.project, complete.files);
+    } catch (error) {
+      // The project is already on disk; a cloud bookkeeping failure must not turn a
+      // finished save into "保存失败".
+      console.error('recordFile failed', error);
+      try {
+        cloudStatus = cloud.status();
+      } catch {
+        cloudStatus = null;
+      }
+    }
     sessions.set(session, { file, projectId: payload.project.id, hash: fileHash(file) });
     return { ...result, session, cloudStatus };
   });
