@@ -1,0 +1,696 @@
+[
+  {
+    "key": "death_spike",
+    "label": "碰尖刺死亡",
+    "category": "死亡",
+    "intent": "短促刺痛/挤扁；避免长惨叫",
+    "file": "events/death_spike.wav",
+    "seconds": 0.697,
+    "components": [
+      {
+        "pack": "oga-squeak",
+        "original": "squeak toy/squeak toy - squeak1.wav",
+        "source_url": "https://opengameart.org/content/squeak-toy-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.5,
+        "original_sha256": "a89853f355ce7c6c60ee9695f5e725250c6a74f4a177b549afa0a30ff98ff362"
+      },
+      {
+        "pack": "interface-sounds",
+        "original": "Audio/error_001.ogg",
+        "source_url": "https://kenney.nl/assets/interface-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.3,
+        "original_sha256": "46e67425d16339772e8d328fb36a49426c9467418686e11beeb71ff84b0f6433"
+      }
+    ],
+    "chosen_scheme": "C",
+    "source_file": "C/death_spike.wav",
+    "selection_note": "C 死亡音",
+    "sha256": "34ad721ae8472325a37211fcff99ec9f3239baf793ef5499079c4e834f082437",
+    "preview_positions": {
+      "01_死亡奖励与AI试听": 0.333,
+      "02_完整26场景试听": 0.333
+    }
+  },
+  {
+    "key": "death_fall",
+    "label": "掉出房间死亡",
+    "category": "死亡",
+    "intent": "下滑失重；落空的喜剧感",
+    "file": "events/death_fall.wav",
+    "seconds": 0.855,
+    "components": [
+      {
+        "pack": "oga-retro",
+        "original": "The Essential Retro Video Game Sound Effects Collection [512 sounds] By Juhani Junkala/Movement/Falling Sounds/sfx_sounds_falling3.wav",
+        "source_url": "https://opengameart.org/content/512-sound-effects-8-bit-style",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.7,
+        "original_sha256": "f09da184f5a375fccfab4e7229fc40dc8aec46dc054f5bb301a1e86e3c2c6223"
+      },
+      {
+        "pack": "interface-sounds",
+        "original": "Audio/bong_001.ogg",
+        "source_url": "https://kenney.nl/assets/interface-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.3,
+        "original_sha256": "d21d0f0b782445db579d11e2506b24cd1ac9d664ee33aeaf807761aa7b6fd710"
+      }
+    ],
+    "chosen_scheme": "C",
+    "source_file": "C/death_fall.wav",
+    "selection_note": "C 死亡音",
+    "sha256": "f8b63e408ac0579c62fe47c9e3b7542873fb242ca659ae679c5074d28804bde3",
+    "preview_positions": {
+      "01_死亡奖励与AI试听": 1.68,
+      "02_完整26场景试听": 1.68
+    }
+  },
+  {
+    "key": "death_ai",
+    "label": "被 AI 抓到死亡",
+    "category": "死亡",
+    "intent": "被 AI 抓到并死亡时的失败反馈",
+    "file": "events/death_ai.wav",
+    "seconds": 0.639,
+    "components": [
+      {
+        "pack": "interface-sounds",
+        "original": "Audio/glitch_002.ogg",
+        "source_url": "https://kenney.nl/assets/interface-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.2,
+        "original_sha256": "1da06a2e63ce131f5e0316ca27c75fc0d672db7a8f9b986c70693f2bd992eabc"
+      },
+      {
+        "pack": "oga-retro",
+        "original": "The Essential Retro Video Game Sound Effects Collection [512 sounds] By Juhani Junkala/General Sounds/Weird Sounds/sfx_sound_shutdown1.wav",
+        "source_url": "https://opengameart.org/content/512-sound-effects-8-bit-style",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.59,
+        "tempo_multiplier": 2.4,
+        "original_sha256": "1f6c0b2a8511293cc21490d3f1773215c05aae26c52f003e3561fba33631c30c"
+      }
+    ],
+    "chosen_scheme": "C",
+    "source_file": "C/death_ai.wav:instrumental-first-component",
+    "selection_note": "C 的故障起音接电子断电尾音",
+    "sha256": "184ee43ede3d9bb2f370766acd9c40deceb44f266e23e804d67cb2075986a28f",
+    "preview_positions": {
+      "01_死亡奖励与AI试听": 3.185,
+      "02_完整26场景试听": 3.185
+    }
+  },
+  {
+    "key": "token",
+    "label": "小 Token 拾取",
+    "category": "奖励",
+    "intent": "短促，连续拾取不会每次都奏乐",
+    "file": "events/token.wav",
+    "seconds": 0.416,
+    "components": [
+      {
+        "pack": "oga-retro",
+        "original": "The Essential Retro Video Game Sound Effects Collection [512 sounds] By Juhani Junkala/General Sounds/Coins/sfx_coin_single1.wav",
+        "source_url": "https://opengameart.org/content/512-sound-effects-8-bit-style",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": null,
+        "original_sha256": "5db3c16ed50acd8fb02525caf5446402910fd3fb61071ae9098ac232e22a63aa"
+      }
+    ],
+    "chosen_scheme": "A",
+    "source_file": "A/token.wav",
+    "selection_note": "A 奖励音",
+    "sha256": "9a5851f0f7592eebca5d6ce7c311059b90c4c6718e4de76a5e4504b21238ff48",
+    "preview_positions": {
+      "01_死亡奖励与AI试听": 4.474,
+      "02_完整26场景试听": 4.474
+    }
+  },
+  {
+    "key": "big_token",
+    "label": "大 Token 拾取",
+    "category": "奖励",
+    "intent": "比小 Token 更有排面",
+    "file": "events/big_token.wav",
+    "seconds": 0.469,
+    "components": [
+      {
+        "pack": "oga-retro",
+        "original": "The Essential Retro Video Game Sound Effects Collection [512 sounds] By Juhani Junkala/General Sounds/Coins/sfx_coin_cluster3.wav",
+        "source_url": "https://opengameart.org/content/512-sound-effects-8-bit-style",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": null,
+        "original_sha256": "0ba9d1bd0e61b66a86960e0553f8dc1923ae48bb2b27934dfe61d395a4b7f619"
+      }
+    ],
+    "chosen_scheme": "A",
+    "source_file": "A/big_token.wav",
+    "selection_note": "A 奖励音",
+    "sha256": "1235f33b703d1146c6912aa4d183da88783f1ef7cd445f30e4b967d0ced9a0f1",
+    "preview_positions": {
+      "01_死亡奖励与AI试听": 5.54,
+      "02_完整26场景试听": 5.54
+    }
+  },
+  {
+    "key": "charge",
+    "label": "充能完成",
+    "category": "奖励",
+    "intent": "让玩家知道冲刺资源到手",
+    "file": "events/charge.wav",
+    "seconds": 0.418,
+    "components": [
+      {
+        "pack": "oga-retro",
+        "original": "The Essential Retro Video Game Sound Effects Collection [512 sounds] By Juhani Junkala/General Sounds/Positive Sounds/sfx_sounds_powerup3.wav",
+        "source_url": "https://opengameart.org/content/512-sound-effects-8-bit-style",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": null,
+        "original_sha256": "ba1231c9791ae933faffb1d01899c5d205a234e0e25e8c28653588431a7f3014"
+      }
+    ],
+    "chosen_scheme": "A",
+    "source_file": "A/charge.wav",
+    "selection_note": "A 奖励音",
+    "sha256": "1ff12d78167e982b8f74cfd26a9bd1a1959954f748e43d46faf049586af9d615",
+    "preview_positions": {
+      "01_死亡奖励与AI试听": 6.659,
+      "02_完整26场景试听": 6.659
+    }
+  },
+  {
+    "key": "collectible",
+    "label": "收藏品/高价值奖励",
+    "category": "奖励",
+    "intent": "夸张庆祝，少量使用",
+    "file": "events/collectible.wav",
+    "seconds": 0.923,
+    "components": [
+      {
+        "pack": "oga-retro",
+        "original": "The Essential Retro Video Game Sound Effects Collection [512 sounds] By Juhani Junkala/General Sounds/Weird Sounds/sfx_sound_refereewhistle.wav",
+        "source_url": "https://opengameart.org/content/512-sound-effects-8-bit-style",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": null,
+        "original_sha256": "950b39a4c05229a403272eb6f4e4e58bd6e0286186a637f1ea4772fddbd2e2cb"
+      },
+      {
+        "pack": "oga-retro",
+        "original": "The Essential Retro Video Game Sound Effects Collection [512 sounds] By Juhani Junkala/General Sounds/Fanfares/sfx_sounds_fanfare1.wav",
+        "source_url": "https://opengameart.org/content/512-sound-effects-8-bit-style",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": null,
+        "original_sha256": "f66509a79af67f2cc3efd3c524d54809c2be2235bf27562e5d6fd0542c2fcad3"
+      }
+    ],
+    "chosen_scheme": "A",
+    "source_file": "A/collectible.wav",
+    "selection_note": "A 奖励音",
+    "sha256": "b051b07330ea56845dff1de5f535227eda54e5bfcba7646bac35131a24da8dfb",
+    "preview_positions": {
+      "01_死亡奖励与AI试听": 7.727,
+      "02_完整26场景试听": 7.727
+    }
+  },
+  {
+    "key": "checkpoint",
+    "label": "激活存档点",
+    "category": "奖励",
+    "intent": "明确保存成功",
+    "file": "events/checkpoint.wav",
+    "seconds": 0.664,
+    "components": [
+      {
+        "pack": "oga-retro",
+        "original": "The Essential Retro Video Game Sound Effects Collection [512 sounds] By Juhani Junkala/General Sounds/Positive Sounds/sfx_sounds_powerup7.wav",
+        "source_url": "https://opengameart.org/content/512-sound-effects-8-bit-style",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": null,
+        "original_sha256": "09830a5f4d2ee511613451aeee2d40eeb5bde46330df82550957b7ef9aea0321"
+      }
+    ],
+    "chosen_scheme": "A",
+    "source_file": "A/checkpoint.wav",
+    "selection_note": "A 奖励音",
+    "sha256": "1805cdd209d2fde9ada6fc2553eabe84ffbcb76f284eb8db3e5abc044b7040c8",
+    "preview_positions": {
+      "01_死亡奖励与AI试听": 9.299,
+      "02_完整26场景试听": 9.299
+    }
+  },
+  {
+    "key": "finish",
+    "label": "通关结算",
+    "category": "奖励",
+    "intent": "完整短庆祝，允许更长",
+    "file": "events/finish.wav",
+    "seconds": 0.28,
+    "components": [
+      {
+        "pack": "oga-retro",
+        "original": "The Essential Retro Video Game Sound Effects Collection [512 sounds] By Juhani Junkala/General Sounds/Fanfares/sfx_sounds_fanfare2.wav",
+        "source_url": "https://opengameart.org/content/512-sound-effects-8-bit-style",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": null,
+        "original_sha256": "8fcc77be85e2640efaf92f8850266ab214b036a9c26f015aa478819d98944ca6"
+      }
+    ],
+    "chosen_scheme": "A",
+    "source_file": "A/finish.wav",
+    "selection_note": "A 奖励音",
+    "sha256": "eba0df3295015fa95334cfc9293cc99e9f36e6f3d8282519b7d9c80773b04876",
+    "preview_positions": {
+      "01_死亡奖励与AI试听": 10.614,
+      "02_完整26场景试听": 10.614
+    }
+  },
+  {
+    "key": "jump",
+    "label": "跳跃",
+    "category": "动作",
+    "intent": "轻，起跳即播",
+    "file": "events/jump.wav",
+    "seconds": 0.22,
+    "components": [
+      {
+        "pack": "digital-audio",
+        "original": "Audio/phaseJump2.ogg",
+        "source_url": "https://kenney.nl/assets/digital-audio",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.22,
+        "original_sha256": "5d85717cfca231f7da7887cef5f44b2131bbe3308eb0c1fee0b4f9e61d59b571"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "B/jump.wav",
+    "selection_note": "B 基础音",
+    "sha256": "8b1ab2504c9f64317e6e0f79baa6e18dea3ca4de790220bec7eac1fc13dd5f8f",
+    "preview_positions": {
+      "02_完整26场景试听": 11.544
+    }
+  },
+  {
+    "key": "land",
+    "label": "落地",
+    "category": "动作",
+    "intent": "比跳跃更低、更轻",
+    "file": "events/land.wav",
+    "seconds": 0.16,
+    "components": [
+      {
+        "pack": "impact-sounds",
+        "original": "Audio/impactGeneric_light_000.ogg",
+        "source_url": "https://kenney.nl/assets/impact-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.16,
+        "original_sha256": "f0e982611e97512fee5f777986b67e8b435434b601f94992ec044f7e89fb5acb"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "B/land.wav",
+    "selection_note": "B 基础音",
+    "sha256": "fd6f222f5bc3cee90a74491375d2d012d6bfacdd45fed41564896d0b88e72e57",
+    "preview_positions": {
+      "02_完整26场景试听": 12.414
+    }
+  },
+  {
+    "key": "dash",
+    "label": "水平冲刺",
+    "category": "动作",
+    "intent": "与跳跃区别明显",
+    "file": "events/dash.wav",
+    "seconds": 0.23,
+    "components": [
+      {
+        "pack": "digital-audio",
+        "original": "Audio/phaserUp4.ogg",
+        "source_url": "https://kenney.nl/assets/digital-audio",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.23,
+        "original_sha256": "a64a69368af9d85dfce8dd38432fd6c9935a7766621782193102c9cb276571fc"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "B/dash.wav",
+    "selection_note": "B 基础音",
+    "sha256": "24bfe29d2766b1fff6f4a90f69aadffc57baff797c5d099f5f4d9f0f95630dc3",
+    "preview_positions": {
+      "02_完整26场景试听": 13.224
+    }
+  },
+  {
+    "key": "jet",
+    "label": "喷气弹射",
+    "category": "机关",
+    "intent": "单次喷气启动，不作为循环",
+    "file": "events/jet.wav",
+    "seconds": 0.65,
+    "components": [
+      {
+        "pack": "sci-fi-sounds",
+        "original": "Audio/thrusterFire_001.ogg",
+        "source_url": "https://kenney.nl/assets/sci-fi-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.65,
+        "original_sha256": "924636edc923fe4aab5829b69dc5dc1c5d659dec5739865434dabee752a3bb79"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "B/jet.wav",
+    "selection_note": "B 基础音",
+    "sha256": "e034383e1eb908b533407a1296ae3de23b16cd70881ba9ad1ddfa0a8c65f4a47",
+    "preview_positions": {
+      "02_完整26场景试听": 14.104
+    }
+  },
+  {
+    "key": "rail_start",
+    "label": "进入导轨",
+    "category": "机关",
+    "intent": "短机械/电子启动",
+    "file": "events/rail_start.wav",
+    "seconds": 0.5,
+    "components": [
+      {
+        "pack": "sci-fi-sounds",
+        "original": "Audio/engineCircular_000.ogg",
+        "source_url": "https://kenney.nl/assets/sci-fi-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.5,
+        "original_sha256": "8ab85f9fa85e9e692287f98acb36b9ac3ba15313b007c039055e286b736f4e3a"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "B/rail_start.wav",
+    "selection_note": "B 基础音",
+    "sha256": "559d6291f0926e3bd0089e850298ab52acb5d2d5d134643749960f63209df80d",
+    "preview_positions": {
+      "02_完整26场景试听": 15.404
+    }
+  },
+  {
+    "key": "rail_end",
+    "label": "导轨弹出",
+    "category": "机关",
+    "intent": "到达导轨末端、被弹出时播放",
+    "file": "events/rail_end.wav",
+    "seconds": 0.23,
+    "components": [
+      {
+        "pack": "sci-fi-sounds",
+        "original": "Audio/impactMetal_000.ogg",
+        "source_url": "https://kenney.nl/assets/sci-fi-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.23,
+        "tempo_multiplier": 1,
+        "original_sha256": "956c6612a256aa1a67a2327fffe2454f6b1d82e4c1c2be28fd66916335d5b1d6"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "sci-fi-sounds/Audio/impactMetal_000.ogg",
+    "selection_note": "短金属释放声",
+    "sha256": "50062cde9f75c19013716373ddeae429116531701addb3ab6bb6e09c879a1ef0",
+    "preview_positions": {
+      "02_完整26场景试听": 16.554
+    }
+  },
+  {
+    "key": "ice_create",
+    "label": "冰块生成",
+    "category": "机关",
+    "intent": "晶体或高频电子质感",
+    "file": "events/ice_create.wav",
+    "seconds": 0.121,
+    "components": [
+      {
+        "pack": "interface-sounds",
+        "original": "Audio/glass_003.ogg",
+        "source_url": "https://kenney.nl/assets/interface-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.45,
+        "original_sha256": "9a6f16e3c2eff6fe5d017a4755a28306b14555728831cd00d70308e8f9689566"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "B/ice_create.wav",
+    "selection_note": "B 基础音",
+    "sha256": "5befffa7bbbc98ee19df43fcba4d7765148f07219f1d3e405352d0c10f597cb0",
+    "preview_positions": {
+      "02_完整26场景试听": 17.434
+    }
+  },
+  {
+    "key": "ice_melt",
+    "label": "冰块消失",
+    "category": "机关",
+    "intent": "消散/碎裂",
+    "file": "events/ice_melt.wav",
+    "seconds": 0.012,
+    "components": [
+      {
+        "pack": "interface-sounds",
+        "original": "Audio/glitch_003.ogg",
+        "source_url": "https://kenney.nl/assets/interface-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.4,
+        "original_sha256": "d55e0c64aee9f1ab2ba9523d0e256ca76639c3ec2f230405e2ff25aff36020b3"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "B/ice_melt.wav",
+    "selection_note": "B 基础音",
+    "sha256": "0c060b25b7aee29e929f1fa7ae316cb4d74e1323b47740a401b0df4026391f8a",
+    "preview_positions": {
+      "02_完整26场景试听": 18.205
+    }
+  },
+  {
+    "key": "thermal",
+    "label": "温控切换",
+    "category": "机关",
+    "intent": "开关触发确认",
+    "file": "events/thermal.wav",
+    "seconds": 0.229,
+    "components": [
+      {
+        "pack": "interface-sounds",
+        "original": "Audio/switch_003.ogg",
+        "source_url": "https://kenney.nl/assets/interface-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.25,
+        "original_sha256": "ca12dd32103f401481d5aff56d5e9831174e99bb577139c09b07d046eb8b837e"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "B/thermal.wav",
+    "selection_note": "B 基础音",
+    "sha256": "a22a76c5d4939e4f53d353e0e61667a09f776da57ddb95bd8fb16aed8bd3b186",
+    "preview_positions": {
+      "02_完整26场景试听": 18.866
+    }
+  },
+  {
+    "key": "transform",
+    "label": "旋转/变换机关",
+    "category": "机关",
+    "intent": "机械动作完成提示",
+    "file": "events/transform.wav",
+    "seconds": 0.532,
+    "components": [
+      {
+        "pack": "sci-fi-sounds",
+        "original": "Audio/doorOpen_000.ogg",
+        "source_url": "https://kenney.nl/assets/sci-fi-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.55,
+        "original_sha256": "5b7e07eccd4413ad9ef3720c2d14f9cc699f4c50111e9b2f48bd60e6f1a164c3"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "B/transform.wav",
+    "selection_note": "B 基础音",
+    "sha256": "c6976c937e2710459dbcbb442039be64711ffc57a2ab7a1a5f7dc5112fbd7c0e",
+    "preview_positions": {
+      "02_完整26场景试听": 19.745
+    }
+  },
+  {
+    "key": "ai_start",
+    "label": "AI 启动追逐",
+    "category": "AI",
+    "intent": "明确进入追逐阶段",
+    "file": "events/ai_start.wav",
+    "seconds": 0.8,
+    "components": [
+      {
+        "pack": "sci-fi-sounds",
+        "original": "Audio/computerNoise_001.ogg",
+        "source_url": "https://kenney.nl/assets/sci-fi-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.8,
+        "original_sha256": "29b4842f6d8c0ba2b0cb00bfaff3b852b492bb43197a82e697917aacbe106757"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "B/ai_start.wav",
+    "selection_note": "B 基础音",
+    "sha256": "699613bbe31b58ff7e70a407e73832fe7f88f9687c7f4cf9e749669eea765ee5",
+    "preview_positions": {
+      "01_死亡奖励与AI试听": 11.544,
+      "02_完整26场景试听": 20.927
+    }
+  },
+  {
+    "key": "ai_warning",
+    "label": "AI 危险提示",
+    "category": "AI",
+    "intent": "预留给 AI 传送前的提示。建议在预警开始时响一次，给玩家避让时间。",
+    "file": "events/ai_warning.wav",
+    "seconds": 0.33,
+    "components": [
+      {
+        "pack": "interface-sounds",
+        "original": "Audio/question_003.ogg",
+        "source_url": "https://kenney.nl/assets/interface-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.4,
+        "original_sha256": "00bafc564e29c12e99da584864a750260e7110378251d63d3aa5b3d727836efe"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "B/ai_warning.wav",
+    "selection_note": "B 基础音",
+    "sha256": "172dc2fa48eb8d7672c78f8eb6f4a2d74607e4d82396294e48bd6b0121f13912",
+    "preview_positions": {
+      "02_完整26场景试听": 22.377
+    }
+  },
+  {
+    "key": "ai_steal",
+    "label": "被 AI 抓到但未死亡",
+    "category": "AI",
+    "intent": "与真正死亡分开",
+    "file": "events/ai_steal.wav",
+    "seconds": 0.165,
+    "components": [
+      {
+        "pack": "interface-sounds",
+        "original": "Audio/error_002.ogg",
+        "source_url": "https://kenney.nl/assets/interface-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.45,
+        "original_sha256": "76810ec365f41078fd0507101da5bb7b8730fe011dde43908329fdabd8575e79"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "B/ai_steal.wav",
+    "selection_note": "B 基础音",
+    "sha256": "c6e130006601afab436b68cc7d956d7a78c2855ad7e772d536ad74c11aed6c6f",
+    "preview_positions": {
+      "02_完整26场景试听": 23.357
+    }
+  },
+  {
+    "key": "teleport",
+    "label": "传送/换房",
+    "category": "机关",
+    "intent": "短过渡",
+    "file": "events/teleport.wav",
+    "seconds": 0.55,
+    "components": [
+      {
+        "pack": "sci-fi-sounds",
+        "original": "Audio/forceField_000.ogg",
+        "source_url": "https://kenney.nl/assets/sci-fi-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.55,
+        "original_sha256": "c2916f2a062c8ddd1aca2826d134fe90847037db31342726ffb0f9097afe339c"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "B/teleport.wav",
+    "selection_note": "B 基础音",
+    "sha256": "43bffe7fbcf71a5d073bf7d729aafd8b1f19cc905e7004d064b4112eec313589",
+    "preview_positions": {
+      "02_完整26场景试听": 24.172
+    }
+  },
+  {
+    "key": "ui_move",
+    "label": "菜单移动",
+    "category": "界面",
+    "intent": "轻点",
+    "file": "events/ui_move.wav",
+    "seconds": 0.04,
+    "components": [
+      {
+        "pack": "interface-sounds",
+        "original": "Audio/select_002.ogg",
+        "source_url": "https://kenney.nl/assets/interface-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.15,
+        "original_sha256": "4cc6ac5341b9b2c86fef80c347de028e9ab9f2e037586ac7d9fa59a403a1c012"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "B/ui_move.wav",
+    "selection_note": "B 基础音",
+    "sha256": "727848a7407e0349b6b2b42ef1a422c43b081407f8352ddc7823b7aa8d849ccd",
+    "preview_positions": {
+      "02_完整26场景试听": 25.372
+    }
+  },
+  {
+    "key": "ui_confirm",
+    "label": "菜单确认",
+    "category": "界面",
+    "intent": "明确按下",
+    "file": "events/ui_confirm.wav",
+    "seconds": 0.29,
+    "components": [
+      {
+        "pack": "interface-sounds",
+        "original": "Audio/confirmation_001.ogg",
+        "source_url": "https://kenney.nl/assets/interface-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.35,
+        "original_sha256": "063564703b6094d70718a3e787a55cc9141611e4ecd6b6637f8828f79b4a8c3a"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "B/ui_confirm.wav",
+    "selection_note": "B 基础音",
+    "sha256": "3acda9b7f0ee3b3c213abec7ee6ff0a6bc7601749237ffe3c38fe934d0e98e37",
+    "preview_positions": {
+      "02_完整26场景试听": 26.062
+    }
+  },
+  {
+    "key": "ui_back",
+    "label": "菜单返回",
+    "category": "界面",
+    "intent": "与确认区分",
+    "file": "events/ui_back.wav",
+    "seconds": 0.061,
+    "components": [
+      {
+        "pack": "interface-sounds",
+        "original": "Audio/back_001.ogg",
+        "source_url": "https://kenney.nl/assets/interface-sounds",
+        "license": "CC0-1.0",
+        "excerpt_cap_seconds": 0.25,
+        "original_sha256": "07db973f79f6ae0f2edc34561e7592e24d0577455919fb602cb8ecc0da991dcf"
+      }
+    ],
+    "chosen_scheme": "B",
+    "source_file": "B/ui_back.wav",
+    "selection_note": "B 基础音",
+    "sha256": "7082658afb27762228be2d7a37a6d21033fb79a21f6b7c725b0aa52060fbb64b",
+    "preview_positions": {
+      "02_完整26场景试听": 27.002
+    }
+  }
+]

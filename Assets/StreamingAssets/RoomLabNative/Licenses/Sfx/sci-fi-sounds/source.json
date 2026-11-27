@@ -1,0 +1,13 @@
+{
+  "pack": "sci-fi-sounds",
+  "page": "https://kenney.nl/assets/sci-fi-sounds",
+  "source_archive_sha256": "119340f351a5098ad814f78719438c0da355a9ce8a4c8a3af6a8d48aa3d49e04",
+  "included_originals": [
+    "Audio/computerNoise_001.ogg",
+    "Audio/doorOpen_000.ogg",
+    "Audio/engineCircular_000.ogg",
+    "Audio/forceField_000.ogg",
+    "Audio/thrusterFire_001.ogg",
+    "Audio/impactMetal_000.ogg"
+  ]
+}

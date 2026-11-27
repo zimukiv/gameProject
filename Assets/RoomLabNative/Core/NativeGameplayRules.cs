@@ -5,15 +5,19 @@ namespace RoomLab.Native
     // Editor255Compat: faithful 2.5.5 project settings. LatestPhysics: the planning document profile.
     // DemoPhysics: authored level content driven by the current design intent for the shipped demo
     // (paid dash stock 1 starting at 0, AI eats collectibles, E to boot the AI, two AI catches kill).
-    public enum NativeGameplayRules {Editor255Compat,LatestPhysics,DemoPhysics}
+    public enum NativeGameplayRules {Editor255Compat,LatestPhysics,DemoPhysics,EditorBuild15}
     public static class NativeRuleSets
     {
         public static bool IsManualInteraction(this NativeGameplayRules rules,string type)
         {
-            if(rules==NativeGameplayRules.LatestPhysics)return type=="physics.thermal"||type=="common.aiStart"||type=="common.aiStartHollow";
-            if(rules==NativeGameplayRules.DemoPhysics)return type=="common.aiStart"||type=="common.aiStartHollow";
+            if(rules==NativeGameplayRules.LatestPhysics)return type=="physics.thermal"||type=="common.aiStart"||type=="common.aiStartHollow"||type=="common.assignmentSubmit";
+            if(rules==NativeGameplayRules.DemoPhysics)return type=="common.aiStart"||type=="common.aiStartHollow"||type=="common.assignmentSubmit";
+            // 正式版（EditorBuild15）：助手方块与交付方块同样只允许按交互键触发，禁止踩上去自动触发
+            if(rules==NativeGameplayRules.EditorBuild15)return type=="common.aiStart"||type=="common.aiStartHollow"||type=="common.assignmentSubmit";
             return false;
         }
+        // 交付方块（停止 AI）在编辑器构建档里也要能用交互键触发。
+        public static bool IsSubmitInteraction(this NativeGameplayRules rules,string type){return type=="common.assignmentSubmit";}
         public static bool BankedRecharge(this NativeGameplayRules rules){return rules!=NativeGameplayRules.Editor255Compat;}
     }
     public static class NativePhysicsDemo

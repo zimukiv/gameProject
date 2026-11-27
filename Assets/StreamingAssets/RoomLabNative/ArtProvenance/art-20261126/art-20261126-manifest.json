@@ -1,0 +1,815 @@
+﻿{
+    "package":  "2026-11-26.zip",
+    "importedAt":  "2026-11-26 12:33:06",
+    "source":  "D:\\QQ download\\2026-11-26.zip",
+    "policy":  "standard art stays default; star0e_alt / player_recolored are optional skins; UI text must never be baked",
+    "fileCount":  161,
+    "totalBytes":  1252699,
+    "files":  [
+                  {
+                      "path":  "assets/test/manifest.json",
+                      "bytes":  17648,
+                      "sha256":  "f5041f5a899b8d6507882a6c0915647f2494b95f994284913f2ee2db7d301d0c"
+                  },
+                  {
+                      "path":  "assets/test/characters/ai/ai_chase_00.png",
+                      "bytes":  3096,
+                      "sha256":  "839fac9e521a96167863711a23ec6c04678b792085fdfdd90ac8be51306012bf"
+                  },
+                  {
+                      "path":  "assets/test/characters/ai/ai_chase_01.png",
+                      "bytes":  3151,
+                      "sha256":  "025b4c6bdaa958d58f9220fc9d0e54c6830a54e155537078e72b3a8db81835c2"
+                  },
+                  {
+                      "path":  "assets/test/characters/ai/ai_chase_02.png",
+                      "bytes":  3189,
+                      "sha256":  "f3a30b45a91c0af15ec52c33a28f1f5ad74cbf962fc87ca76ee72e52f673de69"
+                  },
+                  {
+                      "path":  "assets/test/characters/ai/ai_chase_03.png",
+                      "bytes":  3092,
+                      "sha256":  "058d7a16fd27849642c885d430d9f36ce2949bc978d5cbdb56004874b529cc4d"
+                  },
+                  {
+                      "path":  "assets/test/characters/ai/ai_chase_04.png",
+                      "bytes":  3216,
+                      "sha256":  "1119e214f66b65e8565f90382b1833c3a0f2e48510e76d1ae4eb75d5f5187273"
+                  },
+                  {
+                      "path":  "assets/test/characters/ai/ai_chase_05.png",
+                      "bytes":  3175,
+                      "sha256":  "4c5cd10661fa8861ab45a2153afdd9c0ca1bfaeb30cc07d2abf91b7665dcf9c9"
+                  },
+                  {
+                      "path":  "assets/test/characters/ai/ai_idle_00.png",
+                      "bytes":  3098,
+                      "sha256":  "e9f1471d68e2360df21f95ed19a5beb350a658b6dc99f0e5c7428353283f66c8"
+                  },
+                  {
+                      "path":  "assets/test/characters/ai/ai_idle_01.png",
+                      "bytes":  3174,
+                      "sha256":  "7a66da5d3e0024facef2ba045b7ba5b7da75a79fc4443dfde16db48a3478872d"
+                  },
+                  {
+                      "path":  "assets/test/characters/ai/ai_idle_02.png",
+                      "bytes":  3038,
+                      "sha256":  "4f76bf2a4df9ff6e3f3ae666d339be3b5c30c265c69e4b66f06a3d786519b369"
+                  },
+                  {
+                      "path":  "assets/test/characters/ai/ai_idle_03.png",
+                      "bytes":  3072,
+                      "sha256":  "ef04f8eb6180d48c05756e85491e7baf68aca63868057a9a49b0df3d29c4836d"
+                  },
+                  {
+                      "path":  "assets/test/characters/ai/ai_knockback_00.png",
+                      "bytes":  2870,
+                      "sha256":  "d76231414da4c045b9324dc803761f5f6e3d89360e2f8d3437df96e9f57dd6c2"
+                  },
+                  {
+                      "path":  "assets/test/characters/ai/ai_knockback_01.png",
+                      "bytes":  3193,
+                      "sha256":  "e604f6e90b2922c4f2974db74ddfa1ffc74b8c626dc162a621bcf1cf766800ee"
+                  },
+                  {
+                      "path":  "assets/test/characters/ai/ai_skill_00.png",
+                      "bytes":  3147,
+                      "sha256":  "76f353a6740957eae54eb0acff6dca895454342ffe63d5733f7a39fd55007562"
+                  },
+                  {
+                      "path":  "assets/test/characters/ai/ai_skill_01.png",
+                      "bytes":  3982,
+                      "sha256":  "8cd4bff3359abb035f907efd756ef41acdf99980b433a08573b4bcf843a52525"
+                  },
+                  {
+                      "path":  "assets/test/characters/ai/ai_skill_02.png",
+                      "bytes":  3967,
+                      "sha256":  "9b3a7d1f9d17c3e664de8d8b2169d2e7a88c9a4cf45c6b8b4e0d1eea9f4b6a0c"
+                  },
+                  {
+                      "path":  "assets/test/characters/ai/ai_skill_03.png",
+                      "bytes":  3680,
+                      "sha256":  "9eef503ff74aded38de8c5054dcd92ba491f31748441a5db425ac6f832d3cf26"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_crouch_00.png",
+                      "bytes":  804,
+                      "sha256":  "576c8f9169bbab658bb9b348fa4bf74b5353d4d52f36c5fe7853653d1d03ba20"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_crouch_01.png",
+                      "bytes":  791,
+                      "sha256":  "42ae0e3398b4c52474a5abdf285e48c4d4c4705d45617997cd16609a8a778008"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_dash_00.png",
+                      "bytes":  842,
+                      "sha256":  "859af9f2677d0105583036398e5553da260a313027787b986fb75a07e2c757e3"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_dash_01.png",
+                      "bytes":  846,
+                      "sha256":  "91839408291f3b8c06e32c660b12da139a33bb57b5a2eca8bac9fdb733cb12f1"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_dash_02.png",
+                      "bytes":  853,
+                      "sha256":  "1e26b7a52147a524b224b47ec3d051cfccef325b541bfad873533533b284c7a7"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_death_00.png",
+                      "bytes":  829,
+                      "sha256":  "eebd3985d2ce0c7b3d2a883b6f629de007632e1602faa61bd5b7fe0a26a84068"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_death_01.png",
+                      "bytes":  861,
+                      "sha256":  "e18a1b9db340571b5c43ae9daf3a0c1a8d42025087d46ef7f39c50e5f4b0614d"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_death_02.png",
+                      "bytes":  886,
+                      "sha256":  "8150e075c144ff95b723445e26f5328092b35741da0eaccbe4d8110f764abc6f"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_death_03.png",
+                      "bytes":  884,
+                      "sha256":  "6de7e10a6d964b220b53cb3e75108ba0c8a21e9ece48a05fc6bee2cc7f9c501b"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_fall_00.png",
+                      "bytes":  842,
+                      "sha256":  "2752662aac98e30fcf11fd2cd46f2b2466475e4feb836f4e0e770153f73d1943"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_fall_01.png",
+                      "bytes":  839,
+                      "sha256":  "82fc3ceb15ecb89e7049a58f5c06c0df20a34f9f9739b57a3bbfd7f0cbf8506b"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_idle_00.png",
+                      "bytes":  828,
+                      "sha256":  "7d33efb07bb8adad11172d56ff504cc39bcb089131872cdb51f4ba27c1ba2c17"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_idle_01.png",
+                      "bytes":  832,
+                      "sha256":  "6d06874a33c83e95b3957e665f7715b1d3d0ceb10e38f1c3cee9d9f6e2e8981c"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_idle_02.png",
+                      "bytes":  839,
+                      "sha256":  "1b5bd9a763916627a346e7a97d6b26f5028335b5e01e1f929bb89e2ce0ca69c1"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_idle_03.png",
+                      "bytes":  832,
+                      "sha256":  "f6787f54484c9af65bd2113212ac66b26381a72ec424427cdb7d7dab639d4a18"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_jumpdust_00.png",
+                      "bytes":  448,
+                      "sha256":  "4c9c58248c9569f12393c2ce165d681d67657909228d6d242ab4a7f05b4faec8"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_jumpdust_01.png",
+                      "bytes":  486,
+                      "sha256":  "9b78db19798434d33b19969736e7d68d7a58752764b7dc3cf3e0e75fac1d4ad8"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_jumpdust_02.png",
+                      "bytes":  397,
+                      "sha256":  "ad5dec17a5ac0f9e3f5e23dacf237d4202e051fa9c4a8c710217861207cf60eb"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_jump_00.png",
+                      "bytes":  834,
+                      "sha256":  "0f59c7c9ffde933ca240161e03e0bbff8c0fb0c106b3409bb7ddc2387bfa04b2"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_jump_01.png",
+                      "bytes":  871,
+                      "sha256":  "b4a53fd105956de8d791d036cda1babf13a4ca0dbe8d512dd000653adebff7e8"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_landdust_00.png",
+                      "bytes":  440,
+                      "sha256":  "e9379f447a04d7c85eb42aec9b1e34510de59f144a61247f8a5aa19fe471f48d"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_landdust_01.png",
+                      "bytes":  455,
+                      "sha256":  "ba0f26b10cd28348f5625a3be9437b820a0ad0c67d51d8787edfcec0a2babd24"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_landdust_02.png",
+                      "bytes":  425,
+                      "sha256":  "155e3c59e11c29894b29560c097189379e687064f73db525e835766037bc0729"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_landdust_03.png",
+                      "bytes":  380,
+                      "sha256":  "8cfa67427eed0db8bae8c9c33088ab426bb946463ec83f9d63a231d9211f04a4"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_run_00.png",
+                      "bytes":  830,
+                      "sha256":  "047ae43897ed0c2ac3acf84aaec582189a0911f83e0703d63edd72f1db93eaac"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_run_01.png",
+                      "bytes":  830,
+                      "sha256":  "a3dd74bb21ef9244e124240112bd6d4705fde89be53a170871130267a0e0bba9"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_run_02.png",
+                      "bytes":  852,
+                      "sha256":  "519b96a033d13a9e2e752971ac9803be6eee2c3bf3f3b3cd5a47129099fa47c2"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_run_03.png",
+                      "bytes":  817,
+                      "sha256":  "0c4ad326c0b1f13195711abbd62fc076065d2f5a4aba69d14a9c2d73dab1bd57"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_run_04.png",
+                      "bytes":  1150,
+                      "sha256":  "930a8c757c18bf695b23ba5746b05efb6bd2c353f51976c048cbdc0dd422d14e"
+                  },
+                  {
+                      "path":  "assets/test/characters/player/player_run_05.png",
+                      "bytes":  1129,
+                      "sha256":  "4291caf5e023dce433b01cfca51f7ba1ea9bbb722b7dc62bfaf940a34fcf7f14"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_crouch_00.png",
+                      "bytes":  688,
+                      "sha256":  "b44afe7b103f401cd52720430164c9d939d1a6df21f9e8dc2ec5f33d7e71a87d"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_crouch_01.png",
+                      "bytes":  655,
+                      "sha256":  "9717a87a2b26102b10edbffd1519a903177b5cb67d0e003864058a3d09199be4"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_dash_00.png",
+                      "bytes":  771,
+                      "sha256":  "0b9c4b252b53f8f84ae9758b9c6da13699b4f1dd355b5c880ff446fad54389f6"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_dash_01.png",
+                      "bytes":  800,
+                      "sha256":  "27e8078fc3b8d1b3f2be070925965c2f561f1816348e4de0af7d5424bf5f7c4e"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_dash_02.png",
+                      "bytes":  770,
+                      "sha256":  "aa2e8af7559fd91a611d4d408e9c0c22acc1cec229cf2b74336f2ead18696e6e"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_death_00.png",
+                      "bytes":  696,
+                      "sha256":  "e6fa726908e202b6c679345cb63bc78b6642717ec8fbb8178fafc51c96af4fb2"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_death_01.png",
+                      "bytes":  719,
+                      "sha256":  "67a17eae0aa1f384b9b9c1ef3a755de2d463caa83916b025beebf19a57570ebb"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_death_02.png",
+                      "bytes":  770,
+                      "sha256":  "bbf3bebf13af9ba0e99c43f95785e2e8383a5a1f23214409a057128a54ea5259"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_death_03.png",
+                      "bytes":  733,
+                      "sha256":  "df1e8fe7d49b7e1a02fa86e830e6735d37b04173bcf3f2c99ef75727cf691593"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_fall_00.png",
+                      "bytes":  694,
+                      "sha256":  "b6dc361f27e00dfd272399c8996384d02163b460940e06ffc0cddb353052482e"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_fall_01.png",
+                      "bytes":  725,
+                      "sha256":  "69d582c3dcbb22333d1e6ccf8bf9cd67af3cc33a3c6c72f8df16286dbd8f7297"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_idle_00.png",
+                      "bytes":  705,
+                      "sha256":  "066ee1afea01f0ed333a4588ee34e42312670e865d1e9dad6c55af0a4da73242"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_idle_01.png",
+                      "bytes":  711,
+                      "sha256":  "5ce54a9cc388b961fe9ad448b7ee2d823ca66b6d00259af95b444b8706f85727"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_idle_02.png",
+                      "bytes":  733,
+                      "sha256":  "e610fe8d456ffe6526445a53647c648b0d871a0f3afb7f30042256c2eb23326d"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_idle_03.png",
+                      "bytes":  727,
+                      "sha256":  "c029de8153ca745d69932a22e2a005c6554e58025f9006925f266efb84c0af13"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_jumpdust_00.png",
+                      "bytes":  196,
+                      "sha256":  "3aa06fe05fa04887fb4ae6dadce5f30546fdf2bcd04a16907f729c114baade95"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_jumpdust_01.png",
+                      "bytes":  208,
+                      "sha256":  "dc4031573411821b14b6706a93040b1ad39c2456c21eb3e9c2cafe35158b565b"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_jumpdust_02.png",
+                      "bytes":  142,
+                      "sha256":  "1ad4785ab5dfd7c0707384ce6225fc52e64d0da5aafb54b043a19409b896fded"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_jump_00.png",
+                      "bytes":  700,
+                      "sha256":  "81bb20c6e9523df1653a82f8770c3d2c94e13d053b5bed6bcf6270301b42fc0c"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_jump_01.png",
+                      "bytes":  729,
+                      "sha256":  "15eed4cf8d71b41888c1a3b3a3bb24088b003b4d33c6acfa48344b12b6d579c8"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_landdust_00.png",
+                      "bytes":  185,
+                      "sha256":  "fa9c825d540f04d3ae7a6a86867008aac5f6803976285dc14befa79f793e1cac"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_landdust_01.png",
+                      "bytes":  182,
+                      "sha256":  "23bcd65e00ebb72fdf55b1c4f139c771dbfb93013113afd780989d99bca426c1"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_landdust_02.png",
+                      "bytes":  182,
+                      "sha256":  "c2d50d42f1eafbaef38b244cc6d3117086e99db91f65f42f80362b386ea10661"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_landdust_03.png",
+                      "bytes":  125,
+                      "sha256":  "54f125b0001e6748e962c1c8017d1b098cc34c4686f38c640e6ed01b742db367"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_run_00.png",
+                      "bytes":  755,
+                      "sha256":  "5a11db62d597dfad75243df71062dd38a28f8fd870037ca5c8d52120d04163d7"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_run_01.png",
+                      "bytes":  717,
+                      "sha256":  "0c3ecefd60b726101347e62710ea1e82bd084d8cdf65bf870ba3432cfec6b90e"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_run_02.png",
+                      "bytes":  759,
+                      "sha256":  "148794525dfcc96dc2a626e727c479174c065a58fd008b981bf1fc2e80ab6e2d"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_run_03.png",
+                      "bytes":  723,
+                      "sha256":  "aa2e10e76b0fd9df1a97df041e8fa5c696645b11138e61dbaa966a7271ea573e"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_run_04.png",
+                      "bytes":  1037,
+                      "sha256":  "bde46c64921f72cf31fa80e65b8e3298a462c54019b496c86a1213aa7895902b"
+                  },
+                  {
+                      "path":  "assets/test/characters/player_recolored/player_run_05.png",
+                      "bytes":  1022,
+                      "sha256":  "57939e3e8ef5e048d8cafb7a7449b6cd803e388769783e866e0b3929f7db28dd"
+                  },
+                  {
+                      "path":  "assets/test/environment/common/common_aistart.png",
+                      "bytes":  906,
+                      "sha256":  "f3981d172719ee93d25023df6160a23ccffcc669f1056bb1520a63688328a890"
+                  },
+                  {
+                      "path":  "assets/test/environment/common/common_aistarthollow.png",
+                      "bytes":  389,
+                      "sha256":  "df7f812dbbae98eb1c14e0804e620c02676ee2cffb951d4aee54abecc1b3004e"
+                  },
+                  {
+                      "path":  "assets/test/environment/common/common_checkpoint_active.png",
+                      "bytes":  549,
+                      "sha256":  "64b7a12684efdfcf196bf15aef5f16b74b6310a05e32072ea24390c1a875e5d7"
+                  },
+                  {
+                      "path":  "assets/test/environment/common/common_checkpoint_idle.png",
+                      "bytes":  524,
+                      "sha256":  "5d7e6aa14c077ba026d623c166f3a597b0a8bee6ecd251affe92f0979e121838"
+                  },
+                  {
+                      "path":  "assets/test/environment/common/common_collectible.png",
+                      "bytes":  1678,
+                      "sha256":  "a7cbcf64a09b4e1903ea148467194727d234d826d960475ef4186b2f069bdb3b"
+                  },
+                  {
+                      "path":  "assets/test/environment/common/common_solid.png",
+                      "bytes":  722,
+                      "sha256":  "f9427d083171ad42d5c3ac0d98bea01632c22bd7877ce8b04fee85d69389a783"
+                  },
+                  {
+                      "path":  "assets/test/environment/common/common_solid_v2.png",
+                      "bytes":  819,
+                      "sha256":  "3d63a946e20acb327e344851b08acff3b2654dfed0b71654a8560401f8ff66dd"
+                  },
+                  {
+                      "path":  "assets/test/environment/common/common_solid_v3.png",
+                      "bytes":  842,
+                      "sha256":  "f0b5104a6f46e71d92ce406a7017c8ce2b39e89fb1941e9b4c8f799b2c8ede99"
+                  },
+                  {
+                      "path":  "assets/test/environment/common/common_spike.png",
+                      "bytes":  503,
+                      "sha256":  "d0c5a379c90bfd1d6a5843d78f0aa5bb21bffd1544443e560ab4d3e39071372f"
+                  },
+                  {
+                      "path":  "assets/test/environment/common/token_big.png",
+                      "bytes":  620,
+                      "sha256":  "64187ef0ad2cf9c9e8cdd8d28505036c7562720fd68eecf3add5733e9cfa574d"
+                  },
+                  {
+                      "path":  "assets/test/environment/common/token_small.png",
+                      "bytes":  456,
+                      "sha256":  "eb3dd6a4a115d7dd9062503682ab708949c49a8c89dcd6212d377296584f99c7"
+                  },
+                  {
+                      "path":  "assets/test/environment/common/token_small_10x10.png",
+                      "bytes":  201,
+                      "sha256":  "cccb8060ed776f3381add4a70f343292295d1c9378182955b939444f7735cfbc"
+                  },
+                  {
+                      "path":  "assets/test/environment/common/star0e_alt/common_aistarthollow_star0e.png",
+                      "bytes":  351,
+                      "sha256":  "836ce5e74d690da3a199e6bbab8e84624a18e2f9f10ad6d4ba32cf3b51ee96e3"
+                  },
+                  {
+                      "path":  "assets/test/environment/common/star0e_alt/common_aistart_star0e.png",
+                      "bytes":  389,
+                      "sha256":  "df7f812dbbae98eb1c14e0804e620c02676ee2cffb951d4aee54abecc1b3004e"
+                  },
+                  {
+                      "path":  "assets/test/environment/common/star0e_alt/common_collectible_star0e.png",
+                      "bytes":  470,
+                      "sha256":  "ffef3cd111aa27768b8a30c4cc54987bc30c3d29f3fd32cefd167a1d4332f738"
+                  },
+                  {
+                      "path":  "assets/test/environment/math/bg_math_main.png",
+                      "bytes":  27855,
+                      "sha256":  "ff98018b4bd9ca7d47805223e62556c3e9352efd3153babb58e02ce0b15e4ede"
+                  },
+                  {
+                      "path":  "assets/test/environment/math/calculus_derivative_active.png",
+                      "bytes":  206,
+                      "sha256":  "cdd40c4a1a89b9dce2d8cdc97a19bad06636a9884263d7148154d38171577796"
+                  },
+                  {
+                      "path":  "assets/test/environment/math/calculus_derivative_idle.png",
+                      "bytes":  197,
+                      "sha256":  "d947f4c6bb71192a3dd8f36090adddfcd87feb6b7c9b08bd4a2d9a5e4d628e3b"
+                  },
+                  {
+                      "path":  "assets/test/environment/math/calculus_integral_active.png",
+                      "bytes":  214,
+                      "sha256":  "077f849a0845c65eae88de80886ff379703b18f1985364c5e19c2d1cea42e90f"
+                  },
+                  {
+                      "path":  "assets/test/environment/math/calculus_integral_idle.png",
+                      "bytes":  200,
+                      "sha256":  "f2d1a64bd33462fe1967d91099b2f46c37f3f9dbdabfd05c7b8bc7628551bb5a"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_ai_activator_off.png",
+                      "bytes":  952,
+                      "sha256":  "6ed345f95ae526afae137f1553f3c9b3eac458653baa9f42d73cb674dc6855f6"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_ai_activator_on.png",
+                      "bytes":  906,
+                      "sha256":  "f3981d172719ee93d25023df6160a23ccffcc669f1056bb1520a63688328a890"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_ice_cracked.png",
+                      "bytes":  1144,
+                      "sha256":  "771240bc3183775da4080c931e6201c88bb8c6b7230c9e6b90620ba6d44c3294"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_ice_solid.png",
+                      "bytes":  1029,
+                      "sha256":  "e0d07b6c2c9a160577635871ac61857fb39960d245f6cb9cb1d133f190ca686b"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_jet_active.png",
+                      "bytes":  478,
+                      "sha256":  "250285153edc63bcf84838d0c8d22dbdbca01c50ea4d0ef4045315591902785f"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_jet_burst_00.png",
+                      "bytes":  214,
+                      "sha256":  "a8d5ba12f9a194106ee6f84ce1d4f4959ccbcccc3efecb1f5b91bb4dd2ca3674"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_jet_burst_01.png",
+                      "bytes":  267,
+                      "sha256":  "1952dec8017a410730d705f08c1a2ec8ea63af4e1a6d744bb647dd4b3922b5a4"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_jet_burst_02.png",
+                      "bytes":  260,
+                      "sha256":  "0510060bdfe0bfa6db2ff80b3f2cbefa482fd00425c13761adb9a66ffa931cdb"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_jet_burst_03.png",
+                      "bytes":  267,
+                      "sha256":  "8da6c069988f15737af9d90cc434398338a7c854c3ddf78594332d350dec4d42"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_jet_flame_00.png",
+                      "bytes":  303,
+                      "sha256":  "da0341251790ab9b234d1a66b0809dc8ca6b0559a569d9b4d9374c0651c59a10"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_jet_flame_01.png",
+                      "bytes":  301,
+                      "sha256":  "54e6d6ce6ea4a623c8f4a1836aa69dec9840c2345d07c4fe0cb56b664323661c"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_jet_flame_02.png",
+                      "bytes":  275,
+                      "sha256":  "2110f13f12f624e6a2e9ddc8cad281b680cd66e60360081c00f3e5aec48fac1b"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_jet_flame_03.png",
+                      "bytes":  262,
+                      "sha256":  "46c04d2063e97dde3231b3ae069f4c28aae5adc59496c4439549aed530467796"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_jet_idle.png",
+                      "bytes":  471,
+                      "sha256":  "763109093d29d08cafdde95aecd87a28d6f6914a62dc64411f90b341524888f8"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_rail_active.png",
+                      "bytes":  211,
+                      "sha256":  "20e37e493eb596c4a1099c428b6fe51da0756b9776a98000873c91a6faef748e"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_rail_idle.png",
+                      "bytes":  211,
+                      "sha256":  "830f2bef6cb1a2421c6c38d1e4620e42bfee4e96ae988578cb2f43826a9fd493"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_thermal_cold.png",
+                      "bytes":  212,
+                      "sha256":  "5bcc755388c61e9f70547e7e65add3ac8416c6f5afc018e42811e553576f783a"
+                  },
+                  {
+                      "path":  "assets/test/environment/physics/physics_thermal_hot.png",
+                      "bytes":  471,
+                      "sha256":  "ac6051821520b462a11d5bd52c2684383dae03ccf5be473835bd81154ec77e8d"
+                  },
+                  {
+                      "path":  "assets/test/environment/slacker/bg_guided-slacker_main.png",
+                      "bytes":  27853,
+                      "sha256":  "d701f78a1fe70c983730f4b1e4d2e8903622c4f09dae72b646fd5039e207eff5"
+                  },
+                  {
+                      "path":  "assets/test/environment/slacker/slacker_awake_active.png",
+                      "bytes":  236,
+                      "sha256":  "49dbf3345221ffca2d6f4a3f1463bcc2fee86634c9523c9ac4624b1f373c11a4"
+                  },
+                  {
+                      "path":  "assets/test/environment/slacker/slacker_awake_idle.png",
+                      "bytes":  200,
+                      "sha256":  "f3bb4624c082c23cc187cd7e43576924ff941c57f33022d7f37c17dc921aca26"
+                  },
+                  {
+                      "path":  "assets/test/environment/slacker/slacker_checkin_active.png",
+                      "bytes":  580,
+                      "sha256":  "94abcc07462f6de59af327595c9cb6ff2808f71fae1adb588db217c210fa4302"
+                  },
+                  {
+                      "path":  "assets/test/environment/slacker/slacker_checkin_idle.png",
+                      "bytes":  614,
+                      "sha256":  "c3460e409bf3c4dd9dffe0326d4efd62d8bc4ecf136062f5927fec130c9a39bb"
+                  },
+                  {
+                      "path":  "assets/UI/光.png",
+                      "bytes":  7305,
+                      "sha256":  "3efeff4be53f8e513d5c7c3e9525e2fa87fc5088b9f5f3933e42ee69b8d67b45"
+                  },
+                  {
+                      "path":  "assets/UI/大标题.png",
+                      "bytes":  9232,
+                      "sha256":  "9517e4900c54f9fc957b0ab218576871c5e73c9851dadd7f1b7d421dbeeeb934"
+                  },
+                  {
+                      "path":  "assets/UI/影.png",
+                      "bytes":  8222,
+                      "sha256":  "be4c227dae16d717e0006edee4696f8babb96123921790955f49ab9706208a8a"
+                  },
+                  {
+                      "path":  "assets/UI/手机本体-无光照.png",
+                      "bytes":  3841,
+                      "sha256":  "8d7b3b96709cdb11bbad54102a26b9751eec1eeca980a6a6a379ef22804a9f73"
+                  },
+                  {
+                      "path":  "assets/UI/消息通知条.png",
+                      "bytes":  2868,
+                      "sha256":  "e86eeecde4161a9dc105e288c2f35594b35790ed1516cce40e021fe8d40da069"
+                  },
+                  {
+                      "path":  "assets/UI/背景.png",
+                      "bytes":  208573,
+                      "sha256":  "e2a9cd77ba5f0d5f7276022d80a617f200303875d37ad2464bafaa60890b32f6"
+                  },
+                  {
+                      "path":  "assets/UI/effects/cold_freeze_00.png",
+                      "bytes":  62809,
+                      "sha256":  "d15e61b9a141e36f9d4209c1835979b74d381f9eed68575530c8a59f9996a985"
+                  },
+                  {
+                      "path":  "assets/UI/effects/cold_freeze_01.png",
+                      "bytes":  78357,
+                      "sha256":  "5511da807301be66176a2f331ba3ab05b22c3a61d96a340aef77877b1a878ef1"
+                  },
+                  {
+                      "path":  "assets/UI/effects/cold_freeze_02.png",
+                      "bytes":  87269,
+                      "sha256":  "d1ea3c49fc047e8925bed73a792662dfb15dd509d4026ef81e36eb3ddc6bd411"
+                  },
+                  {
+                      "path":  "assets/UI/effects/cold_freeze_preview_light.png",
+                      "bytes":  48347,
+                      "sha256":  "01ff7c89148ccecfa636d639b270eee2529005f6260ad382bae3042e12936857"
+                  },
+                  {
+                      "path":  "assets/UI/effects/heat_wave_00.png",
+                      "bytes":  69318,
+                      "sha256":  "7d76e944bd0235a27617306d1fdc6a5f3d7f8639e36b4a61e8bdf227c2ac12e5"
+                  },
+                  {
+                      "path":  "assets/UI/effects/heat_wave_01.png",
+                      "bytes":  69744,
+                      "sha256":  "951bb745ba44b775a1e30e5ca8285aefd305bcba234a0dd1494a036badee8070"
+                  },
+                  {
+                      "path":  "assets/UI/effects/heat_wave_02.png",
+                      "bytes":  69617,
+                      "sha256":  "c3503f3753178fabb593b6c14fa7475de9ac18bd256371812a0ea2bb7fafdd75"
+                  },
+                  {
+                      "path":  "assets/UI/effects/heat_wave_preview_light.png",
+                      "bytes":  51463,
+                      "sha256":  "9ad745a4b4849ce5347729960b3d318b1a1a0b41e7d47187ea81d1e6129103dc"
+                  },
+                  {
+                      "path":  "assets/UI/mainmenu_generated/glow_desk.png",
+                      "bytes":  22922,
+                      "sha256":  "ced3afc95914d18bcedd6577d56816670630614699d39a032ea190f2577b3eec"
+                  },
+                  {
+                      "path":  "assets/UI/mainmenu_generated/hover_glow.png",
+                      "bytes":  1999,
+                      "sha256":  "a9db6baa023a0db7e03dbda35c613a30c3d6e9f2b88d2c02bdb492f2a198d7ae"
+                  },
+                  {
+                      "path":  "assets/UI/mainmenu_generated/icon_back.png",
+                      "bytes":  93,
+                      "sha256":  "90f729c77c43be8d94c1d76fbe7329b77d7d3363d4274bfbbd56108af9b970cc"
+                  },
+                  {
+                      "path":  "assets/UI/mainmenu_generated/icon_collection.png",
+                      "bytes":  149,
+                      "sha256":  "e054b85cbf51b939311b39608f9a463927e4f45fbf23415d1bf48b8e183ca1ee"
+                  },
+                  {
+                      "path":  "assets/UI/mainmenu_generated/icon_credits.png",
+                      "bytes":  185,
+                      "sha256":  "c16da113574920b262f88f5c243196cf8dd2fcd7f973ddefb2d6feadf54e8e90"
+                  },
+                  {
+                      "path":  "assets/UI/mainmenu_generated/icon_exit.png",
+                      "bytes":  174,
+                      "sha256":  "afdb2a805b1355776bbdaa87facd16320190372e668d00f9dd49e8a2eded403d"
+                  },
+                  {
+                      "path":  "assets/UI/mainmenu_generated/icon_level.png",
+                      "bytes":  204,
+                      "sha256":  "652a2fb7880f55968dc95781b8832b02c84c670947eba063564af7f344e63e44"
+                  },
+                  {
+                      "path":  "assets/UI/mainmenu_generated/icon_message.png",
+                      "bytes":  126,
+                      "sha256":  "6257b0bc53ac4aedb1ce885ab158ccebf00c7ec97cd7165a94593e069a122d8b"
+                  },
+                  {
+                      "path":  "assets/UI/mainmenu_generated/icon_settings.png",
+                      "bytes":  157,
+                      "sha256":  "de48034c1db6f03b7190711a4e4962276f714472587c44658d35ae949f7e5702"
+                  },
+                  {
+                      "path":  "assets/UI/mainmenu_generated/notification_bar.png",
+                      "bytes":  265,
+                      "sha256":  "11af4008afba534e30ad9640283e6fccbc4f5ffa9c95d384f82e1366135162c5"
+                  },
+                  {
+                      "path":  "assets/UI/mainmenu_generated/screen_wallpaper.png",
+                      "bytes":  1680,
+                      "sha256":  "a14239f24f460010723464dbbd7f4845b373b7ca9da16d5dbd109f45d9907e90"
+                  },
+                  {
+                      "path":  "assets/UI/pause/pause_asset_preview.png",
+                      "bytes":  73667,
+                      "sha256":  "ee0e1b55464c8e26cde2238c3bc3c5bffb2ae991f9ec8f16eb72020003095b39"
+                  },
+                  {
+                      "path":  "assets/UI/pause/pause_btn_exit.png",
+                      "bytes":  163,
+                      "sha256":  "9161c7f448216d00482440e7cea2f14eae6235fb4760ef66d54c1d688819656e"
+                  },
+                  {
+                      "path":  "assets/UI/pause/pause_btn_primary.png",
+                      "bytes":  332,
+                      "sha256":  "0a29772fe135c7f0210c226583a0197745ab385cfe96cf0f4c5e3390ee5a4d60"
+                  },
+                  {
+                      "path":  "assets/UI/pause/pause_btn_secondary.png",
+                      "bytes":  326,
+                      "sha256":  "a611ae41fcada0f988af64dbc5459b633b1c639fa5af8164ce4140c20d3f8934"
+                  },
+                  {
+                      "path":  "assets/UI/pause/pause_dim.png",
+                      "bytes":  39684,
+                      "sha256":  "0fc0d266527adc648a98dd8190faa3d3324e889ffaba30dc2646645bcbe20ddd"
+                  },
+                  {
+                      "path":  "assets/UI/pause/pause_icon.png",
+                      "bytes":  257,
+                      "sha256":  "d6dbb2c72965fbf7a4b249c4d1e343429205c80c860e74795a9f7d53440aad10"
+                  },
+                  {
+                      "path":  "assets/UI/pause/pause_panel.png",
+                      "bytes":  11109,
+                      "sha256":  "4913309c2ab8b0a8416deee84ed23fba7be9370e9937c7a5543210254ebf12ea"
+                  },
+                  {
+                      "path":  "assets/UI/pause/pause_panel_native_480x270.png",
+                      "bytes":  1829,
+                      "sha256":  "2c5bc99044ecc43ecf3c1c0228160a79731877813e9fd90b198f548fa9e7fdb3"
+                  },
+                  {
+                      "path":  "assets/UI/result/result_dim.png",
+                      "bytes":  39684,
+                      "sha256":  "0fc0d266527adc648a98dd8190faa3d3324e889ffaba30dc2646645bcbe20ddd"
+                  },
+                  {
+                      "path":  "assets/UI/result/result_medal.png",
+                      "bytes":  1129,
+                      "sha256":  "26ba2e3b7ab472595e68db465d592d5ea94d48940d3639445da2780dae181ae0"
+                  },
+                  {
+                      "path":  "assets/UI/result/result_mockup_preview.png",
+                      "bytes":  75190,
+                      "sha256":  "fc10a6688ba64022c06a7a382204ad0229c3cfa10d7cb7356adc838749a2eff6"
+                  },
+                  {
+                      "path":  "assets/UI/result/result_panel.png",
+                      "bytes":  12839,
+                      "sha256":  "39c9822fac2b16cdcc7e6a22aafefdce25482e624df802ef243aa8f4f5318514"
+                  },
+                  {
+                      "path":  "assets/UI/result/result_panel_native_480x270.png",
+                      "bytes":  2686,
+                      "sha256":  "935353635578456c225364188327dbe4c47ebc03f6b2b4d342bbeae5d869fad1"
+                  },
+                  {
+                      "path":  "assets/UI/result/result_star_empty.png",
+                      "bytes":  302,
+                      "sha256":  "c9d58fee27069cb11bef20928cc5610080b281e224e525a258380756e3da6aa1"
+                  },
+                  {
+                      "path":  "assets/UI/result/result_star_full.png",
+                      "bytes":  306,
+                      "sha256":  "480362ef539458b0d007a7281774d09c212d0c1e94e233d092fe3d98c77b580a"
+                  },
+                  {
+                      "path":  "assets/UI/result/结算页对齐说明.md",
+                      "bytes":  1170,
+                      "sha256":  "ba17e262e638dc070575f764d19944a6a7f50ddd0ac9073be4e0df9415e6e224"
+                  }
+              ]
+}

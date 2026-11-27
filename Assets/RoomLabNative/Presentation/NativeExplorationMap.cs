@@ -11,6 +11,16 @@ namespace RoomLab.Native
         // Stored with the other display preferences by NativePhysicsDemoPlayer.
         bool courseMapPreferred = true;
 
+        // Rooms the player has actually entered. Persisted with the save record so the world map
+        // keeps filling in across sessions; undiscovered rooms are simply not drawn.
+        readonly HashSet<string> discoveredRooms = new HashSet<string>(StringComparer.Ordinal);
+
+        void RememberRoom(string id)
+        {
+            if (string.IsNullOrEmpty(id) || Game == null) return;
+            if (discoveredRooms.Add(id)) SaveRecord(!Game.Completed);
+        }
+
         void OpenExplorationMap()
         {
             if (Game == null) return;
@@ -45,11 +55,15 @@ namespace RoomLab.Native
         void BuildExplorationMap(Transform root)
         {
             if (Game == null) return;
-            bool explored = courseMapPreferred && Game.IsNetwork;
-            bool paper = Game.Course.Kind == "calculus";
+            bool merged = Game.Project != null && Game.Project.OriginalJson?["mainlinePackage"] != null;
+            // 合并包默认打开版图；选「当前全景」时仍可回到本房全景（不再被强制）。
+            bool explored = merged ? courseMapPreferred : (courseMapPreferred && Game.IsNetwork);
+            bool paper = merged ? !Game.OwnsPhone : Game.Course.Kind == "calculus";
             map = !explored;
             float width = designWidth, height = designHeight;
-            Color bar = new Color(Ink.r, Ink.g, Ink.b, .97f);
+            Color bar = paper ? new Color(.94f, .88f, .71f) : new Color(.035f, .079f, .105f);
+            Color label = paper ? Ink : Paper;
+            Color accent = paper ? new Color(.15f, .38f, .37f) : Teal;
 
             // Deliberately leave the central panorama transparent. The page camera component
             // fits the complete room inside this opening after the world's normal refresh.
@@ -57,21 +71,26 @@ namespace RoomLab.Native
             NativeUiKit.MarkBackdrop(NativeUiKit.AbsImage(root, "Map footer", 0, height - 43, width, 43, bar).gameObject);
             var title = NativeUiKit.AbsLabel(root, 18, 12, width - 248, 23,
                 explored ? paper ? "纸上来路" : Game.Course.Kind == "slacker" ? "课后留影" : "沿途记录" : MapRoomName(Game.Room),
-                17, Paper, TextAnchor.MiddleLeft);
+                17, label, TextAnchor.MiddleLeft);
+title.enabled=false;   // 不显示关卡/房间名
             if (NoteFont != null) title.font = NoteFont;
-            title.text = MapCaption(title.text, title, width - 250);
+            title.text = "";   // 地图页不显示房间名
             MapButton(root, width - 222, 11, 98, 28, "当前全景", () => SetMapPreference(false, true), !explored);
             var total = MapButton(root, width - 116, 11, 98, 28, "沿途总图", () => SetMapPreference(true, true), explored);
-            total.interactable = Game.IsNetwork;
+            // 合并后的主线包也要能用「沿途总图」，这里原来只允许 network 模式，导致按钮点不动。
+            total.interactable = merged || Game.IsNetwork;
             var location = NativeUiKit.AbsLabel(root, 18, 45, width - 36, 18,
                 Game.IsGuided && Game.IsAwarenessResource
                     ? MapRoomName(Game.Room) + "    本房剩余：" + MapResourceCount(Game.Room.Id)
-                    : explored ? MapRoomName(Game.Room) : "当前场景", 11, Teal, TextAnchor.MiddleLeft);
+                    : explored ? MapRoomName(Game.Room) : "当前场景", 11, accent, TextAnchor.MiddleLeft);
+location.enabled=false;   // 不显示当前位置信息
             if(NativeDisplayCopy.Active(Game)&&NoteFont!=null)location.font=NoteFont;
-            location.text = MapCaption(location.text, location, width - 38);
+            location.text = "";   // 地图页不显示当前位置信息
 
             Rect opening = new Rect(16, 82, width - 32, height - 133);
-            if (explored) BuildCourseMap(root, opening, paper);
+            // 合并后的主线包用「版图」：编辑器同款相对位置 + 房间地块轮廓拼接。
+            if (merged && courseMapPreferred && BuildWorldPlatePage(root, opening)) { }
+            else if (explored) BuildCourseMap(root, opening, paper);
             else
             {
                 var frame = root.gameObject.AddComponent<NativeMapPanoramaFrame>();
@@ -79,9 +98,7 @@ namespace RoomLab.Native
                     width, height - HudBand, opening, height);
             }
 
-            NativeUiKit.AbsLabel(root, 18, height - 34, width - 252, 22,
-                Game.IsGuided ? Game.Course.Kind == "slacker" ? "数量为剩余道具 · 小旗是存档点" : "亮框是你的位置 · 小旗是存档点"
-                    : explored ? "亮框 · 此处    旗记 · 存档" : "暂驻片刻", 11, Paper, TextAnchor.MiddleLeft);
+            NativeUiKit.AbsLabel(root, 18, height - 34, width - 252, 22, "", 11, label, TextAnchor.MiddleLeft);
             MapButton(root, width - 222, height - 35, 98, 27, "返回暂停", () => CloseExplorationMap(false), false);
             MapButton(root, width - 116, height - 35, 98, 27,
                 Game.Completed ? "返回结算" : "继续游戏", () => CloseExplorationMap(true), true);
@@ -100,7 +117,24 @@ namespace RoomLab.Native
             return button;
         }
 
-        void BuildCourseMap(Transform root, Rect opening, bool paper)
+        void BuildDeveloperMap(Transform root)
+        {
+            var bar=NativeUiKit.Abs(root,"Developer map controls",12,8,designWidth-24,28);
+            var row=NativeUiKit.Row(bar,"Developer map controls",26,8);
+            NativeUiKit.Button(row,"返回",()=>Show("developer"),12,25);
+            NativeUiKit.Label(row,"点击房间跳转",13,Paper);
+            BuildCourseMap(root,new Rect(10,42,designWidth-20,designHeight-52),false,roomId=>{
+                tainted=true;
+                Game.SetDeveloperOptions(true,Game.LockHealth,Game.DeveloperFlight);
+                Game.LoadRoom(roomId);
+                timeline.Reset();
+                keys.Clear();
+                hiddenDeveloperOpen=false;
+                Show("play");
+            });
+        }
+
+        void BuildCourseMap(Transform root, Rect opening, bool paper, Action<string> jump=null)
         {
             Color background = paper ? new Color(.84f, .83f, .74f) : new Color(.045f, .075f, .105f);
             Color line = paper ? new Color(.20f, .34f, .35f) : new Color(.35f, .66f, .66f);
@@ -110,14 +144,14 @@ namespace RoomLab.Native
             var graphic = NativeUiKit.New(panel, "Trace strokes").gameObject.AddComponent<NativeCourseGraphGraphic>();
             graphic.raycastTarget = false;
             NativeUiKit.MarkBackdrop(graphic.gameObject);
-            bool resourceCounts = Game.IsGuided && Game.IsAwarenessResource;
+            bool resourceCounts = jump==null && Game.IsGuided && Game.IsAwarenessResource;
             var points = MapRoomPoints(Game.Course, opening.width, opening.height, resourceCounts);
             var visible = new Dictionary<string, NativeMapNode>();
             var nodes = new List<NativeMapNode>();
             for (int i = 0; i < Game.Course.Rooms.Count; i++)
             {
                 var room = Game.Course.Rooms[i];
-                if (!Game.VisitedRooms.Contains(room.Id) && room.Id != Game.Room.Id) continue;
+                if (jump==null&&!discoveredRooms.Contains(room.Id) && room.Id != Game.Room.Id) continue;
                 var node = new NativeMapNode
                 {
                     Point = points[i], Current = room.Id == Game.Room.Id,
@@ -131,7 +165,7 @@ namespace RoomLab.Native
             var pairs = new Dictionary<string, NativeMapEdge>();
             foreach (var edge in Game.Course.Connections)
             {
-                if (!Game.TraversedConnections.Contains(edge.Id)) continue;
+                if (jump==null&&(!discoveredRooms.Contains(edge.FromRoomId) || !discoveredRooms.Contains(edge.ToRoomId))) continue;
                 NativeMapNode from, to;
                 if (!visible.TryGetValue(edge.FromRoomId, out from) || !visible.TryGetValue(edge.ToRoomId, out to)) continue;
                 if ((from.Point - to.Point).sqrMagnitude < 1) continue;
@@ -154,11 +188,25 @@ namespace RoomLab.Native
 
             // Reserve label space using the entire authored graph, not just discovered nodes.
             // This keeps both geometry and captions stable as exploration grows.
-            for (int i = 0; i < Game.Course.Rooms.Count; i++)
+            // Room names are intentionally not drawn on this map.
+            for (int i = 0; i < 0; i++)
             {
                 var room = Game.Course.Rooms[i];
                 NativeMapNode node;
                 if (!visible.TryGetValue(room.Id, out node)) continue;
+                if(jump!=null)
+                {
+                    float radius=14;
+                    foreach(var other in nodes)
+                        if(other.Index!=i)radius=Mathf.Min(radius,Vector2.Distance(node.Point,other.Point)*.34f);
+                    radius=Mathf.Max(4,radius);
+                    var target=NativeUiKit.AbsImage(panel,"Jump to "+room.Id,node.Point.x-radius,node.Point.y-radius,radius*2,radius*2,new Color(1,1,1,.08f));
+                    target.raycastTarget=true;
+                    var button=target.gameObject.AddComponent<UnityEngine.UI.Button>();
+                    button.targetGraphic=target;
+                    button.onClick.AddListener(()=>jump(room.Id));
+                    continue;
+                }
                 float labelWidth = resourceCounts ? 102 : 88;
                 for (int j = 0; j < points.Count; j++)
                 {
@@ -221,7 +269,16 @@ namespace RoomLab.Native
             return name;
         }
 
-        static List<Vector2> MapRoomPoints(NativeCourse course, float width, float height, bool resourceCaptions = false)
+        Vector2 MapCourseOffset(JObject room)
+        {
+            var offsets = Game?.Project?.OriginalJson?["layout"]?["courseOffsets"] as JObject;
+            var courseId = (string)room?["nativeCourse"];
+            var entry = courseId != null ? offsets?[courseId] as JObject : null;
+            float x, y;
+            if (entry == null || !MapCoordinate(entry["x"], out x) || !MapCoordinate(entry["y"], out y)) return Vector2.zero;
+            return new Vector2(x, y);
+        }
+        List<Vector2> MapRoomPoints(NativeCourse course, float width, float height, bool resourceCaptions = false)
         {
             var raw = new List<Vector2>();
             int columns = Mathf.Max(1, Mathf.CeilToInt(Mathf.Sqrt(course.Rooms.Count * 2f)));
@@ -229,11 +286,13 @@ namespace RoomLab.Native
             var occupied = new HashSet<Vector2>();
             for (int i = 0; i < course.Rooms.Count; i++)
             {
-                var graph = course.Rooms[i].Raw?["graph"] as JObject;
+                var roomRaw = course.Rooms[i].Raw;
+                var graph = roomRaw?["graph"] as JObject;
                 float x, y;
                 if (!MapCoordinate(graph?["x"], out x) || !MapCoordinate(graph?["y"], out y))
                 { fallback = true; break; }
-                var point = new Vector2(x, y);
+                var offset = MapCourseOffset(roomRaw);
+                var point = new Vector2(x + offset.x, y + offset.y);
                 if (!occupied.Add(point)) { fallback = true; break; }
                 raw.Add(point);
             }

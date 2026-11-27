@@ -17,6 +17,40 @@ public static class GameInput
     public static bool IsHeldExact(KeyCode key) => ReadSingle(key, false);
     public static bool WasPressedExact(KeyCode key) => ReadSingle(key, true);
 
+    public static bool TryGetMousePosition(out Vector2 position)
+    {
+#if ENABLE_INPUT_SYSTEM
+        var mouse = Mouse.current;
+        if (mouse != null)
+        {
+            position = mouse.position.ReadValue();
+            return true;
+        }
+#endif
+#if ENABLE_LEGACY_INPUT_MANAGER
+        position = Input.mousePosition;
+        return true;
+#else
+        position = default;
+        return false;
+#endif
+    }
+
+    public static bool StoryAdvancePressed()
+    {
+#if ENABLE_INPUT_SYSTEM
+        if (Mouse.current?.leftButton.wasPressedThisFrame == true ||
+            Keyboard.current?.anyKey.wasPressedThisFrame == true ||
+            Touchscreen.current?.primaryTouch.press.wasPressedThisFrame == true) return true;
+#endif
+#if ENABLE_LEGACY_INPUT_MANAGER
+        return Input.anyKeyDown || Input.GetMouseButtonDown(0) ||
+            (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began);
+#else
+        return false;
+#endif
+    }
+
     private static bool Read(KeyCode key, bool pressedThisFrame)
     {
         if (ReadSingle(key, pressedThisFrame)) return true;

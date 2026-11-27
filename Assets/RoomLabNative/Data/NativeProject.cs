@@ -28,6 +28,7 @@ namespace RoomLab.Native
         public string Id, Name;
         public readonly List<NativeCourse> Courses = new List<NativeCourse>();
         public readonly List<NativeAsset> Assets = new List<NativeAsset>();
+        public readonly List<NativeAiWire> AiWires = new List<NativeAiWire>();
         public readonly Dictionary<string, double> Performance = new Dictionary<string, double>(StringComparer.Ordinal);
         public bool AssetsResolved { get; internal set; }
         public bool DataValid { get { return true; } }
@@ -55,6 +56,12 @@ namespace RoomLab.Native
         public readonly List<NativeTile> Tiles=new List<NativeTile>();
         public readonly List<NativeObject> Objects=new List<NativeObject>();
         public readonly List<NativeRegion> Entries=new List<NativeRegion>(), Exits=new List<NativeRegion>(), Zones=new List<NativeRegion>(), Movables=new List<NativeRegion>();
+        public readonly Dictionary<string,string> AiExitBindings=new Dictionary<string,string>(StringComparer.Ordinal);
+    }
+    // room.aiExitBindings + project.map.aiConnections: the editor's explicit AI routing.
+    public sealed class NativeAiWire
+    {
+        public string Id, FromRoomId, AiExitId, ToRoomId, AiEntranceId;
     }
     public sealed class NativeTile { public int X,Y; public bool Collision; public JObject Raw; }
     public class NativeRegion

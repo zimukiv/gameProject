@@ -1,0 +1,9 @@
+{
+  "pack": "digital-audio",
+  "page": "https://kenney.nl/assets/digital-audio",
+  "source_archive_sha256": "24e6ce28b76a6d8c89cff4d331e0965ff5c3de8a73c612028e9d363cc64e4f06",
+  "included_originals": [
+    "Audio/phaseJump2.ogg",
+    "Audio/phaserUp4.ogg"
+  ]
+}

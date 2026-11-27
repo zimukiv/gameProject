@@ -12,11 +12,13 @@ namespace RoomLab.Native
     public static class NativeUiKit
     {
         public static Font Font;
+        /// 最近一次构建 UI 时所在的画布根（页面画布），中景等整屏装饰挂在这里。
+        public static Transform PageRoot;
         public static Action ClickSound;
         public static readonly Color Paper=new Color(.88f,.87f,.77f),Ink=new Color(.055f,.085f,.14f),Teal=new Color(.2f,.72f,.72f),Orange=new Color(.95f,.58f,.29f);
         public static readonly Color Slot=new Color(.16f,.25f,.32f),SlotIdle=new Color(.11f,.18f,.24f);
         static Transform Host(Transform parent){return parent;}
-        public static RectTransform New(Transform parent,string name){var go=new GameObject(name,typeof(RectTransform));go.layer=parent.gameObject.layer;var t=(RectTransform)go.transform;t.SetParent(parent,false);t.anchorMin=Vector2.zero;t.anchorMax=Vector2.one;t.offsetMin=Vector2.zero;t.offsetMax=Vector2.zero;return t;}
+        public static RectTransform New(Transform parent,string name){if(parent!=null&&parent.GetComponentInParent<Canvas>()!=null)PageRoot=parent.transform.root;var go=new GameObject(name,typeof(RectTransform));go.layer=parent.gameObject.layer;var t=(RectTransform)go.transform;t.SetParent(parent,false);t.anchorMin=Vector2.zero;t.anchorMax=Vector2.one;t.offsetMin=Vector2.zero;t.offsetMax=Vector2.zero;return t;}
         public static RectTransform Abs(Transform parent,string name,float x,float y,float w,float h){var t=New(parent,name);t.anchorMin=t.anchorMax=new Vector2(0,1);t.pivot=new Vector2(0,1);t.anchoredPosition=new Vector2(x,-y);t.sizeDelta=new Vector2(w,h);return t;}
         public static void Center(RectTransform t,float width){t.anchorMin=t.anchorMax=new Vector2(.5f,.5f);t.pivot=new Vector2(.5f,.5f);t.anchoredPosition=Vector2.zero;if(width>0)t.sizeDelta=new Vector2(width,t.sizeDelta.y);}
         public static void MarkBackdrop(GameObject go){if(go.GetComponent<NativeUiBackdrop>()==null)go.AddComponent<NativeUiBackdrop>();}
@@ -87,6 +89,20 @@ namespace RoomLab.Native
         public static void Relayout(Transform page){Canvas.ForceUpdateCanvases();for(int i=0;i<page.childCount;i++){var t=page.GetChild(i) as RectTransform;if(t!=null)LayoutRebuilder.ForceRebuildLayoutImmediate(t);}Canvas.ForceUpdateCanvases();}
         // Returns the number of inspected pairs. Solid = text or an interactive graphic; decorative
         // images are covered by their own text so they are not compared with it.
+        static Rect VisibleRect(RectTransform node)
+        {
+            var rect=WorldRect(node);
+            for(var parent=node.parent;parent!=null;parent=parent.parent)
+            {
+                if(!(parent is RectTransform clip)||clip.GetComponent<RectMask2D>()==null)continue;
+                var b=WorldRect(clip);
+                float x=Mathf.Max(rect.xMin,b.xMin),y=Mathf.Max(rect.yMin,b.yMin);
+                rect=new Rect(x,y,Mathf.Max(0,Mathf.Min(rect.xMax,b.xMax)-x),
+                    Mathf.Max(0,Mathf.Min(rect.yMax,b.yMax)-y));
+                if(rect.width<=0||rect.height<=0)break;
+            }
+            return rect;
+        }
         public static int Validate(RectTransform root,List<string> problems,Rect bounds)
         {
             var nodes=new List<RectTransform>();Collect(root,nodes);
@@ -96,13 +112,15 @@ namespace RoomLab.Native
                 for(int j=i+1;j<nodes.Count;j++)
                 {
                     var a=nodes[i];var b=nodes[j];if(IsAncestor(a,b)||IsAncestor(b,a))continue;if(!Solid(a)||!Solid(b))continue;
-                    pairs++;var ra=WorldRect(a);var rb=WorldRect(b);
+                    pairs++;var ra=VisibleRect(a);var rb=VisibleRect(b);
+                    if(ra.width<=0||ra.height<=0||rb.width<=0||rb.height<=0)continue;
                     if(Overlaps(ra,rb,0.6f))problems.Add("overlap "+Name(a)+" "+Range(ra)+" <> "+Name(b)+" "+Range(rb));
                 }
             }
             foreach(var n in nodes)
             {
-                var text=n.GetComponent<Text>();var r=WorldRect(n);
+                var text=n.GetComponent<Text>();var r=VisibleRect(n);
+                if(r.width<=0||r.height<=0)continue;
                 if(bounds.width>0&&!Contains(bounds,r,1.5f))problems.Add("outside "+Name(n)+" "+Range(r));
                 if(text!=null&&text.preferredHeight>n.rect.height+1.5f)problems.Add("clipped "+Name(n)+" preferred="+text.preferredHeight.ToString("F1")+" box="+n.rect.height.ToString("F1"));
             }

@@ -55,7 +55,7 @@ namespace RoomLab.Native
         {
             if(Game==null||error!=null)return;
             if(!verify){if(GameInput.WasPressedExact(KeyCode.Escape)){timeline.Reset();keyboard.DiscardEdges();Game.TogglePause();}if(GameInput.WasPressedExact(KeyCode.R)){timeline.Reset();keyboard.DiscardEdges();Game.Retry();}
-                if(keyboard.Overflowed){timeline.Advance(Game,1,default(MotionInput));keyboard.DiscardEdges();}
+                if(keyboard.Overflowed){timeline.ProtectInputOverflow(Game);keyboard.DiscardEdges();}
                 if(Game.Mode!="playing"||Game.RespawnRemaining>0)keyboard.DiscardEdges();
                 while(keyboard.TryRead(out var edge))timeline.Advance(Game,0,edge);
                 timeline.Advance(Game,Time.unscaledDeltaTime,keyboard.Held);

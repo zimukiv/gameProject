@@ -46,6 +46,7 @@ namespace RoomLab.Native
                 else {if(physics.Length>1)throw new NativeCourseSelectionException(physics.Select(c=>new JObject{{"id",c["id"]},{"name",c["name"]},{"kind",c["kind"]}}).ToArray());selected=physics[0];}
                 normalized["courses"]=new JArray(selected.DeepClone());
             }
+            ProjectMapConnections(normalized);
             // Check the original used module names before alias normalization can hide a declaration.
             foreach(var ct in Array(normalized,"courses"))foreach(var rt in Array(Object(ct,"course"),"rooms"))
                 foreach(var ot in Array(Object(rt,"room"),"objects"))CheckModule(normalized,Object(ot,"object"));
@@ -56,7 +57,7 @@ namespace RoomLab.Native
                 foreach(var ot in Array(Object(rt,"room"),"objects"))CheckModule(normalized,Object(ot,"object"));
             var p=new NativeProject { sourceBytes=(byte[])bytes.Clone(),SourceSha256=Sha(bytes),OriginalJson=source,
                 NormalizedJson=normalized,Profile=opts.Profile,SourceKind=format,Id=Text(normalized,"id",""),Name=Text(normalized,"name","") };
-            Build(p);NativeReworkValidation.Validate(p);ResolveAssets(p,archive,opts);return p;
+            ReadAiWires(normalized,p);Build(p);NativeReworkValidation.Validate(p);ResolveAssets(p,archive,opts);return p;
         }
         public static string Sha(byte[] bytes) { using(var s=SHA256.Create())return BitConverter.ToString(s.ComputeHash(bytes)).Replace("-","").ToLowerInvariant(); }
         public static JObject Parse(byte[] bytes)
@@ -160,7 +161,7 @@ namespace RoomLab.Native
                     if(room.Cols<1||room.Cols>256||room.Rows<1||room.Rows>256)throw Bad("房间尺寸需为1–256格");
                     var camera=r["playCamera"]==null?new JObject():Object(r["playCamera"],"playCamera");room.CameraMode=Text(camera,"mode","room");if(room.CameraMode!="room"&&room.CameraMode!="follow")throw Bad("试玩视角模式无效");room.CameraCols=Number(camera,"cols",30);room.CameraRows=Number(camera,"rows",17);if(room.CameraCols<1||room.CameraCols>256||room.CameraRows<1||room.CameraRows>256)throw Bad("视野尺寸无效");
                     var cells=new HashSet<string>();foreach(var tt in Array(r,"tiles")) {var t=Object(tt,"tile");int x=Int(t,"x"),y=Int(t,"y");Bounds(x,y,1,1,room);if(!cells.Add(x+","+y))throw Bad("固定砖坐标重复");room.Tiles.Add(new NativeTile {X=x,Y=y,Collision=Bool(t,"collision",true),Raw=t});}
-                    ReadRegions(r,"entries",room.Entries,room,ids);ReadRegions(r,"exits",room.Exits,room,ids);ReadRegions(r,"zones",room.Zones,room,ids);ReadRegions(r,"movables",room.Movables,room,ids);
+                    ReadRegions(r,"entries",room.Entries,room,ids);ReadRegions(r,"exits",room.Exits,room,ids);ReadAiBindings(r,room);ReadRegions(r,"zones",room.Zones,room,ids);ReadRegions(r,"movables",room.Movables,room,ids);
                     if(room.Entries.Count==0)throw Bad("房间没有入口："+room.Name);
                     foreach(var ot in Array(r,"objects")) {
                         var o=Object(ot,"object");string type=Text(o,"type","",true);var definition=NativeModuleCatalog.Definitions[type];var shape=Text(definition,"collider","");
@@ -193,6 +194,61 @@ namespace RoomLab.Native
             foreach(var c in p.Courses) {
                 ValidateBindings(c.ArtBindings,assetIds);
                 foreach(var r in c.Rooms) {ValidateBindings(r.ArtBindings,assetIds);foreach(var o in r.Objects)foreach(var binding in o.AssetOverrides.Properties())if(binding.Value.Type==JTokenType.String&&binding.Value.Value<string>()!=""&&!assetIds.Contains(binding.Value.Value<string>()))throw Bad("缺失实例素材引用："+binding.Value);}
+            }
+        }
+        // The motion runtime owns one course at a time. Project-level edges
+        // inside that course take precedence over legacy edges at the same exit.
+        static void ReadAiBindings(JObject r,NativeRoom room)
+        {
+            if (!(r["aiExitBindings"] is JArray bindings)) return;
+            foreach (var token in bindings)
+            {
+                var entry = Object(token,"ai exit binding");
+                string exitId = Text(entry,"exitId",null), aiExitId = Text(entry,"aiExitId",null);
+                if (!string.IsNullOrEmpty(exitId) && !string.IsNullOrEmpty(aiExitId)) room.AiExitBindings[exitId] = aiExitId;
+            }
+        }
+        static void ReadAiWires(JObject root,NativeProject project)
+        {
+            project.AiWires.Clear();
+            if (!(root["map"]?["aiConnections"] is JArray wires)) return;
+            foreach (var token in wires)
+            {
+                var wire = Object(token,"ai connection");
+                var from = Object(wire["from"],"from");
+                var to = Object(wire["to"],"to");
+                project.AiWires.Add(new NativeAiWire {
+                    Id = Text(wire,"id",""), FromRoomId = Text(from,"roomId",""), AiExitId = Text(from,"aiExitId",""),
+                    ToRoomId = Text(to,"roomId",""), AiEntranceId = Text(to,"aiEntranceId",""),
+                });
+            }
+        }
+        static void ProjectMapConnections(JObject root)
+        {
+            if (!(root["map"]?["connections"] is JArray explicitEdges)) return;
+            foreach (JObject course in Array(root,"courses"))
+            {
+                var rooms = new HashSet<string>(Array(course,"rooms").Select(r => (string)r["id"]));
+                var connections = new JArray();
+                var seen = new HashSet<(string room,string exit)>();
+                foreach (var token in explicitEdges)
+                {
+                    var edge = Object(token,"map connection");
+                    var from = Object(edge["from"],"from");
+                    var to = Object(edge["to"],"to");
+                    string room = Text(from,"roomId","",true), exit = Text(from,"exitId","",true);
+                    if (!rooms.Contains(room) || !seen.Add((room,exit))) continue;
+                    if (!rooms.Contains(Text(to,"roomId","",true))) throw Bad("当前运行时尚不支持跨大关接线："+edge["id"]);
+                    connections.Add(edge.DeepClone());
+                }
+                foreach (var token in course["connections"] as JArray ?? new JArray())
+                {
+                    var edge = Object(token,"connection");
+                    var from = Object(edge["from"],"from");
+                    if (!seen.Contains((Text(from,"roomId","",true),Text(from,"exitId","",true))))
+                        connections.Add(edge.DeepClone());
+                }
+                course["connections"] = connections;
             }
         }
         static void ValidateBindings(JObject bindings,HashSet<string> ids) {foreach(var binding in bindings.Properties()){IEnumerable<JToken> values=binding.Value is JObject o?o.Properties().Select(x=>x.Value):new[]{binding.Value};foreach(var value in values)if(value.Type==JTokenType.String&&value.Value<string>()!=""&&!ids.Contains(value.Value<string>()))throw Bad("缺失素材引用："+value);}}

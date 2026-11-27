@@ -1,0 +1,692 @@
+{
+  "tool": "STAR0E 素材预览工具",
+  "toolVersion": "1.0.0",
+  "generatedAt": "2026-11-25T15:22:14.122Z",
+  "level": {
+    "file": "latest-campaign.json",
+    "id": "deadline-autosave-v1",
+    "name": "DDL · 截止之前",
+    "version": 2
+  },
+  "course": {
+    "id": "__network__",
+    "name": "全部 · 网络"
+  },
+  "scope": "course",
+  "room": null,
+  "counts": {
+    "files": 72,
+    "missing": 1
+  },
+  "files": [
+    {
+      "path": "characters/ai/ai_chase_00.png",
+      "slot": "AI · 追逐 #00",
+      "source": "ai_chase_00.png",
+      "width": 32,
+      "height": 64,
+      "aiAction": "chase",
+      "aiFrame": 0
+    },
+    {
+      "path": "characters/ai/ai_chase_01.png",
+      "slot": "AI · 追逐 #01",
+      "source": "ai_chase_01.png",
+      "width": 32,
+      "height": 64,
+      "aiAction": "chase",
+      "aiFrame": 1
+    },
+    {
+      "path": "characters/ai/ai_chase_02.png",
+      "slot": "AI · 追逐 #02",
+      "source": "ai_chase_02.png",
+      "width": 32,
+      "height": 64,
+      "aiAction": "chase",
+      "aiFrame": 2
+    },
+    {
+      "path": "characters/ai/ai_chase_03.png",
+      "slot": "AI · 追逐 #03",
+      "source": "ai_chase_03.png",
+      "width": 32,
+      "height": 64,
+      "aiAction": "chase",
+      "aiFrame": 3
+    },
+    {
+      "path": "characters/ai/ai_chase_04.png",
+      "slot": "AI · 追逐 #04",
+      "source": "ai_chase_04.png",
+      "width": 32,
+      "height": 64,
+      "aiAction": "chase",
+      "aiFrame": 4
+    },
+    {
+      "path": "characters/ai/ai_chase_05.png",
+      "slot": "AI · 追逐 #05",
+      "source": "ai_chase_05.png",
+      "width": 32,
+      "height": 64,
+      "aiAction": "chase",
+      "aiFrame": 5
+    },
+    {
+      "path": "characters/ai/ai_idle_00.png",
+      "slot": "AI · 待机未启动 #00",
+      "source": "ai_idle_00.png",
+      "width": 32,
+      "height": 64,
+      "aiAction": "idle",
+      "aiFrame": 0
+    },
+    {
+      "path": "characters/ai/ai_idle_01.png",
+      "slot": "AI · 待机未启动 #01",
+      "source": "ai_idle_01.png",
+      "width": 32,
+      "height": 64,
+      "aiAction": "idle",
+      "aiFrame": 1
+    },
+    {
+      "path": "characters/ai/ai_idle_02.png",
+      "slot": "AI · 待机未启动 #02",
+      "source": "ai_idle_02.png",
+      "width": 32,
+      "height": 64,
+      "aiAction": "idle",
+      "aiFrame": 2
+    },
+    {
+      "path": "characters/ai/ai_idle_03.png",
+      "slot": "AI · 待机未启动 #03",
+      "source": "ai_idle_03.png",
+      "width": 32,
+      "height": 64,
+      "aiAction": "idle",
+      "aiFrame": 3
+    },
+    {
+      "path": "characters/ai/ai_knockback_00.png",
+      "slot": "AI · 被击退 #00",
+      "source": "ai_knockback_00.png",
+      "width": 32,
+      "height": 64,
+      "aiAction": "knockback",
+      "aiFrame": 0
+    },
+    {
+      "path": "characters/ai/ai_knockback_01.png",
+      "slot": "AI · 被击退 #01",
+      "source": "ai_knockback_01.png",
+      "width": 32,
+      "height": 64,
+      "aiAction": "knockback",
+      "aiFrame": 1
+    },
+    {
+      "path": "characters/ai/ai_skill_00.png",
+      "slot": "AI · 技能 #00",
+      "source": "ai_skill_00.png",
+      "width": 32,
+      "height": 64,
+      "aiAction": "skill",
+      "aiFrame": 0
+    },
+    {
+      "path": "characters/ai/ai_skill_01.png",
+      "slot": "AI · 技能 #01",
+      "source": "ai_skill_01.png",
+      "width": 32,
+      "height": 64,
+      "aiAction": "skill",
+      "aiFrame": 1
+    },
+    {
+      "path": "characters/ai/ai_skill_02.png",
+      "slot": "AI · 技能 #02",
+      "source": "ai_skill_02.png",
+      "width": 32,
+      "height": 64,
+      "aiAction": "skill",
+      "aiFrame": 2
+    },
+    {
+      "path": "characters/ai/ai_skill_03.png",
+      "slot": "AI · 技能 #03",
+      "source": "ai_skill_03.png",
+      "width": 32,
+      "height": 64,
+      "aiAction": "skill",
+      "aiFrame": 3
+    },
+    {
+      "path": "characters/player/player_crouch_00.png",
+      "slot": "主角 · crouch #00",
+      "source": "player_crouch_00.png",
+      "width": 32,
+      "height": 64,
+      "action": "crouch",
+      "frame": 0
+    },
+    {
+      "path": "characters/player/player_crouch_01.png",
+      "slot": "主角 · crouch #01",
+      "source": "player_crouch_01.png",
+      "width": 32,
+      "height": 64,
+      "action": "crouch",
+      "frame": 1
+    },
+    {
+      "path": "characters/player/player_dash_00.png",
+      "slot": "主角 · dash #00",
+      "source": "player_dash_00.png",
+      "width": 32,
+      "height": 64,
+      "action": "dash",
+      "frame": 0
+    },
+    {
+      "path": "characters/player/player_dash_01.png",
+      "slot": "主角 · dash #01",
+      "source": "player_dash_01.png",
+      "width": 32,
+      "height": 64,
+      "action": "dash",
+      "frame": 1
+    },
+    {
+      "path": "characters/player/player_death_00.png",
+      "slot": "主角 · death #00",
+      "source": "player_death_00.png",
+      "width": 32,
+      "height": 64,
+      "action": "death",
+      "frame": 0
+    },
+    {
+      "path": "characters/player/player_death_01.png",
+      "slot": "主角 · death #01",
+      "source": "player_death_01.png",
+      "width": 32,
+      "height": 64,
+      "action": "death",
+      "frame": 1
+    },
+    {
+      "path": "characters/player/player_death_02.png",
+      "slot": "主角 · death #02",
+      "source": "player_death_02.png",
+      "width": 32,
+      "height": 64,
+      "action": "death",
+      "frame": 2
+    },
+    {
+      "path": "characters/player/player_death_03.png",
+      "slot": "主角 · death #03",
+      "source": "player_death_03.png",
+      "width": 32,
+      "height": 64,
+      "action": "death",
+      "frame": 3
+    },
+    {
+      "path": "characters/player/player_fall_00.png",
+      "slot": "主角 · fall #00",
+      "source": "player_fall_00.png",
+      "width": 32,
+      "height": 64,
+      "action": "fall",
+      "frame": 0
+    },
+    {
+      "path": "characters/player/player_fall_01.png",
+      "slot": "主角 · fall #01",
+      "source": "player_fall_01.png",
+      "width": 32,
+      "height": 64,
+      "action": "fall",
+      "frame": 1
+    },
+    {
+      "path": "characters/player/player_idle_00.png",
+      "slot": "主角 · idle #00",
+      "source": "player_idle_00.png",
+      "width": 32,
+      "height": 64,
+      "action": "idle",
+      "frame": 0
+    },
+    {
+      "path": "characters/player/player_idle_01.png",
+      "slot": "主角 · idle #01",
+      "source": "player_idle_01.png",
+      "width": 32,
+      "height": 64,
+      "action": "idle",
+      "frame": 1
+    },
+    {
+      "path": "characters/player/player_idle_02.png",
+      "slot": "主角 · idle #02",
+      "source": "player_idle_02.png",
+      "width": 32,
+      "height": 64,
+      "action": "idle",
+      "frame": 2
+    },
+    {
+      "path": "characters/player/player_idle_03.png",
+      "slot": "主角 · idle #03",
+      "source": "player_idle_03.png",
+      "width": 32,
+      "height": 64,
+      "action": "idle",
+      "frame": 3
+    },
+    {
+      "path": "characters/player/player_jump_00.png",
+      "slot": "主角 · jump #00",
+      "source": "player_jump_00.png",
+      "width": 32,
+      "height": 64,
+      "action": "jump",
+      "frame": 0
+    },
+    {
+      "path": "characters/player/player_jump_01.png",
+      "slot": "主角 · jump #01",
+      "source": "player_jump_01.png",
+      "width": 32,
+      "height": 64,
+      "action": "jump",
+      "frame": 1
+    },
+    {
+      "path": "characters/player/player_jumpdust_00.png",
+      "slot": "主角 · 起跳灰尘 #00",
+      "source": "player_jumpdust_00.png",
+      "width": 32,
+      "height": 32,
+      "action": "jumpdust",
+      "frame": 0
+    },
+    {
+      "path": "characters/player/player_jumpdust_01.png",
+      "slot": "主角 · 起跳灰尘 #01",
+      "source": "player_jumpdust_01.png",
+      "width": 32,
+      "height": 32,
+      "action": "jumpdust",
+      "frame": 1
+    },
+    {
+      "path": "characters/player/player_jumpdust_02.png",
+      "slot": "主角 · 起跳灰尘 #02",
+      "source": "player_jumpdust_02.png",
+      "width": 32,
+      "height": 32,
+      "action": "jumpdust",
+      "frame": 2
+    },
+    {
+      "path": "characters/player/player_landdust_00.png",
+      "slot": "主角 · 落地灰尘 #00",
+      "source": "player_landdust_00.png",
+      "width": 32,
+      "height": 32,
+      "action": "landdust",
+      "frame": 0
+    },
+    {
+      "path": "characters/player/player_landdust_01.png",
+      "slot": "主角 · 落地灰尘 #01",
+      "source": "player_landdust_01.png",
+      "width": 32,
+      "height": 32,
+      "action": "landdust",
+      "frame": 1
+    },
+    {
+      "path": "characters/player/player_landdust_02.png",
+      "slot": "主角 · 落地灰尘 #02",
+      "source": "player_landdust_02.png",
+      "width": 32,
+      "height": 32,
+      "action": "landdust",
+      "frame": 2
+    },
+    {
+      "path": "characters/player/player_landdust_03.png",
+      "slot": "主角 · 落地灰尘 #03",
+      "source": "player_landdust_03.png",
+      "width": 32,
+      "height": 32,
+      "action": "landdust",
+      "frame": 3
+    },
+    {
+      "path": "characters/player/player_run_00.png",
+      "slot": "主角 · run #00",
+      "source": "player_run_00.png",
+      "width": 32,
+      "height": 64,
+      "action": "run",
+      "frame": 0
+    },
+    {
+      "path": "characters/player/player_run_01.png",
+      "slot": "主角 · run #01",
+      "source": "player_run_01.png",
+      "width": 32,
+      "height": 64,
+      "action": "run",
+      "frame": 1
+    },
+    {
+      "path": "characters/player/player_run_02.png",
+      "slot": "主角 · run #02",
+      "source": "player_run_02.png",
+      "width": 32,
+      "height": 64,
+      "action": "run",
+      "frame": 2
+    },
+    {
+      "path": "characters/player/player_run_03.png",
+      "slot": "主角 · run #03",
+      "source": "player_run_03.png",
+      "width": 32,
+      "height": 64,
+      "action": "run",
+      "frame": 3
+    },
+    {
+      "path": "characters/player/player_run_04.png",
+      "slot": "主角 · run #04",
+      "source": "player_run_04.png",
+      "width": 32,
+      "height": 64,
+      "action": "run",
+      "frame": 4
+    },
+    {
+      "path": "characters/player/player_run_05.png",
+      "slot": "主角 · run #05",
+      "source": "player_run_05.png",
+      "width": 32,
+      "height": 64,
+      "action": "run",
+      "frame": 5
+    },
+    {
+      "path": "environment/common/common_aistart.png",
+      "slot": "AI 启动器",
+      "source": "ai_activator_on.png",
+      "width": 64,
+      "height": 96,
+      "type": "common.aiStart",
+      "state": "idle"
+    },
+    {
+      "path": "environment/common/common_aistarthollow.png",
+      "slot": "AI 启动板（空）",
+      "source": "common_aistart.png",
+      "width": 32,
+      "height": 32,
+      "type": "common.aiStartHollow",
+      "state": "idle"
+    },
+    {
+      "path": "environment/common/common_checkpoint_active.png",
+      "slot": "检查点 · 激活",
+      "source": "1795568182.png",
+      "width": 32,
+      "height": 32,
+      "type": "common.checkpoint",
+      "state": "active"
+    },
+    {
+      "path": "environment/common/common_checkpoint_idle.png",
+      "slot": "检查点 · 待机",
+      "source": "1795568024.png",
+      "width": 32,
+      "height": 32,
+      "type": "common.checkpoint",
+      "state": "idle"
+    },
+    {
+      "path": "environment/common/common_collectible.png",
+      "slot": "收藏品",
+      "source": "_contact_sheet.png",
+      "width": 320,
+      "height": 320,
+      "type": "common.collectible",
+      "state": "idle"
+    },
+    {
+      "path": "environment/common/common_solid.png",
+      "slot": "地面基础块",
+      "source": "common_solid.png",
+      "width": 32,
+      "height": 32,
+      "type": "common.solid",
+      "state": "idle"
+    },
+    {
+      "path": "environment/common/common_spike.png",
+      "slot": "尖刺",
+      "source": "common_spike.png",
+      "width": 32,
+      "height": 32,
+      "type": "common.spike",
+      "state": "idle"
+    },
+    {
+      "path": "environment/common/token_big.png",
+      "slot": "大 Token",
+      "source": "token_big.png",
+      "width": 32,
+      "height": 32,
+      "type": "common.coin",
+      "state": "idle"
+    },
+    {
+      "path": "environment/common/token_small.png",
+      "slot": "小 Token",
+      "source": "token_small.png",
+      "width": 32,
+      "height": 32,
+      "type": "common.small",
+      "state": "idle"
+    },
+    {
+      "path": "environment/math/bg_math_main.png",
+      "slot": "背景 · __network__",
+      "source": "bg_math_main.png",
+      "width": 512,
+      "height": 512,
+      "course": "__network__"
+    },
+    {
+      "path": "environment/math/calculus_derivative_active.png",
+      "slot": "求导控制器（散开） · 激活",
+      "source": "calculus_derivative_active.png",
+      "width": 32,
+      "height": 8,
+      "type": "calculus.derivative",
+      "state": "active"
+    },
+    {
+      "path": "environment/math/calculus_derivative_idle.png",
+      "slot": "求导控制器（散开） · 待机",
+      "source": "calculus_derivative_idle.png",
+      "width": 32,
+      "height": 8,
+      "type": "calculus.derivative",
+      "state": "idle"
+    },
+    {
+      "path": "environment/math/calculus_integral_active.png",
+      "slot": "积分控制器（聚拢） · 激活",
+      "source": "calculus_integral_active.png",
+      "width": 32,
+      "height": 8,
+      "type": "calculus.integral",
+      "state": "active"
+    },
+    {
+      "path": "environment/math/calculus_integral_idle.png",
+      "slot": "积分控制器（聚拢） · 待机",
+      "source": "calculus_integral_idle.png",
+      "width": 32,
+      "height": 8,
+      "type": "calculus.integral",
+      "state": "idle"
+    },
+    {
+      "path": "environment/physics/physics_ice_cracked.png",
+      "slot": "冰块平台 · 裂纹",
+      "source": "physics_ice_cracked.png",
+      "width": 32,
+      "height": 32,
+      "type": "physics.ice",
+      "state": "cracked"
+    },
+    {
+      "path": "environment/physics/physics_ice_solid.png",
+      "slot": "冰块平台 · 完整",
+      "source": "physics_ice_solid.png",
+      "width": 32,
+      "height": 32,
+      "type": "physics.ice",
+      "state": "solid"
+    },
+    {
+      "path": "environment/physics/physics_jet_active.png",
+      "slot": "喷气口 · 激活",
+      "source": "physics_jet_active.png",
+      "width": 32,
+      "height": 32,
+      "type": "physics.jet",
+      "state": "active"
+    },
+    {
+      "path": "environment/physics/physics_jet_idle.png",
+      "slot": "喷气口 · 待机",
+      "source": "physics_jet_idle.png",
+      "width": 32,
+      "height": 32,
+      "type": "physics.jet",
+      "state": "idle"
+    },
+    {
+      "path": "environment/physics/physics_rail_active.png",
+      "slot": "电磁炮 · 激活",
+      "source": "physics_rail_active.png",
+      "width": 32,
+      "height": 8,
+      "type": "physics.rail",
+      "state": "active"
+    },
+    {
+      "path": "environment/physics/physics_rail_idle.png",
+      "slot": "电磁炮 · 待机",
+      "source": "physics_rail_idle.png",
+      "width": 32,
+      "height": 8,
+      "type": "physics.rail",
+      "state": "idle"
+    },
+    {
+      "path": "environment/physics/physics_thermal_cold.png",
+      "slot": "冷热控制器 · 冷",
+      "source": "physics_thermal_cold.png",
+      "width": 32,
+      "height": 8,
+      "type": "physics.thermal",
+      "state": "cold"
+    },
+    {
+      "path": "environment/physics/physics_thermal_hot.png",
+      "slot": "冷热控制器 · 热",
+      "source": "physics_thermal_hot.png",
+      "width": 32,
+      "height": 32,
+      "type": "physics.thermal",
+      "state": "hot"
+    },
+    {
+      "path": "environment/slacker/bg_guided-slacker_main.png",
+      "slot": "背景 · guided-slacker",
+      "source": "bg_guided-slacker_main.png",
+      "width": 512,
+      "height": 512,
+      "course": "guided-slacker"
+    },
+    {
+      "path": "environment/slacker/slacker_awake_active.png",
+      "slot": "清醒块 · 激活",
+      "source": "slacker_awake_active.png",
+      "width": 32,
+      "height": 8,
+      "type": "slacker.awake",
+      "state": "active"
+    },
+    {
+      "path": "environment/slacker/slacker_awake_idle.png",
+      "slot": "清醒块 · 待机",
+      "source": "slacker_awake_idle.png",
+      "width": 32,
+      "height": 8,
+      "type": "slacker.awake",
+      "state": "idle"
+    },
+    {
+      "path": "environment/slacker/slacker_checkin_active.png",
+      "slot": "签到块 · 激活",
+      "source": "slacker_checkin_active.png",
+      "width": 32,
+      "height": 32,
+      "type": "slacker.checkin",
+      "state": "active"
+    },
+    {
+      "path": "environment/slacker/slacker_checkin_idle.png",
+      "slot": "签到块 · 待机",
+      "source": "slacker_checkin_idle.png",
+      "width": 32,
+      "height": 32,
+      "type": "slacker.checkin",
+      "state": "idle"
+    }
+  ],
+  "terrainVariants": [
+    {
+      "path": "environment/common/common_solid.png",
+      "weight": 1,
+      "source": "common_solid.png",
+      "primary": true
+    }
+  ],
+  "missing": [
+    {
+      "category": "bg",
+      "label": "背景 · 中景",
+      "type": "bg",
+      "status": "missing",
+      "provided": 0,
+      "required": 1
+    }
+  ],
+  "naming": {
+    "player": "characters/player/player_<action>_<nn>.png",
+    "block": "environment/<physics|math|slacker|common>/<type_with_underscores>[_state].png",
+    "background": "environment/<course>/bg_<course>_main.png"
+  }
+}

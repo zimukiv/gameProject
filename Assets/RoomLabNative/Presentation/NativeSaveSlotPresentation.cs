@@ -158,40 +158,45 @@ namespace RoomLab.Native
             label.horizontalOverflow=HorizontalWrapMode.Overflow;label.verticalOverflow=VerticalWrapMode.Truncate;
             return label;
         }
+        static readonly Color ArchivePaper = new Color(.89f,.84f,.67f);
+        static readonly Color ArchiveCard = new Color(.96f,.92f,.78f);
+        static readonly Color ArchiveAccent = new Color(.17f,.33f,.34f);
+        static readonly Color ArchiveWarning = new Color(.53f,.25f,.13f);
+
         void BuildSaveSlots(Transform root,bool saving)
         {
             float width=Mathf.Min(600,designWidth-32),height=296;
             var panel=NativeUiKit.Abs(root,saving?"Save slots panel":"Load slots panel",(designWidth-width)/2,(designHeight-height)/2,width,height);
-            NativeUiKit.MarkBackdrop(NativeUiKit.Box(panel,"Slot page paper",Ink).gameObject);
+            NativeUiKit.MarkBackdrop(NativeUiKit.Box(panel,"Slot page paper",ArchivePaper).gameObject);
             bool automatic=!saving&&loadAutoSlots&&Game.IsContactAutosave;
             if(!saving&&Game.IsContactAutosave){
                 SlotTab(panel,14,"手动",false,!automatic);
                 SlotTab(panel,86,"自动",true,automatic);
-            }else SlotLabel(panel,14,6,width-28,18,saving?"保存":"读取",12,Teal);
+            }else SlotLabel(panel,14,6,width-28,18,saving?"保存":"读取",12,ArchiveAccent);
             float cardWidth=automatic?width-28:(width-40)/2;
             var files=SaveSlots;
             var history=automatic?AutoSaves.Read():null;
             for(int i=1;i<=(automatic?3:NativeSaveSlotFiles.Count);i++)
             {
                 int number=i;var slot=automatic?AutomaticSlot(history,number):files.Read(number);float x=automatic?14:14+(i-1)%2*(cardWidth+12),y=30+(automatic?i-1:(i-1)/2)*74;
-                var button=NativeUiKit.Button(panel,"",()=>{if(saving)ChooseSaveSlot(number);else if(automatic)LoadAutoSlot(number);else LoadSlot(number);},12,66,NativeUiKit.SlotIdle,cardWidth,0);
+                var button=NativeUiKit.Button(panel,"",()=>{if(saving)ChooseSaveSlot(number);else if(automatic)LoadAutoSlot(number);else LoadSlot(number);},12,66,ArchiveCard,cardWidth,0);
                 button.gameObject.name=(saving?"Save slot ":automatic?"Auto load slot ":"Load slot ")+number.ToString("00");
                 var rect=(RectTransform)button.transform;rect.anchorMin=rect.anchorMax=new Vector2(0,1);rect.pivot=new Vector2(0,1);rect.anchoredPosition=new Vector2(x,-y);rect.sizeDelta=new Vector2(cardWidth,66);
                 var caption=button.transform.Find("Caption");if(caption!=null)caption.gameObject.SetActive(false);
                 button.interactable=saving||slot.Readable;
                 string heading=(automatic?"自动 ":"存档 ")+number.ToString("00")+(slot.Readable?"  ·  "+SlotChapter(SlotField(slot,"kind")):"");
-                SlotLabel(rect,9,3,cardWidth-18,17,heading,12,slot.Exists?Paper:Teal);
-                if(!slot.Exists)SlotLabel(rect,9,25,cardWidth-18,27,"空存档",12,new Color(.65f,.72f,.72f));
-                else if(!slot.Readable)SlotLabel(rect,9,24,cardWidth-18,34,saving?"无法读取，可覆盖":"无法读取",11,Orange);
+                SlotLabel(rect,9,3,cardWidth-18,17,heading,12,slot.Exists?Ink:ArchiveAccent);
+                if(!slot.Exists)SlotLabel(rect,9,25,cardWidth-18,27,"空存档",12,ArchiveAccent);
+                else if(!slot.Readable)SlotLabel(rect,9,24,cardWidth-18,34,saving?"无法读取，可覆盖":"无法读取",11,ArchiveWarning);
                 else
                 {
-                    SlotLabel(rect,9,20,cardWidth-18,16,SlotRoomDisplayName(slot),11,Paper);
-                    SlotLabel(rect,9,36,cardWidth-18,14,SlotProgress(slot),10,new Color(.68f,.79f,.79f));
-                    SlotLabel(rect,9,50,cardWidth-18,16,SlotTime(slot),10,new Color(.55f,.65f,.68f));
+                    SlotLabel(rect,9,20,cardWidth-18,16,SlotRoomDisplayName(slot),11,Ink);
+                    SlotLabel(rect,9,36,cardWidth-18,14,SlotProgress(slot),10,ArchiveAccent);
+                    SlotLabel(rect,9,50,cardWidth-18,16,SlotTime(slot),10,ArchiveAccent);
                 }
             }
             string message=!string.IsNullOrEmpty(saveSlotNotice)?saveSlotNotice:history!=null&&history.Exists&&!history.Readable?"自动记录暂时读不了。":"";
-            SlotLabel(panel,14,248,width-28,16,message,11,Orange);
+            SlotLabel(panel,14,248,width-28,16,message,11,ArchiveWarning);
             var back=NativeUiKit.Button(panel,saving?"不存，继续走":"返回",()=>{if(saving)CancelSaveSlots();else CloseLoadSlots();},12,23,NativeUiKit.Slot,156,0);
             var backRect=(RectTransform)back.transform;backRect.anchorMin=backRect.anchorMax=new Vector2(.5f,0);backRect.pivot=new Vector2(.5f,0);backRect.anchoredPosition=new Vector2(0,6);backRect.sizeDelta=new Vector2(156,23);
         }
@@ -204,10 +209,10 @@ namespace RoomLab.Native
         {
             float width=Mathf.Min(430,designWidth-40);
             var panel=NativeUiKit.Column(root,"Overwrite slot confirmation",9,18,16);NativeUiKit.Center(panel,width);
-            NativeUiKit.MarkBackdrop(panel.gameObject);panel.gameObject.AddComponent<Image>().color=Ink;
+            NativeUiKit.MarkBackdrop(panel.gameObject);panel.gameObject.AddComponent<Image>().color=ArchivePaper;
             var slot=SaveSlots.Read(overwriteSlot);
-            NativeUiKit.Label(panel,"覆盖存档 "+overwriteSlot.ToString("00")+"？",20,Paper);
-            var summary=NativeUiKit.Label(panel,slot.Readable?SlotChapter(SlotField(slot,"kind"))+" · "+SlotRoomDisplayName(slot)+"\n"+SlotTime(slot):"这个位置已经有一份记录。",12,Teal);if(NativeDisplayCopy.Active(Game))summary.font=NoteFont??font;
+            NativeUiKit.Label(panel,"覆盖存档 "+overwriteSlot.ToString("00")+"？",20,Ink);
+            var summary=NativeUiKit.Label(panel,slot.Readable?SlotChapter(SlotField(slot,"kind"))+" · "+SlotRoomDisplayName(slot)+"\n"+SlotTime(slot):"这个位置已经有一份记录。",12,ArchiveAccent);if(NativeDisplayCopy.Active(Game))summary.font=NoteFont??font;
             var row=NativeUiKit.Row(panel,"Overwrite choice",30,10);
             NativeUiKit.Button(row,"再想想",()=>{if(Time.unscaledTime>=saveSlotReadyAt)Show("save-slots");},12,30);
             NativeUiKit.Button(row,"覆盖并保存",ConfirmOverwriteSlot,12,30,Teal);
