@@ -233,7 +233,7 @@ namespace RoomLab.Native
         {
             if(RespawnRemaining>0&&Mode=="playing")return;if(RetryResourceAnchor(reason))return;double deathX=Player.x,deathY=Player.y;var preserve=new Dictionary<string,MotionObjectState>();foreach(var o in Room.Objects)if(o.ResetPolicy=="preserve")preserve.Add(o.Id,ObjectStates[o.Id].Copy());
             roomCaches[Room.Id]=CaptureRoom();foreach(var r in Course.Rooms)if(roomCaches.TryGetValue(r.Id,out var cached))ApplyLifeReset(r,cached);
-            Deaths++;AiHits=0;Emit("retry",new JObject{{"reason",reason}});var cp=Checkpoint;var room=Room;var entry=Entry.Id;Score=cp.score;Tokens=cp.tokens;Charges=cp.charges;Recharge=cp.recharge;Credited.Clear();foreach(var c in cp.credited)Credited.Add(c);CourseAIActive=cp.active;CourseAITier=cp.tier;CourseAIId=cp.aiId;Phase=cp.phase;Life=cp.life+1;
+            Deaths++;AiHits=0;Emit("retry",new JObject{{"reason",reason}});var cp=Checkpoint;var room=Room;var entry=Entry.Id;Score=cp.score;Tokens=cp.tokens;Charges=cp.charges;Recharge=cp.recharge;var ownedItems=IsEditorBuild15?OwnedBuild15Keys():null;Credited.Clear();foreach(var c in cp.credited)Credited.Add(c);if(ownedItems!=null)foreach(var k in ownedItems)Credited.Add(k);CourseAIActive=cp.active;CourseAITier=cp.tier;CourseAIId=cp.aiId;Phase=cp.phase;Life=cp.life+1;
             if(IsRework){ReworkSignals.Clear();foreach(var v in cp.signals)ReworkSignals.Add(v.Key,v.Value);}var state=cp.state.Copy();ApplyLifeReset(room,state);roomCaches[room.Id]=state;lifeBaselines.Clear();var keepReturn=entryReturn;Room=null;LoadGameplayRoom(room.Id,entry,null,cp,keepReturn);respawnX=Player.x;respawnY=Player.y;
             // 还原助手的位置与路径轨迹（老存档没有 aiTrail 时自动跳过）
             if(cp.active&&AI!=null&&cp.aiTrail!=null&&cp.aiTrail.Count>0)
@@ -249,7 +249,10 @@ namespace RoomLab.Native
             if(IsEditorBuild15)foreach(var o in Room.Objects)if(o.Type=="common.coin"){
                 var coin=ObjectStates[o.Id];coin.used=false;coin.respawnRemaining=0;
             }
-            if(IsRework)foreach(var o in Room.Objects)if(o.ResetPolicy=="preserve"&&ObjectStates[o.Id].used&&(o.Raw["rework"]?["switch"]!=null||o.Raw["rework"]?["signal"]!=null))ReworkFire(o,ObjectStates[o.Id]);Player.freeDash=true;Player.dashCount=0;Player.paidDashUsed=false;RespawnRemaining=.5;Message=reason;
+            if(IsRework)foreach(var o in Room.Objects)if(o.ResetPolicy=="preserve"&&ObjectStates[o.Id].used&&(o.Raw["rework"]?["switch"]!=null||o.Raw["rework"]?["signal"]!=null))ReworkFire(o,ObjectStates[o.Id]);
+            // used 已随检查点回退、而机关砖还停在展开位时，把砖收回起点。
+            if(IsEditorBuild15)ReconcileBuild15Bricks();
+            Player.freeDash=true;Player.dashCount=0;Player.paidDashUsed=false;RespawnRemaining=.5;Message=reason;
             // 先留在死亡地点播完死亡动画，计时结束再回到复活点
             Player.x=deathX;Player.y=deathY;Player.vx=Player.vy=0;Player.grounded=false;pendingRespawn=true;
         }

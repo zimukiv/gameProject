@@ -14,6 +14,47 @@ namespace RoomLab.Native
             ((Project.OriginalJson["itemState"]?["initial"] as JObject)?[type] is JValue item && item.Type==JTokenType.Integer && (long)item>0) ||
             Course.Rooms.Any(room=>room.Objects.Any(o=>o.Type==type&&Credited.Contains(room.Id+"/"+o.Id)));
 
+        // 求导/积分板在数据里是 collision:true 的实心机关砖，引擎会把玩家挤到 rect 之外，
+        // 因此只靠 Overlap/top 判定时"贴着侧面撞上去"永远不成立。这两类额外接受贴边接触。
+        static bool IsBuild15CalculusBlock(string type) => type=="calculus.integral"||type=="calculus.derivative";
+
+        // 门控失败时必须给反馈，否则玩家分不清"缺道具"还是"没踩对"。
+        static readonly string HintCalculator="需要道具：计算器",HintPhone="需要道具：手机",HintCoffee="需要道具：咖啡",HintGeneric="需要道具。";
+        static string Build15GateHint(string type) =>
+            IsBuild15CalculusBlock(type)?HintCalculator:type=="slacker.checkin"?HintPhone:type=="slacker.awake"?HintCoffee:HintGeneric;
+
+        // 已拾取的主线道具键。这些是一次性钥匙（全 campaign 只有一个计算器要开 28 个机关），
+        // 死亡/读档回退检查点时必须钉住，否则走过去之后所有求导/积分板会永久失效。
+        List<string> OwnedBuild15Keys()
+        {
+            var keys=new List<string>();
+            foreach(var room in Course.Rooms)foreach(var o in room.Objects)
+                if(Build15Item(o.Type)&&Credited.Contains(room.Id+"/"+o.Id))keys.Add(room.Id+"/"+o.Id);
+            return keys;
+        }
+
+        // 死亡回退一致性：机关砖的 pathTime/progress 必须和触发板的 used 属于同一世代。
+        // 若 used 已回退成"未触发"而砖还留在展开位，就地把砖收回起点——
+        // 这正是"死了以后求导/积分不回退"的现象。
+        void ReconcileBuild15Bricks()
+        {
+            foreach(var o in Room.Objects){
+                if(!IsBuild15CalculusBlock(o.Type))continue;
+                if(ObjectStates[o.Id].used)continue;
+                foreach(var b in Room.Movables){
+                    if((string)b.Raw["padId"]!=o.Id)continue;
+                    if(!Movables.TryGetValue(b.Id,out var st)||st==null)continue;
+                    if(b.Raw["motionPath"] is JArray path&&path.Count>0){
+                        double end=NativeBrickPath.Duration(path);
+                        if(end>0&&st.pathTime>0&&st.pathTime<=end)
+                            st.anim=new NativeTransformAnimation{kind="path",to=0};
+                    }else if(st.progress>0){
+                        st.anim=new NativeTransformAnimation{kind="progress",from=st.progress,to=0};
+                    }
+                }
+            }
+        }
+
         // 机关砖的实时位置：入口、出口、物件共用同一份状态，显示与判定不会各算一套。
         static MotionRect MovableRectIn(NativeRoom room,IDictionary<string,NativeMovableState> states,NativeRegion brick)
         {
@@ -78,6 +119,25 @@ namespace RoomLab.Native
                 Course.Connections.Exists(edge=>edge.FromRoomId==Room.Id&&edge.ToRoomId==Course.Rooms[0].Id);
         }
 
+        public bool FreeExploration { get; private set; }
+        public bool CanExploreAfterCompletion => IsEditorBuild15 && MainlinePack && (Completed || FreeExploration);
+
+        public bool ExploreFromStart()
+        {
+            if (!CanExploreAfterCompletion) return false;
+            FreeExploration = true;
+            LoadRoom(Course.Rooms[0].Id);
+            return true;
+        }
+
+        bool TryReviewExplorationScore(NativeObject interaction)
+        {
+            if (!FreeExploration || interaction?.Type != "common.assignmentSubmit" ||
+                !IsMainlineFinalSubmission()) return false;
+            Mode = "won";
+            return true;
+        }
+
         bool Build15TriggerAllowed(NativeObject o)
         {
             switch(o.Type)
@@ -108,7 +168,7 @@ namespace RoomLab.Native
                                 roomCaches.TryGetValue(room.Id,out var visited)?visited.objects:null;
                             if(states!=null&&states.TryGetValue(device.Id,out var submission)&&submission.fired)done++;
                         }
-                    if((IsMainlineFinalSubmission()||total>0&&done>=total)&&!completionAwarded)
+                    if(!FreeExploration&&(IsMainlineFinalSubmission()||total>0&&done>=total)&&!completionAwarded)
                     {completionAwarded=true;Score+=50000;Mode="won";Emit("finish");Finished?.Invoke();}
                     return true;
                 case "slacker.awake":

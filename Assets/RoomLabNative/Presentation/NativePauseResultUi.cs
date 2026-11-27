@@ -112,7 +112,12 @@ namespace RoomLab.Native
             NativeUiKit.AbsLabel(root,226f,214f,288f,14f,"藏品 "+collected+" / "+total,10,Ink,TextAnchor.MiddleLeft);
             PauseProgress(root,226,232,288,collected,total);
             // 按钮：自绘底框 + 文字（覆盖面板自带按钮区）
-            PauseAction(root,226f,246f,288f,24f,"返回桌面",()=>{SaveProgress();Show("menu");},false,true);
+            if (Game.CanExploreAfterCompletion)
+            {
+                PauseAction(root,226f,246f,138f,24f,Game.FreeExploration?"继续探索":"自由探索",StartFreeExploration,false,true);
+                PauseAction(root,376f,246f,138f,24f,"返回桌面",()=>{SaveProgress();Show("menu");},false);
+            }
+            else PauseAction(root,226f,246f,288f,24f,"返回桌面",()=>{SaveProgress();Show("menu");},false,true);
             PauseAction(root,226f,276f,138f,20f,"再来一次",NewGame,false);
             PauseAction(root,376f,276f,138f,20f,"退出游戏",Quit,false,false,true);
         }
@@ -225,7 +230,12 @@ namespace RoomLab.Native
                     PauseLabel(frame,263,204,114,12,"藏品 "+collected+" / "+total,8,PausePhoneText);
                     PauseProgress(frame,263,217,114,collected,total);
                 }else PauseProgress(frame,263,189,114,visited,ProgressRoomCount());
-                PauseAction(frame,236,won?230:204,168,19,won?"返回桌面":"继续作业",won?desktop:resume,true,true);
+                if (won && Game.CanExploreAfterCompletion)
+                {
+                    PauseAction(frame,236,230,81,19,Game.FreeExploration?"继续探索":"自由探索",StartFreeExploration,true,true);
+                    PauseAction(frame,323,230,81,19,"返回桌面",desktop,true);
+                }
+                else PauseAction(frame,236,won?230:204,168,19,won?"返回桌面":"继续作业",won?desktop:resume,true,true);
                 PauseAction(frame,236,won?254:228,81,16,won?"再来一次":"从存档点重来",won?(Action)NewGame:Retry,true);
                 PauseAction(frame,323,won?254:228,81,16,"设置",settings,true);
                 if(!won){

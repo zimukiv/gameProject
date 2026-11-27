@@ -54,6 +54,8 @@ namespace RoomLab.Native
             return pixels[key]=Sprite.Create(texture,new Rect(0,0,width,height),new Vector2(.5f,.5f),32,0,SpriteMeshType.FullRect);
         }
 
+        SpriteRenderer sizedVignette;
+        int previewWidth,previewHeight;
         void RefreshWebPreviewBackground(Camera camera)
         {
 
@@ -61,12 +63,15 @@ namespace RoomLab.Native
             if(Game.IsEditorBuild15)previewVignette.enabled=Game.Room.Zones.Exists(z=>
                 (Game.Player.x+Game.Player.w*.5)>=z.X*32&&(Game.Player.x+Game.Player.w*.5)<(z.X+z.W)*32&&
                 (Game.Player.y+Game.Player.h*.5)>=z.Y*32&&(Game.Player.y+Game.Player.h*.5)<(z.Y+z.H)*32);
-            float width=Game.Room.Cols,height=Game.Room.Rows;
-            var center=new Vector3(width/2,height/2,0);
+            int width=Game.Room.Cols,height=Game.Room.Rows;
+            if(previewVignette==sizedVignette&&width==previewWidth&&height==previewHeight)return;
+            sizedVignette=previewVignette;
+            previewWidth=width;previewHeight=height;
+            var center=new Vector3(width/2f,height/2f,0);
             themeBackdrop.size=new Vector2(width,height);
             themeBackdrop.transform.position=center;
             previewVignette.transform.position=center;
-            previewVignette.transform.localScale=new Vector3(width/20,height/11.25f,1);
+            previewVignette.transform.localScale=new Vector3(width/20f,height/11.25f,1);
         }
     }
 }

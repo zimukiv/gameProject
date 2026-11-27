@@ -74,7 +74,7 @@ namespace RoomLab.Native
         }
 
         const double JetBurstDuration = 4.0 / 12;
-        JToken lastJetEvent;
+        JToken lastJetEvent, jetEventTail, latestRoomJetEvent;
         string jetRoom, activeJetId;
 
         void PlaceJetEffect(SpriteRenderer renderer, NativeMotion g, NativeObject nozzle, string frame)
@@ -101,27 +101,35 @@ namespace RoomLab.Native
             {
                 jetRoom = g.Room.Id;
                 activeJetId = null;
+                jetEventTail = latestRoomJetEvent = null;
                 burstAge = 0;
             }
             NativeObject activeJet = null, burstJet = null;
-            JToken latestJetEvent = null;
-            for (int i = g.Events.Count - 1; i >= 0; i--)
+            var tail = g.Events.Count > 0 ? g.Events[g.Events.Count - 1] : null;
+            if (!ReferenceEquals(tail, jetEventTail))
             {
-                var item = g.Events[i];
-                if ((string)item["type"] != "jet" || (string)item["room"] != jetRoom) continue;
-                latestJetEvent = item;
-                break;
+                jetEventTail = tail;
+                latestRoomJetEvent = null;
+                for (int i = g.Events.Count - 1; i >= 0; i--)
+                {
+                    var item = g.Events[i];
+                    if ((string)item["type"] != "jet" || (string)item["room"] != jetRoom) continue;
+                    latestRoomJetEvent = item;
+                    break;
+                }
             }
+            var latestJetEvent = latestRoomJetEvent;
+            string latestJetId = (string)latestJetEvent?["id"];
             foreach (var nozzle in g.Room.Objects)
             {
                 if (nozzle.Type != "physics.jet" || !g.LayerActive(nozzle.Raw)) continue;
                 if (g.VisualState(nozzle) == "active")
                 {
                     activeJet ??= nozzle;
-                    if (latestJetEvent != null && nozzle.Id == (string)latestJetEvent["id"])
+                    if (nozzle.Id == latestJetId)
                         activeJet = nozzle;
                 }
-                if (latestJetEvent != null && nozzle.Id == (string)latestJetEvent["id"])
+                if (nozzle.Id == latestJetId)
                     burstJet = nozzle;
             }
             if (activeJet != null)
@@ -208,66 +216,51 @@ namespace RoomLab.Native
             }
         }
         // ---- 中景：素材预览工具 web 版风格（只在关内、世界层最底部、更小更疏、按行错开不重叠）----
-        sealed class MidFormula { public Image image; public float row, speed, offset; }
-        readonly List<MidFormula> midFormulas = new List<MidFormula>();
-        // 页面切换时直接开/关这一容器，避免暂停时世界刷新停止导致公式残留
         public static Transform FormulaRoot;
-        public static string masterPage;   // 当前页面：play 以外公式隐藏
+        public static string masterPage;
         SpriteRenderer midBackdrop;
-        Texture2D midTexture;
-        Texture2D midCurveTexture;
-        Color32[] midCurveBuffer;
-        SpriteRenderer midCurveSprite;
+        Transform midGroundRoot;
+        public bool OwnsMidGround(Transform child) => child == midGroundRoot;
+
+        public void DisposeMidGround()
+        {
+            if (midBackdrop != null)
+            {
+                UnityEngine.Object.Destroy(midBackdrop.sprite.texture);
+                UnityEngine.Object.Destroy(midBackdrop.sprite);
+            }
+            foreach (var curve in midCurves) if (curve != null) UnityEngine.Object.Destroy(curve.sprite);
+            foreach (var formula in midFormulas) if (formula != null) UnityEngine.Object.Destroy(formula.sprite);
+            if (midAtlas != null) UnityEngine.Object.Destroy(midAtlas);
+        }
+        readonly SpriteRenderer[] midCurves = new SpriteRenderer[3];
+        readonly SpriteRenderer[] midFormulas = new SpriteRenderer[4];
+        const int MidAtlasWidth = 512;
+        const int MidAtlasHeight = 176;
+        const int CurveStripHeight = 48;
+        Texture2D midAtlas;
+        Color32[] midAtlasPixels;
         string midRoom;
         float midTime;
-        float midCurveStamp;
-        // 5 个公式，各占一行（row 互不相同 → 漂移时永远不会叠在一起）
-        // 照抄 web 版 MID_FORMULAS（start / y / speed）+ 字号：一个砖块高（32）× 0.8~1.2
-        static readonly string[] MidTexts = { "sin x", "\u222bf(x)dx", "x\u00b2+1=0", "\u220fn", "\u03c0", "\u222b?", "d/dx", "lim x" };
-        static readonly float[] MidStarts = { .04f, .62f, .26f, .78f, .12f, .54f, .38f, .88f };
-        static readonly float[] MidYs = { .18f, .30f, .45f, .57f, .68f, .78f, .24f, .86f };
-        static readonly float[] MidSpeeds = { 24f, 18f, 22f, 20f, 16f, 26f, 20f, 30f };
-        static readonly float[] MidOffsets = { .04f, .62f, .26f, .78f, .12f, .54f, .38f, .88f };
-        static readonly float[] MidSizes = { 32f, 27f, 35f, 29f, 38f, 26f, 34f, 30f };
-        static readonly Color[] MidColors = {
-            new Color(.88f,.92f,.94f,.78f), new Color(.30f,.66f,.68f,.70f), new Color(.92f,.92f,.86f,.74f),
-            new Color(.88f,.94f,.92f,.72f), new Color(.66f,.56f,.34f,.68f), new Color(.86f,.92f,.94f,.70f),
-            new Color(.90f,.92f,.88f,.72f), new Color(.86f,.90f,.94f,.68f),
-        };
 
         void TickMidGround(double dt)
         {
             var g = game();
             if (g == null) return;
-            bool inLevel = g.Mode == "playing" || g.Mode == "paused";   // 关内（含暂停）都显示网格背景；主菜单/结算隐藏
+            bool playing = g.Mode == "playing";
+            bool inLevel = playing || g.Mode == "paused";
+            if (inLevel && (midBackdrop == null || midRoom != g.Room.Id))
+            {
+                midRoom = g.Room.Id;
+                BuildMidGround(g);
+            }
             if (midBackdrop != null) midBackdrop.enabled = inLevel;
-            if (midCurveSprite != null) midCurveSprite.enabled = inLevel;
-            bool formulasVisible = g.Mode == "playing";   // 公式只在游玩中显示，暂停/菜单隐藏
-            for (int i = 0; i < midFormulas.Count; i++) if (midFormulas[i].image != null) midFormulas[i].image.enabled = formulasVisible;
-            if (!inLevel) return;
-            if (midRoom != g.Room.Id) { midRoom = g.Room.Id; BuildMidGround(g); }
-            if (g.Mode == "playing") midTime += (float)dt;
-            // Update the raster at a fixed visual rate, with no uploads while paused.
-            if (g.Mode == "playing" && midCurveSprite != null && midTime - midCurveStamp >= 1f / 30f)
-            {
-                midCurveStamp = midTime;
-                PaintCurves(g.Room.Cols, g.Room.Rows, midTime);
-            }
-            float rows = g.Room.Rows, cols = g.Room.Cols;
-            for (int i = 0; i < midFormulas.Count; i++)
-            {
-                var f = midFormulas[i];
-                if (f.image == null) continue;
-                float span = cols + 6f;
-                float x = (f.offset * span + midTime * f.speed / 32f) % span - 3f;
-                f.image.rectTransform.anchoredPosition = new Vector2(x, -(f.row * rows));
-            }
+            foreach (var curve in midCurves) if (curve != null) curve.enabled = inLevel;
+            foreach (var formula in midFormulas) if (formula != null) formula.enabled = playing;
+            if (!playing) return;
+            midTime += (float)dt;
+            PositionMidGround(g.Room.Cols, g.Room.Rows);
         }
-
-        // 世界层最底部：一张房间大小的深色网格底（sortingOrder -40，比地形砖还低）
-        // 公式已烘焙进背景贴图（见 PaintCurves），这里不再创建 UI 画布
-        void BuildMidFormulas() { FormulaRoot = null; }
-
 
         // 背景教程提示（由玩家每帧写入）：显示在中景纹理上
         public static string BackgroundHint;
@@ -284,6 +277,14 @@ namespace RoomLab.Native
             {'F',new[]{"###","#..","##.","#..","#.."}}, {'T',new[]{"###",".#.",".#.",".#.",".#."}},
             {'P',new[]{"##.","#.#","##.","#..","#.."}}, {'R',new[]{"##.","#.#","##.","#.#","#.#"}},
             {'C',new[]{".##","#..","#..","#..",".##"}}, {'K',new[]{"#.#","#.#","##.","#.#","#.#"}},
+            {'B',new[]{"##.","#.#","##.","#.#","##."}}, {'J',new[]{"..#","..#","..#","#.#",".#."}},
+            {'L',new[]{"#..","#..","#..","#..","###"}}, {'Q',new[]{".#.","#.#","#.#",".#.","..#"}},
+            {'U',new[]{"#.#","#.#","#.#","#.#","###"}}, {'X',new[]{"#.#","#.#",".#.","#.#","#.#"}},
+            {'Y',new[]{"#.#","#.#",".#.",".#.",".#."}}, {'Z',new[]{"###","..#",".#.","#..","###"}},
+            {'*',new[]{"...", "#.#",".#.","#.#","..."}}, {'<',new[]{"..#",".#.","#..",".#.","..#"}},
+            {'>',new[]{"#..",".#.","..#",".#.","#.."}}, {'[',new[]{"##.","#..","#..","#..","##."}},
+            {']',new[]{".##","..#","..#","..#",".##"}}, {':',new[]{"...",".#.","...",".#.","..."}},
+            {'!',new[]{".#.",".#.",".#.","...",".#."}}, {'_',new[]{"...","...","...","...","###"}},
             {'N',new[]{"#.#","###","###","#.#","#.#"}}, {'G',new[]{".##","#..","#.#","#.#",".##"}},
         };
         // 找字形（主表 + 补充表）
@@ -291,6 +292,7 @@ namespace RoomLab.Native
         {
             if (Font3x5.TryGetValue(ch, out var g)) return g;
             if (FontExtra.TryGetValue(ch, out var e)) return e;
+            if (FontExtra.TryGetValue(char.ToUpperInvariant(ch), out e)) return e;
             return null;
         }
         static readonly System.Collections.Generic.Dictionary<char,string[]> Font3x5 =
@@ -307,6 +309,14 @@ namespace RoomLab.Native
             {'S',new[]{".##","#..",".##","..#","##."}}, {'u',new[]{"...","#.#","#.#","#.#",".##"}},
             {'m',new[]{"...","###","#.#","#.#","#.#"}}, {'p',new[]{"...","##.","#.#","##.","#.."}},
             {'?',new[]{"##.","..#",".#.","...",".#."}}, {'/',new[]{"..#","..#",".#.","#..","#.."}},
+            {'3',new[]{"##.","..#",".#.","..#","##."}}, {'4',new[]{"#.#","#.#","###","..#","..#"}},
+            {'5',new[]{"###","#..","##.","..#","##."}}, {'6',new[]{".##","#..","###","#.#","###"}},
+            {'7',new[]{"###","..#",".#.",".#.",".#."}}, {'8',new[]{"###","#.#","###","#.#","###"}},
+            {'9',new[]{"###","#.#","###","..#","##."}}, {'-',new[]{"...","...","###","...","..."}},
+            {'e',new[]{"...",".#.","###","#..",".##"}}, {'c',new[]{"...",".##","#..","#..",".##"}},
+            {'o',new[]{"...",".#.","#.#","#.#",".#."}}, {'g',new[]{"...",".##","#.#",".##","..#"}},
+            {'k',new[]{"#..","#..","#.#","##.","#.#"}}, {',',new[]{"...","...","...",".#.","#.."}},
+            {'.',new[]{"...","...","...","...",".#."}}, {(char)39,new[]{".#.",".#.","...","...","..."}},
             {'l',new[]{"#..","#..","#..","#..","##."}}, {' ' ,new[]{"...","...","...","...","..."}},
         };
         void PixelText(Color32[] px,int W,int H,string text,int x0,int y0,int scale,Color32 color)
@@ -334,9 +344,21 @@ namespace RoomLab.Native
         // 房间背景模块：深色网格 + 坐标轴 + 实线边框（排序 -8；曲线/公式也在同一张纹理上）
         void BuildMidGround(NativeMotion g)
         {
-            ClearStaleMid();
+            if (midBackdrop == null) CreateMidBackdrop();
+            midBackdrop.transform.position = new Vector3(g.Room.Cols * .5f, g.Room.Rows * .5f, 0f);
+            midBackdrop.transform.localScale = new Vector3(g.Room.Cols * 32f / 640f, g.Room.Rows * 32f / 360f, 1f);
+            midTime = 0f;
+            PickRoomBackground();
+            BakeMidAtlas();
+            PositionMidGround(g.Room.Cols, g.Room.Rows);
+        }
+
+        void CreateMidBackdrop()
+        {
+            midGroundRoot = new GameObject("Math background").transform;
+            midGroundRoot.SetParent(root, false);
             const int W = 640, H = 360;   // 2× 分辨率：网格/曲线/公式更精细
-            if (midTexture == null) midTexture = new Texture2D(W, H, TextureFormat.RGBA32, false);
+            var midTexture = new Texture2D(W, H, TextureFormat.RGBA32, false);
             var px = new Color32[W * H];
             var deep = new Color32(0, 0, 0, 0);   // 不透明：房间内用本模块，房间外露出 GPT 的底层背景
             var grid = new Color32(86, 105, 119, 25);
@@ -352,109 +374,168 @@ namespace RoomLab.Native
             midTexture.SetPixels32(px);
             midTexture.Apply(false, false);
             var sprite = Sprite.Create(midTexture, new Rect(0, 0, W, H), new Vector2(.5f, .5f), 32f);
-            midBackdrop = MakeSprite("Mid backdrop", sprite, -8);
-            midBackdrop.transform.position = new Vector3(g.Room.Cols * .5f, g.Room.Rows * .5f, 0f);
-            midBackdrop.transform.localScale = new Vector3(g.Room.Cols * 32f / W, g.Room.Rows * 32f / H, 1f);
-
-            midCurveStamp = midTime;
-            PaintCurves(g.Room.Cols, g.Room.Rows, midTime);
+            midBackdrop = MakeMidRenderer("Mid backdrop", sprite, -8);
         }
 
-        static int midPaintTick;
-        void PaintCurves(float cols, float rows, float time)
+        readonly System.Random backgroundRandom = new System.Random();
+        readonly int[] roomCurves = new int[3];
+        readonly string[] roomFormulas = new string[4];
+        readonly float[] formulaWidths = new float[4];
+        static readonly Color32[] CurveColors = {
+            new Color32(42, 103, 109, 145), new Color32(137, 101, 44, 123), new Color32(146, 69, 56, 100)
+        };
+        static readonly float[] FormulaRows = { .20f, .38f, .57f, .76f };
+        static readonly float[] FormulaStarts = { .12f, .53f, .30f, .68f };
+        static readonly string[] FormulaPool = {
+            "x->0: sin(x)/x->1", "e^(i*pi)+1=0", "d/dx Int f(t)dt=f(x)",
+            "Int u dv=uv-Int v du", "Int dx/(1+x^2)=atan(x)+C", "Int 1/x dx=ln(abs(x))+C",
+            "Int_-inf^inf e^(-x^2)dx=sqrt(pi)", "Int x e^x dx=(x-1)e^x+C", "Int cos(x)^2 dx=x/2+sin(2x)/4+C",
+            "Int_0^1 x^x dx=Sum((-1)^n/(n+1)^(n+1))", "Sum 1/n^2=pi^2/6", "Sum 1/2^n=2",
+            "Sum (-1)^n/(2n+1)=pi/4", "Sum x^n/n!=e^x", "sin(x)=x-x^3/3!+x^5/5!-...",
+            "ln(1+x)=x-x^2/2+x^3/3-...", "(1+x)^a=Sum C(a,n)x^n", "lim (1+1/n)^n=e",
+            "lim n^(1/n)=1", "lim (ln x)/x=0", "y''+y=0",
+            "y'+py=q", "y'=ky(1-y/K)", "dy/dx=(dy/dt)/(dx/dt)",
+            "fxy=fyx", "grad f=(fx,fy,fz)", "D_u f=grad f*u",
+            "div curl F=0", "curl grad f=0", "grad f=L grad g",
+            "Int div F dV=Int F*n dS", "Int curl F*dS=Int F*dr", "Int dx/sqrt(1-x^2)=asin(x)+C",
+            "r=a(1-cos t)", "x=a(t-sin t)", "y=a(1-cos t)",
+            "x^2/a^2+y^2/b^2=1", "x^2/a^2-y^2/b^2=1", "L=Int sqrt(1+y'^2)dx",
+            "K=abs(y'')/(1+y'^2)^(3/2)", "dxdy=r drdt", "Int_0^1 ln(x)dx=-1",
+            "F=dp/dt", "F=-grad U", "m x''+b x'+kx=0",
+            "a=v^2/r", "L=r cross p", "dL/dt=T",
+            "I=Int r^2 dm", "I=Ic+md^2", "W=Int F*dr",
+            "F=-GMm/r^2", "T^2=4pi^2 a^3/(GM)", "v=sqrt(2GM/r)",
+            "dU=TdS-pdV", "pV=nRT", "pV^g=const",
+            "dS=dQrev/T", "eta=1-Tc/Th", "v=sqrt(gRT/M)",
+            "E=mc^2", "E^2=(pc)^2+(mc^2)^2", "g=1/sqrt(1-v^2/c^2)",
+            "t'=g(t-vx/c^2)", "x'=g(x-vt)", "lambda=h/p",
+            "E=hf", "Kmax=hf-W", "dx dp>=hbar/2",
+            "i hbar dY/dt=H Y", "En=-13.6/n^2 eV", "div E=rho/e0",
+            "div B=0", "curl E=-dB/dt", "curl B=u0 J+u0 e0 dE/dt",
+            "F=q(E+v cross B)", "C=eA/d", "U=CV^2/2",
+            "I=I0 e^(-t/RC)", "F=-kx", "w=1/sqrt(LC)",
+            "c=1/sqrt(u0 e0)", "n1 sin(t1)=n2 sin(t2)", "1/f=1/u+1/v",
+            "d sin(t)=m lambda", "I=I0 cos(t)^2", "lambda'=lambda+h(1-cos t)/(mc)",
+            "f'=f(v+vo)/(v-vs)", "Q=mc dT", "P=I^2 R",
+            "W=c+v+m", "m'=m/v", "p'=m/(c+v)",
+            "organic ratio=c/v", "M-C-M': M'>M", "C-M-C",
+            "M'=M+dM", "v+m=new value", "necessary work+surplus work=workday",
+            "I(v+m)=IIc",
+        };
+
+        void PickRoomBackground()
         {
-            if ((midPaintTick++ % 3) != 0) return;
-            float density = 640f / Mathf.Max(1, Mathf.Max(cols, rows));
-            int W = Mathf.Max(1, Mathf.RoundToInt(cols * density));
-            int H = Mathf.Max(1, Mathf.RoundToInt(rows * density));
-            if (midCurveTexture == null || midCurveTexture.width != W || midCurveTexture.height != H)
+            var curves = new HashSet<int>();
+            var formulas = new HashSet<int>();
+            for (int i = 0; i < roomCurves.Length; i++)
             {
-                if (midCurveTexture != null) UnityEngine.Object.Destroy(midCurveTexture);
-                midCurveTexture = new Texture2D(W, H, TextureFormat.RGBA32, false);
-                midCurveBuffer = new Color32[W * H];
+                int index;
+                do { index = backgroundRandom.Next(10); } while (!curves.Add(index));
+                roomCurves[i] = index;
             }
-            var cpx = midCurveBuffer;
-            Array.Clear(cpx, 0, cpx.Length);
-            var colors = new[] { new Color32(42, 103, 109, 155), new Color32(137, 101, 44, 132), new Color32(146, 69, 56, 104) };
-            float t = time * .35f;
-
-            for (int c = 0; c < 3; c++)
+            for (int i = 0; i < roomFormulas.Length; i++)
             {
-                int thickness = 3 - c, previousY = 0;
-                for (int x = 0; x < W; x++)
-                {
-                    float u = x / (float)(W - 1);
-                    float y;
-                    if (c == 0) y = H * .62f - (float)Math.Sin(u * Math.PI * 2.0 + t) * H * .12f;
-                    else if (c == 1) y = H * .40f - (float)Math.Cos(u * Math.PI * 1.6 + t * .8f) * H * .11f;
-                    else y = H * .80f - (float)Math.Sin(u * Math.PI * 1.2 - t * .6f) * H * .08f;
-                    int py = H - 1 - (int)y;
-                    // 与前一列连线，避免陡坡处出现断点
-                    if (x > 0)
-                    {
-                        int prev = previousY;
-                        int from = Math.Min(prev, py), to = Math.Max(prev, py);
-                        for (int q = from; q <= to; q++)
-                            for (int k = 0; k < thickness; k++)
-                            {
-                                int qq = q + k;
-                                if (qq >= 0 && qq < H) cpx[qq * W + x] = colors[c];
-                            }
-                    }
-                    else
-                    {
-                        for (int k = 0; k < thickness; k++)
-                        {
-                            int q = py + k;
-                            if (q >= 0 && q < H) cpx[q * W + x] = colors[c];
-                        }
-                    }
-                    previousY = py;
-                }
+                int index;
+                do { index = backgroundRandom.Next(FormulaPool.Length); } while (!formulas.Add(index));
+                roomFormulas[i] = FormulaPool[index];
             }
-            // ------- 公式：与曲线同一条纹理（同层、同淡度），只在游玩时绘制 -------
-            if (cols > 0)
-            {
-                var texts = new[] { "sin x", "Int f(x)dx", "x^2+1=0", "Sum n", "pi", "Int?", "d/dx", "lim x" };
-                var rowsY = new[] { .18f, .30f, .45f, .57f, .68f, .78f, .24f, .86f };
-                var speeds = new[] { 24f, 18f, 22f, 20f, 16f, 26f, 20f, 30f };
-                var starts = new[] { .04f, .62f, .26f, .78f, .12f, .54f, .38f, .88f };
-                var tone = new Color32(49, 66, 87, 150);
-                for (int i = 0; i < texts.Length; i++)
-                {
-                    int glyphScale = Mathf.Clamp(Mathf.RoundToInt(density * .14f), 1, 4);
-                    float margin = texts[i].Length * 4f * glyphScale * cols * 32f / W + 8f;
-                    float span = cols * 32f + margin * 2f;
-                    float px = (starts[i] * span + time * speeds[i]) % span - margin;   // 设计像素
-                    int x = (int)(px / (cols * 32f) * W);
-                    int y = H - 1 - (int)(rowsY[i] * H);
-                    PixelText(cpx, W, H, texts[i], x, y, glyphScale, tone);   // 字模 3×（配合 2× 纹理）
-                }
-            }
-            // ------- 背景教程提示：人在下方→右上角；人在上方→左下角 -------
-            if (false && !string.IsNullOrEmpty(BackgroundHint) && game() != null && game().Mode == "playing")
-            {
-                var hintTone = new Color32(232, 226, 200, 210);
-                string[] lines = BackgroundHint.Split('|');
-                int scale = 4, lineH = 5 * scale + 6;
-                for (int i = 0; i < lines.Length; i++)
-                {
-                    int w = lines[i].Length * 4 * scale;
-                    int x = BackgroundHintTopRight ? Math.Max(4, W - 8 - w) : 8;
-                    int y = BackgroundHintTopRight ? H - 12 - i * lineH : 12 + (lines.Length - 1 - i) * lineH;
-                    PixelText(cpx, W, H, lines[i], x, y, scale, hintTone);
-                }
-            }
-            midCurveTexture.filterMode = FilterMode.Point;
-            midCurveTexture.SetPixels32(cpx);
-            midCurveTexture.Apply(false, false);
-            if (midCurveSprite == null)
-                midCurveSprite = MakeSprite("Mid curves", Sprite.Create(midCurveTexture, new Rect(0, 0, W, H), new Vector2(.5f, .5f), 32f, 0, SpriteMeshType.FullRect), -7);
-            // 每次都按当前关卡尺寸重新缩放与居中（换房后尺寸不同也能正确贴合）
-            midCurveSprite.transform.localScale = new Vector3(cols * 32f / W, rows * 32f / H, 1f);
-            midCurveSprite.transform.position = new Vector3(cols * .5f, rows * .5f, 0f);
-            midCurveSprite.enabled = true;
         }
+
+        static float CurveValue(int curve, float u, float phase)
+        {
+            float x = 2f * u - 1f;
+            switch (curve)
+            {
+                case 0: return Mathf.Sin(Mathf.PI * 2f * u + phase);
+                case 1: return Mathf.Cos(Mathf.PI * 3f * u - phase);
+                case 2: return 2f * x * x - 1f;
+                case 3: return x * x * x;
+                case 4: return (Mathf.Exp(2f * x) - 3f) / 4.4f;
+                case 5: return Mathf.Log(1f + 7f * u) / Mathf.Log(8f) * 2f - 1f;
+                case 6: return 2f / (1f + Mathf.Exp(-7f * x)) - 1f;
+                case 7: return 2f * Mathf.Exp(-5f * x * x) - 1f;
+                case 8: return 2f * Mathf.Sqrt(u) - 1f;
+                default: return Mathf.Atan(5f * x) / 1.4f;
+            }
+        }
+        void BakeMidAtlas()
+        {
+            if (midAtlas == null)
+            {
+                midAtlas = new Texture2D(MidAtlasWidth, MidAtlasHeight, TextureFormat.RGBA32, false) {
+                    filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp
+                };
+                midAtlasPixels = new Color32[MidAtlasWidth * MidAtlasHeight];
+            }
+            Array.Clear(midAtlasPixels, 0, midAtlasPixels.Length);
+            for (int i = 0; i < midCurves.Length; i++)
+            {
+                int bottom = i * CurveStripHeight;
+                int previous = 0;
+                for (int x = 0; x < MidAtlasWidth; x++)
+                {
+                    float u = x / (float)(MidAtlasWidth - 1);
+                    int y = 24 + Mathf.RoundToInt(17f * CurveValue(roomCurves[i], u, 0f));
+                    if (x == 0) previous = y;
+                    for (int k = Mathf.Min(previous, y); k <= Mathf.Max(previous, y) + 1; k++)
+                        midAtlasPixels[(bottom + k) * MidAtlasWidth + x] = CurveColors[i];
+                    previous = y;
+                }
+                if (midCurves[i] == null)
+                    midCurves[i] = MakeMidRenderer("Mid curves " + i,
+                        MidSprite(new Rect(0, bottom, MidAtlasWidth, CurveStripHeight), new Vector2(.5f, .5f)), -7);
+            }
+
+            var tone = new Color32(49, 66, 87, 140);
+            for (int i = 0; i < midFormulas.Length; i++)
+            {
+                int bottom = midCurves.Length * CurveStripHeight + i * 8;
+                string formula = roomFormulas[i];
+                PixelText(midAtlasPixels, MidAtlasWidth, MidAtlasHeight, formula, 0, bottom + 6, 1, tone);
+                formulaWidths[i] = formula.Length * 4f / 32f;
+                if (midFormulas[i] == null)
+                    midFormulas[i] = MakeMidRenderer("Mid formula " + i,
+                        MidSprite(new Rect(0, bottom, MidAtlasWidth, 8), new Vector2(0f, .5f)), -7);
+            }
+            midAtlas.SetPixels32(midAtlasPixels);
+            midAtlas.Apply(false, false);
+        }
+
+        SpriteRenderer MakeMidRenderer(string name, Sprite sprite, int order)
+        {
+            var renderer = MakeSprite(name, sprite, order);
+            renderer.transform.SetParent(midGroundRoot, false);
+            return renderer;
+        }
+
+        Sprite MidSprite(Rect rect, Vector2 pivot)
+        {
+            return Sprite.Create(midAtlas, rect, pivot, 32f, 0, SpriteMeshType.FullRect);
+        }
+
+        void PositionMidGround(float cols, float rows)
+        {
+            for (int i = 0; i < midCurves.Length; i++)
+            {
+                float phase = midTime * (.85f + i * .14f) + i * 1.6f;
+                var curve = midCurves[i].transform;
+                curve.localPosition = new Vector3(cols * .5f, rows * (.60f - i * .20f + .026f * Mathf.Sin(phase)), 0f);
+                curve.localScale = new Vector3(cols * 32f / MidAtlasWidth,
+                    rows * 32f / CurveStripHeight * (.155f + .027f * Mathf.Cos(phase)), 1f);
+            }
+            for (int i = 0; i < midFormulas.Length; i++)
+            {
+                float scale = Mathf.Min(1.65f, cols * .42f / formulaWidths[i]);
+                float width = formulaWidths[i] * scale;
+                float travel = cols - width;
+                float phase = midTime * (.19f + i * .035f) + FormulaStarts[i] * Mathf.PI * 2f;
+                float x = travel * (.5f + .42f * Mathf.Sin(phase));
+                var formula = midFormulas[i].transform;
+                formula.localPosition = new Vector3(x, rows * (1f - FormulaRows[i]), 0f);
+                formula.localScale = new Vector3(scale, scale, 1f);
+            }
+        }
+
         SpriteRenderer[] outerMask = new SpriteRenderer[4];
         void BuildOuterMask(float cols, float rows)
         {
@@ -500,26 +581,6 @@ namespace RoomLab.Native
             return sr;
         }
 
-        void ClearStaleMid()
-        {
-            // 前一个世界实例留在页面画布上的中景对象也要清掉（否则会出现多份重影）
-            Sweep(Deck);
-            Sweep(worldRoot);
-            midFormulas.Clear(); midBackdrop = null; midCurveSprite = null;
-        }
-        static void Sweep(Transform parent)
-        {
-            if (parent == null) return;
-            var doomed = new System.Collections.Generic.List<GameObject>();
-            for (int i = 0; i < parent.childCount; i++)
-            {
-                var child = parent.GetChild(i).gameObject;
-                if (child.name.StartsWith("Mid formula") || child.name.StartsWith("Mid curves") || child.name.StartsWith("Mid backdrop"))
-                    doomed.Add(child);
-            }
-            foreach (var go in doomed) UnityEngine.Object.Destroy(go);
-        }
-
         // 大 token：未拾取时脚下打一圈金色光影；已拾取过（5 秒后复活的回充 token）不带光。
         readonly System.Collections.Generic.Dictionary<string, SpriteRenderer> tokenGlows =
             new System.Collections.Generic.Dictionary<string, SpriteRenderer>();
@@ -536,7 +597,7 @@ namespace RoomLab.Native
                     glow = Make("Token glow " + o.Id, 5);
                     tokenGlows[o.Id] = glow;
                 }
-                bool chargeOnly = g.Credited.Contains(g.Room.Id + "/" + o.Id);
+                bool chargeOnly = g.Credited.Contains(g.Room.Id + "/" + o.Id);   // 仅每帧少量喷射装置调用，暂不优化
                 glow.sprite = sprite("fx-token-glow");
                 glow.enabled = !chargeOnly;
                 if (chargeOnly) continue;

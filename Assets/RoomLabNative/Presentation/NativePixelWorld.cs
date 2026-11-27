@@ -44,7 +44,22 @@ namespace RoomLab.Native
             if(!Builtin){var authored=Bound(type,"idle");if(authored!=null)return authored;}
             return Game.Course.Kind=="calculus"||Game.Course.Kind=="slacker"?WorldSlice(index):Pixel(fallback);
         }
+        // 每帧对每个物件做 "房间/物件" 字符串拼接 + 长串哈希，在 WebGL 里是主要 GC 来源。
+        // 改为缓存：只在收集数量变化或换房时重建一次。
+        bool CreditedFor(NativeObject o){
+            if(Game.Credited.Count!=creditedStamp){
+                creditedStamp=Game.Credited.Count;creditedCache.Clear();
+                string roomId=Game.Room.Id;
+                foreach(var obj in Game.Room.Objects)creditedCache[obj.Id]=Game.Credited.Contains(roomId+"/"+obj.Id);
+            }
+            bool value;return creditedCache.TryGetValue(o.Id,out value)&&value;
+        }
+
         SpriteRenderer Add(string name,Sprite sprite,MotionRect r,int order){var go=new GameObject(name);go.transform.SetParent(Root.transform);var sr=go.AddComponent<SpriteRenderer>();sr.sprite=sprite??white;sr.sortingOrder=order;Place(sr,r);return sr;}
+        readonly Dictionary<string,Vector4> lastRect=new Dictionary<string,Vector4>();
+        readonly List<GameObject> pendingDestroy=new List<GameObject>();
+        Transform objectRoot; readonly List<SpriteRenderer> spritePool=new List<SpriteRenderer>();
+        int creditedStamp=-1; readonly Dictionary<string,bool> creditedCache=new Dictionary<string,bool>();
         void Place(SpriteRenderer sr,MotionRect r){sr.transform.position=new Vector3((float)(r.x+r.w/2)/32,Game.Room.Rows-(float)(r.y+r.h/2)/32,0);sr.transform.localScale=new Vector3((float)r.w/sr.sprite.rect.width,(float)r.h/sr.sprite.rect.height,1);}
         // Keeps the artwork's own pixel size and only centres it on the tile. Stretching every pickup to
         // the 32px tile made the 26px and 15px tokens render at exactly the same size.
@@ -75,26 +90,123 @@ namespace RoomLab.Native
             bool placeholder=asset!=null&&asset.Bytes!=null&&PlaceholderHashes.Contains(NativeProjectLoader.Sha(asset.Bytes));
             placeholderCache[id]=placeholder;return placeholder;
         }
+        // 门贴图 64x96（2x3 格），**底边必须严格对齐门格底边**，不允许再往下压。
+        // 贴图的"门洞"在下半部分；门格贴到房间顶边时（作者用 y=0 表示"从上方进入"，
+        // 或者门通过 attachmentTo 挂在机关砖上被推到顶边），y+live.h-96 会算成负值。
+        // 曾经为了消掉"只露一截的半个门"而把 y 夹到 0，结果门洞比判定区（EntryRect/ExitRect）低了 1 格，
+        // 玩家朝看起来是门洞的地方走却踩不到判定区 —— 表现为"站在门口进不去 / 像是被挡住"。
+        // 所以这里保持底边对齐，允许上半部分画到房间上边之外（被裁是作者摆位的结果，不是要修的 bug）。
+        static MotionRect DoorArtRect(MotionRect live,double w,double h)
+        {
+            return new MotionRect(null,live.x+live.w*.5-w*.5,live.y+live.h-h,w,h);
+        }
         // 出口画在判定用的同一份实时矩形上：绑了机关砖就跟着砖走，没绑定等同作者坐标。
         MotionRect ExitVisualRect(NativeRegion exit,bool authored)
         {
             var live=Game.ExitRect(exit);
-            return authored?live:new MotionRect(null,(live.x+live.w/2.0)-32,live.y+live.h-96,64,96);
+            return authored?live:DoorArtRect(live,64,96);
         }
         MotionRect EntryDoorRect(NativeRegion entry)
         {
-            var live=Game.EntryRect(entry);
-            return new MotionRect(null,live.x+live.w*.5-32,live.y+live.h-96,64,96);
+            return DoorArtRect(Game.EntryRect(entry),64,96);
         }
-        Sprite Bound(string type,string slot,NativeObject o=null){string id=Bind(type,slot,o);if(id==null||Placeholder(id))return null;if(!Assets.Has(id))return null;var a=Game.Project.Assets.Find(v=>v.Id==id);return Assets.Get(id,Game.RoomTime,a?.Fps??6);}
+        readonly Dictionary<(string type,string slot,NativeObject owner),(string id,double fps)> boundArt =
+            new Dictionary<(string,string,NativeObject),(string,double)>();
+
+        Sprite Bound(string type,string slot,NativeObject o=null)
+        {
+            var key=(type,slot,o);
+            if(!boundArt.TryGetValue(key,out var cached))
+            {
+                string id=Bind(type,slot,o);
+                if(id==null||Placeholder(id)||!Assets.Has(id))cached=(null,0);
+                else cached=(id,Game.Project.Assets.Find(asset=>asset.Id==id)?.Fps??6);
+                boundArt.Add(key,cached);
+            }
+            return cached.id==null?null:Assets.Get(cached.id,Game.RoomTime,cached.fps);
+        }
         // An exported project package can carry no art bindings at all; fall back to the built-in pixel
         // slices so an imported level stays readable instead of turning into white/grey blocks.
         Sprite Art(string type,string slot,string fallback,NativeObject o=null,bool actor=false){if(!Builtin){var bound=Bound(type,slot,o);if(bound!=null)return bound;}return Pixel(fallback,actor);}
-        void Rebuild(){guidedPresentation?.Dispose();guidedPresentation=null;reworkPresentation?.Dispose();reworkPresentation=null;campaignEffects?.Dispose();campaignEffects=null;mathPresentation?.Dispose();mathPresentation=null;dreamPresentation?.Dispose();dreamPresentation=null;themeBackdrop=null;previewVignette=null;foreach(Transform t in Root.transform)UnityEngine.Object.Destroy(t.gameObject);objects.Clear();teacherVisualX.Clear();zoneTints.Clear();consoles.Clear();moves.Clear();custom.Clear();phaseTiles.Clear();exits.Clear();entryDoors.Clear();authoredExits.Clear();nativeSize.Clear();room=Game.Room.Id;var r=Game.Room;
+        // The largest room determines the pool's high-water mark. Inactive tiles
+        // are retained only for the lifetime of this world.
+        readonly List<SpriteRenderer> terrainPool = new List<SpriteRenderer>();
+        Transform terrainRoot;
+        int terrainUsed;
+        NativeRoom terrainPrewarmRoom;
+        int terrainReserve;
+
+        SpriteRenderer CreateTerrainRenderer()
+        {
+            var tile = new GameObject("Terrain");
+            tile.transform.SetParent(terrainRoot, false);
+            tile.SetActive(false);
+            var renderer = tile.AddComponent<SpriteRenderer>();
+            terrainPool.Add(renderer);
+            return renderer;
+        }
+
+        SpriteRenderer Terrain(Sprite sprite, MotionRect rect)
+        {
+            var renderer = terrainUsed < terrainPool.Count ? terrainPool[terrainUsed] : CreateTerrainRenderer();
+            terrainUsed++;
+            renderer.sprite = sprite ?? white;
+            renderer.color = Color.white;
+            Place(renderer, rect);
+            if (!renderer.gameObject.activeSelf) renderer.gameObject.SetActive(true);
+            return renderer;
+        }
+
+        public void PrewarmTerrain()
+        {
+            if (!ReferenceEquals(terrainPrewarmRoom, Game.Room))
+            {
+                terrainPrewarmRoom = Game.Room;
+                terrainReserve = terrainUsed;
+                foreach (var connection in Game.Course.Connections)
+                {
+                    string destinationId = connection.FromRoomId == terrainPrewarmRoom.Id ? connection.ToRoomId :
+                        connection.ToRoomId == terrainPrewarmRoom.Id ? connection.FromRoomId : null;
+                    if (destinationId == null) continue;
+                    var destination = Game.Project.FindRoom(destinationId);
+                    if (destination != null) terrainReserve = Math.Max(terrainReserve, destination.Tiles.Count);
+                }
+            }
+            double until = Time.realtimeSinceStartupAsDouble + .0006;
+            for (int i = 0; i < 8 && terrainPool.Count < terrainReserve && Time.realtimeSinceStartupAsDouble < until; i++)
+                CreateTerrainRenderer();
+        }
+
+        void Rebuild(){boundArt.Clear();guidedPresentation?.Dispose();guidedPresentation=null;reworkPresentation?.Dispose();reworkPresentation=null;campaignEffects?.Dispose();campaignEffects=null;mathPresentation?.Dispose();mathPresentation=null;dreamPresentation?.Dispose();dreamPresentation=null;themeBackdrop=null;previewVignette=null;foreach(Transform t in Root.transform)if(t!=terrainRoot&&worldEffects?.OwnsMidGround(t)!=true){t.gameObject.SetActive(false);UnityEngine.Object.Destroy(t.gameObject);}objects.Clear();creditedStamp=-1;teacherVisualX.Clear();zoneTints.Clear();consoles.Clear();moves.Clear();custom.Clear();phaseTiles.Clear();exits.Clear();entryDoors.Clear();authoredExits.Clear();nativeSize.Clear();room=Game.Room.Id;var r=Game.Room;
+            if(terrainRoot==null){terrainRoot=new GameObject("Terrain pool").transform;terrainRoot.SetParent(Root.transform,false);}
+            int previousTerrainUsed=terrainUsed;terrainUsed=0;
             string bg=(string)(r.ArtBindings?.Property("background")!=null?r.ArtBindings["background"]:Game.Course.ArtBindings?["background"]);
             if(UseWebPreviewBackground) BuildWebPreviewBackground();else { authorBackdrop=!Builtin&&Assets.Has(bg)&&!Placeholder(bg);string backgroundName=Game.IsRework&&Game.Course.Kind=="calculus"?"rework-calculus-background":Game.IsRework&&Game.Course.Kind=="slacker"?"rework-classroom-awake":Game.Course.Kind=="calculus"?"calculus-background":Game.Course.Kind=="slacker"?"slacker-background":"background";var backdrop=Builtin?Pixel(backgroundName):(Assets.Has(bg)&&!Placeholder(bg)?Assets.Get(bg,0):Pixel(backgroundName));if(backdrop!=null){var b=Add("Laboratory background",backdrop,new MotionRect(null,0,0,r.Cols*32,r.Rows*32),-20);themeBackdrop=b;b.color=(Assets.Has(bg)&&!Placeholder(bg)&&!Builtin)||Game.Course.Kind!="physics"?Color.white:new Color(.42f,.46f,.56f);} }
-            roomTint=Add("Room temperature light",white,new MotionRect(null,0,0,r.Cols*32,r.Rows*32),-15);foreach(var zone in r.Zones)zoneTints.Add(zone.Id,Add("Temperature zone "+zone.Id,white,new MotionRect(null,zone.X*32,zone.Y*32,zone.W*32,zone.H*32),-9));var cells=new HashSet<string>();foreach(var t in r.Tiles)cells.Add(t.X+","+t.Y);
-            foreach(var t in r.Tiles){string n=!cells.Contains(t.X+","+(t.Y-1))?(!cells.Contains((t.X-1)+","+t.Y)?"groundTopLeft":!cells.Contains((t.X+1)+","+t.Y)?"groundTopRight":"groundTopMiddle"):"groundFill";var rect=new MotionRect(null,t.X*32,t.Y*32,32,32);var s=Add("Terrain "+t.X+","+t.Y,WorldArt("common.solid","terrain_pickups-"+n,n=="groundTopLeft"?0:n=="groundTopMiddle"?1:n=="groundTopRight"?2:3),rect,0);if(Game.IsRework&&Game.Course.Kind=="calculus"&&(Builtin||Bound("common.solid","idle")==null)){s.color=new Color(.82f,.78f,.69f);if(!cells.Contains(t.X+","+(t.Y-1))){var edge=Add("Paper standable edge",white,new MotionRect(null,t.X*32,t.Y*32,32,2),3);edge.color=new Color(.30f,.29f,.25f);}}if(Game.IsRework&&t.Raw["rework"]!=null)phaseTiles.Add(Tuple.Create((JToken)t.Raw,s));if(!Builtin){string id=Bind("common.solid","idle");if(id!=null&&!Placeholder(id)&&Assets.Has(id))custom.Add(Tuple.Create(s,id,rect,Game.Project.Assets.Find(v=>v.Id==id)?.Fps??6));}}
+            roomTint=Add("Room temperature light",white,new MotionRect(null,0,0,r.Cols*32,r.Rows*32),-15);foreach(var zone in r.Zones)zoneTints.Add(zone.Id,Add("Temperature zone "+zone.Id,white,new MotionRect(null,zone.X*32,zone.Y*32,zone.W*32,zone.H*32),-9));var cells=new HashSet<(int,int)>();foreach(var t in r.Tiles)cells.Add((t.X,t.Y));
+            string terrainAsset=Builtin?null:Bind("common.solid","idle");
+            bool authoredTerrain=!Placeholder(terrainAsset)&&Assets.Has(terrainAsset);
+            bool animatedTerrain=authoredTerrain&&Assets.Frames[terrainAsset].Length>1;
+            double terrainFps=animatedTerrain?(Game.Project.Assets.Find(v=>v.Id==terrainAsset)?.Fps??6):6;
+            var terrainSprites=new[]{WorldArt("common.solid","terrain_pickups-groundTopLeft",0),WorldArt("common.solid","terrain_pickups-groundTopMiddle",1),WorldArt("common.solid","terrain_pickups-groundTopRight",2),WorldArt("common.solid","terrain_pickups-groundFill",3)};
+            foreach(var tile in r.Tiles)
+            {
+                bool top=!cells.Contains((tile.X,tile.Y-1));
+                int visual=top?(!cells.Contains((tile.X-1,tile.Y))?0:!cells.Contains((tile.X+1,tile.Y))?2:1):3;
+                var rect=new MotionRect(null,tile.X*32,tile.Y*32,32,32);
+                var renderer=Terrain(terrainSprites[visual],rect);
+                if(Game.IsRework&&Game.Course.Kind=="calculus"&&!authoredTerrain)
+                {
+                    renderer.color=new Color(.82f,.78f,.69f);
+                    if(top)
+                    {
+                        var edge=Add("Paper standable edge",white,new MotionRect(null,tile.X*32,tile.Y*32,32,2),3);
+                        edge.color=new Color(.30f,.29f,.25f);
+                    }
+                }
+                if(Game.IsRework&&tile.Raw["rework"]!=null)phaseTiles.Add(Tuple.Create((JToken)tile.Raw,renderer));
+                if(animatedTerrain)custom.Add(Tuple.Create(renderer,terrainAsset,rect,terrainFps));
+            }
+            for(int i=terrainUsed;i<previousTerrainUsed;i++)terrainPool[i].gameObject.SetActive(false);
             foreach(var e in r.Exits){
                 var exitArt=WorldArt("common.exit","campus_interactables-exitOpen",7);
                 bool authored=!Builtin&&Bound("common.exit","idle")!=null;
@@ -239,7 +351,7 @@ namespace RoomLab.Native
             RefreshHitFeedback(dt);
             guidedPresentation?.Refresh(dt);if(guidedPresentation!=null&&Builtin){player.transform.localScale=guidedPresentation.StudentScale;player.transform.localRotation=Quaternion.Euler(0,0,guidedPresentation.StudentTilt);}
             if(Game.IsRework)foreach(var e in exits)e.Item2.color=Game.CampaignExitOpen&&Game.ReworkExitOpen(e.Item1)?Color.white:new Color(.48f,.48f,.46f,.75f);reworkPresentation?.Refresh();campaignEffects?.Refresh();mathPresentation?.Refresh(dt);dreamPresentation?.Refresh(dt);if(dreamPresentation!=null&&themeBackdrop!=null&&!authorBackdrop){if(Game.IsRework){themeBackdrop.sprite=Pixel(Game.AwarenessBand=="dream"?"rework-classroom-dream":"rework-classroom-awake");themeBackdrop.color=Game.AwarenessBand=="haze"?new Color(.77f,.74f,.84f):Color.white;}else themeBackdrop.color=Color.Lerp(new Color(.66f,.61f,.78f),Color.white,dreamPresentation.Clarity);}
-            foreach(var o in Game.Room.Objects){var s=objects[o.Id];s.sprite=Visual(o)??white;if(Game.IsEditorBuild15&&o.Type=="slacker.teacher")PlaceTeacherArt(s,o);else if(nativeSize.Contains(o.Id))PlaceNative(s,Game.ObjectRect(o));else Place(s,Game.ObjectRect(o));s.enabled=(Game.Rules==NativeGameplayRules.EditorBuild15&&o.Type=="common.coin")?!Game.ObjectStates[o.Id].used:!Game.Credited.Contains(Game.Room.Id+"/"+o.Id)&&!Game.IsSpent(o)&&!Game.IsBuild15TeacherRemoved(o)&&!(Game.IsAwarenessResource&&o.Raw["rework"]?["clarityDelta"]!=null&&(Builtin||Bound(o.Type,RenderState(o),o)==null));if(o.Type=="common.coin")s.color=Game.Credited.Contains(Game.Room.Id+"/"+o.Id)?new Color(.52f,.54f,.58f):Color.white;if(Game.IsRework)s.color=Game.LayerActive(o.Raw)?Color.white:new Color(.6f,.7f,.9f,.12f);if(Game.IsCampaign&&Game.LayerActive(o.Raw)&&o.Type=="common.collectible"){s.transform.position+=new Vector3(0,(float)Math.Sin(Game.Elapsed*3+o.X)*.08f,0);s.color=Color.Lerp(Color.white,new Color(.65f,1,1),(float)(Math.Sin(Game.Elapsed*3)*.5+.5));}
+            foreach(var o in Game.Room.Objects){var s=objects[o.Id];s.sprite=Visual(o)??white;if(Game.IsEditorBuild15&&o.Type=="slacker.teacher")PlaceTeacherArt(s,o);else if(nativeSize.Contains(o.Id))PlaceNative(s,Game.ObjectRect(o));else Place(s,Game.ObjectRect(o));s.enabled=(Game.Rules==NativeGameplayRules.EditorBuild15&&o.Type=="common.coin")?!Game.ObjectStates[o.Id].used:!CreditedFor(o)&&!Game.IsSpent(o)&&!Game.IsBuild15TeacherRemoved(o)&&!(Game.IsAwarenessResource&&o.Raw["rework"]?["clarityDelta"]!=null&&(Builtin||Bound(o.Type,RenderState(o),o)==null));if(o.Type=="common.coin")s.color=Game.Credited.Contains(Game.Room.Id+"/"+o.Id)?new Color(.52f,.54f,.58f):Color.white;if(Game.IsRework)s.color=Game.LayerActive(o.Raw)?Color.white:new Color(.6f,.7f,.9f,.12f);if(Game.IsCampaign&&Game.LayerActive(o.Raw)&&o.Type=="common.collectible"){s.transform.position+=new Vector3(0,(float)Math.Sin(Game.Elapsed*3+o.X)*.08f,0);s.color=Color.Lerp(Color.white,new Color(.65f,1,1),(float)(Math.Sin(Game.Elapsed*3)*.5+.5));}
                 if(Game.LayerActive(o.Raw)&&(o.Type=="calculus.integral"||o.Type=="calculus.derivative")&&(Builtin||Bound(o.Type,RenderState(o),o)==null))s.color=RenderState(o)=="active"?new Color(.65f,.85f,1):Color.white;
                 if(o.Type=="physics.ice"){
                     bool solid=Game.ObjectStates[o.Id].solid;
@@ -249,11 +361,11 @@ namespace RoomLab.Native
                     if(!solid&&!authored){var footprint=Game.ObjectRect(o);Place(s,new MotionRect(null,footprint.x,footprint.y+footprint.h-3,footprint.w,3));}
                 }
                 if(consoles.TryGetValue(o.Id,out var console)){console.enabled=Builtin||Bound(o.Type,RenderState(o),o)==null;console.sprite=Pixel("physics_mechanisms-"+(Game.TemperatureAt(o)=="hot"?"hotConsole":"coldConsole"));}if(o.Type=="physics.thermal")s.color=!Builtin&&Bound(o.Type,RenderState(o),o)!=null?Color.white:Game.TemperatureAt(o)=="hot"?new Color(1,.82f,.7f):new Color(.7f,.9f,1);if(Game.IsRework&&!Game.LayerActive(o.Raw)){var color=s.color;color.a=.12f;s.color=color;if(consoles.TryGetValue(o.Id,out var hiddenConsole))hiddenConsole.enabled=false;}}
-            foreach(var t in phaseTiles)t.Item2.color=Game.LayerActive(t.Item1)?Color.white:new Color(.6f,.7f,.9f,.16f);foreach(var m in Game.Room.Movables){Place(moves[m.Id],Game.MovableRect(m));if(Game.IsRework)moves[m.Id].color=Game.LayerActive(m.Raw)?Color.white:new Color(.6f,.7f,.9f,.16f);}foreach(var e in exits)Place(e.Item2,ExitVisualRect(e.Item1,authoredExits.Contains(e.Item1.Id)));foreach(var e in entryDoors)Place(e.Item2,EntryDoorRect(e.Item1));foreach(var c in custom){c.Item1.sprite=Assets.Get(c.Item2,Game.RoomTime,c.Item4);Place(c.Item1,c.Item3);}
+            foreach(var t in phaseTiles)t.Item2.color=Game.LayerActive(t.Item1)?Color.white:new Color(.6f,.7f,.9f,.16f);foreach(var m in Game.Room.Movables){Place(moves[m.Id],Game.MovableRect(m));if(Game.IsRework)moves[m.Id].color=Game.LayerActive(m.Raw)?Color.white:new Color(.6f,.7f,.9f,.16f);}foreach(var e in exits)Place(e.Item2,ExitVisualRect(e.Item1,authoredExits.Contains(e.Item1.Id)));foreach(var e in entryDoors)Place(e.Item2,EntryDoorRect(e.Item1));foreach(var c in custom){var frame=Assets.Get(c.Item2,Game.RoomTime,c.Item4);if(c.Item1.sprite==frame)continue;c.Item1.sprite=frame;Place(c.Item1,c.Item3);}
             roomTint.color=TemperatureTint(Game.RoomEnvironment,Game.Course.Kind=="physics"&&!Game.IsEditorBuild15?.10f:0);foreach(var zone in zoneTints){bool hot=Game.Zones[zone.Key]=="hot";zone.Value.color=TemperatureTint(Game.Zones[zone.Key],Game.Course.Kind!="physics"||Game.IsEditorBuild15?0:hot?.22f:.18f);zone.Value.sortingOrder=hot?-7:-8;}bool full=map||Game.Room.CameraMode=="room";float rows=(float)(full?Game.Room.Rows:Game.Room.CameraRows),cols=(float)(full?Game.Room.Cols:Game.Room.CameraCols);float aspect=Mathf.Max(.25f,camera.aspect);float baseSize=Mathf.Max(rows/2,cols/2/aspect);camera.orthographicSize=Game.IsEditorBuild15&&!full?baseSize:NativeCameraView.Apply(baseSize,full,(float)Game.Room.Cols,(float)Game.Room.Rows,(float)Game.Room.CameraCols,(float)Game.Room.CameraRows,aspect);float hy=camera.orthographicSize,hx=hy*aspect;float x=full?Game.Room.Cols/2f:Mathf.Clamp((float)p.x/32,Mathf.Min(hx,Game.Room.Cols/2f),Mathf.Max(Game.Room.Cols-hx,Game.Room.Cols/2f));float y=full?Game.Room.Rows/2f:Mathf.Clamp(Game.Room.Rows-(float)p.y/32,Mathf.Min(hy,Game.Room.Rows/2f),Mathf.Max(Game.Room.Rows-hy,Game.Room.Rows/2f));camera.transform.position=new Vector3(Mathf.Round(x*32)/32,Mathf.Round(y*32)/32,-10);RefreshWebPreviewBackground(camera);RefreshAssistant(camera);camera.backgroundColor=Game.RoomEnvironment=="hot"?new Color(.12f,.065f,.06f):new Color(.04f,.065f,.11f);
         }
         static Color TemperatureTint(string t,float alpha){return t=="hot"?new Color(1,.26f,.03f,alpha):new Color(.06f,.46f,1,alpha);}
         public string ThermalHint{get{int hot=0,cold=0;foreach(var o in Game.Room.Objects)if(o.Type=="physics.ice"){if(Game.TemperatureAt(o)=="hot")hot++;else cold++;}return hot+cold==0?null:hot>0&&cold==0?"温区：热 · 冰已融化，踩控温板切冷生成冰":cold>0&&hot==0?"温区：冷 · 冰可站立，持续站立会融化，离开后按设定再生":"温区：冷热并存 · 重叠区域以热为准";}}
-        public void Dispose(){guidedPresentation?.Dispose();guidedPresentation=null;reworkPresentation?.Dispose();campaignEffects?.Dispose();foreach(var texture in generatedTextures)UnityEngine.Object.Destroy(texture);campaignEffects=null;mathPresentation?.Dispose();dreamPresentation?.Dispose();Root.SetActive(false);UnityEngine.Object.Destroy(Root);foreach(var s in pixels.Values)UnityEngine.Object.Destroy(s);UnityEngine.Object.Destroy(white.texture);UnityEngine.Object.Destroy(white);}
+        public void Dispose(){worldEffects?.DisposeMidGround();guidedPresentation?.Dispose();guidedPresentation=null;reworkPresentation?.Dispose();campaignEffects?.Dispose();foreach(var texture in generatedTextures)UnityEngine.Object.Destroy(texture);campaignEffects=null;mathPresentation?.Dispose();dreamPresentation?.Dispose();Root.SetActive(false);UnityEngine.Object.Destroy(Root);foreach(var s in pixels.Values)UnityEngine.Object.Destroy(s);UnityEngine.Object.Destroy(white.texture);UnityEngine.Object.Destroy(white);}
     }
 }

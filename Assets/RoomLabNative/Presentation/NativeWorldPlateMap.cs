@@ -15,6 +15,7 @@ namespace RoomLab.Native
         const float PlateCell = 10.5f;
         // 版图纹理缓存：只在「发现集合 / 当前房间 / 目标尺寸」变化时重建，避免每帧重算。
         Texture2D plateTexture; string plateKey;
+        float plateFit; Vector2 plateImageOrigin; readonly Dictionary<string,Rect> platePixelRects=new Dictionary<string,Rect>();
 
         sealed class PlateRoom
         {
@@ -50,12 +51,12 @@ namespace RoomLab.Native
         }
 
         // 解算 + 绘制成纹理；返回的纹理带 uvRect 翻转交给调用方（Unity 纹理原点在左下）。
-        Texture2D BuildWorldPlate(int maxWidth, int maxHeight)
+        Texture2D BuildWorldPlate(int maxWidth, int maxHeight, bool allRooms=false)
         {
             if (Game == null) return null;
             bool paper = !Game.OwnsPhone;
             string key = Game.Project.SourceSha256 + ":" + Game.Course.Id + ":" + paper + ":" + Game.Room.Id
-                + ":" + maxWidth + "x" + maxHeight + ":" + string.Join(",", Game.Course.Rooms
+                + ":" + maxWidth + "x" + maxHeight + ":" + allRooms + ":" + string.Join(",", Game.Course.Rooms
                     .FindAll(room => discoveredRooms.Contains(room.Id)).ConvertAll(room => room.Id));
             if (plateTexture != null && plateKey == key) return plateTexture;
             var offsets = Game.Project.OriginalJson?["layout"]?["courseOffsets"] as JObject;
@@ -63,7 +64,7 @@ namespace RoomLab.Native
             float minX = float.MaxValue, minY = float.MaxValue, maxX = float.MinValue, maxY = float.MinValue;
             foreach (var room in Game.Course.Rooms)
             {
-                if (!discoveredRooms.Contains(room.Id) && room.Id != Game.Room.Id) continue;
+                if (!allRooms && !discoveredRooms.Contains(room.Id) && room.Id != Game.Room.Id) continue;
                 var origin = PlateOrigin(room, offsets);
                 var rect = new Rect(origin.x, origin.y, Mathf.Max(1, room.Cols) * PlateCell, Mathf.Max(1, room.Rows) * PlateCell);
                 rooms.Add(new PlateRoom { Room = room, Rect = rect });
@@ -94,6 +95,8 @@ namespace RoomLab.Native
                 return new RectInt(x, y, Mathf.Max(1, right - x), Mathf.Max(1, bottom - y));
             }
 
+            platePixelRects.Clear();
+            for (int i = 0; i < rooms.Count; i++) { var pr = Project(rooms[i].Rect); platePixelRects[rooms[i].Room.Id] = new Rect(pr.x, pr.y, pr.width, pr.height); }
             int currentId = 0;
             for (int i = 0; i < rooms.Count; i++)
             {
@@ -164,10 +167,10 @@ namespace RoomLab.Native
             return texture;
         }
 
-        bool BuildWorldPlatePage(Transform root, Rect opening)
+        bool BuildWorldPlatePage(Transform root, Rect opening, bool allRooms=false)
         {
             if (Game == null) return false;
-            var texture = BuildWorldPlate(Mathf.RoundToInt(opening.width * 2f), Mathf.RoundToInt(opening.height * 2f));
+            var texture = BuildWorldPlate(Mathf.RoundToInt(opening.width * 2f), Mathf.RoundToInt(opening.height * 2f), allRooms);
             if (texture == null) return false;
             bool paper = !Game.OwnsPhone;
             Color desk = paper ? new Color(.81f, .75f, .58f) : new Color(.045f, .082f, .12f);
@@ -194,8 +197,20 @@ namespace RoomLab.Native
             rect.sizeDelta = new Vector2(texture.width * fit, texture.height * fit);
             rect.anchoredPosition = new Vector2(opening.x + (opening.width - texture.width * fit) / 2f,
                 -(opening.y + (opening.height - texture.height * fit) / 2f));
+            plateFit = fit;
+            plateImageOrigin = new Vector2(opening.x + (opening.width - texture.width * fit) / 2f,
+                opening.y + (opening.height - texture.height * fit) / 2f);
             NativeUiKit.MarkBackdrop(go);
             return true;
+        }
+
+        // 房间方块在页面坐标（左上原点）中的矩形，供开发者地图叠加热区。
+        Rect PlateRoomUiRect(string roomId)
+        {
+            Rect pixel;
+            if (!platePixelRects.TryGetValue(roomId, out pixel)) return default(Rect);
+            return new Rect(plateImageOrigin.x + pixel.x * plateFit, plateImageOrigin.y + pixel.y * plateFit,
+                pixel.width * plateFit, pixel.height * plateFit);
         }
     }
 }

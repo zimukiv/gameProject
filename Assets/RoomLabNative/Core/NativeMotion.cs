@@ -210,7 +210,9 @@ namespace RoomLab.Native
         }
         void TriggerObjects(double oldBottom,MotionInput input)
         {
-            var p=Player;var interaction=input.interactPressed?NearbyInteraction:null;foreach(var o in Room.Objects){if(!LayerActive(o.Raw))continue;string mode=o.Trigger["mode"].Value<string>();if(mode=="none")continue;var s=ObjectStates[o.Id];var rect=ObjectRect(o);
+            var p=Player;var interaction=input.interactPressed?NearbyInteraction:null;
+            if (TryReviewExplorationScore(interaction)) return;
+            foreach(var o in Room.Objects){if(!LayerActive(o.Raw))continue;string mode=o.Trigger["mode"].Value<string>();if(mode=="none")continue;var s=ObjectStates[o.Id];var rect=ObjectRect(o);
                 bool top=p.grounded&&p.vy>=0&&oldBottom<=rect.y+2&&Math.Abs(p.y+p.h-rect.y)<1&&p.x+p.w>rect.x+2&&p.x<rect.x+rect.w-2;
                 bool occupied=MotionRect.Overlap(p.Rect,rect)||top;
                 if((Rules==NativeGameplayRules.Editor255Compat||IsEditorBuild15)&&o.Type=="physics.rail"&&o.Flag("sideTrigger")){bool vertical=p.y+p.h>rect.y&&p.y<rect.y+rect.h;bool left=p.x<=rect.x+2&&p.x+p.w>=rect.x-8;bool right=p.x>=rect.x+rect.w-2&&p.x<=rect.x+rect.w+8;bool inside=p.x+p.w>rect.x&&p.x<rect.x+rect.w;occupied=top||vertical&&(left||right||inside);}
@@ -223,7 +225,13 @@ namespace RoomLab.Native
                 else if(Rules==NativeGameplayRules.DemoPhysics&&o.Type=="physics.jet")occupied=occupied&&p.vy>=-1;
                 if(IsEditorBuild15){
                     if(o.Type=="slacker.awake")occupied=MotionRect.Overlap(p.Rect,rect);
-                    if(!Build15TriggerAllowed(o)){s.firedDuringContact=false;continue;}
+                    // 求导/积分板只认"踩上去"：实心块要站到它顶上（Overlap 会被引擎挤开，只剩 top），
+                    // 非实心块要走进它的格子里。贴着侧面撞、垫在下面顶都不算。
+                    // （先前为"撞上去没反馈"加过外扩判定，那会让贴边也能触发，已移除。）
+                    if(!Build15TriggerAllowed(o)){
+                        if(occupied){var hint=Build15GateHint(o.Type);if(Message!=hint)Message=hint;}
+                        s.firedDuringContact=false;continue;
+                    }
                 }
                 if(!occupied){s.firedDuringContact=false;continue;}bool ready=!o.Trigger["requiresAI"].Value<bool>()||(AI.active&&AI.id==(o.AiId??Room.AiId??Course.AiId)&&Hypot(AI.x-(o.X+.5)*32,AI.y-o.Y*32)<=((double?)o.Trigger["distance"]??5)*32);s.waitingAI=!ready;s.hasWaitingAI=true;
                 if(ready&&!s.firedDuringContact){Fire(o);s.firedDuringContact=true;if(AwaitingSaveChoice)return;}
@@ -318,7 +326,7 @@ namespace RoomLab.Native
             if(p.y<0){p.y=0;p.vy=0;if(dashing)p.dashY=0;}
             if(p.y>Room.Rows*32+80){if(LockHealth){p.x=Checkpoint?.x??Entry.X*32+4;p.y=Checkpoint?.y??Entry.Y*32+4;ClearFlightMotion();if(DeveloperEnabled)ResetAITrackingAtPlayer();}else Retry("掉出房间");return;}
             foreach(var o in Room.Objects){if(!LayerActive(o.Raw))continue;if(!LockHealth&&o.Type=="common.spike"&&SpikeTouches(p.Rect,ObjectRect(o),SpikeFacing(o))){Retry("碰到尖刺");return;}TryCollect(o);}
-            if(TickBuild15TeacherContacts())return;TriggerObjects(oldBottom,input);if(AwaitingSaveChoice)return;UpdateInactiveAI(dt);if(Player!=p)return;StickToRidingBrick();CheckExits();
+            if(TickBuild15TeacherContacts())return;TriggerObjects(oldBottom,input);if(AwaitingSaveChoice||FreeExploration&&Mode=="won")return;UpdateInactiveAI(dt);if(Player!=p)return;StickToRidingBrick();CheckExits();
         }
         void UpdateInactiveAI(double dt){UpdateAI(dt);TickPatrols(dt);}
         public static double Accelerate(double velocity,int horizontal,double speed,double dt,double ramp){if(horizontal==0)return 0;double current=Math.Sign(velocity)==horizontal?Math.Min(Math.Abs(velocity),speed):0;return horizontal*Math.Min(speed,current+speed/ramp*dt);}

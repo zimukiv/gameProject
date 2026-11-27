@@ -17,6 +17,7 @@ namespace RoomLab.Native
             if(IsEditorBuild15&&MainlinePack&&RespawnRemaining<=0&&Player.rail==null&&!AtDoor(Player.x,Player.y)&&
                 SafePosition(Player.x,Player.y-(Player.crouching?10:0)))
                 result["resume"]=JToken.FromObject(CaptureCheckpoint(null,Player.x,Player.y-(Player.crouching?10:0)),serializer);
+            if (FreeExploration) result["freeExploration"] = true;
             WriteNetwork(result);return result;
         }
         public static NativeMotion FromMainlineRevision(NativeProject project,JObject saved,NativeGameplayRules rules)
@@ -77,6 +78,8 @@ namespace RoomLab.Native
             var g=new NativeMotion(project,(string)saved["course"],(string)saved["room"],rules);
             if(g.Course.Id!=(string)saved["course"]||g.Room.Id!=(string)saved["room"]||!g.Room.Entries.Exists(e=>e.Id==(string)saved["entry"]))throw new NativeDataException("存档房间或入口无效");
             g.ValidateNetworkSaveJson(saved);
+            g.FreeExploration = g.IsEditorBuild15 && g.MainlinePack &&
+                saved["freeExploration"]?.Type == JTokenType.Boolean && (bool)saved["freeExploration"];
             var cpJson=saved["checkpoint"] as JObject??throw new NativeDataException("存档点状态缺失");
             foreach(string key in new[]{"face","tokens","charges","recharge","score","tier","life","dashCount"})if(cpJson[key]?.Type!=JTokenType.Integer)throw new NativeDataException("存档整数类型无效："+key);
             foreach(string key in new[]{"active","freeDash","paidDashUsed"})if(cpJson[key]?.Type!=JTokenType.Boolean)throw new NativeDataException("存档布尔类型无效："+key);

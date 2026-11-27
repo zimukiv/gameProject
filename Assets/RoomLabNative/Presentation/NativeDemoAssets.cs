@@ -29,7 +29,9 @@ namespace RoomLab.Native
             if(asset.Bytes==null)throw new NativeDataException("素材缺失："+asset.Path);var bytes=asset.Bytes;Texture2D tex=null;
             string ext=Path.GetExtension(asset.Path).ToLowerInvariant();
             if(ext==".gif"||ext==".webp"){AddNativeAnimation(asset);return;}
-            if(ext==".svg"){
+            var webSprite=ext==".svg"&&Application.platform==RuntimePlatform.WebGLPlayer?Resources.Load<Texture2D>("WebSvg/"+asset.Id):null;
+            if(webSprite!=null){tex=webSprite;Budget(tex.width,tex.height);ext=".png";}
+            else if(ext==".svg"){
                 string xml=System.Text.Encoding.UTF8.GetString(bytes);var doc=new XmlDocument{XmlResolver=null};using(var r=XmlReader.Create(new StringReader(xml),new XmlReaderSettings{DtdProcessing=DtdProcessing.Prohibit,XmlResolver=null}))doc.Load(r);
                 var allowed=new HashSet<string>{"svg","g","defs","rect","circle","ellipse","path","polygon","polyline","line","clipPath"};
                 foreach(XmlNode node in doc.SelectNodes("//*")){if(!allowed.Contains(node.LocalName))throw new NativeDataException("不支持SVG元素："+node.LocalName+" / "+asset.Path);foreach(XmlAttribute attr in node.Attributes)if(attr.LocalName.StartsWith("on")||attr.LocalName=="href"||attr.LocalName=="filter"||attr.LocalName=="style"||attr.LocalName=="class"||attr.LocalName=="mask"||attr.Value.Contains("http:")&&attr.LocalName!="xmlns"||attr.Value.Contains("https:"))throw new NativeDataException("不支持SVG外部引用或效果："+asset.Path);}
@@ -42,7 +44,7 @@ namespace RoomLab.Native
                 if(ext==".png"&&bytes.Length>=24){int w=(bytes[16]<<24)|(bytes[17]<<16)|(bytes[18]<<8)|bytes[19],h=(bytes[20]<<24)|(bytes[21]<<16)|(bytes[22]<<8)|bytes[23];Budget(w,h);}
                 if(ext!=".png"){var size=JpegSize(bytes);Budget(size.Item1,size.Item2);}tex=new Texture2D(2,2,TextureFormat.RGBA32,false);if(!ImageConversion.LoadImage(tex,bytes)){UnityEngine.Object.Destroy(tex);throw new NativeDataException("图像解码失败："+asset.Path);}
             }else throw new NativeDataException("尚不支持原生解码 "+ext+"："+asset.Path+"；请在编辑器改用PNG/JPEG或受支持SVG后重新导出");
-            if(tex==null)throw new NativeDataException("图像未生成："+asset.Path);owned.Add(tex);tex.filterMode=FilterMode.Point;tex.wrapMode=TextureWrapMode.Clamp;
+            if(tex==null)throw new NativeDataException("图像未生成："+asset.Path);if(webSprite==null)owned.Add(tex);tex.filterMode=FilterMode.Point;tex.wrapMode=TextureWrapMode.Clamp;
             if(ext==".svg"){int visible=0;var colors=new HashSet<uint>();foreach(var c in tex.GetPixels32())if(c.a>0){visible++;colors.Add((uint)c.r<<16|(uint)c.g<<8|c.b);}if(visible<1)throw new NativeDataException("SVG实际栅格化为空或单色："+asset.Path);Debug.Log("NATIVE_SVG_PIXELS_PASS "+asset.Id+" visible="+visible+" colors="+colors.Count);}
             if(asset.FrameWidth<0||asset.FrameHeight<0||asset.FrameWidth!=Math.Floor(asset.FrameWidth)||asset.FrameHeight!=Math.Floor(asset.FrameHeight))throw new NativeDataException("仅支持非负整数动画帧尺寸："+asset.Path);bool sheet=asset.FrameWidth>0&&asset.FrameHeight>0;var frames=new List<Sprite>();int fw=sheet?(int)asset.FrameWidth:tex.width,fh=sheet?(int)asset.FrameHeight:tex.height;if(fw<1||fh<1||fw>tex.width||fh>tex.height||asset.Fps<0||asset.Fps>240)throw new NativeDataException("动画帧设置不受支持："+asset.Path);
             for(int y=0;y<tex.height/fh;y++)for(int x=0;x<tex.width/fw;x++){var s=Sprite.Create(tex,new Rect(x*fw,tex.height-(y+1)*fh,fw,fh),new Vector2(.5f,.5f),32);owned.Add(s);frames.Add(s);}

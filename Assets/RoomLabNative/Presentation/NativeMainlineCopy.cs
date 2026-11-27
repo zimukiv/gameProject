@@ -28,6 +28,7 @@ namespace RoomLab.Native
             try
             {
                 loadedFrom = System.IO.Path.Combine(streamingAssets, RelativePath);
+                if (Application.platform==RuntimePlatform.WebGLPlayer) { catalog=JObject.Parse(Resources.Load<TextAsset>("mainline-webgl-copy").text); return; }
                 if (!File.Exists(loadedFrom)) { Debug.LogWarning("MAINLINE_COPY_MISSING " + loadedFrom); catalog = new JObject(); return; }
                 catalog = JObject.Parse(File.ReadAllText(loadedFrom));
                 Debug.Log("MAINLINE_COPY_LOADED collectibles=" + (catalog["collectibles"] as JObject)?.Count +

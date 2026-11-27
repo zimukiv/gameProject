@@ -16,7 +16,9 @@ namespace RoomLab.Native
     {
         public NativeMotion Game{get;private set;}NativeProject builtin;NativeDemoAssets assets;NativePixelWorld world;bool isBuiltin,tainted,map,verify;string identity,page="menu",notice="",loadedRoom,lastCheckpoint;int high,roomReached;float saveAt;
         NativeInputTimeline timeline=new NativeInputTimeline();NativeKeyboardEvents keys;RoomLabKeyBindings legacy;KeyCode[] bindings={KeyCode.A,KeyCode.D,KeyCode.Space,KeyCode.S,KeyCode.LeftShift,KeyCode.E};readonly MotionBinding[] actions={MotionBinding.Left,MotionBinding.Right,MotionBinding.Jump|MotionBinding.Up,MotionBinding.Down,MotionBinding.Dash,MotionBinding.Interact};int rebind=-1;
-        Camera view;RenderTexture target;Canvas canvas;CanvasScaler scaler;RectTransform ui;Transform panels;RawImage worldImage;Text hud,hint,status;Font font;AudioSource speaker;readonly Dictionary<string,AudioClip> sounds=new Dictionary<string,AudioClip>();JObject lastEvent;float volume=.55f;string saveDirectory;bool settingsFromGame;int desiredWidth=1280,desiredHeight=720;bool desiredFull;bool matrix;bool tutorialSeen;bool importLegacyRules;string importedLevel="";int verifiedCoreChecks;string importedCourseId="";string builtinCourseId="autosave:physics";string pendingImportPath,pendingReturnPage;JObject[] pendingCourses;bool displayExpanded;float viewMax=1.3f;float designWidth=640f,designHeight=360f,playfieldWidth=640f,playfieldHeight=327f;int pixelScale=1,appliedWidth,appliedHeight;
+        Camera view;RenderTexture target;
+        Image screenBackground;
+        bool directFullscreenWorld;Canvas canvas;CanvasScaler scaler;RectTransform ui;Transform panels;RawImage worldImage;Text hud,hint,status;Font font;AudioSource speaker;readonly Dictionary<string,AudioClip> sounds=new Dictionary<string,AudioClip>();JObject lastEvent;float volume=.55f;string saveDirectory;bool settingsFromGame;int desiredWidth=1280,desiredHeight=720;bool desiredFull;bool matrix;bool tutorialSeen;bool importLegacyRules;string importedLevel="";int verifiedCoreChecks;string importedCourseId="";string builtinCourseId="autosave:physics";string pendingImportPath,pendingReturnPage;JObject[] pendingCourses;bool displayExpanded;float viewMax=1.3f;float designWidth=640f,designHeight=360f,playfieldWidth=640f,playfieldHeight=327f;int pixelScale=1,appliedWidth,appliedHeight;
         // The HUD bar lives above the level instead of on top of it: 26px bar + 7px margin.
         const float HudBand=33f;
         string developerReturnPage="pause";bool hiddenDeveloperOpen,developerTools;
@@ -46,9 +48,9 @@ namespace RoomLab.Native
         // 提示统一限时：notice 一变就重新计时，避免任何提示常驻在提示行上。
         string noticeShown = "";
         float noticeShownUntil;
-        void Start(){mainlineVerify=Array.IndexOf(Environment.GetCommandLineArgs(),"-nativeMainlineVerify")>=0;mapShot=Array.IndexOf(Environment.GetCommandLineArgs(),"-nativeMapShot")>=0;campaignVerify=Array.IndexOf(Environment.GetCommandLineArgs(),"-nativeCampaignVerify")>=0;verify=mainlineVerify||campaignVerify||Array.IndexOf(Environment.GetCommandLineArgs(),"-nativePhysicsVerify")>=0;matrix=Array.IndexOf(Environment.GetCommandLineArgs(),"-nativeUiMatrix")>=0;try{Application.runInBackground=true;Application.targetFrameRate=120;QualitySettings.vSyncCount=1;string mainlinePath=Path.Combine(Application.streamingAssetsPath,"RoomLabNative","Mainline","mainline.zip");
-            mainlineEdition=File.Exists(mainlinePath);
-            saveDirectory=Path.Combine(Application.persistentDataPath,mainlineEdition?"mainline-formal-20261126-clean-v1":"deadline-autosave-progress-v1");if(verify){Screen.SetResolution(1280,720,FullScreenMode.Windowed);}if(verify||matrix||mapShot)saveDirectory=Path.Combine(Evidence(),"isolated-progress");else if(mainlineEdition){var documents=Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);if(!string.IsNullOrEmpty(documents))saveDirectory=Path.Combine(documents,"AI大人拜托了","玩家存档");}Directory.CreateDirectory(saveDirectory);font=Resources.Load<Font>("PhysicsPixelFont/FusionPixel");if(font==null)throw new Exception("中文字体未打包");LoadSettings();BindKeys();speaker=gameObject.AddComponent<AudioSource>();speaker.playOnAwake=false;CreateSounds();CreateCampaignAudio();
+        void Start(){Application.targetFrameRate=120;try{Shader.WarmupAllShaders();}catch{}mainlineVerify=Array.IndexOf(Environment.GetCommandLineArgs(),"-nativeMainlineVerify")>=0;mapShot=Array.IndexOf(Environment.GetCommandLineArgs(),"-nativeMapShot")>=0;campaignVerify=Array.IndexOf(Environment.GetCommandLineArgs(),"-nativeCampaignVerify")>=0;verify=mainlineVerify||campaignVerify||Array.IndexOf(Environment.GetCommandLineArgs(),"-nativePhysicsVerify")>=0;matrix=Array.IndexOf(Environment.GetCommandLineArgs(),"-nativeUiMatrix")>=0;try{Application.runInBackground=true;Application.targetFrameRate=120;QualitySettings.vSyncCount=1;string mainlinePath=Path.Combine(Application.streamingAssetsPath,"RoomLabNative","Mainline","mainline.zip");
+            mainlineEdition=Application.platform==RuntimePlatform.WebGLPlayer||File.Exists(mainlinePath);
+            saveDirectory=Path.Combine(Application.persistentDataPath,mainlineEdition?"mainline-formal-20261126-clean-v1":"deadline-autosave-progress-v1");if(verify){Screen.SetResolution(1280,720,FullScreenMode.Windowed);}if(verify||matrix||mapShot)saveDirectory=Path.Combine(Evidence(),"isolated-progress");else if(mainlineEdition&&Application.platform!=RuntimePlatform.WebGLPlayer){var documents=Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);if(!string.IsNullOrEmpty(documents))saveDirectory=Path.Combine(documents,"AI大人拜托了","玩家存档");}Directory.CreateDirectory(saveDirectory);font=Resources.Load<Font>("PhysicsPixelFont/FusionPixel");if(font==null)throw new Exception("中文字体未打包");LoadSettings();BindKeys();speaker=gameObject.AddComponent<AudioSource>();speaker.playOnAwake=false;CreateSounds();CreateCampaignAudio();
             view=Camera.main;if(view==null){var c=new GameObject("Native Physics World Camera");c.tag="MainCamera";view=c.AddComponent<Camera>();}view.orthographic=true;view.clearFlags=CameraClearFlags.SolidColor;
             SetupCanvas();
             if(mainlineEdition||mainlineVerify){
@@ -61,12 +63,59 @@ namespace RoomLab.Native
                 if(!verify&&!mapShot&&!matrix)ShowStartupIntro(PlayerPrefs.GetInt(StartupIntroSeenKey,0)==1);
                 return;
             }
-            string dir=Path.Combine(Application.streamingAssetsPath,"RoomLabNative");builtin=NativeProjectLoader.LoadFile(Path.Combine(dir,"AuthoredPhysics","authored-physics.json"),new ImportOptions{Profile=ImportProfile.EditorAuto,RequireAssets=true});CommitCandidate(builtin,NativeGameplayRules.DemoPhysics,true);if(!verify&&!matrix&&!string.IsNullOrEmpty(builtinCourseId)){try{LoadBuiltinCourse(builtinCourseId);}catch(Exception e){builtinCourseId="";notice="上次大关无法恢复，已返回物理关："+e.Message;SaveSettings();}}if(!verify&&!matrix&&!string.IsNullOrEmpty(importedLevel))TryRestoreImport();Show("menu");if(matrix)StartCoroutine(UiMatrix());else if(verify)StartCoroutine(campaignVerify?VerifyCampaign():Verify());
+            string dir=Path.Combine(Application.streamingAssetsPath,"RoomLabNative");builtin=SafeLoadBuiltin(Path.Combine(dir,"AuthoredPhysics","authored-physics.json"),new ImportOptions{Profile=ImportProfile.EditorAuto,RequireAssets=true});CommitCandidate(builtin,NativeGameplayRules.DemoPhysics,true);if(!verify&&!matrix&&!string.IsNullOrEmpty(builtinCourseId)){try{LoadBuiltinCourse(builtinCourseId);}catch(Exception e){builtinCourseId="";notice="上次大关无法恢复，已返回物理关："+e.Message;SaveSettings();}}if(!verify&&!matrix&&!string.IsNullOrEmpty(importedLevel))TryRestoreImport();Show("menu");if(matrix)StartCoroutine(UiMatrix());else if(verify)StartCoroutine(campaignVerify?VerifyCampaign():Verify());
         }catch(Exception e){Debug.LogException(e);notice=e.Message;if(verify||matrix)Finish(2);}}
+        // 性能监控浮层（F9 开关）：帧率 / 本帧 / 最长帧 / GC 次数 / 托管内存 / 总分配。
+        void EnsurePerfHud(){
+            if(perfHud!=null)return;
+            var go=new GameObject("Perf monitor",typeof(RectTransform),typeof(Canvas),typeof(CanvasScaler),typeof(GraphicRaycaster));
+            var host=canvas!=null?canvas.transform:null;
+            go.transform.SetParent(host,false);
+            var perfCanvas=go.GetComponent<Canvas>();perfCanvas.renderMode=RenderMode.ScreenSpaceOverlay;perfCanvas.sortingOrder=32000;
+            var perfScaler=go.GetComponent<CanvasScaler>();perfScaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;perfScaler.referenceResolution=new Vector2(640f,360f);perfScaler.matchWidthOrHeight=1f;
+            var label=new GameObject("Perf text",typeof(RectTransform)).AddComponent<Text>();
+            label.transform.SetParent(go.transform,false);
+            if(font!=null)label.font=font;
+            label.fontSize=11;label.color=new Color(1f,.93f,.55f,1f);label.alignment=TextAnchor.UpperLeft;
+            label.horizontalOverflow=HorizontalWrapMode.Overflow;label.verticalOverflow=VerticalWrapMode.Overflow;
+            var rect=(RectTransform)label.transform;rect.anchorMin=rect.anchorMax=new Vector2(0f,1f);rect.pivot=new Vector2(0f,1f);
+            rect.anchoredPosition=new Vector2(4f,-4f);rect.sizeDelta=new Vector2(400f,74f);
+            perfHud=label;
+        }
+
+        void TickPerfHud(){
+            EnsurePerfHud();
+            if(perfHud==null)return;
+            if(!perfHud.gameObject.activeSelf)perfHud.gameObject.SetActive(true);
+            if(Time.unscaledTime<perfHudAt)return;
+            perfHudAt=Time.unscaledTime+.25f;
+            int gc=GC.CollectionCount(0);
+            if(gc!=perfGcLast){perfGcLast=gc;perfGcAt=Time.unscaledTime;}
+            float fps=frameAvgMs>0.01f?1000f/frameAvgMs:0f;
+            long mono=0,total=0;
+            try{mono=UnityEngine.Profiling.Profiler.GetMonoUsedSizeLong();total=UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong();}catch{}
+            string res=Screen.width+"x"+Screen.height+(target!=null?"  RT "+target.width+"x"+target.height+(directFullscreenWorld?" 直写":""):"  RT 无");
+            perfHud.text="FPS "+fps.ToString("F0")+"   帧 "+frameAvgMs.ToString("F1")+"ms   最长 "+frameWorstMs.ToString("F1")+"ms   "+res+"\n"
+                +"GC "+gc+" 次 ("+(Time.unscaledTime-perfGcAt).ToString("F1")+"s 前)  托管 "+(mono/1048576f).ToString("F1")+"MB  总分配 "+(total/1048576f).ToString("F1")+"MB";
+        }
+
+        void SampleFrame(){
+            float ms=Time.unscaledDeltaTime*1000f;
+            frameRing[frameRingAt]=ms;frameRingAt=(frameRingAt+1)%frameRing.Length;
+            float worst=0f,sum=0f;
+            for(int i=0;i<frameRing.Length;i++){float v=frameRing[i];sum+=v;if(v>worst)worst=v;}
+            frameAvgMs=sum/frameRing.Length;frameWorstMs=worst;
+            if(devPerf!=null&&page=="developer"&&Time.unscaledTime>=perfLabelAt){
+                perfLabelAt=Time.unscaledTime+.25f;
+                devPerf.text="帧率 "+(frameAvgMs>0.01f?(1000f/frameAvgMs):0f).ToString("F0")+"   本帧 "+ms.ToString("F1")+"ms   近60帧最长 "+frameWorstMs.ToString("F1")+"ms";
+            }
+        }
+
         void SetupCanvas(){var go=new GameObject("Native Physics UI",typeof(Canvas),typeof(CanvasScaler),typeof(GraphicRaycaster));go.layer=5;canvas=go.GetComponent<Canvas>();canvas.renderMode=RenderMode.ScreenSpaceOverlay;canvas.sortingOrder=10;
             scaler=go.GetComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;scaler.referenceResolution=new Vector2(640,360);scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;scaler.referencePixelsPerUnit=100;scaler.matchWidthOrHeight=0;
             NativeUiKit.Font=font;NativeUiKit.ClickSound=()=>Play("ui");
-            NativeUiKit.MarkBackdrop(NativeUiKit.Box(go.transform,"Screen background",Color.black).gameObject);
+            screenBackground=NativeUiKit.Box(go.transform,"Screen background",Color.black);
+            NativeUiKit.MarkBackdrop(screenBackground.gameObject);
             ui=NativeUiKit.New(go.transform,"Design space");
             var raw=NativeUiKit.New(ui,"Native world").gameObject.AddComponent<RawImage>();raw.raycastTarget=false;raw.color=Color.white;worldImage=raw;NativeUiKit.MarkBackdrop(raw.gameObject);
             var worldRect=worldImage.rectTransform;worldRect.anchorMin=new Vector2(0,0);worldRect.anchorMax=new Vector2(1,1);worldRect.offsetMin=new Vector2(0,0);worldRect.offsetMax=new Vector2(0,-HudBand);
@@ -79,19 +128,60 @@ namespace RoomLab.Native
         // the world render texture follows the playfield at an integer pixel scale, so no letterbox,
         // no wasted screen and the status bar never covers the level.
         void ApplyScreen(bool force){
-            if(view==null)return;if(!force&&Screen.width==appliedWidth&&Screen.height==appliedHeight)return;
+            if(view==null)return;
+            // 全屏也走 RenderTexture 路径：直写画布依赖 view.rect 裁 HUD 条带，浏览器全屏下会错位/黑边。
+            bool direct=false;
+            if(!force&&Screen.width==appliedWidth&&Screen.height==appliedHeight&&direct==directFullscreenWorld)return;
+            bool pathChanged=direct!=directFullscreenWorld;
+            directFullscreenWorld=direct;
             appliedWidth=Screen.width;appliedHeight=Screen.height;
             float aspect=appliedWidth/(float)Mathf.Max(1,appliedHeight),baseline=16f/9f;bool wide=aspect>=baseline;
             if(scaler!=null)scaler.matchWidthOrHeight=wide?1f:0f;
             designWidth=wide?360f*aspect:640f;designHeight=wide?360f:640f/aspect;
-            float scale=Mathf.Min(appliedWidth/designWidth,appliedHeight/designHeight);pixelScale=Mathf.Clamp(Mathf.FloorToInt(scale),1,4);
+            float scale=Mathf.Min(appliedWidth/designWidth,appliedHeight/designHeight);int pixelCap=Application.platform==RuntimePlatform.WebGLPlayer?1:4;pixelScale=Mathf.Clamp(Mathf.FloorToInt(scale),1,pixelCap);
             playfieldWidth=designWidth;playfieldHeight=Mathf.Max(96f,designHeight-HudBand);
-            int rw=Mathf.Clamp(Mathf.RoundToInt(playfieldWidth*pixelScale),320,4096),rh=Mathf.Clamp(Mathf.RoundToInt(playfieldHeight*pixelScale),180,2160);
+            // Fullscreen WebGL writes the world directly into the canvas viewport.
+            // The HUD still overlays the same playfield bounds without a full-size texture copy.
+            if(direct)
+            {
+                view.targetTexture=null;
+                view.rect=new Rect(0,0,1,playfieldHeight/designHeight);
+                view.aspect=playfieldWidth/playfieldHeight;
+                worldImage.enabled=false;
+                worldImage.texture=null;
+                var background=screenBackground.rectTransform;
+                background.anchorMin=new Vector2(0,playfieldHeight/designHeight);
+                background.anchorMax=Vector2.one;
+                background.offsetMin=background.offsetMax=Vector2.zero;
+                if(target!=null){target.Release();Destroy(target);target=null;}
+                if(pathChanged)Debug.Log("WEB_FULLSCREEN_DIRECT "+appliedWidth+"x"+appliedHeight);
+                return;
+            }
+            if(pathChanged)
+            {
+                view.rect=new Rect(0,0,1,1);
+                view.ResetAspect();
+                worldImage.enabled=true;
+                var background=screenBackground.rectTransform;
+                background.anchorMin=Vector2.zero;
+                background.anchorMax=Vector2.one;
+                background.offsetMin=background.offsetMax=Vector2.zero;
+            }
+            int maxRw=Application.platform==RuntimePlatform.WebGLPlayer?1280:4096,maxRh=Application.platform==RuntimePlatform.WebGLPlayer?720:2160;int rw=Mathf.Clamp(Mathf.RoundToInt(playfieldWidth*pixelScale),320,maxRw),rh=Mathf.Clamp(Mathf.RoundToInt(playfieldHeight*pixelScale),180,maxRh);
             if(target!=null&&target.width==rw&&target.height==rh)return;
             var previous=target;target=new RenderTexture(rw,rh,24){filterMode=FilterMode.Point,name="Physics design "+rw+"x"+rh};target.Create();
             view.orthographic=true;view.clearFlags=CameraClearFlags.SolidColor;view.targetTexture=target;if(worldImage!=null)worldImage.texture=target;
             if(previous!=null){previous.Release();Destroy(previous);}}
-        void ClearUI(){var previous=new List<Transform>();foreach(Transform t in panels)previous.Add(t);foreach(var t in previous){t.gameObject.SetActive(false);t.SetParent(null,false);Destroy(t.gameObject);}hud=hint=status=null;}
+        RectTransform settingsStage, settingsScreen, settingsHeader, settingsViewport;
+        Image settingsPointer;
+        NativePixelWorld settingsArtWorld;
+
+        void ClearUI(){
+            if(settingsStage!=null&&settingsStage.IsChildOf(panels)){
+                settingsStage.gameObject.SetActive(false);
+                settingsStage.SetParent(transform,false);
+            }
+            var previous=new List<Transform>();foreach(Transform t in panels)previous.Add(t);foreach(var t in previous){t.gameObject.SetActive(false);t.SetParent(null,false);Destroy(t.gameObject);}hud=hint=status=null;}
         void Show(string state){
             // The resolution list is an accordion: every fresh entry to settings starts collapsed,
             // while the in-page toggle keeps the state it just switched to.
@@ -110,7 +200,7 @@ namespace RoomLab.Native
             if(!Game.IsEditorBuild15||state!="pause"&&state!="won")NativeUiKit.MarkBackdrop(NativeUiKit.Box(root,"Backdrop",new Color(.025f,.045f,.08f,.9f)).gameObject);
             if(IsSaveSlotPage){saveSlotReadyAt=Time.unscaledTime+.2f;if(EventSystem.current!=null)EventSystem.current.SetSelectedGameObject(null);if(state=="overwrite-slot")BuildOverwriteSlot(root);else BuildSaveSlots(root,state=="save-slots");NativeUiKit.Relayout(root);return;}
             if(state=="new-game")BuildNewGameConfirm(root);else if(state=="collection")BuildCollection(root);else if(state=="builtin-select")BuildBuiltinSelection(root);else if(state=="course-select")BuildCourseSelection(root);else if(state=="menu")BuildMenu(root);else if(state=="settings")BuildSettings(root);else if(state=="developer")BuildDeveloper(root);else if(state=="developer-map")BuildDeveloperMap(root);else if(state=="settings-expanded"){displayExpanded=true;phoneSettingsTab=2;BuildSettings(root);}else if(state=="tutorial"){tutorialSeen=true;SaveSettings();BuildTutorial(root);}else BuildPause(root,state);
-            NativeUiKit.Relayout(root);if(verify&&(state=="builtin-select"||state=="course-select"))VerifySelectionBounds(root);}
+            if(state!="settings"&&state!="settings-expanded")NativeUiKit.Relayout(root);if(verify&&(state=="builtin-select"||state=="course-select"))VerifySelectionBounds(root);}
         void VerifySelectionBounds(RectTransform root){
             Canvas.ForceUpdateCanvases();NativeUiKit.Relayout(root);var screen=NativeUiKit.WorldRect((RectTransform)canvas.transform);
             foreach(var text in root.GetComponentsInChildren<Text>()){var bounds=NativeUiKit.WorldRect(text.rectTransform);if(bounds.xMin<screen.xMin-1||bounds.xMax>screen.xMax+1||bounds.yMin<screen.yMin-1||bounds.yMax>screen.yMax+1)throw new Exception("Selection UI outside canvas: "+text.text);}
@@ -353,10 +443,42 @@ namespace RoomLab.Native
             NativeUiKit.Button(footer, "返回", () => Show(Game != null ? "pause" : "menu"), 12, 28);
             NativeUiKit.Fit(panel, width, designHeight - 24f);
         }
+        void DropSettingsControl(RectTransform control)
+        {
+            if(control==null)return;
+            control.gameObject.SetActive(false);
+            control.SetParent(null,false);
+            Destroy(control.gameObject);
+        }
+
+        RectTransform SettingsScreen(Transform root)
+        {
+            if(settingsStage==null||settingsArtWorld!=world)
+            {
+                if(settingsStage!=null)Destroy(settingsStage.gameObject);
+                settingsScreen=BuildMenuArt(root,false);
+                settingsStage=(RectTransform)settingsScreen.parent;
+                settingsPointer=pointerLight;
+                settingsArtWorld=world;
+            }
+            else
+            {
+                DropSettingsControl(settingsHeader);
+                DropSettingsControl(settingsViewport);
+                settingsStage.SetParent(root,false);
+                settingsStage.localScale=Vector3.one*Mathf.Min(designWidth/640f,designHeight/360f);
+                settingsStage.gameObject.SetActive(true);
+                pointerLightScreen=settingsScreen;
+                pointerLight=settingsPointer;
+                clockLabel=null;
+            }
+            return settingsScreen;
+        }
+
         void BuildSettings(Transform root)
         {
-            var screen=BuildMenuArt(root,false);
-            var top=NativeUiKit.Column(screen,"Settings header",1,0,0);
+            var screen=SettingsScreen(root);
+            var top=settingsHeader=NativeUiKit.Column(screen,"Settings header",1,0,0);
             top.anchorMin=top.anchorMax=new Vector2(0,1);top.pivot=new Vector2(0,1);
             top.anchoredPosition=new Vector2(9,-10);top.sizeDelta=new Vector2(131,0);
             PhoneMenuButton(top,"返回","ui-icon-back",()=>{rebind=-1;Show(settingsFromGame?"pause":"menu");});
@@ -369,7 +491,7 @@ namespace RoomLab.Native
                 NativeUiKit.Button(tabs,categories[i],()=>{phoneSettingsTab=tab;Show("settings");},
                     9,17,phoneSettingsTab==tab?Teal:NativeUiKit.SlotIdle);
             }
-            var viewport=NativeUiKit.Abs(screen,"Settings viewport",9,73,131,158);
+            var viewport=settingsViewport=NativeUiKit.Abs(screen,"Settings viewport",9,73,131,158);
             pointerLight.transform.SetAsLastSibling();
             var scrollBacking=viewport.gameObject.AddComponent<Image>();
             scrollBacking.color=new Color(.035f,.075f,.11f,.96f);
@@ -433,9 +555,7 @@ namespace RoomLab.Native
                 BuildDisplayGroup(panel);
             }
             status=NativeUiKit.Label(panel,notice!=null&&notice.StartsWith("已进入",StringComparison.Ordinal)?"":notice,10,Orange);
-            Canvas.ForceUpdateCanvases();
-            LayoutRebuilder.ForceRebuildLayoutImmediate(panel);
-            scroll.verticalNormalizedPosition=1;
+            LayoutRebuilder.MarkLayoutForRebuild(panel);
         }
         void BuildDisplayGroup(Transform parent){
             var group=NativeUiKit.Column(parent,"Display options",6,10,8);var bg=group.gameObject.AddComponent<Image>();bg.color=new Color(.09f,.14f,.19f);bg.raycastTarget=false;
@@ -443,6 +563,7 @@ namespace RoomLab.Native
             var viewRow=NativeUiKit.Row(group,"Room view",26,8);
             var viewLabel=NativeUiKit.Label(viewRow,"视野",12,Paper,TextAnchor.MiddleLeft);NativeUiKit.Size(viewLabel,44,26,0);
             NativeSciFiGauge.Create(viewRow,1f,1.6f,viewMax,v=>{viewMax=v;NativeCameraView.Zoom=v;},SaveSettings);
+            if(Application.platform==RuntimePlatform.WebGLPlayer)return;
             string current=desiredFull?"全屏":desiredWidth+"×"+desiredHeight;
             NativeUiKit.Button(group,"分辨率  "+current+(displayExpanded?"  收起 ▾":"  展开 ▸"),()=>{displayExpanded=!displayExpanded;Show("settings");},9,24,NativeUiKit.Slot);
             if(displayExpanded){
@@ -464,7 +585,7 @@ namespace RoomLab.Native
             Show("developer");
         }
         void CloseHiddenDeveloper(){hiddenDeveloperOpen=false;Show(developerReturnPage=="developer"?"pause":developerReturnPage);}
-        void BuildDeveloper(Transform root){float width=Mathf.Min(560f,designWidth-32f);
+        void BuildDeveloper(Transform root){float width=Mathf.Min(560f,designWidth-32f);devPerf=NativeUiKit.AbsLabel(root,16f,42f,designWidth-32f,20f,"帧率 --   本帧 --ms   近60帧最长 --ms",12,Paper,TextAnchor.MiddleLeft);
             var panel=NativeUiKit.Column(root,"Hidden developer panel",6,14,12);NativeUiKit.Center(panel,width);var bg=panel.gameObject.AddComponent<Image>();bg.color=Ink;bg.raycastTarget=false;
             NativeUiKit.Label(panel,"开发者选项",20,Paper);
             var tabs=NativeUiKit.Row(panel,"Developer tabs",26,8);
@@ -604,7 +725,13 @@ namespace RoomLab.Native
             if(problems>0){Debug.LogError("NATIVE_UI_MATRIX_FAIL problems="+problems);Finish(2);yield break;}
             Debug.Log("NATIVE_UI_MATRIX_PASS shots="+shots+" pairs="+pairs+" overlaps=0 outside=0 clipped=0 resolutions="+UiMatrixSizes.Length+" pages="+UiMatrixPages.Length);
             Finish(0);}
-        void Update(){float previousDesignWidth=designWidth,previousDesignHeight=designHeight;ApplyScreen(false);UpdatePhoneLight();bool hadStory=storyActive;TickStory();TickArtifactNotice(Time.unscaledTime);if(Game==null||hadStory||storyActive)return;if(!verify&&!matrix&&!mapShot&&ShowFirstAssistantRoomHint())return;if((page=="exploration-map"||IsSaveSlotPage)&&(previousDesignWidth!=designWidth||previousDesignHeight!=designHeight))Show(page);
+        void LateUpdate()
+        {
+            if(page=="play"&&Game!=null&&Game.Mode=="playing"&&!storyActive)
+                world?.PrewarmTerrain();
+        }
+
+        void Update(){if(GameInput.WasPressedExact(KeyCode.F9))perfHudOn=!perfHudOn;if(perfHudOn)TickPerfHud();SampleFrame();float previousDesignWidth=designWidth,previousDesignHeight=designHeight;ApplyScreen(false);UpdatePhoneLight();bool hadStory=storyActive;TickStory();TickArtifactNotice(Time.unscaledTime);if(Game==null||hadStory||storyActive)return;if(!verify&&!matrix&&!mapShot&&ShowFirstAssistantRoomHint())return;if((page=="exploration-map"||IsSaveSlotPage)&&(previousDesignWidth!=designWidth||previousDesignHeight!=designHeight))Show(page);
             DrainAutoSaves();
             if(Game.UsesManualSaveSlots&&Game.AwaitingSaveChoice&&page=="play")OpenSaveSlots();
             if(!verify&&!matrix&&HandleHiddenDeveloperInput())return;
@@ -619,7 +746,9 @@ namespace RoomLab.Native
             // 第一次见到交付方块时给一句加粗提示（本次运行只弹一次）。
             var nearbyInteraction=Game.NearbyInteraction;
             if(!verify&&!matrix&&!mapShot&&ShowFirstAssistantRoomHint()){world.Refresh(0,view,map);return;}
-            if(noticedRoom!=Game.Room.Id){noticedRoom=Game.Room.Id;SaveProgress();}if(loadedRoom!=Game.Room.Id)loadedRoom=Game.Room.Id;if(lastCheckpoint!=Game.Checkpoint.id){lastCheckpoint=Game.Checkpoint.id;SaveProgress();}
+            bool roomOrCheckpointChanged=noticedRoom!=Game.Room.Id||lastCheckpoint!=Game.Checkpoint.id;
+            noticedRoom=Game.Room.Id;loadedRoom=Game.Room.Id;lastCheckpoint=Game.Checkpoint.id;
+            if(roomOrCheckpointChanged)SaveProgress();
             // 新手教程：第一关提示移动与冲刺（每次运行只弹一次，6 秒）
             // 第一关：移动教程作为背景小字常驻（不再居中大字）
             bool inFirstRoom = Game.Course.Rooms.Count > 0 && Game.Room.Id == Game.Course.Rooms[0].Id;
@@ -627,6 +756,12 @@ namespace RoomLab.Native
             else if(Time.unscaledTime<teaHintUntil)tutorialText="现在消耗 Token 可连续两次冲刺！";
             else tutorialText="";
             // 新手教程：第一次遇到助手方块时提示交互键
+            if (page=="play" && Game.FreeExploration && Game.Mode=="won")
+            {
+                if (!tainted) high = Math.Max(high, Game.Score);
+                SaveProgress();
+                Show("won");
+            }
             if(Game.Completed&&page=="play"&&!endingShown)
             {
                 if(!tainted){high=Math.Max(high,Game.Score);SaveRecord(false);}
@@ -682,6 +817,9 @@ namespace RoomLab.Native
         float storyAutoHideAt; double gateNoticeShown = -1;
         float storyInputLockUntil;   // 刚弹出时的输入冷却，避免上一个点击直接跳过首句
         float gateNoticeCooldown;
+        int hudScore=-1,hudTokens=-1,hudCharges=-1;bool hudFree,hudPaid;
+        readonly float[] frameRing=new float[60];int frameRingAt;float frameWorstMs,frameAvgMs;Text devPerf;float perfLabelAt;
+        Text perfHud;bool perfHudOn;float perfHudAt;int perfGcLast;float perfGcAt;
         string hudShown;
         string saveSigShown;   // 门禁提示冷却，避免关门瞬间反复弹出
         readonly Dictionary<string,Text> blockHints = new Dictionary<string,Text>();
@@ -905,6 +1043,23 @@ namespace RoomLab.Native
             // state validation, asset decoding and a first render refresh.
             var oldWorld=world;var oldAssets=assets;world=render;assets=decoded;Game=motor;isBuiltin=builtIn;identity=nextIdentity;tainted=false;notice="";loadedRoom=Game.Room.Id;lastCheckpoint=Game.Checkpoint.id;lastEvent=null;timeline.Reset();keys.Clear();map=false;RootActivate();oldWorld?.Dispose();oldAssets?.Dispose();ReadRecord();
         }
+
+        NativeProject SafeLoadBuiltin(string file,ImportOptions options){
+            try{ return NativeProjectLoader.LoadFile(file,options); }
+            catch(Exception e){
+                Debug.LogWarning("BUILTIN_LOAD_SKIPPED "+e.Message);
+                try{
+                    var packed=Resources.Load<TextAsset>("mainline-webgl");
+                    if(packed!=null&&packed.bytes!=null&&packed.bytes.Length>0){
+                        Debug.Log("BUILTIN_FALLBACK_MAINLINE "+packed.bytes.Length);
+                        return NativeProjectLoader.LoadBytes(packed.bytes,".zip",options);
+                    }
+                    Debug.LogWarning("BUILTIN_FALLBACK_MISSING");
+                }catch(Exception e2){ Debug.LogWarning("BUILTIN_FALLBACK_FAILED "+e2.Message); }
+                return null;
+            }
+        }
+
         void LoadMainlineEdition()
         {
             // ① 同学替换关卡：exe 同级 "关卡" 文件夹里的 JSON / ZIP 优先
@@ -951,8 +1106,39 @@ namespace RoomLab.Native
                 catch(Exception e){Debug.LogWarning("MAINLINE_LOOSE_PACK_FAILED "+looseZip+" : "+e.Message);}
             }
             // ② 内置关卡包
-            string path=Path.Combine(Application.streamingAssetsPath,"RoomLabNative","Mainline","mainline.zip");
-            var project=LoadImport(path,true,out _);
+            //    唯一事实来源 = 包内 Resources/mainline-webgl，Windows 与 WebGL 都直接按字节加载。
+            //    旧做法是"Windows 优先用 persistentDataPath 的副本、且只解包一次"，后果有两个：
+            //      (a) 换了新包仍旧跑旧关卡（数据修复不生效）；
+            //      (b) 同一版本在两端可能跑出不同关卡，玩测对不上。
+            //    sha 取的是原始字节（NativeProjectLoader.LoadBytes → Sha(bytes)），与读文件一致，
+            //    所以改用内嵌字节不会改变 SourceSha256、不影响已有存档。
+            NativeProject project=null;
+            var packedPack=Resources.Load<TextAsset>("mainline-webgl");
+            if(packedPack!=null&&packedPack.bytes!=null&&packedPack.bytes.Length>0)
+            {
+                try{
+                    project=NativeProjectLoader.LoadBytes(packedPack.bytes,".zip",
+                        new ImportOptions{Profile=ImportProfile.EditorAuto,RequireAssets=true,PlayableCoursesOnly=true});
+                    Debug.Log("MAINLINE_BUNDLED_LOADED "+packedPack.bytes.Length);
+                }catch(Exception bundledError){Debug.LogWarning("MAINLINE_BUNDLED_FAILED "+bundledError.Message);}
+                // 诊断：本地若还留着旧版解包缓存，明确记一笔"它已被忽略"，免得又怀疑是数据没更新
+                try{
+                    string stale=Path.Combine(Application.persistentDataPath,"RoomLabNative","Mainline","mainline.zip");
+                    if(File.Exists(stale)&&NativeProjectLoader.Sha(File.ReadAllBytes(stale))!=NativeProjectLoader.Sha(packedPack.bytes))
+                        Debug.LogWarning("MAINLINE_CACHE_STALE_IGNORED "+new FileInfo(stale).Length+" bytes");
+                }catch(Exception staleError){Debug.LogWarning("MAINLINE_CACHE_CHECK_FAILED "+staleError.Message);}
+            }
+            else Debug.LogWarning("MAINLINE_BUNDLED_MISSING");
+            if(project==null)
+            {
+                // 回退：包内没有内嵌关卡时（老包 / 特殊构建）才走文件
+                string path=Path.Combine(Application.streamingAssetsPath,"RoomLabNative","Mainline","mainline.zip");
+                try{
+                    string cached=Path.Combine(Application.persistentDataPath,"RoomLabNative","Mainline","mainline.zip");
+                    if(!File.Exists(path)&&File.Exists(cached))path=cached;
+                }catch(Exception fallbackError){Debug.LogWarning("MAINLINE_CACHE_FALLBACK "+fallbackError.Message);}
+                project=LoadImport(path,true,out _);
+            }
             CommitCandidate(project,NativeGameplayRules.EditorBuild15,false);
             identity="mainline-player-v2";
             ImportLegacyPlayerProgress();
@@ -1121,7 +1307,7 @@ namespace RoomLab.Native
                 return;
             }
             if(teaReturnHint==null){
-                teaReturnHint=NativeUiKit.AbsLabel(parent,0,0,130,17,"门内站 1.5 秒可返回",9,Color.white,TextAnchor.MiddleCenter);
+                teaReturnHint=NativeUiKit.AbsLabel(parent,0,0,130,17,"站立1.5s即可返回",9,Color.white,TextAnchor.MiddleCenter);
                 teaReturnHint.raycastTarget=false;
                 teaReturnHint.rectTransform.anchorMin=teaReturnHint.rectTransform.anchorMax=new Vector2(.5f,.5f);
                 teaReturnHint.rectTransform.pivot=new Vector2(.5f,.5f);
@@ -1199,8 +1385,14 @@ namespace RoomLab.Native
             PhoneMenuButton(top,"确定清空并开始","ui-icon-level",()=>{HideStory();NewGame();},true);
             PhoneMenuButton(top,"取消","ui-icon-back",()=>Show("menu"));
         }
+        void StartFreeExploration()
+        {
+            if (!Game.FreeExploration && !Game.ExploreFromStart()) return;
+            Show("play");
+            SaveProgress();
+        }
         bool playerRunStarted;
-        void NewGame(){playerRunStarted=true;HideStory();assistantHintRooms.Clear();guidanceSeen.Clear();guidanceRoom=null;storyRoom=null;discoveredRooms.Clear();roomReached=0;high=0;journal.Clear();try{if(File.Exists(SaveFile))File.Move(SaveFile,SaveFile+".before-new-game-"+DateTime.UtcNow.Ticks);}catch{}SetGame(new NativeMotion(Game.Project,rules:Game.Rules));tainted=false;notice=ThemeHint();SaveProgress();
+        void NewGame(){endingShown=false;playerRunStarted=true;HideStory();assistantHintRooms.Clear();guidanceSeen.Clear();guidanceRoom=null;storyRoom=null;discoveredRooms.Clear();roomReached=0;high=0;journal.Clear();try{if(File.Exists(SaveFile))File.Move(SaveFile,SaveFile+".before-new-game-"+DateTime.UtcNow.Ticks);}catch{}SetGame(new NativeMotion(Game.Project,rules:Game.Rules));tainted=false;notice=ThemeHint();SaveProgress();
             Show("play");
         }
         static readonly HashSet<string> LegacyMainlineSources=new HashSet<string>(StringComparer.OrdinalIgnoreCase){
@@ -1257,7 +1449,7 @@ namespace RoomLab.Native
         void Retry(){Game.Retry();notice="已恢复最近检查点";Show("play");}
         void ReadRecord(){journal.Clear();high=roomReached=0;try{var data=JObject.Parse(File.ReadAllText(SaveFile));high=Math.Max(0,(int?)data["high"]??0);discoveredRooms.Clear();foreach(var token in data["discovered"] as JArray??new JArray()){var id=(string)token;if(!string.IsNullOrEmpty(id))discoveredRooms.Add(id);}roomReached=Math.Max(0,(int?)data["roomReached"]??0);if(data["journal"] is JArray recorded)foreach(var item in recorded){string key=(string)item;foreach(var r in Game.Course.Rooms)foreach(var o in r.Objects)if(o.Type=="common.collectible"&&key==r.Id+"/"+o.Id)journal.Add(key);}}catch{}}
         void SaveProgress(){if(Game==null||identity=="mainline-player-v2"&&!playerRunStarted||tainted||Game.DeveloperEnabled||Game.Completed)return;roomReached=Visited();SaveRecord(true);}
-        void SaveRecord(bool continuation){if(identity=="mainline-player-v2"&&!playerRunStarted)return;if(Game.IsContactAutosave)continuation=false;try{UpdateJournal();var data=new JObject{{"version",1},{"identity",identity},{"high",high},{"roomReached",roomReached},{"journal",new JArray(journal)},{"discovered",new JArray(discoveredRooms)},{"lastRun",new JObject{{"seconds",Game.Elapsed},{"deaths",Game.Deaths},{"collected",Game.CampaignCollected},{"complete",Game.Completed}}},{"continuation",continuation?(JToken)Game.ExportContinuation():null}};var temp=SaveFile+".tmp";File.WriteAllText(temp,data.ToString());if(File.Exists(SaveFile))File.Replace(temp,SaveFile,null);else File.Move(temp,SaveFile);}catch(Exception e){notice="保存失败："+e.Message;Debug.LogWarning("NATIVE_SAVE_FAILED "+e.Message);}}
+        void SaveRecord(bool continuation){if(identity=="mainline-player-v2"&&!playerRunStarted)return;if(Game.IsContactAutosave)continuation=false;try{UpdateJournal();var data=new JObject{{"version",1},{"identity",identity},{"high",high},{"roomReached",roomReached},{"journal",new JArray(journal)},{"discovered",new JArray(discoveredRooms)},{"lastRun",new JObject{{"seconds",Game.Elapsed},{"deaths",Game.Deaths},{"collected",Game.CampaignCollected},{"complete",Game.Completed||Game.FreeExploration}}},{"continuation",continuation?(JToken)Game.ExportContinuation():null}};var temp=SaveFile+".tmp";File.WriteAllText(temp,data.ToString());if(File.Exists(SaveFile))File.Replace(temp,SaveFile,null);else File.Move(temp,SaveFile);}catch(Exception e){notice="保存失败："+e.Message;Debug.LogWarning("NATIVE_SAVE_FAILED "+e.Message);}}
         string SettingsFile{get{return Path.Combine(saveDirectory,"settings-autosave-v1.json");}}
         void LoadSettings(){
             legacy=RoomLabKeyBindings.Load();
@@ -1281,7 +1473,7 @@ namespace RoomLab.Native
                 }
             }
             catch{}
-            if(!verify&&!matrix&&!mapShot)Screen.SetResolution(desiredWidth,desiredHeight,desiredFull?FullScreenMode.FullScreenWindow:FullScreenMode.Windowed);
+            if(!verify&&!matrix&&!mapShot&&Application.platform!=RuntimePlatform.WebGLPlayer)Screen.SetResolution(desiredWidth,desiredHeight,desiredFull?FullScreenMode.FullScreenWindow:FullScreenMode.Windowed);
             AudioListener.volume=volume;
         }
         void SaveSettings(){var list=new JArray();foreach(var b in bindings)list.Add((int)b);string temporary=SettingsFile+"."+Guid.NewGuid().ToString("N")+".tmp";File.WriteAllText(temporary,new JObject{{"version",1},{"volume",volume},{"musicEnabled",musicEnabled},{"musicVolume",musicVolume},{"effectsVolume",effectsVolume},{"tutorialSeen",tutorialSeen},{"courseMapPreferred",courseMapPreferred},{"viewMax",viewMax},{"importLegacyRules",importLegacyRules},{"importedLevel",importedLevel},{"importedCourseId",importedCourseId},{"builtinCourseId",builtinCourseId},{"bindings",list},{"fullscreen",desiredFull},{"width",desiredWidth},{"height",desiredHeight}}.ToString());if(File.Exists(SettingsFile))File.Replace(temporary,SettingsFile,null);else File.Move(temporary,SettingsFile);}
@@ -1379,9 +1571,49 @@ namespace RoomLab.Native
             }
         }
         // 成品里也能出图：-nativeMapShot 打开地图两种模式并各截一张，便于验收。
+        void CheckFreeExploration()
+        {
+            if (!Game.IsEditorBuild15 || Game.Project.OriginalJson["mainlinePackage"] == null) return;
+            var course = Game.Course;
+            var start = course.Rooms[0];
+            var final = course.Rooms.Find(r => r.Id != start.Id &&
+                r.Objects.Exists(o => o.Type == "common.assignmentSubmit") &&
+                course.Connections.Exists(edge => edge.FromRoomId == r.Id && edge.ToRoomId == start.Id));
+            if (final == null) throw new Exception("Final submission room missing");
+            var run = new NativeMotion(Game.Project, course.Id, final.Id, Game.Rules);
+            var teaRoom = course.Rooms.Find(r => r.Id == "room-mwixuwlb-l0h52r");
+            run.LoadRoom(teaRoom.Id);
+            if (teaRoom.Exits.Count != 0 || run.ReturnEntry?.Id != teaRoom.Entries[0].Id)
+                throw new Exception("Iced tea room return entrance missing or duplicated");
+            run.LoadRoom(final.Id);
+            var submit = final.Objects.Find(o => o.Type == "common.assignmentSubmit");
+            void InteractAtSubmission(NativeMotion motion)
+            {
+                motion.Player.x = submit.X * 32 + 4;
+                motion.Player.y = submit.Y * 32 - 28;
+                motion.Player.vx = motion.Player.vy = 0;
+                motion.Tick(0, new MotionInput { interactPressed = true });
+            }
+            InteractAtSubmission(run);
+            if (!run.Completed) throw new Exception("Final submission did not complete the run");
+            var score = run.Score;
+            if (!run.ExploreFromStart() || run.Room.Id != start.Id || run.Completed || run.Score != score)
+                throw new Exception("Free exploration did not resume at the start");
+            run = NativeMotion.FromContinuation(Game.Project, run.ExportContinuation(), run.Rules);
+            if (!run.FreeExploration) throw new Exception("Free exploration flag was lost on continue");
+            run.LoadRoom(final.Id);
+            run.Score += 100;
+            InteractAtSubmission(run);
+            if (run.Mode != "won" || run.Completed || run.Score != score + 100 ||
+                run.Events.Any(e => (string)e["type"] == "finish"))
+                throw new Exception("Rating review failed: mode="+run.Mode+" completed="+run.Completed+" score="+run.Score+" expected="+(score+100));
+            Debug.Log("FREE_EXPLORATION_PASS returnEntry scoreSave ratingReview");
+        }
+
         IEnumerator MapShot()
         {
             yield return null;
+            CheckFreeExploration();
             ShowStartupIntro(true);
             if(!storyKeyHint.text.Contains("Esc")||!TrySkipStartupIntro()||page!="menu")
                 throw new Exception("Returning startup must support Esc");
@@ -1543,6 +1775,38 @@ namespace RoomLab.Native
                     SetGame(new NativeMotion(project,course.Id,room.Id,NativeGameplayRules.EditorBuild15));
                     world.Refresh(0,view,false);
                 }
+                // Exercise actual page reuse and room changes on a single live world.
+                Show("settings");
+                var previousSettingsStage=settingsStage;
+                var settingsTimer=System.Diagnostics.Stopwatch.StartNew();
+                Show("menu");
+                settingsTimer.Restart();
+                Show("settings");
+                settingsTimer.Stop();
+                if(settingsStage!=previousSettingsStage||!settingsStage.IsChildOf(panels))
+                    throw new Exception("设置界面没有复用背景");
+                Show("play");
+                var first=course.Rooms[0];
+                Game.LoadRoom(first.Id);
+                world.Refresh(0,view,false);
+                var pool=world.Root.transform.Find("Terrain pool");
+                var tile=pool.GetChild(0);
+                long worstRoomTicks=0;
+                foreach(var testRoom in course.Rooms)
+                {
+                    Game.LoadRoom(testRoom.Id);
+                    var timer=System.Diagnostics.Stopwatch.StartNew();
+                    world.Refresh(0,view,false);
+                    timer.Stop();
+                    worstRoomTicks=Math.Max(worstRoomTicks,timer.ElapsedTicks);
+                    int visible=0;
+                    foreach(Transform renderer in pool)if(renderer.gameObject.activeSelf)visible++;
+                    if(pool.GetChild(0)!=tile||visible!=testRoom.Tiles.Count)
+                        throw new Exception("地形复用或可见数量异常："+testRoom.Id);
+                }
+                Debug.Log("NATIVE_TRANSITION_REUSE_PASS rooms="+course.Rooms.Count+
+                    " worstRoomRefreshMs="+(1000.0*worstRoomTicks/System.Diagnostics.Stopwatch.Frequency).ToString("F2")+
+                    " settingsReopenMs="+settingsTimer.Elapsed.TotalMilliseconds.ToString("F2"));
                 NewGame();
                 if(!CanContinue())throw new Exception("主线继续记录未写入");
                 Show("menu");

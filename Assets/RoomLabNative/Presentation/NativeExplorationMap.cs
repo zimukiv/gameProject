@@ -122,16 +122,33 @@ location.enabled=false;   // 不显示当前位置信息
             var bar=NativeUiKit.Abs(root,"Developer map controls",12,8,designWidth-24,28);
             var row=NativeUiKit.Row(bar,"Developer map controls",26,8);
             NativeUiKit.Button(row,"返回",()=>Show("developer"),12,25);
-            NativeUiKit.Label(row,"点击房间跳转",13,Paper);
-            BuildCourseMap(root,new Rect(10,42,designWidth-20,designHeight-52),false,roomId=>{
-                tainted=true;
-                Game.SetDeveloperOptions(true,Game.LockHealth,Game.DeveloperFlight);
-                Game.LoadRoom(roomId);
-                timeline.Reset();
-                keys.Clear();
-                hiddenDeveloperOpen=false;
-                Show("play");
-            });
+            NativeUiKit.Label(row,"点击房间跳转（方框版图）",13,Paper);
+            var opening=new Rect(10,42,designWidth-20,designHeight-52);
+            // 与游玩时的「沿途总图」同一套方框版图渲染，全部房间可见。
+            if(!BuildWorldPlatePage(root,opening,true))
+            {
+                NativeUiKit.Label(root,"版图不可用",13,Paper);
+                return;
+            }
+            foreach(var room in Game.Course.Rooms)
+            {
+                var box=PlateRoomUiRect(room.Id);
+                if(box.width<4||box.height<4)continue;
+                var hotspot=NativeUiKit.AbsImage(root,"Jump to "+room.Id,box.x,box.y,box.width,box.height,new Color(1f,1f,1f,.004f));
+                hotspot.raycastTarget=true;
+                var button=hotspot.gameObject.AddComponent<Button>();
+                button.targetGraphic=hotspot;
+                string target=room.Id;
+                button.onClick.AddListener(()=>{
+                    tainted=true;
+                    Game.SetDeveloperOptions(true,Game.LockHealth,Game.DeveloperFlight);
+                    Game.LoadRoom(target);
+                    timeline.Reset();
+                    keys.Clear();
+                    hiddenDeveloperOpen=false;
+                    Show("play");
+                });
+            }
         }
 
         void BuildCourseMap(Transform root, Rect opening, bool paper, Action<string> jump=null)

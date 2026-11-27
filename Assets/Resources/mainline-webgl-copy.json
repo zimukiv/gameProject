@@ -1,0 +1,227 @@
+{
+  "version": 1,
+  "note": "运行时可直接编辑：本文件按对象 ID / 道具类型 / 课程 kind 索引文案，改完重启游戏即可生效，无需重新打包。",
+  "levelName": "第一大关 · 物理 DDL",
+  "levelSourceSha256": "3b66468e46630330ae560654f51056b54b0557eaad77cbdd51ac97a0c45e2f51",
+  "collectiblesAreGlobal": true,
+  "aiChaseIntervalSeconds": 30,
+  "collectibleTotal": 21,
+  "collectibles": {
+    "block-mvniyk1k-zyhvos": {
+      "name": "《涂黑的数据异常点》",
+      "line": "散点图上离群最远的点，被铅笔狠狠涂黑伪装成杂质。",
+      "room": "room-mvnf7n9x-0t6ggh",
+      "roomName": "AI追逐1",
+      "source": "id-match"
+    },
+    "block-mvoniqsk-w3skhk": {
+      "name": "《绝热膨胀的咖啡罐》",
+      "line": "在冷热温控台边缘放了一夜，熬夜后醒来你和它都浮肿了",
+      "room": "room-mvnf7nel-q8wikm",
+      "roomName": "新房间 10",
+      "source": "id-match"
+    },
+    "block-mvp28r8e-2mfxfw": {
+      "name": "《未校准的示波器截图》",
+      "line": "实验说明没预习的你不知道为什么波形图是正弦，但至少在 DDL 前打印出来了。",
+      "room": "room-mvnf7nm5-vf4wbu",
+      "roomName": "新房间 12",
+      "source": "id-match"
+    },
+    "object-mvnkr562-kiz9e4": {
+      "name": "《第七版终稿.pdf》",
+      "line": "文件名虽然叫终稿，但文件夹里其实还有‘绝对不改版’。",
+      "room": "room-mvnkr562-1ihb3g",
+      "roomName": "XX",
+      "source": "id-match"
+    },
+    "object-mvnkr562-1izjf3": {
+      "name": "《这真的是最后一版.docx》",
+      "line": "凌晨 4:15 保存，你困到甚至忘了关电脑",
+      "room": "room-mvnkr562-1ihb3g",
+      "roomName": "XX",
+      "source": "id-match"
+    },
+    "object-mvnkr562-bpx08d": {
+      "name": "《指导老师的红色问号》",
+      "line": "让ai写的“一定正确“的结论旁边，留下一个古法手写的大大的问号",
+      "room": "room-mvnkr562-1ihb3g",
+      "roomName": "XX",
+      "source": "id-match"
+    },
+    "block-mwuuci2f-jm64gy": {
+      "name": "《无人认领的座位》",
+      "line": "倒数第二排靠窗，桌角刻着几年前某位学长算不出的高数公式。",
+      "room": "room-mvaapi4e-crbnks",
+      "roomName": "冰引入",
+      "source": "random-fill"
+    },
+    "block-mwuubuoa-ydbofn": {
+      "name": "《过程比答案多一行》",
+      "line": "哪怕最后结果算错，阅卷老师看到这一行也能给两分步骤分。",
+      "room": "room-mvndxqmk-k9xt7n",
+      "roomName": "8",
+      "source": "random-fill"
+    },
+    "block-mwuuc2sn-jt0kia": {
+      "name": "《阁楼的解法》",
+      "line": "绕了七八层积分的远路，回过头看，原来答案就写在正下方。",
+      "room": "room-mvndxqmk-k9xt7n",
+      "roomName": "8",
+      "source": "random-fill"
+    },
+    "block-mwtclo5c-ppnm27": {
+      "name": "《放映间的灰尘》",
+      "line": "投影仪光束里飞舞的尘埃，在黑暗教室里宛如无声的慢动作电影。",
+      "room": "room-mvnkr562-1ihb3g",
+      "roomName": "XX",
+      "source": "random-fill"
+    },
+    "block-mwutpjq9-7811ub": {
+      "name": "《梦的余温》",
+      "line": "额头靠在桌板上压出的红印，提醒你刚才那堂课真的只是做梦。",
+      "room": "room-mwm5an19-fsoz6d",
+      "roomName": "03 求导练习 · 双门分流",
+      "source": "random-fill"
+    },
+    "block-mwutqcc6-div4mj": {
+      "name": "《走神以后》",
+      "line": "窗外的树影晃了三下，这一页幻灯片就彻底变成了未解之谜。",
+      "room": "room-mwq5yur6-wqo37h",
+      "roomName": "新房间 24",
+      "source": "random-fill"
+    },
+    "block-mwrvicog-g09h16": {
+      "name": "《备用杯套》",
+      "line": "瓦楞纸套被反复捏得变平，上面写满了怕被抽问的假装思考草稿。",
+      "room": "room-mwq5yur6-wqo37h",
+      "roomName": "新房间 24",
+      "source": "random-fill"
+    },
+    "block-mwusnt6e-21plh1": {
+      "name": "《画框外的颜色》",
+      "line": "讲台侧面悬挂的名画复制品，褪色边缘印着粉笔灰的灰白。",
+      "room": "room-mw76ya7k-6gyljq",
+      "roomName": "期末周-物理主（已完成)",
+      "source": "random-fill"
+    },
+    "block-mwuso2br-lpvdb4": {
+      "name": "《两页之间的批注》",
+      "line": "只有在背光处才看得清的字迹：‘别往下算了，出题人印错了’。",
+      "room": "room-mw76ya7k-6gyljq",
+      "roomName": "期末周-物理主（已完成)",
+      "source": "random-fill"
+    },
+    "block-mwptdz12-2jqxe8": {
+      "name": "《答到前的停顿》",
+      "line": "老师点到前排空座位名字时，全教室陷入长达三秒的心虚沉寂。",
+      "room": "room-mw76yacb-oq6qet",
+      "roomName": "期末周-序",
+      "source": "random-fill"
+    },
+    "block-mwutly09-o5brkd": {
+      "name": "《同一个名字》",
+      "line": "点名册上两行完全不同字迹的签名，签的居然是同一个人。",
+      "room": "room-mw76yagq-eco17v",
+      "roomName": "期末周-水课主",
+      "source": "random-fill"
+    },
+    "object-mwps6pw4-1a87yv": {
+      "name": "《无人放映的结尾》",
+      "line": "幻灯片放到了最后一页‘Thank You’，台下只剩下收拾桌面的声音。",
+      "room": "room-mwps6pw4-wry065",
+      "roomName": "巡查躲避 冰红茶能力锁关入口",
+      "source": "random-fill"
+    },
+    "object-mwps6pw4-u9nzz2": {
+      "name": "《被折起来的一页》",
+      "line": "折痕把两个毫无关系的公式拼在了一起，但你没看出来有什么问题",
+      "room": "room-mwps6pw4-wry065",
+      "roomName": "巡查躲避 冰红茶能力锁关入口",
+      "source": "random-fill"
+    },
+    "block-mwutnoke-y31ctw": {
+      "name": "《留给同伴的空白》",
+      "line": "撕掉半截的草稿纸，怎么恰好没有答案",
+      "room": "room-mwssgou7-uoz0uu",
+      "roomName": "未完成",
+      "source": "random-fill"
+    },
+    "block-mwutmvtj-gv6d5q": {
+      "name": "《杯沿的月亮》",
+      "line": "纸杯里晃动的灯影，在第 45 分钟的时候被刚睡醒的你看成了一弯月牙。",
+      "room": "room-mwssgou7-uoz0uu",
+      "roomName": "未完成",
+      "source": "random-fill"
+    }
+  },
+  "unusedCollectibleLines": [
+    {
+      "name": "《夹层里的旁注》",
+      "line": "不知是谁用铅笔写的‘此处显然可得’，卡了整整两个小时。"
+    },
+    {
+      "name": "《回家吧孩子回家吧》",
+      "line": "沿着推论原路返回，所有消去的常数项在这一刻重新相遇。"
+    },
+    {
+      "name": "《留到下课的一分钟》",
+      "line": "讲台上的倒计时走完前，谁也不敢第一个站起来收书包拉拉链。"
+    },
+    {
+      "name": "《睡梦中的签名》",
+      "line": "签到表传过来时半睡半醒，名字的最后一笔直接划到了桌面上。"
+    },
+    {
+      "name": "《再也读不懂的注脚》",
+      "line": "睡意散去时投影幕已经翻了十页，只有黑板边角还留着上节课的板书。"
+    },
+    {
+      "name": "《答辩通过的拟合曲线》",
+      "line": "R² 只有 0.68，但在评委老师揉眼睛的瞬间它完美得无可挑剔。"
+    }
+  ],
+  "items": {
+    "item.icedTea": {
+      "name": "冷萃隔夜美式",
+      "line": "纸杯里剩下的大半杯冰美式，苦得你吐了吐舌"
+    },
+    "item.calculator": {
+      "name": "全英文PPT讲义",
+      "line": "密密麻麻的专业外语，你发现把两只眼睛都闭起来阅读很舒服"
+    },
+    "item.phone": {
+      "name": "不知道属于谁的签到用笔",
+      "line": "永远只有半管墨的黑色水笔，全班传阅却从不属于任何人。"
+    }
+  },
+  "ai": {
+    "physics": {
+      "ident": "物理 AI (physics-demo-ai)",
+      "name": "作业助手",
+      "trigger": "AI 启动板 / 提交装置",
+      "start": "大作业ddl倒计时开始，带我去各实验数据取样！",
+      "chase": "数据传输过载，警告：即将高速校准！",
+      "close": "物理实验报告已生成，确认提交上传！",
+      "kind": "physics"
+    },
+    "course-mw76vb7u-spzbp5": {
+      "ident": "高数 AI (calculus-assistant)",
+      "name": "证明题帮手",
+      "trigger": "助手终端 / 提交装置",
+      "start": "草稿纸已铺平，下一步的推导由你带路。",
+      "chase": "检测到超出已有知识范畴，不支持将猜想作为证明环节",
+      "close": "证明完毕，最终解已提交教务系统。",
+      "kind": "calculus"
+    },
+    "course-mw7dp2bi-xxnocu": {
+      "ident": "水课 AI (slacker-assistant)",
+      "name": "代签助手",
+      "trigger": "替身终端 / 提交装置",
+      "start": "帮你看一眼老师，你先抓紧时间闭眼歇会。",
+      "chase": "老师讲得太催眠了……困意袭来，撑住！",
+      "close": "下课铃响了，点名册已合上，全身而退",
+      "kind": "slacker"
+    }
+  }
+}
