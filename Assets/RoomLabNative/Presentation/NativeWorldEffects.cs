@@ -360,8 +360,10 @@ namespace RoomLab.Native
             PaintCurves(g.Room.Cols, g.Room.Rows, midTime);
         }
 
+        static int midPaintTick;
         void PaintCurves(float cols, float rows, float time)
         {
+            if ((midPaintTick++ % 3) != 0) return;
             float density = 640f / Mathf.Max(1, Mathf.Max(cols, rows));
             int W = Mathf.Max(1, Mathf.RoundToInt(cols * density));
             int H = Mathf.Max(1, Mathf.RoundToInt(rows * density));

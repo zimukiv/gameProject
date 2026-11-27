@@ -56,7 +56,7 @@ namespace RoomLab.Native
         void ResumeAIPlayerTrail(NativePoint point)
         {
             RememberAIPlayerTrail(point);var trail=AI.trail;int nearest=0;double best=double.MaxValue;
-            for(int i=0;i<trail.Count;i++){double distance=Hypot(trail[i].x-AI.x,trail[i].y-AI.y);if(distance<=best){best=distance;nearest=i;}}
+            for(int i=System.Math.Max(0,trail.Count-240);i<trail.Count;i++){double distance=Hypot(trail[i].x-AI.x,trail[i].y-AI.y);if(distance<=best){best=distance;nearest=i;}}
             // Keep the chronological suffix, including its corners, rather than taking a
             // straight shortcut to the player's latest position after ballistic flight.
             if(nearest>0)trail.RemoveRange(0,nearest);
@@ -66,7 +66,7 @@ namespace RoomLab.Native
             var pc=PlayerCenter;double x=pc.x-165;
             // Processing delays catches, not collection. Avoid placing the AI directly
             // on an unclaimed collectible while resetting a developer safety return.
-            for(int pass=0;pass<=Room.Objects.Count;pass++){bool overlap=false;foreach(var o in Room.Objects){if(o.Type!="common.collectible"||Credited.Contains(creditKeys[o.Id]))continue;var r=ObjectRect(o);if(MotionRect.Overlap(new MotionRect(null,x-12,pc.y-14,24,28),r)){x=Math.Min(x,r.x-13);overlap=true;}}if(!overlap)break;}
+            for(int pass=0;pass<8;pass++){bool overlap=false;foreach(var o in Room.Objects){if(o.Type!="common.collectible"||Credited.Contains(creditKeys[o.Id]))continue;var r=ObjectRect(o);if(MotionRect.Overlap(new MotionRect(null,x-12,pc.y-14,24,28),r)){x=Math.Min(x,r.x-13);overlap=true;}}if(!overlap)break;}
             // Portal warning eagerly reserves its route before arrival. Cancelling that
             // unfinished warning must release only its reservation, not completed routes.
             if(AI.warning!=null)AI.teleported.Remove(AI.warning.id);

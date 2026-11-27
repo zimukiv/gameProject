@@ -636,7 +636,7 @@ namespace RoomLab.Native
                     StartCoroutine(StoryRoutine(new[]{"恭喜你完成了所有作业！",Game.Difficulty>=2?"现在你可以自由探索了！":"现在你可以游玩困难模式了！"},true,()=>Show("won")));
                 }
             }
-            world.Refresh(Time.unscaledDeltaTime,view,map);if(hud!=null)hud.text="分数 "+Game.Score+"   Token "+Game.Tokens+"   免费 "+(Game.Player.freeDash?"●":"○")+(Game.PaidDashUnlocked?"   付费 "+Game.Charges+"/"+Game.PaidStockCap:"");
+            world.Refresh(Time.unscaledDeltaTime,view,map);if(hud!=null){var hudNow="分数 "+Game.Score+"   Token "+Game.Tokens+"   免费 "+(Game.Player.freeDash?"●":"○")+(Game.PaidDashUnlocked?"   付费 "+Game.Charges+"/"+Game.PaidStockCap:"");if(hudNow!=hudShown){hudShown=hudNow;hud.text=hudNow;}}
             // 新手提示：内容 + 放在空白背景区（人在下方→上方区域；人在上方→下方区域）
             bool tutLow=Game.Player.y>Game.Room.Rows*16.0;
             tutorialText = "";
@@ -669,7 +669,7 @@ namespace RoomLab.Native
             }
             if(hintBacking!=null)hintBacking.enabled=false;   // 字幕不再带底衬/阴影
             if(notice!=noticeShown){noticeShown=notice;noticeShownUntil=Time.unscaledTime+2f;}bool warningOn=Game!=null&&Game.AI!=null&&Game.AI.warning!=null;if(warningOn&&!aiWarningWasOn)Play("ai_warning");aiWarningWasOn=warningOn;AiCopyTick();if(hint!=null)hint.text=mainlineEdition?"":Time.unscaledTime<copyUntil?copyLine:Time.unscaledTime<noticeShownUntil?notice:tainted?"开发检查 · 成绩不保存":Game.RespawnRemaining>0?"复活准备…":nearbyInteraction!=null?InteractionPrompt(nearbyInteraction):"";
-            TickLocatedTutorial(inFirstRoom);TickBlockHints();TickTeaReturnHint();if(page=="play"&&Time.unscaledTime>saveAt){saveAt=Time.unscaledTime+5;SaveProgress();}PumpSounds();CampaignTick();TickAwarenessHud();TickAutoSaveNotice();}
+            TickLocatedTutorial(inFirstRoom);TickBlockHints();TickTeaReturnHint();if(page=="play"&&Time.unscaledTime>saveAt){saveAt=Time.unscaledTime+20;var sig=Game.Score+":"+Game.Tokens+":"+Game.Room.Id+":"+Game.Credited.Count;if(sig!=saveSigShown){saveSigShown=sig;SaveProgress();}}PumpSounds();CampaignTick();TickAwarenessHud();TickAutoSaveNotice();}
         // 字幕位置：人在下方 → 右上角；人在上方 → 左下角
         // ---- 剧情/拾取文字：无对话框，上下黑边 + 画面正中白字，字号自适应，逐字显示 ----
         Canvas storyCanvas; RectTransform storyRoot; Text storyText; Text storyKeyHint; Image storyBackdrop;
@@ -681,7 +681,9 @@ namespace RoomLab.Native
         int storyOpenedFrame;
         float storyAutoHideAt; double gateNoticeShown = -1;
         float storyInputLockUntil;   // 刚弹出时的输入冷却，避免上一个点击直接跳过首句
-        float gateNoticeCooldown;   // 门禁提示冷却，避免关门瞬间反复弹出
+        float gateNoticeCooldown;
+        string hudShown;
+        string saveSigShown;   // 门禁提示冷却，避免关门瞬间反复弹出
         readonly Dictionary<string,Text> blockHints = new Dictionary<string,Text>();
         Transform blockHintPage;
         string blockHintRoom;   // 方块上的常驻小字（按房间重建）
